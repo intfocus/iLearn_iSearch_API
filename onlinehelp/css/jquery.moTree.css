@@ -1,0 +1,16 @@
+.moTree { border: 0; white-space:nowrap; padding: 5 10 5 10; }
+.moTree .moTreeIcon {cursor:pointer; vertical-align:middle;}
+.moTree ul {padding:0;}
+.moTree li {list-style:none; padding:2px 0;}
+.moTreeCollapsed ul {display:none;}
+.moTreeTopic .moTreeIcon {background:none; cursor:default;}
+
+.moTree ul {margin:0 0 0 0px;}
+.moTree a:link, .moTree a:visited {color:#222; text-decoration:none;}
+.moTree a:hover {color:#222; text-decoration:underline; }
+.moTree a.selectedNode, .moTree a.selectedNode:visited {color:#499e24; font-weight:bold;}
+.moTree ul li ul {margin:0 0 0 20px;}
+.moTree .moTreeIcon {width:20px;height:18px;}
+.moTree .moTreeExpanded  .moTreeIcon {background:url(images/moTreeE.gif) no-repeat 0 1px;}
+.moTree .moTreeCollapsed .moTreeIcon {background:url(images/moTreeC.gif) no-repeat 0 1px;}
+.moTree .moTreeTopic     .moTreeIcon {background:url(images/moTreeT.gif) no-repeat 0 1px;}
