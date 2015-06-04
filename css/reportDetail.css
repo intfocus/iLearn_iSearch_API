@@ -1,0 +1,392 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+	background:#fff;
+	overflow:auto;
+	overflow-x:hidden;
+	color:#000;
+}
+.createTime {
+	float:right;
+	font-size:14px;
+	font-weight:normal;
+}
+.reportBanner {
+	padding:15px;
+	color:#333;
+	font-size:24px;
+	font-weight:bold;
+}
+.reportDetail {
+	margin:5px 15px;	
+}
+.reportDetail .reportName {
+	background-color:#595757;
+	border:1px solid #ECEFC5;
+	color:#DAE879;
+	font-weight:bold;
+	font-size:18px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .reportName span.name {
+	margin:5px 10px;
+	display:block;
+}
+.reportDetail .reportName .funcBtn {
+	float:right;
+	display:inline-block;
+	line-height:32px;
+	border-left:1px solid #eee;
+	padding:0 20px 0 5px;
+	font-size:14px;
+	color:#eee;
+	cursor:pointer;
+	position:relative;
+	z-index:3;
+	background: #787878;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#787878), to(#464646));
+	background: -webkit-linear-gradient(#787878, #464646);
+	background: -moz-linear-gradient(#787878, #464646);
+	background: -ms-linear-gradient(#787878, #464646);
+	background: -o-linear-gradient(#787878, #464646);
+	background: linear-gradient(#787878, #464646);
+	-pie-background: linear-gradient(#787878, #464646);
+}
+.reportDetail .reportName .funcBtn:hover {
+	background: #999999;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#999999), to(#464646));
+	background: -webkit-linear-gradient(#999999, #464646);
+	background: -moz-linear-gradient(#999999, #464646);
+	background: -ms-linear-gradient(#999999, #464646);
+	background: -o-linear-gradient(#999999, #464646);
+	background: linear-gradient(#999999, #464646);
+	-pie-background: linear-gradient(#999999, #464646);
+}
+
+.reportDetail .reportName .funcBtn.disabled, .reportDetail .reportName .funcBtn.disabled:hover {
+	background-color:#3E3A39;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#3E3A39), to(#3E3A39));
+	background: -webkit-linear-gradient(#3E3A39, #3E3A39);
+	background: -moz-linear-gradient(#3E3A39, #3E3A39);
+	background: -ms-linear-gradient(#3E3A39, #3E3A39);
+	background: -o-linear-gradient(#3E3A39, #3E3A39);
+	background: linear-gradient(#3E3A39, #3E3A39);
+	-pie-background: linear-gradient(#3E3A39, #3E3A39);
+	cursor:default;
+	color:#727171;
+}
+.reportDetail .reportName .icon {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	background-repeat:no-repeat;
+	background-position:center;
+	margin:4px 5px;
+	vertical-align:middle;
+}
+.reportDetail .reportName span.print .icon {
+	background:url(../images/icon_print.png);
+}
+.reportDetail .reportName span.send .icon {
+	background:url(../images/icon_email.png);
+}
+.reportDetail .reportName span.download .icon {
+	background:url(../images/icon_download.png);
+}
+.reportDetail .reportName span.disabled.download .icon {
+	background-position:bottom;
+}
+.reportDetail .rSubmenuW {
+	margin:20px 10px 0 10px;
+}
+.reportDetail .rSubmenuW .rSubmenu {
+	border:1px solid #E9EBC3;
+	padding:5px 10px;
+	cursor:pointer;
+	font-weight:bold;
+	margin:0;
+	display:inline-block;
+	font-size:14px;
+}
+.reportDetail .rSubmenuW .rSubmenu:hover {
+	background-color:#666;
+}
+.reportDetail .rSubmenuW .rSubmenu.active {
+	background-color:#5B7300;
+}
+
+.condition a.showHide {
+	text-decoration:underline;
+	cursor:pointer;
+	color:#778E13;
+	position:absolute;
+	right:0px;
+	top:6px;
+}
+.condition .comList {
+	margin-right:70px;
+	*height:1%; /*fix ie7 dis*/
+}
+.condition .comList.hide {
+	overflow:hidden;
+	height:25px;
+}
+.condition .comList span.com {
+	display:inline-block;
+	background:#E1E5CA;
+	padding:2px 8px;
+	margin:5px 10px 0 0;
+}
+.reportDetail .resultW {
+	margin:30px 10px 0 10px;
+	clear:both;
+	width:100%;
+	*width:auto;
+}
+
+/**
+.reportDetail .resultW .divide {
+	width:47%;
+	display:inline-block;
+	margin-right:20px;
+	vertical-align:top;
+}
+.reportDetail .resultW .divide ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .divide li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW .divideC {
+	color:#555;
+}
+.reportDetail .resultW .divideC p {
+	padding-bottom:10px;
+}
+**/
+
+.reportDetail .resultW  ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW  li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW p {
+	padding-bottom:10px;
+	width:95%;
+	max-width:1000px;
+}
+.reportDetail .resultW p span {
+	color:#f00;
+}
+
+.reportDetail .resultW .title {
+	font-weight:bold;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .title .hint {
+	font-weight:normal;
+	color:#aaa;
+}
+
+
+/**
+.reportDetail .resultW .riskResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+}
+.reportDetail .resultW .riskResult ul {
+	list-style-type:none;
+}
+.reportDetail .resultW .riskResult li {
+	padding:10px;
+	clear:right;
+	color:#fff;
+	font-weight:bold;
+	margin:0;
+}
+.reportDetail .resultW .riskResult li.highest {
+	background-color:#910D38;
+}
+.reportDetail .resultW .riskResult li.high {
+	background-color:#EB1400;
+}
+.reportDetail .resultW .riskResult li.mid {
+	background-color:#F37000;
+}
+.reportDetail .resultW .riskResult li.low {
+	background-color:#F39800;
+}
+.reportDetail .resultW .riskResult li span.result {
+	float:right;
+	font-weight:bold;
+}
+**/
+
+
+.reportDetail .resultW .totalResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+	list-style-type:none;
+}
+.reportDetail .resultW .totalResult li {
+	padding:5px 10px;
+	clear:right;
+	color:#333;
+	margin:5px 0;
+	border:1px solid #999;
+}
+.reportDetail .resultW .totalResult li span.result {
+	float:right;
+	font-weight:bold;
+	color:#f00;
+}
+
+
+.reportDetail .resultW .otherResultW {
+	margin-left:350px;
+}
+.reportDetail .resultW .otherResultW .otherResult {
+	width:168px;
+	background-color:#eee;
+	padding:5px 10px;
+	float:left;
+	color:#595757;
+	margin:2px 2px 0 0;
+}
+.otherResultW .otherResult .field, 
+.otherResultW .otherResult .result {
+	display:block;
+}
+.otherResultW .otherResult .result {
+	color:#f00;
+}
+.reportDetail .resultW .description {
+	clear:both;
+	padding-top:10px;
+	color:#D1D1D1;
+}
+.reportDetail .resultW .chartW{
+	margin-top:10px;
+	width:100%;
+}
+.reportDetail .resultW .chartW .chart{
+	display:inline-block;
+	width:49%;
+	text-align:center;
+}
+.fixRelative { /*fix firefox relative problem*/
+	position:relative;
+	display:block;
+}
+
+.reportDetail .resultW .rList {
+	margin-top:10px;
+	width:95%;
+}
+.reportDetail .resultW th, .reportDetail .resultW td {
+	padding:5px;
+	white-space:nowrap;
+}
+.reportDetail .resultW th {
+	border:1px solid #ccc;
+	background:#666;
+	text-align:center;
+	font-weight:bold;
+	color:#fff;
+}
+.reportDetail .resultW tr.highest th {
+	background-color:#910D38;
+}
+.reportDetail .resultW tr.high th {
+	background-color:#EB1400;
+}
+.reportDetail .resultW td {
+	border:1px solid #999;
+	text-align:left;
+}
+
+.reportDetail .resultW td.path, .reportDetail .resultW td.fileName {
+	white-space:normal;
+}
+.reportDetail .resultW.conditionW {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .resultW.conditionW table.condition {
+	background-color:#F7F8F8;
+	width:98%;
+}
+.reportDetail .resultW.conditionW th,
+.reportDetail .resultW.conditionW td {
+	padding:5px 10px;
+	border:1px solid #999;
+}
+.reportDetail .resultW.conditionW th {
+	width:1px;
+	color:#666;
+	background-color:transparent;
+	text-align:left;
+	font-weight:normal;
+}
+.reportDetail .resultW.conditionW th span {
+	white-space:nowrap;
+}
+.reportDetail ..resultW.conditionW td {
+	color:#222;
+}
+.reportDetail .resultW p.hint {
+	margin-top:5px;
+	color:#666;
+}
+
+
+.reportDetail .resultW.assess table.aList {
+	width:95%;
+}
+.reportDetail .resultW.assess th,
+.reportDetail .resultW.assess td {
+	padding:10px;
+	border-bottom:1px solid #999;
+	border-color:#aaa;
+}
+.reportDetail .resultW.assess th {
+	width:1px;
+	color:#fff;
+	background-color:transparent;
+	text-align:left;
+	font-weight:bold;
+}
+.reportDetail .resultW.assess th.highest {
+	background-color:#910D38;
+}
+.reportDetail .resultW.assess th.high {
+	background-color:#EB1400;
+}
+.reportDetail .resultW.assess th.mid {
+	background-color:#F37000;
+}
+.reportDetail .resultW.assess th.low {
+	background-color:#F39800;
+}
+.reportDetail .resultW.assess th span {
+	white-space:nowrap;
+}
+.reportDetail .resultW.assess td {
+	color:#222;
+	white-space:normal;
+}
+.reportDetail .resultW .command {
+	border:1px solid #777;
+	padding:5px;
+	height:200px;
+	width:94%;
+	color:#777;
+}

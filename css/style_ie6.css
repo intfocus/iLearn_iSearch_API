@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+
+.logo {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/logo.png', sizingMethod='image');
+}
+.leftPart_TL {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/angle_TL.png', sizingMethod='image');
+}
+.leftPart_TR {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/angle_TR.png', sizingMethod='image');
+}
+.leftPart_BL {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/angle_BL.png', sizingMethod='image');
+}
+.leftPart_BR {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/angle_BR.png', sizingMethod='image');
+}
+.loginWrap .TL {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/loginWrap_TL.png', sizingMethod='image');
+}
+.loginWrap .TR {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/loginWrap_TR.png', sizingMethod='image');
+}
+.loginWrap .BL {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/loginWrap_BL.png', sizingMethod='image');
+}
+.loginWrap .BR {
+	background-image: none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/loginWrap_BR.png', sizingMethod='image');
+}

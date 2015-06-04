@@ -1,0 +1,306 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body {
+	height:100%;
+	text-align:center;
+	margin:0px;
+	background:#ecf5de;
+	font-size:12px;
+}
+.container {
+	width:100%;
+	height:100%;
+	margin:auto;
+}
+.container td {
+	text-align:center;
+}
+.main {
+	margin:auto;
+}
+.leftPart {
+	width:140px;
+	height:340px;
+	position:relative;
+	background:url(../images/leftPartBg.jpg) no-repeat left top;
+}
+.logo {
+	width:440px;
+	height:50px;
+	position:absolute;
+	top:-58px;
+	left:8px;
+   cursor:hand;
+	background:url(../images/logo_login.png) no-repeat left bottom;
+}
+.leftPart_TL, .leftPart_TR, .leftPart_BL, .leftPart_BR {
+	position:absolute;
+	width:15px;
+	height:15px;
+}
+.leftPart_TL {
+	left:0px;
+	top:0px;
+	background:url(../images/angle_TL.png) no-repeat left top;
+}
+.leftPart_TR {
+	right:0px;
+	top:0px;
+	background:url(../images/angle_TR.png) no-repeat left top;
+}
+.leftPart_BL {
+	left:0px;
+	bottom:0px;
+	background:url(../images/angle_BL.png) no-repeat left bottom;
+}
+.leftPart_BR {
+	right:0px;
+	bottom:0px;
+	background:url(../images/angle_BR.png) no-repeat left bottom;
+}
+.loginWrap {
+	margin-left:5px;
+}
+.loginWrap td {
+	border:0;
+}
+.loginWrap .TL {
+	width:21px;
+	height:19px;
+	background:url(../images/loginWrap_TL.png) left top no-repeat;
+	vertical-align:top;
+}
+.loginWrap .T {
+	background:url(../images/loginWrap_T.png) left top repeat-x;
+}
+.loginWrap .TR {
+	width:28px;
+	background:url(../images/loginWrap_TR.png) left top no-repeat;
+	vertical-align:top;
+}
+.loginWrap .L {
+	background:url(../images/loginWrap_L.png) left top repeat-y;
+}
+.loginWrap .M {
+	background:url(../images/loginWrap_M.png) left top;
+	vertical-align:middle;
+	text-align:left;
+	background:#fff;
+	height:302px;
+	width:430px;
+}
+.loginWrap .R {
+	background:url(../images/loginWrap_R.png) left top repeat-y;
+}
+.loginWrap .BL {
+	height:19px;
+	background:url(../images/loginWrap_BL.png) left top no-repeat;
+}
+.loginWrap .B {
+	background:url(../images/loginWrap_B.png) left top repeat-x;
+	vertical-align:top;
+	text-align:center;
+}
+.loginWrap .BR {
+	background:url(../images/loginWrap_BR.png) left top no-repeat;
+}
+.tabsWrap {
+	position:absolute;
+	top:-38px;
+	right:15px;
+	width:300px;
+}
+.downArrow {
+	position:absolute;
+	left:43%;
+	bottom:-10px;
+	border:0;
+}
+a.tabBtn {
+	background: transparent url('../images/tab_R.gif') no-repeat scroll top right; 
+	color:#fff;
+	float:right;
+	height:29px;
+	margin:0 0 0 5px; 
+	padding-right: 28px;
+	text-decoration: none;
+	font-weight:bold;
+	position:relative;
+	white-space:nowrap;
+	display:block;
+	position:relative;
+}
+a.tabBtn .tabBtn_R {
+    background: transparent url('../images/tab_L.gif') no-repeat; 
+	display: block; 
+	line-height: 15px; 
+	padding: 7px 0 7px 30px;  
+	}
+a.tabBtn:hover {
+	background: transparent url('../images/tab_R.gif') right 29px;
+	}
+a.tabBtn:hover .tabBtn_R {
+	background: transparent url('../images/tab_L.gif') left 29px;
+	}
+a.tabActive, a.tabActive:hover {
+	background: transparent url('../images/tabAct_R.gif') no-repeat scroll top right; 
+}
+a.tabActive .tabBtn_R, a.tabActive:hover .tabBtn_R {
+    background: transparent url('../images/tabAct_L.gif') no-repeat; 
+}
+.loginContentWrap {
+	color:#666;
+}
+.loginContentWrap td {
+	vertical-align:top;
+	text-align:left;
+	padding:0 10px;
+}
+.loginContentWrap td a {
+	color:#00A650;
+	text-decoration:underline;
+	cursor:pointer;
+}
+.loginContentWrap td a:hover {
+	color:#28C66F;
+}
+.loginContentWrap input, .loginContentWrap select {
+	width:245px;
+	font-size:14px;
+	color:#EA5514;
+}
+.loginContentWrap input {
+	border-top:1px solid #666;
+	border-left:1px solid #666;
+	border-right:1px solid #ccc;	
+	border-bottom:1px solid #ccc;
+	height:20px;
+}
+.loginContentWrap select {
+	height:23px;
+}
+.loginContentWrap .captchaInput {
+	width:80px;
+}
+.listContent {
+	margin:15px 0;
+}
+.listContent2 {
+	margin:5px 0 15px 0;
+}
+.captcha {
+	border:1px inset #ccc;
+	cursor:pointer;
+	vertical-align:top;
+	margin-top:2px;
+}
+.loginContentWrap .checkbox {
+	width:auto;
+	margin-right:5px;
+	vertical-align:middle;
+	border:0px;
+}
+.mLeft10 {
+	margin-left:10px;
+}
+a.btn_submit_new {
+	height:29px;
+	display:block;
+	border:1px solid;
+	border-color:#ccc #999 #999 #ccc;
+	text-decoration:none;
+	background:#eee;
+	float:left;
+	padding:0;
+	margin:0;
+}
+a.btn_submit_new input {
+	background:url(../images/submit_new.gif) repeat-x;
+	height:29px;
+	cursor:pointer;
+	color:black;
+	font-weight:bold;
+	margin:0;
+	padding: 1px 20px;
+	outline:0;
+	vertical-align:top;
+	border:0;
+	width:auto;
+	overflow:visible;
+}
+a.btn_submit_new:hover input {
+	background-position:58px;
+}
+.keyboardBtn {
+	background:url(../images/keyboardBtn.gif) top left no-repeat;
+	width:34px;
+	height:24px;
+	display:inline-block;
+	*display:inline ; 
+	zoom:1;
+	vertical-align:middle;
+	margin-top:16px;
+}
+.keyboardBtn:hover {
+	background:url(../images/keyboardBtn_over.gif) top left no-repeat;
+}
+
+.miniKeyboard {
+	position:absolute;
+	top:42px;
+	left:0px;
+	z-index:2;
+}
+.relative {
+	position:relative;
+}
+.hide {
+	display:none;
+}
+/*20120316 Billy*/
+.msg {
+	color:#F00;
+	font-weight:bold;
+	position:absolute;
+	width:270px;
+	height:65px;
+	left:90px;
+	top:0px;
+	text-decoration:none;
+}
+.msg_adm {
+	color:#F00;
+	font-weight:bold;
+	position:absolute;
+	width:270px;
+	height:65px;
+	left:150px;
+	top:0px;
+	text-decoration:none;
+}
+.copyrightWrap {
+	width:400px;
+	margin:auto;
+	position:relative;
+}
+.copyright {
+	position:absolute;
+	left:0px; 
+	top:30px;
+}
+.certified {
+	width:532px;
+	text-align:left;
+}
+.logout {
+	text-align:left;
+}
+a.link {
+	color:#F60;
+	text-decoration:underline;
+}
+a.link:hover {
+	color:#F30;
+	text-decoration:underline;
+}

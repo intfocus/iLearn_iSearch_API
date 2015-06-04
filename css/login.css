@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */
+
+.loginW {
+	width: 350px;
+	margin: 10% auto 0 auto;
+}
+.welcomeNote {
+	background:#339933;
+	border:1px solid #339933;
+	padding:10px;
+	font-weight:bold;
+	color:#FF6;
+}
+.inputArea {
+	border:1px solid #339933;
+	padding:10px;
+}
+.inputArea span {
+	color:#666;
+}
+input.userID, input.password {
+	width:97%;
+	background-color:#F9F9F9;
+	border:1px solid #888;
+	color:#333;
+	font-size:14px;
+	line-height:22px;
+	height:22px;
+	margin-top:5px;
+	color:#333;
+	padding:0 5px;
+}
+.inputArea div {
+	padding-bottom:10px;
+}
+.tools {
+	background:#444;
+	padding:5px 10px;
+}
+.remAcc {
+	margin-top:10px;
+	display:block;
+	color:#666;
+}
+.remAcc input {
+	vertical-align:middle;
+}
+.declaration {
+	width:600px;
+	margin:70px auto;
+	color:#666;
+	text-align:center;
+}
