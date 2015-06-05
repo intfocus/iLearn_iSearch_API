@@ -99,7 +99,7 @@
          mysqli_close($link);
       }
       sleep(DELAY_SEC);
-      echo json_encode(array("status"=> 0, "count"=>$newcount, "ggdata"=>[], "hddata"=>[], "result"=>"公司公告获取失败！")); 
+      echo json_encode(array("status"=> 0, "count"=>$newcount, "ggdata"=>$datagg, "hddata"=>$datahd, "result"=>"公司公告获取失败！")); 
       return;
    }
    
@@ -123,7 +123,7 @@
          mysqli_close($link);
       }
       sleep(DELAY_SEC);
-      echo json_encode(array("status"=> 0, "count"=>$newcount, "ggdata"=>[], "hddata"=>[], "result"=>"公司活动获取失败！")); 
+      echo json_encode(array("status"=> 0, "count"=>$newcount, "ggdata"=>$datagg, "hddata"=>$datahd, "result"=>"公司活动获取失败！")); 
       return;
    }
    mysqli_close($link);

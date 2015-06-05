@@ -105,35 +105,6 @@ function modifySearchNews(NewId)
    str = "cmd=read&NewId=" + NewId;
    url_str = "New/News_modify.php?";
    window.open(url_str + str);
-
-   //alert(str);
-   // $.ajax
-   // ({
-      // beforeSend: function()
-      // {
-         // //alert(str);
-      // },
-      // type: "GET",
-      // url: url_str + str,
-      // cache: false,
-      // success: function(res)
-      // {
-         // //alert("Data Saved: " + res);
-         // if (res.match(/^-\d+$/))  //failed
-         // {
-            // alert(MSG_OPEN_CONTENT_ERROR);
-         // }
-         // else  //success
-         // {
-            // document.getElementById("searchNewsContent").innerHTML = res;		
-            // $('.blockUI').show();
-         // }
-      // },
-      // error: function(xhr)
-      // {
-         // alert("ajax error: " + xhr.status + " " + xhr.statusText);
-      // }
-   // });
 }
 
 function clickSearchNewsPage(obj, n)  //搜尋換頁
@@ -158,103 +129,12 @@ function clickSearchNewsPage(obj, n)  //搜尋換頁
    document.getElementById(str).style.display = "block";
 }
 
-//***Step12 修改页面点击保存按钮出发Ajax动作
-// function modifyNewsContent(NewId)
-// {
-   // NewTitle = document.getElementsByName("NewTitleModify")[0].value.trim();
-   // NewMsg = document.getElementsByName("NewMsgModify")[0].value.trim();
-   // OccurTime = document.getElementsByName("OccurTimeModify")[0].value.trim();
-//    
-   // if (NewTitle.length == 0 || NewMsg.length == 0)
-   // {
-      // alert("公告主题及公告内容不可为空白");
-      // return;
-   // }
-//    
-   // if (OccurTime.length > 0)
-   // {
-      // if (OccurTime.length != 10)
-      // {
-         // alert("日期格式必须为 yyyy-mm-dd");
-         // return;
-      // }
-      // var reg=/2[0-9]{3}-(01|02|03|04|05|06|07|08|09|10|11|12)-(([0-2][1-9])|([1-3][0-1]))/;
-      // if (!reg.exec(OccurTime))
-      // {
-         // alert("日期格式必须为 yyyy-mm-dd " + OccurTime);
-         // return;
-      // }
-   // }
-//    
-   // str = "cmd=write&NewId=" + NewId + "&NewTitle=" + encodeURIComponent(NewTitle) + 
-         // "&NewMsg=" + encodeURIComponent(NewMsg) + "&OccurTime=" + encodeURIComponent(OccurTime);
-   // url_str = "News_modify.php?";
-// 
-   // //alert(str);
-   // $.ajax
-   // ({
-      // beforeSend: function()
-      // {
-         // //alert(str);
-      // },
-      // type: "GET",
-      // url: url_str + str,
-      // cache: false,
-      // success: function(res)
-      // {
-         // //alert("Data Saved: " + res);
-         // if (res.match(/^-\d+$/))  //failed
-         // {
-            // alert(MSG_OPEN_CONTENT_ERROR);
-         // }
-         // else  //success
-         // {
-            // hideContent();
-            // document.getElementsByName("searchNewsButton")[0].click();
-         // }
-      // },
-      // error: function(xhr)
-      // {
-         // alert("ajax error: " + xhr.status + " " + xhr.statusText);
-      // }
-   // });
-// }
-
 //***Step13 新增页面点击保存按钮出发Ajax动作
 function newSearchNewsContentFunc()
 { 
    str = "cmd=read&NewId=0";
    url_str = "New/News_modify.php?";
    window.open(url_str + str);
-
-   //alert(str);
-   // $.ajax
-   // ({
-      // beforeSend: function()
-      // {
-         // //alert(str);
-      // },
-      // type: "GET",
-      // url: url_str + str,
-      // cache: false,
-      // success: function(res)
-      // {
-         // //alert("Data Saved: " + res);
-         // if (res.match(/^-\d+$/))  //failed
-         // {
-            // alert(MSG_OPEN_CONTENT_ERROR);
-         // }
-         // else  //success
-         // {
-            // document.getElementById("searchNewsContent").innerHTML = res;		
-            // $('.blockUI').show();
-         // }
-      // },
-      // error: function(xhr)
-      // {
-         // alert("ajax error: " + xhr.status + " " + xhr.statusText);
-      // }
-   // });
 }
 
 //***Eric 是否可以 删除

@@ -63,17 +63,30 @@
    }
    
    // 取得这个 user_id 相对应的 function_name with function_type=0, 放入一个 Array
-   $str_query1 = "Select F.FunctionName as func_name from privileges P, functions F where P.UserId=$user_id and P.FunctionId = F.FunctionId";
+   $str_query1 = "Select F.FunctionName as func_name, 
+      F.Icon as icon, F.CodePath as codepath, F.Rank as rank 
+      from privileges P, functions F 
+      where P.UserId=$user_id and P.FunctionId = F.FunctionId
+      order by F.Rank";
    $func_array = Array();
+   class Stufun{
+      public $functionname;
+      public $icon;
+      public $codepath;
+   }
    $first_func_name = "";
    if ($result = mysqli_query($link, $str_query1))
    {
       while ($row = mysqli_fetch_assoc($result))
       {
+         $sf = new Stufun();
          $func_name = $row["func_name"];
+         $sf->functionname = $func_name;
+         $sf->icon = $row["icon"];
+         $sf->codepath = $row["codepath"];
          if ($first_func_name == "")
             $first_func_name = $func_name;
-         Array_Push($func_array,$func_name);
+         Array_Push($func_array,$sf);
       }
    }
 ?>
@@ -148,118 +161,141 @@ function loaded()
 	     <!-- ***Step 1 xiougai -->
         <!-- 根据 $func_array 决定哪些出现, 哪些不出现, 同时决定第一页($first_func_name) -->
 <?php
-   if (in_array("公告管理",$func_array))
-   {
-      if ($first_func_name == "公告管理")
-         echo "<li class='active'><span class='tabIcon news'></span><span>公告管理</span></li>";
-      else
-         echo "<li><span class='tabIcon news'></span><span>公告管理</span></li>";
+   for($i=0; $i<count($func_array); $i++){
+      $func = $func_array[$i];
+      if($i == 0){
+         echo "<li class='active'><span class='tabIcon $func->icon'></span><span>$func->functionname</span></li>";
+      }
+      else{
+         echo "<li><span class='tabIcon $func->icon'></span><span>$func->functionname</span></li>";
+      }
+      
    }
-   if (in_array("人员管理",$func_array))
-   {
-      if ($first_func_name == "人员管理")
-         echo "<li class='active'><span class='tabIcon userMgmt'></span><span>人员管理</span></li>";
-      else
-         echo "<li><span class='tabIcon userMgmt'></span><span>人员管理</span></li>";
-   }
-   if (in_array("部门管理",$func_array))
-   {
-      if ($first_func_name == "部门管理")
-         echo "<li class='active'><span class='tabIcon depts'></span><span>部门管理</span></li>";
-      else
-         echo "<li><span class='tabIcon depts'></span><span>部门管理</span></li>";
-   }
-   if (in_array("分类管理",$func_array))
-   {
-      if ($first_func_name == "分类管理")
-         echo "<li class='active'><span class='tabIcon categories'></span><span>分类管理</span></li>";
-      else
-         echo "<li><span class='tabIcon categories'></span><span>分类管理</span></li>";
-   }
-   if (in_array("文档管理",$func_array))
-   {
-      if ($first_func_name == "文档管理")
-         echo "<li class='active'><span class='tabIcon files'></span><span>文档管理</span></li>";
-      else
-         echo "<li><span class='tabIcon files'></span><span>文档管理</span></li>";
-   }
-   if (in_array("后台权限管理",$func_array))
-   {
-      if ($first_func_name == "后台权限管理")
-         echo "<li class='active'><span class='tabIcon setting'></span><span>后台权限管理</span></li>";
-      else
-         echo "<li><span class='tabIcon setting'></span><span>后台权限管理</span></li>";
-   }
+   // if (in_array("公告管理",$func_array))
+   // {
+      // if ($first_func_name == "公告管理")
+         // echo "<li class='active'><span class='tabIcon news'></span><span>公告管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon news'></span><span>公告管理</span></li>";
+   // }
+   // if (in_array("人员管理",$func_array))
+   // {
+      // if ($first_func_name == "人员管理")
+         // echo "<li class='active'><span class='tabIcon userMgmt'></span><span>人员管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon userMgmt'></span><span>人员管理</span></li>";
+   // }
+   // if (in_array("部门管理",$func_array))
+   // {
+      // if ($first_func_name == "部门管理")
+         // echo "<li class='active'><span class='tabIcon depts'></span><span>部门管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon depts'></span><span>部门管理</span></li>";
+   // }
+   // if (in_array("分类管理",$func_array))
+   // {
+      // if ($first_func_name == "分类管理")
+         // echo "<li class='active'><span class='tabIcon categories'></span><span>分类管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon categories'></span><span>分类管理</span></li>";
+   // }
+   // if (in_array("文档管理",$func_array))
+   // {
+      // if ($first_func_name == "文档管理")
+         // echo "<li class='active'><span class='tabIcon files'></span><span>文档管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon files'></span><span>文档管理</span></li>";
+   // }
+   // if (in_array("后台权限管理",$func_array))
+   // {
+      // if ($first_func_name == "后台权限管理")
+         // echo "<li class='active'><span class='tabIcon setting'></span><span>后台权限管理</span></li>";
+      // else
+         // echo "<li><span class='tabIcon setting'></span><span>后台权限管理</span></li>";
+   // }
 ?>         
       </ul>
       <div class="mainContent">
 <?php
-   if (in_array("公告管理",$func_array))
-   {
-      echo "<div class='container searchNewsC' style='display:";
-      if ($first_func_name == "公告管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("New\News_list.php")) include("New\News_list.php");
-      echo "</div>";
+   for($i=0; $i<count($func_array); $i++){
+      $func = $func_array[$i];
+      if($i==0){
+         echo "<div class='container searchNewsC' style='display:block;>";
+         include($func->codepath);
+         echo "</div>";
+      }
+      else{
+         echo "<div class='container searchNewsC' style='display:none;>";
+         include($func->codepath);
+         echo "</div>";
+      }
    }
-   if (in_array("人员管理",$func_array))
-   {
-      echo "<div class='container searchUserC' style='display:";
-      if ($first_func_name == "人员管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("User\Users_list.php")) include("User\Users_list.php");
-      echo "</div>";
-   }
-   if (in_array("部门管理",$func_array))
-   {
-      echo "<div class='container searchDeptC' style='display:";
-      if ($first_func_name == "部门管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("Dept\Depts_list.php")) include("Dept\Depts_list.php");
-      echo "</div>";
-   }
-   if (in_array("分类管理",$func_array))
-   {
-      echo "<div class='container searchCategoryC' style='display:";
-      if ($first_func_name == "分类管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("Category\Categories_list.php")) include("Category\Categories_list.php");
-      echo "</div>";
-   }
-   if (in_array("文档管理",$func_array))
-   {
-      echo "<div class='container searchCategoryC' style='display:";
-      if ($first_func_name == "文档管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("File\Files_list.php")) include("File\Files_list.php");
-      echo "</div>";
-   }
-   if (in_array("后台权限管理",$func_array))
-   {
-      echo "<div class='container superUserC' style='display:";
-      if ($first_func_name == "后台权限管理")
-         echo "block;'";
-      else
-         echo "none;'";
-      echo ">";
-      if (file_exists("Admin\Privileges_list.php")) include("Admin\Privileges_list.php");
-      echo "</div>";
-   }
+   // if (in_array("公告管理",$func_array))
+   // {
+      // echo "<div class='container searchNewsC' style='display:";
+      // if ($first_func_name == "公告管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("New\News_list.php")) include("New\News_list.php");
+      // echo "</div>";
+   // }
+   // if (in_array("人员管理",$func_array))
+   // {
+      // echo "<div class='container searchUserC' style='display:";
+      // if ($first_func_name == "人员管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("User\Users_list.php")) include("User\Users_list.php");
+      // echo "</div>";
+   // }
+   // if (in_array("部门管理",$func_array))
+   // {
+      // echo "<div class='container searchDeptC' style='display:";
+      // if ($first_func_name == "部门管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("Dept\Depts_list.php")) include("Dept\Depts_list.php");
+      // echo "</div>";
+   // }
+   // if (in_array("分类管理",$func_array))
+   // {
+      // echo "<div class='container searchCategoryC' style='display:";
+      // if ($first_func_name == "分类管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("Category\Categories_list.php")) include("Category\Categories_list.php");
+      // echo "</div>";
+   // }
+   // if (in_array("文档管理",$func_array))
+   // {
+      // echo "<div class='container searchCategoryC' style='display:";
+      // if ($first_func_name == "文档管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("File\Files_list.php")) include("File\Files_list.php");
+      // echo "</div>";
+   // }
+   // if (in_array("后台权限管理",$func_array))
+   // {
+      // echo "<div class='container superUserC' style='display:";
+      // if ($first_func_name == "后台权限管理")
+         // echo "block;'";
+      // else
+         // echo "none;'";
+      // echo ">";
+      // if (file_exists("Admin\Privileges_list.php")) include("Admin\Privileges_list.php");
+      // echo "</div>";
+   // }
 ?> 
   
    </div>
