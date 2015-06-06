@@ -117,6 +117,27 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('总公司','HQ',0,1,'ALL','ALL',1,now(),1,now());
-
 insert categories(CategoryName,ParentId,DeptList,FilePath,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('总分类',0,'All','d:\\tmp\\file\\',1,'All','All',1,now(),1,now());
+
+
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('卢安邦','PO',0,1,'ALL','ALL',1,now(),1,now());
+
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('王卫','VCO',1,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('MSFE','MSFE',1,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('TRAINING','TRAINING',1,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('OTHERS','OTHERS',1,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('MED','MED',1,1,'ALL','ALL',1,now(),1,now());
+
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('曲耀斌','KA Head',2,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('CBU Head','CBU Head',2,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('GBU Head','GBU Head',2,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('GBU NSD','GBU NSD',2,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('张晓东','OBU Head',2,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('张伟','RBU Head',2,1,'ALL','ALL',1,now(),1,now());
+
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('KA','KA',7,1,'ALL','ALL',1,now(),1,now());
+
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('CBU-MKT','CBU-MKT',8,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('OBU-MKT','OBU-MKT',8,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('左明星','CBU NSD',8,1,'ALL','ALL',1,now(),1,now());
+insert depts(DeptName,DeptCode,ParentId,Status,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime) values('吴文凯','OBU-NSD',8,1,'ALL','ALL',1,now(),1,now());

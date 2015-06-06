@@ -1,6 +1,6 @@
 <?php
    if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
-      if(isset($_GET["did"])){
+      if(isset($_GET["uid"])){
          $uid = $_GET["uid"];
       }
       else {
@@ -12,7 +12,7 @@
       echo json_encode(array("status"=>-1, "result"=>"用户不存在！")); //-1没有传任何参数
       return;
    }
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    
@@ -71,7 +71,7 @@
       public $edittime;
       public $occurtime;
    }
-   $str_user = "select UserName, Email, DeptId, EmployeeId from wutian.users where UserId = " . $uid;
+   $str_user = "select UserName, Email, DeptId, EmployeeId from users where UserId = " . $uid;
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)

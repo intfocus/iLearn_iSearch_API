@@ -57,7 +57,7 @@ class BuildTreeArray
 ?>
 <?php
 
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "./DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    

@@ -1,6 +1,6 @@
 <?php
 
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    
@@ -296,7 +296,7 @@ function modifyUsersContent()
       <tr>
          <td>
 	<div class="easyui-panel" style="padding:5px">
-		<ul id="tt" class="easyui-tree" data-options="url:'/phptest/Dept_tree_load.php',method:'get',animate:true"></ul>
+		<ul id="tt" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true"></ul>
 	</div>
 	<script type="text/javascript">
       function expandTo(){

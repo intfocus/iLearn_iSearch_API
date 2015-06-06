@@ -1,10 +1,5 @@
 <?php
-/////////////////////////
-//News_modify.php
-//2015/05/18", By Phantom+Eric
-//////////////////////////
-
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    

@@ -20,7 +20,7 @@
       echo json_encode(array("status"=>-1, "result"=>"公司公告和公司活动不存在！")); //-1没有传任何参数
       return;
    }
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    

@@ -1,31 +1,5 @@
 <?php
-////////////////////////////////////////
-//searchIdentityFile.php
-//
-//1.get information from client
-//2.get default extreme setting from DB
-//3.search files
-//4.return string of the refreshed Pages
-// 
-// # 001 modified by Odie 2013/04/26
-//       To support new feature: mutli-level admin
-//       1. Add $_SESSION["loginLevel"] and $_SESSION["loginName"]
-//          admin => 1
-//          user  => 2
-//       2. If user, restrict the department he can see
-//
-// # 002 modified by Odie 2013/07/03
-//       Add the choice of showing encrypted file list in search result
-//       => write a parameter to iFound file for search.pl to process
-//
-// # 003 modified by Odie 2013/09/10
-//       1. Modified type "0,1,2,3,4,5,6" to "0,1,2,3,4,5,6,7" due to 8th type
-//       2. Write the name of 8th type to iFound file
-// # 004 modified by Odie 2013/09/25
-//       1. replace SPACE with "&nbsp;" so it can show the corret numbers of SPACEs
-////////////////////////////////////////
-
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    
@@ -51,7 +25,7 @@
    define("ILLEGAL_CHAR", "'-;<>");                          //illegal char
    define("STR_LENGTH", 50);
    define("SEARCH_SIZE", 1000);                             //上限1000笔数
-   define("PAGE_SIZE", 2);                                //设置列表显示笔数
+   define("PAGE_SIZE", 100);                                //设置列表显示笔数
 
    //return value
    define("SUCCESS", 0);

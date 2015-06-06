@@ -1,6 +1,6 @@
 <?php
 
-   define("FILE_NAME", "d:/phptest/DB.conf");
+   define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
    
@@ -123,7 +123,7 @@
       public $createdTime;
    }
    
-   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from wutian.functions where FunctionType=1";
+   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1";
    if($rs = mysqli_query($link, $str_functionsyz)){
       while($row = mysqli_fetch_assoc($rs)){
          $syz = new StuFunction();
@@ -134,7 +134,7 @@
       }
    }
    
-   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from wutian.functions where FunctionType=2";
+   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2";
    if($rs = mysqli_query($link, $str_functioncpmc)){
       while($row = mysqli_fetch_assoc($rs)){
          $cpmc = new StuFunction();
