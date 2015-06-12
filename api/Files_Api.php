@@ -62,17 +62,17 @@
    
    $datafile = array();
    class Stucategory{
-      public $fileid;
-      public $filename;
-      public $filetitle;
-      public $filedesc;
-      public $filepath;
-      public $pageno;
-      public $filetype;
-      public $status;
-      public $edittime;
-      public $categoryid;
-      public $zipsize;
+      public $Id;
+      public $Name;
+      public $Title;
+      public $Desc;
+      public $Path;
+      public $PageNo;
+      public $Type;
+      public $Status;
+      public $EditTime;
+      public $CategoryId;
+      public $ZipSize;
    }
    
    //----- query -----
@@ -82,17 +82,17 @@
       $filecount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sc = new Stucategory();
-         $sc->fileid = $row['FileId'];
-         $sc->filename = $row['FileName'];
-         $sc->filetitle = $row['FileTitle'];
-         $sc->filedesc = $row['FileDesc'];
-         $sc->filepath = $row['FilePath'];
-         $sc->pageno = $row['PageNo'];
-         $sc->filetype = $row['FileType'];
-         $sc->status = $row['Status'];
-         $sc->edittime = $row['EditTime'];
-         $sc->categoryid = $row['CategoryId'];
-         $sc->zipsize = $row['ZipSize'];
+         $sc->Id = $row['FileId'];
+         $sc->Name = $row['FileName'];
+         $sc->Title = $row['FileTitle'];
+         $sc->Desc = $row['FileDesc'];
+         $sc->Path = $row['FilePath'];
+         $sc->PageNo = $row['PageNo'];
+         $sc->Type = $row['FileType'];
+         $sc->Status = $row['Status'];
+         $sc->EditTime = date("Y/m/d H:i:s",strtotime($row['EditTime']));
+         $sc->CategoryId = $row['CategoryId'];
+         $sc->ZipSize = $row['ZipSize'];
          array_push($datafile,$sc);
       }
       // mysqli_close($link);
@@ -113,6 +113,6 @@
    }
    
    mysqli_close($link);
-   echo json_encode(array("status"=> 1, "count"=>$filecount, "data"=>$datafile, "result"=>"分类夹下文件获取成功！"));      
+   echo json_encode(array("status"=> 1, "count"=>$filecount, "data"=>$datafile, "result"=>""));      
    return;
 ?>

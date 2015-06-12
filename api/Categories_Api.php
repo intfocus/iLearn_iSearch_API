@@ -70,28 +70,30 @@
    
    $datacategory = array();
    class Stucategory{
-      public $categoryname;
-      public $parentid;
-      public $deptlist;
-      public $filepath;
-      public $palist;
-      public $productlist;
-      public $edittime;
+      public $Id;
+      public $Name;
+      public $ParentId;
+      public $DeptList;
+      public $FilePath;
+      public $PaList;
+      public $ProductList;
+      public $EditTime;
    }
    
    //----- query -----
-   $str_category = "select CategoryName, ParentId, DeptList, FilePath, PAList, ProductList, EditTime from categories where ParentId = $parentid and DeptList like '%," . $deptid . ",%';";
+   $str_category = "select CategoryId, CategoryName, ParentId, DeptList, FilePath, PAList, ProductList, EditTime from categories where ParentId = $parentid and DeptList like '%," . $deptid . ",%';";
    if($rs = mysqli_query($link, $str_category)){
       $categorycount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sc = new Stucategory();
-         $sc->categoryname = $row['CategoryName'];
-         $sc->parentid = $row['ParentId'];
-         $sc->deptlist = $row['DeptList'];
-         $sc->filepath = $row['FilePath'];
-         $sc->palist = $row['PAList'];
-         $sc->productlist = $row['ProductList'];
-         $sc->edittime = $row['EditTime'];
+         $sc->Id = $row["CategoryId"];
+         $sc->Name = $row['CategoryName'];
+         $sc->ParentId = $row['ParentId'];
+         $sc->DeptList = $row['DeptList'];
+         $sc->FilePath = $row['FilePath'];
+         $sc->PaList = $row['PAList'];
+         $sc->ProductList = $row['ProductList'];
+         $sc->EditTime = date("Y/m/d H:i:s",strtotime($row['EditTime']));
          array_push($datacategory,$sc);
       }
       // mysqli_close($link);
@@ -112,6 +114,6 @@
    }
    
    mysqli_close($link);
-   echo json_encode(array("status"=> 1, "count"=>$categorycount, "data"=>$datacategory, "result"=>"分类获取成功！"));      
+   echo json_encode(array("status"=> 1, "count"=>$categorycount, "data"=>$datacategory, "result"=>""));      
    return;
 ?>

@@ -69,12 +69,12 @@
       if ($deptcount > 0)
       {
          $deptrow = mysqli_fetch_assoc($rs);
-         $DeptName = $deptrow["DeptName"];
-         $DeptCode = $deptrow["DeptCode"];
+         $Name = $deptrow["DeptName"];
+         $Code = $deptrow["DeptCode"];
          $ParentId = $deptrow["ParentId"];
          $PAList = $deptrow["PAList"];
          $ProductList = $deptrow["ProductList"];
-         $EditTime = $deptrow["EditTime"];
+         $EditTime = date("Y/m/d H:i:s",strtotime($deptrow["EditTime"]));
       }
       else {
          if($link){
@@ -91,13 +91,13 @@
    echo json_encode(array(
       "status"=> 1, 
       "count"=>$deptcount, 
-      "deptname"=>$DeptName, 
-      "deptcode"=>$DeptCode,
-      "parentid"=>$ParentId,
-      "palist"=>$PAList,
-      "productlist"=>$ProductList,
-      "edittime"=>$EditTime,
-      "result"=>"部门获取成功！"
+      "Name"=>$Name, 
+      "Code"=>$Code,
+      "ParentId"=>$ParentId,
+      "PaList"=>$PAList,
+      "ProductList"=>$ProductList,
+      "EditTime"=>$EditTime,
+      "result"=>""
    ));      
    return;
 ?>

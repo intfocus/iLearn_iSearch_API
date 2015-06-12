@@ -1,7 +1,7 @@
 <?php
    if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
-      if(isset($_GET["uid"])){
-         $uid = $_GET["uid"];
+      if(isset($_GET["eid"])){
+         $eid = $_GET["eid"];
       }
       else {
          echo json_encode(array("status"=>-2, "result"=>"用户不存在！")); //-2没有传部门ID
@@ -63,22 +63,15 @@
       return;
    }
    
-   $data1 = array();
-   $data2 = array();
-   class Stunews{
-      public $newtitle;
-      public $newmsg;
-      public $edittime;
-      public $occurtime;
-   }
-   $str_user = "select UserName, Email, DeptId, EmployeeId from users where UserId = " . $uid;
+   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where EmployeeId = '$eid'";
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)
       {
          $userrow = mysqli_fetch_assoc($result);
+         $id = $userrow["UserId"];
          $DeptId = $userrow["DeptId"];
-         $UserName = $userrow["UserName"];
+         $Name = $userrow["UserName"];
          $Email = $userrow["Email"];
          $EmployeeId = $userrow["EmployeeId"];
       }
@@ -93,6 +86,6 @@
       }
    }
    mysqli_close($link);
-   echo json_encode(array("status"=>1, "UserName"=>$UserName, "Email"=>$Email, "EmployeeId"=>$EmployeeId, "DeptId"=>$DeptId, "result"=>"用户获取成功！"));      
+   echo json_encode(array("status"=>1, "Id"=> $id, "Name"=>$Name, "Email"=>$Email, "EmployeeId"=>$EmployeeId, "DeptId"=>$DeptId, "result"=>""));      
    return;
 ?>

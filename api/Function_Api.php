@@ -63,10 +63,10 @@
    
    $dataf = array();
    class Stufunction{
-      public $functionid;
-      public $functionname;
-      public $functiontype;
-      public $createdtime;
+      public $Id;
+      public $Name;
+      public $Type;
+      public $CreatedTime;
    }
    
    //----- query -----
@@ -77,10 +77,10 @@
       while($row = mysqli_fetch_assoc($rs))
       {
          $sf = new Stufunction();
-         $sf->functionid = $row["FunctionId"];
-         $sf->functionname = $row["FunctionName"];
-         $sf->functiontype = $row["FunctionType"];
-         $sf->createdtime = $row["CreatedTime"];
+         $sf->Id = $row["FunctionId"];
+         $sf->Name = $row["FunctionName"];
+         $sf->Type = $row["FunctionType"];
+         $sf->CreatedTime = date("Y/m/d H:i:s",strtotime($row["CreatedTime"]));
          array_push($dataf, $sf);
       }
    }
@@ -99,7 +99,7 @@
       "status"=> 1, 
       "count"=>$functioncount, 
       "data"=>$dataf,
-      "result"=>"功能不存在！"
+      "result"=>""
    ));      
    return;
 ?>

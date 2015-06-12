@@ -57,7 +57,8 @@
       return;
    }
    
-   // 取得这个 user_id 相对应的 function_name with function_type=0, 放入一个 Array
+   //eric-edit -begin
+   // 取得这个 user_id 相对应的 function_name, icon, codepath, rank with function_type=0, 放入一个 Array
    $str_query1 = "Select F.FunctionName as func_name, 
       F.Icon as icon, F.CodePath as codepath, F.Rank as rank 
       from privileges P, functions F 
@@ -84,6 +85,7 @@
          Array_Push($func_array,$sf);
       }
    }
+   //eric-edit -end
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -154,6 +156,7 @@ function loaded()
       <ul class="mainTabW">
 	     <!-- ***Step 1 xiougai -->
         <!-- 根据 $func_array 决定哪些出现, 哪些不出现, 同时决定第一页($first_func_name) -->
+        <!--eric-edit -begin-->
 <?php
    for($i=0; $i<count($func_array); $i++){
       $func = $func_array[$i];
@@ -165,9 +168,11 @@ function loaded()
       }
       
    }
-?>         
+?>
+         <!--eric-edit -end-->
       </ul>
       <div class="mainContent">
+         <!--eric-edit -begin-->
 <?php
    for($i=0; $i<count($func_array); $i++){
       $func = $func_array[$i];
@@ -184,7 +189,7 @@ function loaded()
       }
    }
 ?> 
-  
+      <!--eric-edit -end-->
    </div>
 </div>
 </body>

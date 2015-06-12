@@ -71,10 +71,10 @@
    $datagg = array();
    $datahd = array();
    class Stunews{
-      public $newtitle;
-      public $newmsg;
-      public $edittime;
-      public $occurtime;
+      public $Title;
+      public $Msg;
+      public $EditTime;
+      public $OccurTime;
    }
    
    //----- query -----
@@ -86,10 +86,10 @@
       $newcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sn = new Stunews();
-         $sn->newtitle = $row['NewTitle'];
-         $sn->newmsg = $row['NewMsg'];
-         $sn->edittime = $row['EditTime'];
-         $sn->occurtime = $row['OccurTime'];
+         $sn->Title = $row['NewTitle'];
+         $sn->Msg = $row['NewMsg'];
+         $sn->EditTime = date("Y/m/d H:i:s",strtotime($row['EditTime']));
+         $sn->OccurTime = $row['OccurTime'];
          array_push($datagg,$sn);
       }
    }
@@ -110,10 +110,10 @@
       $newcount = $newcount + mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sn = new Stunews();
-         $sn->newtitle = $row['NewTitle'];
-         $sn->newmsg = $row['NewMsg'];
-         $sn->edittime = $row['EditTime'];
-         $sn->occurtime = $row['OccurTime'];
+         $sn->Title = $row['NewTitle'];
+         $sn->Msg = $row['NewMsg'];
+         $sn->EditTime = date("Y/m/d H:i:s",strtotime($row['EditTime']));
+         $sn->OccurTime = date("Y/m/d H:i:s",strtotime($row['OccurTime']));
          array_push($datahd,$sn);
       }
    }
@@ -127,6 +127,6 @@
       return;
    }
    mysqli_close($link);
-   echo json_encode(array("status"=> 1, "count"=>$newcount, "ggdata"=>$datagg, "hddata"=>$datahd, "result"=>"公司活动和公司公告获取成功！"));      
+   echo json_encode(array("status"=> 1, "count"=>$newcount, "ggdata"=>$datagg, "hddata"=>$datahd, "result"=>""));      
    return;
 ?>
