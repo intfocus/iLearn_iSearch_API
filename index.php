@@ -14,9 +14,13 @@
       return;
    }
    // TODO: 从 Session 里面拿到 login_name + user_id
-   $login_name = "Phantom";
-   $user_id = 1;
+   session_start();
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
    $current_func_name = "iSearch";
+   session_write_close();
    
    define("DB_HOST", $db_host);
    define("ADMIN_ACCOUNT", $admin_account);

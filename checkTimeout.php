@@ -11,12 +11,12 @@
    define(TIMEOUT, -1);
    
    session_start();
-   if (!session_is_registered("GUID"))
-   {
-      echo TIMEOUT;
-      session_write_close();
-      exit();
-   }
+   // if (!session_is_registered("GUID"))
+   // {
+      // echo TIMEOUT;
+      // session_write_close();
+      // exit();
+   // }
    if ($_SESSION["GUID"] == "")
    {
       echo TIMEOUT;

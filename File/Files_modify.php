@@ -219,6 +219,29 @@
 <title>武田 - 部门页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
+function checkFileTypeModify() {
+   FileName = document.getElementsByName("FilePathModify")[0].value;
+   var pos1 = FileName.lastIndexOf('/');
+   var pos2 = FileName.lastIndexOf('\\');
+   var pos  = Math.max(pos1, pos2)
+   if(pos>=0)
+      FileName = FileName.substring(pos+1);
+   pos3 = FileName.lastIndexOf('.');
+   extension = FileName.substring(pos3+1);
+   var Obj = document.getElementsByName("FileTypeModify");
+   if(extension == "zip"){
+      Obj[3].checked = true;
+   }
+   extensions = "mp4mp3";
+   if(extensions.indexOf(extension)>-1){
+      Obj[2].checked = true;
+   }
+   
+   if(extension == "pdf" && !Obj[0].checked && !Obj[1].checked){
+      Obj[0].checked = true;
+   }
+}
+
 function lockFunction(obj, n)
 {
    if (g_defaultExtremeType[n] == 1)
@@ -255,7 +278,7 @@ function modifyFilesContent(FileId)
 	  FileName = document.getElementsByName("FilePathModify")[0].value;
 	  var pos1 = FileName.lastIndexOf('/');
 	  var pos2 = FileName.lastIndexOf('\\');
-      var pos  = Math.max(pos1, pos2)
+     var pos  = Math.max(pos1, pos2)
 	  if(pos>=0)
 		FileName = FileName.substring(pos+1);
       document.getElementsByName("FileName")[0].value = FileName;
@@ -402,6 +425,7 @@ function modifyFilesContent(FileId)
             <Input type=radio name=FileTypeModify value=1 <?php if ($FileType == 1) echo "checked";?>>ppt转pdf(横板)
             <Input type=radio name=FileTypeModify value=2 <?php if ($FileType == 2) echo "checked";?>>pdf(直版)
             <Input type=radio name=FileTypeModify value=3 <?php if ($FileType == 3) echo "checked";?>>视频
+            <Input type=radio name=FileTypeModify value=3 <?php if ($FileType == 4) echo "checked";?>>Zip
          </td>
       </tr>
 <?php
@@ -411,7 +435,7 @@ function modifyFilesContent(FileId)
       <tr>
          <th>选取上传文档：</th>
          <td>
-            <Input type=file accept=".pdf" size=50 name=FilePathModify>
+            <Input type=file accept="application/pdf,application/x-zip-compressed,audio/mp4,audio/mp3" size=50 name="FilePathModify" onchange="checkFileTypeModify();" />
          </td>
       </tr>
 <?php

@@ -230,6 +230,23 @@ function click_logout()  //log out
 function loaded()
 {
    $('#depttree').tree({cascadeCheck:$(this).is(':checked')})
+   $("#depttree").tree({
+       onCheck: function (node, checked) {
+           if (checked) {
+               var parentNode = $(this).tree('getParent', node.target);
+               if (parentNode != null) {
+                   $(this).tree('check', parentNode.target);
+               }
+           } else {
+               var childNode = $(this).tree('getChildren', node.target);
+               if (childNode.length > 0) {
+                   for (var i = 0; i < childNode.length; i++) {
+                       $(this).tree('uncheck', childNode[i].target);
+                   }
+               }
+           }
+       }
+   });
    window.setTimeout("expandToDept()", 1000);
 }
 

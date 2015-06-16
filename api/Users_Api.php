@@ -4,7 +4,7 @@
          $eid = $_GET["eid"];
       }
       else {
-         echo json_encode(array("status"=>-2, "result"=>"用户不存在！")); //-2没有传部门ID
+         echo json_encode(array("status"=>-2, "result"=>"用户不存在！")); //-2没有传员工编号ID
          return;
       }
    }

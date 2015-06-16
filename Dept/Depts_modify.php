@@ -174,7 +174,7 @@
             $DeptId = 0;
             $DeptName = "";
             $DeptCode = "";
-            $ParentId = 0;
+            $ParentId = 1;
             $PAList = "";
             $ProductList = "";
             $TitleStr = "部门新增";

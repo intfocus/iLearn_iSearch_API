@@ -186,7 +186,7 @@
             $CategoryName = "";
             $FilePath = "";
             $DeptList = "All";
-            $ParentId = 0;
+            $ParentId = 1;
             $PAList = "";
             $ProductList = "";
             $TitleStr = "分类新增";
@@ -281,7 +281,24 @@ function click_logout()  //log out
 
 function loaded()
 {
-   $('#depttree').tree({cascadeCheck:$(this).is(':checked')})
+   $('#depttree').tree({cascadeCheck:$(this).is(':checked')});
+   $("#depttree").tree({
+       onCheck: function (node, checked) {
+           if (checked) {
+               var parentNode = $(this).tree('getParent', node.target);
+               if (parentNode != null) {
+                   $(this).tree('check', parentNode.target);
+               }
+           } else {
+               var childNode = $(this).tree('getChildren', node.target);
+               if (childNode.length > 0) {
+                   for (var i = 0; i < childNode.length; i++) {
+                       $(this).tree('uncheck', childNode[i].target);
+                   }
+               }
+           }
+       }
+   });
    var palstr = "<?php echo $PAList; ?>";
    var palstr1 = palstr.substring(1,palstr.length-1);
    var palstr_array = palstr1.split(",,");
@@ -307,7 +324,7 @@ function loaded()
       {
          if(plcheck_array[n].value==plstr_array[m])
          {         
-            plcheck_array[m].checked=true;
+            plcheck_array[n].checked=true;
          }
       }
    }
