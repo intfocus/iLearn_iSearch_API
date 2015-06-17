@@ -14,7 +14,20 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
    
    //query          
    $link;
@@ -203,7 +216,7 @@
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       $ParentId = $_GET["ParentId"];
       $str_query1 = "Insert into Categories (CategoryName,FilePath,DeptList,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$CategoryName','$FilePath','$DeptList',$ParentId,'$PAList','$ProductList',1,now(),1,now(),1)" ;
+                  . " VALUES('$CategoryName','$FilePath','$DeptList',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
 		 $str_id = (string)mysqli_insert_id($link);
@@ -228,7 +241,7 @@
       $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Categories set CategoryName='$CategoryName', DeptList='$DeptList', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditTime=now() where CategoryId=$CategoryId";
+      $str_query1 = "Update Categories set CategoryName='$CategoryName', DeptList='$DeptList', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where CategoryId=$CategoryId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";

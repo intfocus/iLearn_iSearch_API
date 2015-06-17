@@ -68,20 +68,39 @@
    //SSO 
    //$password = '2Federate';
 
-   // $url = "https://login.salesforce.com/services/Soap/u/24.0";
+   //$url = "https://login.salesforce.com/services/Soap/u/24.0";
+   // $url = "https://webssodev.secureaccess.takeda.com/idp/attrsvc.ssaml2";
 //    
    // $body = "
-   // <sfdc:login xmlns:sfdc='urn:partner.soap.sforce.com'>
-     // <sfdc:username>$username</sfdc:username>
-     // <sfdc:password>$password</sfdc:password>
-   // </sfdc:login>";
-//    
-//    
-//    
-   // $result = HTTP::doSoap($url, '', $body, NULL, NULL, 'http://schemas.xmlsoap.org/soap/envelope/', 'text/xml');
-//    
-   // print_r($result);
-   // return;
+      // <samlp:AuthnRequest xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
+                          // ID='s248735275d5542177e9a4fd021410177660b9c8be'
+                          // Version='2.0'
+                          // IssueInstant='2015-05-26T08:36:03Z'
+                          // Destination='https://websso.secureaccess.takeda.com/idp/SSO.saml2'
+                          // ForceAuthn='false'
+                          // IsPassive='false'
+                          // ProtocolBinding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+                          // AssertionConsumerServiceURL='http://tsa-china.takeda.com.cn'
+                          // >
+          // <saml:Issuer xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>IntFocus_tsa-china</saml:Issuer>
+          // <samlp:NameIDPolicy xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
+                              // Format='urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'
+                              // AllowCreate='true'
+                              // />
+          // <samlp:RequestedAuthnContext xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
+                                       // Comparison='minimum'
+                                       // >
+              // <saml:AuthnContextClassRef xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
+          // </samlp:RequestedAuthnContext>
+      // </samlp:AuthnRequest>";
+      // // $body = "
+      // // <sfdc:login xmlns:sfdc='urn:partner.soap.sforce.com'>
+         // // <sfdc:username>$username</sfdc:username>
+         // // <sfdc:password>$password</sfdc:password>
+      // // </sfdc:login>";
+    // $result = HTTP::doSoap($url, '', $body, NULL, NULL, 'http://schemas.xmlsoap.org/soap/envelope/', 'text/xml');
+    // print_r($result);
+    // return;
    //$loginType = $_POST["loginType"]; //直接猜測 system admin or user, 不再用 loginType
    /* 
    if(($password = check($_POST["password"])) == SYMBOL_ERROR)

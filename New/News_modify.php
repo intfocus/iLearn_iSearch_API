@@ -13,7 +13,20 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
             
    $link;
    $db_host;
@@ -152,11 +165,11 @@
       $NewTitle = $_GET["NewTitle"];
       $NewMsg = $_GET["NewMsg"];
       $OccurTime = "'" . $_GET["OccurTime"] . "'";
-      $DeptId = $_GET["DeptId"];
+      $DeptList = $_GET["DeptList"];
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',1,now(),1,now(),1)" ;
+                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -177,7 +190,7 @@
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       //TODO EditUser=UserId
-      $str_query1 = "Update news set NewTitle='$NewTitle', NewMsg='$NewMsg', DeptList='$DeptList', OccurTime=$OccurTime, EditTime=now() where NewId=$NewId";
+      $str_query1 = "Update news set NewTitle='$NewTitle', NewMsg='$NewMsg', DeptList='$DeptList', OccurTime=$OccurTime, EditUser=$user_id, EditTime=now() where NewId=$NewId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -282,7 +295,7 @@ function modifyNewsContent(NewId)
          "&NewMsg=" + encodeURIComponent(NewMsg) + "&OccurTime=" + encodeURIComponent(OccurTime) + "&DeptList=" + encodeURIComponent(DeptList);
    url_str = "News_modify.php?";
 
-   //alert(str);
+   // alert(str);
    $.ajax
    ({
       beforeSend: function()

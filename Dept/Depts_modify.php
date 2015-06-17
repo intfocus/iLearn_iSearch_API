@@ -14,7 +14,20 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
 
    //query          
    $link;
@@ -190,7 +203,7 @@
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       $ParentId = $_GET["ParentId"];
       $str_query1 = "Insert into Depts (DeptName,DeptCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$DeptName','$DeptCode',$ParentId,'$PAList','$ProductList',1,now(),1,now(),1)" ;
+                  . " VALUES('$DeptName','$DeptCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -210,7 +223,7 @@
       $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Depts set DeptName='$DeptName', DeptCode='$DeptCode', ParentId=$ParentId, PAList='$PAList', ProductList='$ProductList', EditTime=now() where DeptId=$DeptId";
+      $str_query1 = "Update Depts set DeptName='$DeptName', DeptCode='$DeptCode', ParentId=$ParentId, PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where DeptId=$DeptId";
       
       if(mysqli_query($link, $str_query1))
       {
@@ -289,7 +302,7 @@ function loaded()
       {
          if(plcheck_array[n].value==plstr_array[m])
          {         
-            plcheck_array[m].checked=true;
+            plcheck_array[n].checked=true;
          }
       }
    }

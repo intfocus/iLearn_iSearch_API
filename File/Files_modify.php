@@ -14,7 +14,20 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
 
    //query          
    $link;
@@ -162,7 +175,7 @@
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       $ParentId = $_GET["ParentId"];
       $str_query1 = "Insert into Files (FileName,FileCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',1,now(),1,now(),1)" ;
+                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -179,7 +192,7 @@
       $FileTitle = $_GET["FileTitle"];
       $FileDesc = $_GET["FileDesc"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Files set FileTitle='$FileTitle', FileDesc='$FileDesc', EditTime=now() where FileId=$FileId";
+      $str_query1 = "Update Files set FileTitle='$FileTitle', FileDesc='$FileDesc', EditUser=$user_id, EditTime=now() where FileId=$FileId";
       
       if(mysqli_query($link, $str_query1))
       {

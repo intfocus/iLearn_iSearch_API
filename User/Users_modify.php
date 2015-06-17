@@ -14,7 +14,20 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
 
    //query          
    $link;
@@ -93,7 +106,7 @@
    
    //get data from client
    $cmd;
-   $UserId;
+   $UserId = $user_id;
 
    //query
    $link;
@@ -176,7 +189,7 @@
          return;
       }
       $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,1,now(),1,now(),1)" ;
+                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
