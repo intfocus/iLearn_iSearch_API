@@ -14,7 +14,22 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      //header("Location:". $web_path . "main.php?cmd=err");
+      $return_string = "<div id=\"sResultTitle\" class=\"sResultTitle\">Session 已经过期，请重新登录！</div>";
+      echo $return_string;
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
    
    //query          
    $link;
@@ -154,7 +169,7 @@
          $UserName = $result[$i][1];
          $UserEmail = $result[$i][2];
          $sql_str = "Insert into Users (UserName,Email,EmployeeId,DeptId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime)" .
-            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,1,now(),1,now());";
+            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,$user_id,now(),$user_id,now());";
          if (!mysqli_query($link, $sql_str))
          {
             mysqli_rollback($link);
@@ -190,7 +205,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="Tue", 01 Jan 1980 1:00:00 GMT">
+<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">

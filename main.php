@@ -43,6 +43,7 @@
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title></title>
       <link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+      <link type="image/x-icon" href="images/wutian.ico" rel="shortcut icon">
       <!--[if IE 6]> 
       <link href="css/style_ie6.css" rel="stylesheet" type="text/css" media="all">
       <![endif]-->
@@ -50,8 +51,8 @@
       <script type="text/JavaScript" src="js/jquery-1.4.4.js"></script>
       <script type="text/javascript" src="openflashchart/js/swfobject.js"></script>
    
-           </head>
-      <body>
+   </head>
+   <body>
       <table class="container" border="0" cellspacing="0" cellpadding="0">
          <tr>
             <td>
