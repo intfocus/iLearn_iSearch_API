@@ -26,13 +26,17 @@
    // Set session=empty, redirect to main.php
    //////////////////////
    $_SESSION["GUID"] = "";
+   $cmd="";
    session_write_close();
-   $cmd = $_GET["cmd"];
-
-   /* 20120522 Billy begin */
-   if (strcmp($cmd , "err") != 0)
-      $cmd = "";
-   /* 20120522 Billy end */
+   if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
+      if(isset($_GET["cmd"])){
+         $cmd = $_GET["cmd"];
+         /* 20120522 Billy begin */
+         if (strcmp($cmd , "err") != 0)
+            $cmd = "";
+         /* 20120522 Billy end */
+      }
+   }
 ?>
 
 <!DOCTYPE HTML>
@@ -50,7 +54,14 @@
       <script type="text/JavaScript" src="js/demoOnly.js"></script>
       <script type="text/JavaScript" src="js/jquery-1.4.4.js"></script>
       <script type="text/javascript" src="openflashchart/js/swfobject.js"></script>
-   
+      <script type="text/javascript">
+         window.onload = function()  //print flash
+         {
+            var cmd = "<?php echo $cmd ?>";
+            if (cmd == "err")
+               document.getElementById("msg").style.display = "block";
+         };
+      </script>
    </head>
    <body>
       <table class="container" border="0" cellspacing="0" cellpadding="0">

@@ -439,7 +439,7 @@ function modifyFilesContent(FileId)
             <Input type=radio name=FileTypeModify value=1 <?php if ($FileType == 1) echo "checked";?>>ppt转pdf(横板)
             <Input type=radio name=FileTypeModify value=2 <?php if ($FileType == 2) echo "checked";?>>pdf(直版)
             <Input type=radio name=FileTypeModify value=3 <?php if ($FileType == 3) echo "checked";?>>视频
-            <Input type=radio name=FileTypeModify value=3 <?php if ($FileType == 4) echo "checked";?>>Zip
+            <Input type=radio name=FileTypeModify value=4 <?php if ($FileType == 4) echo "checked";?>>Zip
          </td>
       </tr>
 <?php

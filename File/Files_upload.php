@@ -14,7 +14,20 @@
       $resultStr = FILE_ERROR . " " . __LINE__;
       goto errexit;
    }
-   $login_name = "Phantom";
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
 
    //query          
    $link;
@@ -87,6 +100,7 @@
    //get data from client
    $cmd;
    $FileId;
+   $FileSize = 0;
    
    ///////////////////////////////////
    // 1.get information from client 
@@ -121,7 +135,7 @@
    ///////////////////////////////////
    $str_query1 = "Insert into Files (FileName, FileTitle, FileDesc, CategoryId, FilePath, SmallGifPath, PageNo, FileType, 
       Status, CreatedUser, CreatedTime, EditUser, EditTime) VALUES('$FileName','$FileTitleModify','$FileDescModify',$CategoryId,'$CategoryFilePath','',0,
-      $FileTypeModify,0,1,now(),1,now());";
+      $FileTypeModify,0,$user_id,now(),$user_id,now());";
    mysqli_query($link,$str_query1);
    //echo $str_query1;
    //return;
@@ -144,27 +158,51 @@
    if(!file_exists($total_file_path)) // 建立目录
       system("mkdir $total_file_path");
 
-   if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.pdf"))
-   {
-      sleep(DELAY_SEC);
-      $resultStr = "文档上传失败 - " . -__LINE__;
-      goto errexit;
+   if ($FileTypeModify == 1 || $FileTypeModify ==2){   
+      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.pdf"))
+      {
+         sleep(DELAY_SEC);
+         $resultStr = "文档上传失败 - " . -__LINE__;
+         goto errexit;
+      }
+   }elseif ($FileTypeModify == 4){
+      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.zip"))
+      {
+         sleep(DELAY_SEC);
+         $resultStr = "文档上传失败 - " . -__LINE__;
+         goto errexit;
+      }
+      $FileSize = filesize("$total_file_path/$FileId.zip");
+      $str_query3 = "update Files set ZipSize = $FileSize where FileId = $FileId";
+      mysqli_query($link,$str_query3);
+   }else{
+      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.zip"))
+      {
+         sleep(DELAY_SEC);
+         $resultStr = "文档上传失败 - " . -__LINE__;
+         goto errexit;
+      }
    }
    
    ///////////////////////////////////
    // 4. 写入 $pdf2image_temp
    //    写入 $pdf2image_bin, FileId, FilePath
-   $fp = fopen($pdf2image_temp,"a+");
-   if (!$fp)
-   {
-      sleep(DELAY_SEC);
-      $resultStr = "文档上传失败 - " . -__LINE__;
-      goto errexit;
+   if ($FileTypeModify == 1 || $FileTypeModify ==2){
+      $fp = fopen($pdf2image_temp,"a+");
+      if (!$fp)
+      {
+         sleep(DELAY_SEC);
+         $resultStr = "文档上传失败 - " . -__LINE__;
+         goto errexit;
+      }
+      fprintf($fp,"%s,%s,%s\n",$pdf2image_bin,$FileId,$CategoryFilePath);
+      fclose($fp);
+      
+      $resultStr = "上传成功，文档格式转换需要数分钟";
    }
-   fprintf($fp,"%s,%s,%s\n",$pdf2image_bin,$FileId,$CategoryFilePath);
-   fclose($fp);
-   
-   $resultStr = "上传成功，文档格式转换需要数分钟";
+   else{
+      $resultStr = "文档上传成功!";
+   }
    
 errexit:   
    $resultStr = "[" . $FileName . "] " . $resultStr;
@@ -176,6 +214,7 @@ errexit:
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">

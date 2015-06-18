@@ -1,4 +1,5 @@
 <?php
+echo filesize("D:/tmp/file/2/6/15/15.zip");
 echo("hello php world!");
 header("Content-Type:text/html;charset=utf-8");
 $link=mysqli_connect("127.0.0.1","root","123456");
@@ -18,11 +19,11 @@ phpinfo();
    }
    
    try{
-      echo inverse(5) . "\n";
-      echo inverse(0) . "\n";
+      echo inverse(5) . "<br />";
+      echo inverse(0) . "<br />";
    }
    catch(Exception $e){
-      echo 'Caught exception: ' . $e->getMessage() . "\n";
+      echo 'Caught exception: ' . $e->getMessage() . "<br />";
    }
    
    echo 'Hello World';

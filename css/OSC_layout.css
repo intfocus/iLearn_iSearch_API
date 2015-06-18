@@ -325,6 +325,12 @@ body, html {
 .mainTabW li span.tabIcon.branch {
 	background-image:url(../images/icon_branch.png);
 }
+.mainTabW li span.tabIcon.exam {
+	background-image:url(../images/icon_exam.png);
+}
+.mainTabW li span.tabIcon.problem {
+	background-image:url(../images/icon_problem.png);
+}
 #enterpiceReport .mainContent {
 	background-color:#fff;
 	border:1px solid #bbb;
