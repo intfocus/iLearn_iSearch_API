@@ -80,8 +80,7 @@
       echo DB_ERROR;       
       return;
    }
-   
-   
+
    //link    
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
    if (!$link)  //connect to server failure    
@@ -91,35 +90,20 @@
       return;
    }
 
-   $users_id = $_POST["users_id"];
-   
+   $users_id = $_POST["users_id"];// employId & userId
+
+   $users_id = transfer_all_id_to_user_id($users_id);
+   $users_id = array_unique($users_id);
+
+   /////////////////////////////////////
    //select all current ids
    //if not exist in upload id,
-   // set Status = -1
-
+   //   set Status = -1
    //for all upload id
    //  if exist -> update status to 1
    //else
-   //insert it
-   
-   function update_examroll_status($user_id, $exam_id, $status)
-   {
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-      if (!$link) 
-      {   
-         die(MSG_ERR_CONNECT_TO_DATABASE);
-      }
-      
-      $str_query = "update examroll set Status=$status where ExamId=$exam_id AND UserId=$user_id";
-      if(($result = mysqli_query($link, $str_query))){
-         return SUCCESS;
-      }
-      else
-      {
-         return ERR_UPDATE_DATABASE;
-      }
-   }
-
+   //  insert it
+   /////////////////////////////////////
    $str_query = "select * from examroll where ExamId=$exam_id";
 
    if($result = mysqli_query($link, $str_query)){
@@ -165,4 +149,60 @@
    
    echo SUCCESS;
    return;
+   
+   function update_examroll_status($user_id, $exam_id, $status)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = "update examroll set Status=$status where ExamId=$exam_id AND UserId=$user_id";
+      if(($result = mysqli_query($link, $str_query))){
+         return SUCCESS;
+      }
+      else
+      {
+         return ERR_UPDATE_DATABASE;
+      }
+   }
+   
+   function transfer_all_id_to_user_id($ids)
+   {
+      $users_id = array();
+      
+      // if all digit, it is user_id, and just push it
+      // else if it is composed by alpha & digit, it is employID, and get it user_id, and push it
+      foreach ($ids as $id)
+      {
+         if (preg_match("/^[0-9]+$/", $id))
+         {
+            array_push($users_id, $id);
+         }
+         else if(preg_match("/[0-9|a-zA-Z]+/", $id))
+         { 
+            $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+            if (!$link)  //connect to server failure    
+            {
+               sleep(DELAY_SEC);
+               echo DB_ERROR;
+               die("连接DB失败");
+            }
+            
+            //print_r
+            $str_query = "select * from users where EmployeeId='$id'";
+            if(($result = mysqli_query($link, $str_query))){
+               $row = mysqli_fetch_assoc($result);
+               array_push($users_id, $row["UserId"]);
+            }
+            else
+            {
+               echo DB_ERROR;
+               die("操作资料库失败");
+            }
+         }
+      }  
+      return $users_id;
+   }
 ?>

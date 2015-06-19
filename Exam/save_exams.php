@@ -287,10 +287,19 @@ EOD;
                               "memo"=> $row["ProblemMemo"],
                            )
       );
+      
+      // insert into ExamDetail
+      if (insert_into_examdetail($exam_id, $prob_id) != SUCCESS)
+      {
+         if($link){
+            mysqli_close($link);
+         }
+         sleep(DELAY_SEC);
+         echo -__LINE__;
+         return;
+      }
    }
-   
-   
-   
+
    // save to json file, file_name id.json
    $json_file_name = EXAM_FILES_DIR."/".$exam_id.".json";
    $exam_json = json_encode(
@@ -314,4 +323,29 @@ EOD;
 
    echo 0;
    return;
+   
+   function insert_into_examdetail($exam_id, $prob_id)
+   {
+      $ret = SUCCESS;
+      
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }  
+
+      $str_query = "INSERT INTO examdetail (ExamId, ProblemId) Values ($exam_id, $prob_id)";
+      if(!mysqli_query($link, $str_query))
+      {
+         $ret = ERR_UPDATE_DATABASE;
+      }
+      
+      if($link){
+         mysqli_close($link);
+      }
+
+      return $ret;
+   }
 ?>

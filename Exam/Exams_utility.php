@@ -18,8 +18,28 @@
    define("MSG_NOT_ENOUGH_SEL_PROB", "单选题数不足");
    define("MSG_NOT_ENOUGH_MULTI_PROB", "多选题数不足");
    
+   define("MSG_EXAM_MODIFY", "考卷修改");
+   
+   define("MOCK_EXAM", 0);
+   define("OFFICIAL_EXAM", 1);
+   
+   define("MSG_MOCK_EXAM", "模拟考");
+   define("MSG_OFFICIAL_EXAM", "正式考");
+   
+   define("GIVE_ANSWER_AFTER_SUBMIT", 1);
+   define("GIVE_ANSWER_AFTER_EXAM_FINISHED", 2);
+
+   define("MSG_GIVE_ANSWER_AFTER_SUBMIT", "考试交卷后公布答案");
+   define("MSG_GIVE_ANSWER_AFTER_EXAM_FINISHED", "考试交卷后答案公布");
+
    define("OLINE_TEST", 0);
    define("ONSITE_TEST", 1);
+
+   define("MSG_ONLINE_TEST", "线上考");
+   define("MSG_ONSITE_TEST", "落地考");
+
+   define("ERR_INVALID_PARAMETER", -10);
+   define("ERR_EXAM_NOT_EXIST", -11);
 
    class Problem
    {
@@ -55,6 +75,18 @@
       public $errors = array();
    }
    
+   
+   function get_exam_type_name_from_id($type)
+   {
+      if ($type == MOCK_EXAM)
+      {
+         return MSG_MOCK_EXAM;
+      }
+      else if ($type == OFFICIAL_EXAM)
+      {
+         return MSG_OFFICIAL_EXAM;
+      }
+   }
    
    function rand_select_problems($problems, $num)
    {
