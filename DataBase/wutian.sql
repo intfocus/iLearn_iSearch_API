@@ -197,6 +197,16 @@ LOCK TABLES `examscore` WRITE;
 /*!40000 ALTER TABLE `examscore` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `ExamDetail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ExamDetail` (
+  `ExamId` int(11) NOT NULL,
+  `ProblemId` int(11) NOT NULL,
+  PRIMARY KEY (`ExamId`, `ProblemId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `files`
 --
