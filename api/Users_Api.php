@@ -63,7 +63,7 @@
       return;
    }
    
-   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where EmployeeId = '$eid'";
+   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where EmployeeId = '$eid' and Status <> 0";
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)

@@ -115,7 +115,7 @@
 <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/OSC_layout.js"></script>
 <script type="text/javascript" src="js/css3pie.js"></script>
-<script type="text/javascript" src="js/PMarkFunction.js"></script>
+<script type="text/javascript" src="js/WutianFunction.js"></script>
 <script type="text/javascript" src="openflashchart/js/swfobject.js"></script>
 <script type="text/javascript" src="openflashchart/js/json/json2.js"></script>
 <!--[if lt IE 10]>

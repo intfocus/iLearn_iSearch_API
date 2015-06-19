@@ -76,7 +76,7 @@
    }
    
    //----- query -----
-   $str_file = "select FileId,FileName,FileTitle,FileDesc,FilePath,PageNo,FileType,Status,EditTime,CategoryId,ZipSize from files where CategoryId = $categoryid and Status in (0,1);";
+   $str_file = "select FileId,FileName,FileTitle,FileDesc,FilePath,PageNo,FileType,Status,EditTime,CategoryId,ZipSize from files where CategoryId = $categoryid and Status <> 0;";
    
    if($rs = mysqli_query($link, $str_file)){
       $filecount = mysqli_num_rows($rs);

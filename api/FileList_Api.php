@@ -85,7 +85,7 @@
 f.Status as FileStatus,f.EditTime as FileEditTime,f.CategoryId as CategoryId,f.ZipSize as ZipSize,c.CategoryName as CategoryName,c.DeptList as DeptList,c.PAList as PAList,c.Status as CategoryStatus,
 c.ProductList as ProductList 
 from files f left join categories c on f.CategoryId = c.CategoryId 
-where f.Status in (0,1) and c.DeptList like '%,$deptid,%';";
+where f.Status <> 0 and c.DeptList like '%,$deptid,%';";
 
    if($rs = mysqli_query($link, $str_file)){
       $filecount = mysqli_num_rows($rs);

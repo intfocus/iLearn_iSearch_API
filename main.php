@@ -132,10 +132,5 @@
             </td>
          </tr>
       </table>
-      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,22,0" height="0" width="0"> 
-         <param name="movie" value="PMark.swf"> 
-         <param name="allowScriptAccess" value="always">
-         <embed type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" allowScriptAccess="always"></embed> 
-      </object>
    </body>
 </html>
