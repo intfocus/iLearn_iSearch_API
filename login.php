@@ -7,8 +7,8 @@
 // #002  Odie           2014-11-26  Add SQL escape to $login_name
    
    //----- Define -----
-   include_once("http.php");
-   include_once("wstrust.php");
+   // include_once("http.php");
+   // include_once("wstrust.php");
    define("FILE_NAME", "./DB.conf"); //account file name
    define("DELAY_SEC", 3);                                       //delay reply
    define("FILE_ERROR", -3);
