@@ -349,7 +349,7 @@ function modifyNewsContent(NewId)
       </tr>
       <tr>
          <th>内文：</th>
-         <td><Input type=text name=NewMsgModify size=100 value="<?php echo $NewMsg;?>"></td>
+         <td><Textarea name=NewMsgModify rows=30 cols=100><?php echo $NewMsg;?></textarea></td>
       </tr>
       <tr>
          <th>发生时间 ：</th>

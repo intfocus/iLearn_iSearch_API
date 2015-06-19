@@ -81,7 +81,7 @@
    }
    
    //----- query -----
-   $str_category = "select CategoryId, CategoryName, ParentId, DeptList, FilePath, PAList, ProductList, EditTime from categories where ParentId = $parentid and DeptList like '%," . $deptid . ",%';";
+   $str_category = "select CategoryId, CategoryName, ParentId, DeptList, FilePath, PAList, ProductList, EditTime from categories where ParentId = $parentid and Status <> 0 and DeptList like '%," . $deptid . ",%';";
    if($rs = mysqli_query($link, $str_category)){
       $categorycount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      

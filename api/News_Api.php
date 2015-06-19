@@ -80,7 +80,7 @@
    //----- query -----
    $str_newgg = "select NewTitle, NewMsg, EditTime, OccurTime from news 
       where status = 1 and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) <= 30 
-      and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) > 0 and OccurTime is null 
+      and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) >= 0 and OccurTime is null 
       and DeptList like '%," . $deptid .",%'";
    if($rs = mysqli_query($link, $str_newgg)){
       $newcount = mysqli_num_rows($rs);
