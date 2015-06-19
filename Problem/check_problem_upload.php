@@ -154,15 +154,26 @@ function read_excel_and_insert_into_database($target_file)
    
    for ($cur_sheet=0; $cur_sheet < $sheet_count; $cur_sheet++)
    {
-      $sheet = $excel->getSheet($cur_sheet);
-      
+      $sheet = $excel->getSheet($cur_sheet);      
       $highest_row = $sheet->getHighestRow();
       $highest_col = count($file_status->upload_problem_syntax);
-    
+
+      $tmp = array();
+
+      for ($col=0; $col<=$highest_col; $col++)
+      {
+         array_push($tmp, $sheet->getCellByColumnAndRow($col, 1)->getValue());
+      }
+      if (!is_valid_syntax_import_file($tmp))
+      {
+         $file_status->status = ERR_FILE_LOAD;
+         array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>0, "message"=>MSG_ERR_FILE_CONTENT_SYNTAX));
+         return $file_status->status;
+      }
+      
       for ($row=2; $row<=$highest_row; $row++)
       {
          $functions = array();
-         $tmp = array();
          for ($col=0; $col<=$highest_col; $col++)
          {
             array_push($tmp, $sheet->getCellByColumnAndRow($col, $row)->getValue());
