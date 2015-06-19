@@ -285,12 +285,14 @@
                $row = mysqli_fetch_assoc($result);
                $ProbId = $row["ProblemId"];
                $ProbType = $row["ProblemType"];
+               $ProbTypeStr = get_type_name_from_id($ProbType);
                $ProbDesc = $row["ProblemDesc"];
                $ProbCategory = $row["ProblemCategory"];
                $funcs_id = get_function_id($ProbCategory);
                $funcs_name = get_funcs_name($funcs_id);
                $funcs_name_str = get_funcs_name_str($funcs_name);
                $ProbLevel = $row["ProblemLevel"];
+               $ProbLevelStr = get_level_name($ProbLevel);
                $ProbMemo = $row["ProblemMemo"];
                $ProbStatus = $row["Status"];
                $StatusStr = $ProbStatus == 0 ? "下架" : "上架";
@@ -299,10 +301,10 @@
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"ProbType fixWidth\">$ProbType</span></td>"
+                  . "<td><span class=\"ProbType fixWidth\">$ProbTypeStr</span></td>"
                   . "<td><span class=\"ProbDesc fixWidth\">$ProbDesc</span></td>"
                   . "<td><span class=\"ProbCategory fixWidth\">$funcs_name_str</span></td>"
-                  . "<td><span class=\"ProbLevel fixWidth\">$ProbLevel</span></td>"
+                  . "<td><span class=\"ProbLevel fixWidth\">$ProbLevelStr</span></td>"
                   . "<td><span class=\"ProbMemo fixWidth\">$ProbMemo</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td><A OnClick=\"actionSearchProbs($ProbId,$ProbStatus);\">$StatusAction</A><br/>"

@@ -85,7 +85,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
@@ -104,7 +103,7 @@
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 考卷管理页面</title>
+<title>武田 - 部门页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
@@ -211,6 +210,11 @@ function loaded() {
          functions_id[i++] = $(this).val();
       });
       // how to check valid functions id?
+      if (functions_id.length == 0)
+      {
+         alert("至少需选一个分类");
+         return;
+      }
 
       $.ajax({
          beforeSend: function(){
@@ -351,14 +355,13 @@ function loaded() {
       $(".problem_id").each(function(){
          exam_probs_id.push($(this).html());
       });
-      
-      
-      if (exam_probs_id.length == 0)
+
+      if (exam_selected_functions.length == 0)
       {
-         alert("至少需有一题题目");
+         alert("至少需选一个分类");
          return;
       }
-
+      
       $.ajax({
          type: "POST",
          url: "save_exams.php",

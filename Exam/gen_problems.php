@@ -133,8 +133,6 @@
       $functions_id = $_GET["functions_id"];
    }
 
-
-  
    //link
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
    if (!$link)  //connect to server failure    

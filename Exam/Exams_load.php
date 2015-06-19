@@ -1,5 +1,5 @@
 <?php
-   //require_once("Problems_utility.php");
+   require_once("Exams_utility.php");
 
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -30,7 +30,6 @@
    define("PAGE_SIZE", 100);                                //设置列表显示笔数
 
    //return value
-   define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -275,7 +274,7 @@
                $row = mysqli_fetch_assoc($result);
                $ExamId = $row["ExamId"];
                $ExamName = $row["ExamName"];
-               $ExamType = $row["ExamType"];
+               $ExamTypeStr = get_exam_type_name_from_id($row["ExamType"]);
                $ExamStatus = $row["Status"];
                $CreatedUserId = $row["CreatedUser"];
                $CreatedUserName = get_user_name($CreatedUserId);
@@ -288,7 +287,7 @@
                   . "<tr>"
                   . "<td>$page_count_display</td>"
                   . "<td><span class=\"ExamName fixWidth\">$ExamName</span></td>"
-                  . "<td><span class=\"ExamType fixWidth\">$ExamType</span></td>"
+                  . "<td><span class=\"ExamType fixWidth\">$ExamTypeStr</span></td>"
                   . "<td><span class=\"ExamStatus fixWidth\">$StatusStr</span></td>"
                   . "<td><span class=\"CreatedUser fixWidth\">$CreatedUserName</span></td>"
                   . "<td><span class=\"CreatedTime fixWidth\">$CreatedTime</span></td>"

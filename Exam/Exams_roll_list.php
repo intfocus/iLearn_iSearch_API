@@ -87,6 +87,30 @@
       echo SYMBOL_ERROR;
       return;
    }
+   
+   function get_employ_id_from_user_id($user_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;
+         die("连接DB失败");
+      }
+           
+      $str_query = "select * from users where UserId=$user_id";
+      if($result = mysqli_query($link, $str_query)){
+         $row = mysqli_fetch_assoc($result);
+         return $row["EmployeeId"];
+      }
+      else
+      {
+         echo DB_ERROR;
+         die("操作资料库失败");
+      }
+   }
+   
+   
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -138,10 +162,9 @@ function modifyUsersContent(exam_id)
    for (i=0;i<users_id.length;i++)
    {
       users_id[i] = users_id[i].trim();
-      //  input check
-      if (!users_id[i].match(/^[0-9]+$/))
+      if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
       {
-         alert(users_id[i] + "不为全数字");
+         alert(users_id[i] + "有非数字及英文之字元");
          return;
       }
    }
@@ -170,8 +193,8 @@ function modifyUsersContent(exam_id)
          }
          else  //success
          {
-            alert("工号批次新增成功，页面关闭后请自行刷新");
-            window.close();
+            //alert("工号批次新增成功，页面关闭后请自行刷新");
+            //window.close();
          }
       },
       error: function(xhr)
@@ -201,7 +224,7 @@ function modifyUsersContent(exam_id)
    <div id="exam_id" style="disply:none;"></div>
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 工号)</th>
+         <th>批次上传内容：(一行一笔数据，数据格式为 "工号" 或着使用者数据里的 "UserId" )</th>
       </tr>
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100><?   
@@ -214,7 +237,8 @@ function modifyUsersContent(exam_id)
             {
                $row = mysqli_fetch_assoc($result);
                $user_id = $row["UserId"];
-               echo "$user_id\n";
+               $employee_id = get_employ_id_from_user_id($user_id);
+               echo "$employee_id\n";
             }
          }?></Textarea></td>        
       </tr>   

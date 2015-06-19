@@ -3,6 +3,7 @@
    
    define("ERR_UPDATE_DATABASE", -10);
    define("ERR_INSERT_DATABASE", -11);
+   define("ERR_SELECT_DATABASE", -12);
    
    define("ERR_PROB_NOT_EXIST", -100);
    define("ERR_PROB_DESC_FORMAT", -101);
@@ -166,16 +167,40 @@
          return MULTI_CHOICE_PROB;
       }
    }
-   /*
+
+   function get_type_name_from_id($type_id)
+   {
+      if ($type_id == TRUE_FALSE_PROB)
+      {
+         return TRUE_FALSE_CHINESE;
+      }
+      else if ($type_id == SINGLE_CHOICE_PROB)
+      {
+         return SINGLE_CHOICE_CHINESE;
+      }
+      else if ($type_id == MULTI_CHOICE_PROB)
+      {
+         return MULTI_CHOICE_CHINESE;
+      }
+   }
+   
+   
    function get_level_name($level)
    {
-      if ($level == $EASY_LEVEL)
+      if ($level == EASY_LEVEL)
       {
-         
+         return EASY_LEVEL_NAME;
       }
-      else if ()
+      else if ($level == MID_LEVEL)
+      {
+         return MID_LEVEL_NAME;
+      }
+      else if ($level == HARD_LEVEL)
+      {
+         return HARD_LEVEL_NAME;
+      }
       
-   }*/
+   }
    
    
    function get_function_id($category_str)

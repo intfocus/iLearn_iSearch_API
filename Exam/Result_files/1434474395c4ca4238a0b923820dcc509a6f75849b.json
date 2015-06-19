@@ -1,1 +1,0 @@
-{"exam_id": 1, "user_id": 2, "score": 50.0, "result": [{"problem_id": 123,"type": 1,"selected_answer": ["A"],"result": 0,"score":0.0},{"problem_id":456,"type": 2,"selected_answer": ["A","B","C"],"result":1,"score": 19}]}
