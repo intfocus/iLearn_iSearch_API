@@ -1,6 +1,8 @@
-<?php 
+<?php
    require_once("Problems_utility.php");
 ?>
+
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchProbs(ProbId, Status)
@@ -8,7 +10,7 @@ function actionSearchProbs(ProbId, Status)
    //ajax
    str = "cmd=actionProbs" + "&ProbId=" + ProbId + "&Status=" + Status;
    url_str = "Problem/Problems_action.php?";
-   
+
    //alert(str);
    $('#loadingWrap').show();
    $.ajax
