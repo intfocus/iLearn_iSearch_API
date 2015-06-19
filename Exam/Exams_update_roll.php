@@ -91,13 +91,10 @@
    }
 
    $users_id = $_POST["users_id"];// employId & userId
-   
+
    $users_id = transfer_all_id_to_user_id($users_id);
    $users_id = array_unique($users_id);
-   print_r($users_id);
-   
-   
-   
+
    /////////////////////////////////////
    //select all current ids
    //if not exist in upload id,
