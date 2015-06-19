@@ -29,6 +29,7 @@
    define("MSG_ERR_UPDATE_DATABASE", "无法更新资料库");
    define("MSG_ERR_INSERT_DATABASE", "无法新增资料库");
    
+   define("MSG_ERR_FILE_CONTENT_SYNTAX", "档案格式不为预设的汇入档案格式");
    define("MSG_ERR_PROB_NOT_EXIST", "题目ID不存在");
    define("MSG_ERR_PROB_TYPE_FORMAT","题目类型不正确");
    define("MSG_ERR_PROB_DESC_FORMAT", "题目描述格式不正确");
@@ -229,6 +230,19 @@
       $output_str = $output_str.",";
       
       return $output_str;
+   }
+   
+   // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析, 选项A, 选项B, 选项C, 选项D, 选项E, 选项F, 选项G, 选项H
+   function is_valid_syntax_import_file($row)
+   {
+      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "适应症" ||
+          $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "选项A" || $row[8] != "选项B" || $row[9] != "选项C" ||
+          $row[10] != "选项D" || $row[11] != "选项E" || $row[12] != "选项F" || $row[13] != "选项G" || $row[14] != "选项H")
+      {
+         return false;
+      }
+
+      return true;
    }
    
    function is_correct_prob_type_format($prob_type)
