@@ -1,3 +1,4 @@
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <?php
    require_once("Problems_utility.php");
 

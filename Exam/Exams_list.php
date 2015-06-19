@@ -1,6 +1,4 @@
-<?php 
-   //require_once("Problems_utility.php");
-?>
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchExams(ExamId, Status)
