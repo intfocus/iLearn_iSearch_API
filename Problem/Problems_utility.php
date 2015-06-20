@@ -232,12 +232,11 @@
       return $output_str;
    }
    
-   // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析, 选项A, 选项B, 选项C, 选项D, 选项E, 选项F, 选项G, 选项H
+   // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析
    function is_valid_syntax_import_file($row)
    {
       if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "适应症" ||
-          $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "选项A" || $row[8] != "选项B" || $row[9] != "选项C" ||
-          $row[10] != "选项D" || $row[11] != "选项E" || $row[12] != "选项F" || $row[13] != "选项G" || $row[14] != "选项H")
+          $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "题目解析")
       {
          return false;
       }
