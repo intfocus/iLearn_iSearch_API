@@ -56,15 +56,14 @@
    define("EASY_LEVEL_NAME", "易");
    define("MID_LEVEL_NAME", "中");
    define("HARD_LEVEL_NAME", "难");
-   
 
-   define("FUNCTION_ADAPTATION", 1);
-   define("FUNCTION_PRODUCT", 2);
+   define("FUNCTION_PRODUCT", 1);
+   define("FUNCTION_ADAPTATION", 2);
    define("FUNCTION_OTHER", 3);
 
    define("FUNCTION_ADAPTATION_NAME", "适应症");
    define("FUNCTION_PRODUCT_NAME", "产品名称");
-   define("FUNCTION_OTHER_NAME", "其他");
+   define("FUNCTION_OTHER_NAME", "题库类别");
 
  
    class UploadFileStatus
@@ -90,6 +89,18 @@
          $this->answer = trim($problem_details[6]);
          $this->memo = $problem_details[7];
          $this->selections = array_slice($problem_details, 8);
+      }
+      
+      function _parse_level($level)
+      {
+         if (strlen($level) == 0)
+         {
+            return MID_LEVEL;
+         }
+         else
+         {
+            return $level;
+         }
       }
       
       function _parse_product($input)

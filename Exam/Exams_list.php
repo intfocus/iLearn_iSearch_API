@@ -1,4 +1,6 @@
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
+<?php 
+   //require_once("Problems_utility.php");
+?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchExams(ExamId, Status)
@@ -6,9 +8,7 @@ function actionSearchExams(ExamId, Status)
    //ajax
    str = "cmd=actionExams" + "&ExamId=" + ExamId + "&Status=" + Status;
    url_str = "Exam/Exams_action.php?";
-   
-   //alert(str);
-   $('#loadingWrap').show();
+
    $.ajax
    ({
       beforeSend: function()
@@ -20,19 +20,15 @@ function actionSearchExams(ExamId, Status)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchExamsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchExamsButton")[0].click();
+         }
+         else  //failed
+         {  
+            //echo "1.0";
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {
@@ -52,9 +48,7 @@ function deleteSearchExams(ExamId)
    //ajax
    str = "cmd=deleteExams" + "&" + "ExamId=" + ExamId;
    url_str = "Exam/Exams_delete.php?";
-   
-   //alert(str);
-   $('#loadingWrap').show();
+
    $.ajax
    ({
       beforeSend: function()
@@ -66,20 +60,16 @@ function deleteSearchExams(ExamId)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchExamsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               $('#loadingWrap').hide();
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchExamsButton")[0].click();
+         }
+         else  //failed
+         {  
+            //echo "1.0";
+            $('#loadingWrap').hide();
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {

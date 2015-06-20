@@ -176,13 +176,12 @@ function get_level_str_from_id(level_id)
 function loaded() {
    functions_id = [];
  
-   for (i=0; i<=50; i++)
+   for (i=0; i<=50; i=i+10)
    {
       dom = "<option value="+ i +">" + i + "</option>";
       $(dom).appendTo("#NewExamEasyLevel");
       $(dom).appendTo("#NewExamHardLevel");
    }
-   
 
    $(".problem_type_count").click(function(){
       if ($(this).val() == 0)
