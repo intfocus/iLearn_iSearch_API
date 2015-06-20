@@ -31,7 +31,6 @@
    $row_number;
    $refresh_str;
 
-   
    header('Content-Type:text/html;charset=utf-8');
    
    //define
@@ -74,7 +73,6 @@
       }
       return $check_str;
    }
-   
 
    $resultStr = "上传成功，文档格式转换需要数分钟";
 ?>
@@ -90,7 +88,6 @@
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link rel="stylesheet" type="text/css" href="../css/exam.css">
 <link rel="stylesheet" type="text/css" href="../css/problem.css">
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -104,7 +101,7 @@
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 部门页面</title>
+<title>武田 - 考卷页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
@@ -129,22 +126,76 @@ function is_valid_exam_level(easy_level_percent, hard_level_percent, mid_level_p
 {
    if (easy_level_percent < 0 || mid_level_percent < 0 || hard_level_percent < 0)
    {
-      alert("难易比重值不能为0");
+      alert("易中难比值不能有负数");
       return false;
    }
-
-   total_level = easy_level_percent + hard_level_percent + mid_level_percent;
+   
+   total_level = easy_level_percent + mid_level_percent + hard_level_percent;
    if (total_level != 100)
    {
-      alert("难中易比重加总不为100%");
+      alert("易中难比值相加需为100");
       return false;
    }
-      
+   
    return true;
+}
+
+function get_type_str_from_id(type_id)
+{
+   if (type_id == <?echo TRUE_FALSE_PROB;?>)
+   {
+      return "<? echo TRUE_FALSE_CHINESE;?>";
+   }
+   else if (type_id == <? echo SINGLE_CHOICE_PROB; ?>)
+   {
+      return "<? echo SINGLE_CHOICE_CHINESE;?>";
+   }
+   else if (type_id == <? echo MULTI_CHOICE_PROB;?>)
+   {
+      return "<? echo MULTI_CHOICE_CHINESE;?>";
+   }
+}
+
+function get_level_str_from_id(level_id)
+{
+   if (level_id == <?echo EASY_LEVEL;?>)
+   {
+      return "<? echo EASY_LEVEL_NAME;?>";
+   }
+   else if (level_id == <? echo MID_LEVEL;?>)
+   {
+      return "<? echo MID_LEVEL_NAME;?>";
+   }
+   else if (level_id == <? echo HIGH_LEVEL;?>)
+   {
+      return "<? echo HARD_LEVEL_NAME;?>";
+   }
 }
 
 function loaded() {
    functions_id = [];
+ 
+   for (i=0; i<=50; i++)
+   {
+      dom = "<option value="+ i +">" + i + "</option>";
+      $(dom).appendTo("#NewExamEasyLevel");
+      $(dom).appendTo("#NewExamHardLevel");
+   }
+   
+
+   $(".problem_type_count").click(function(){
+      if ($(this).val() == 0)
+      {
+         $(this).val("");
+      }
+   });
+
+   $(".problem_level").change(function(){
+      mid_level = 100 - $("#NewExamEasyLevel").val() - $("#NewExamHardLevel").val();
+      $("#problem_mid_level").val(mid_level);
+      $("#problem_mid_level").html(mid_level);
+      
+   });
    
    $("#exam_type").change(function(){
 
@@ -175,7 +226,7 @@ function loaded() {
          $("#exam_location_selections").show();
       }
    });
-   
+
    $("#exam_location").change(function(){
       if ($(this).val() == 0)
       {
@@ -191,15 +242,15 @@ function loaded() {
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
       multi_selection_amount =$("#NewExamMutiSelProbType").val();
-
+      
       if (!is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount))
       {
          return;
       }
 
       easy_level_percent = $("#NewExamEasyLevel").val();
+      mid_level_percent = $("#NewExamMidLevel").val();
       hard_level_percent = $("#NewExamHardLevel").val();
-      mid_level_percent = 100 - easy_level_percent - hard_level_percent;
 
       if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
       {
@@ -240,7 +291,7 @@ function loaded() {
          {  
             if (res.hasOwnProperty("code"))
             {
-               if (res.code != SUCCESS) {
+               if (res.code != <? echo SUCCESS; ?>) {
                   alert(res.message);
                   return;
                }
@@ -266,9 +317,14 @@ function loaded() {
             }
             
             if (res.hasOwnProperty("problems")) {
+               sequence = 0;
                $.each(res.problems, function(key, val){
-                  val_string = "<td class='problem_id' style='display:none'>" + val.id + "</td><td>" + val.desc + "</td><td>" + val.type + "</td><td>" + val.level + "</td>";
+                  type_str = get_type_str_from_id(val.type);
+                  level_str = get_level_str_from_id(val.level);
+
+                  val_string = "<td class='problem_id' style='display:none'>" + val.id + "</td><td>" + sequence + "</td><td>" + type_str + "</td><td>" + level_str + "</td><td>" + val.desc + "</td>";
                   $("#problem_template").clone().html(val_string).insertBefore("#problem_template").removeAttr("id").addClass("tmp_data").show();
+                  sequence++;
                });
                $(".exam_info").show();
                $(".problem_info").show();
@@ -422,16 +478,21 @@ function loaded() {
 
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>题型</th>
-         <td>是非 <Input type=text id=NewExamTrueFalseProbType size=3 value=0>&nbsp;
-             单选 <Input type=text id=NewExamSingleSelProbType size=3 value=0>&nbsp;
-             多选 <Input type=text id=NewExamMutiSelProbType size=3 value=0>&nbsp;
+         <th>题型题数</th>
+         <td>是非 <Input type=text class="problem_type_count" id=NewExamTrueFalseProbType size=3 value=0>&nbsp;
+             单选 <Input type=text class="problem_type_count" id=NewExamSingleSelProbType size=3 value=0>&nbsp;
+             多选 <Input type=text class="problem_type_count" id=NewExamMutiSelProbType size=3 value=0>&nbsp;
          </td>
       </tr>
       <tr>
-         <th>难易比重：</th>
-         <td>易 <Input type=text id=NewExamEasyLevel size=2 value=0> %&nbsp;
-             难 <Input type=text id=NewExamHardLevel size=2 value=0> %&nbsp;
+         <th>易中难比重：</th>
+         <td>易<select class="problem_level" id=NewExamEasyLevel>
+             </select>
+             中<select class="problem_level" id=NewExamMidLevel disabled>
+             <option id="problem_mid_level" selected value=100>100</option>
+             </select>
+             难<select class="problem_level" id=NewExamHardLevel>
+             </select>
          </td>
       </tr>
       <tr>
@@ -518,11 +579,16 @@ function loaded() {
       <div>中等题目题数: <u id="content4"></u></div>
       <div>困难题目题数: <u id="content5"></u></div>
    </div>
+
+   <div class="problem_info" style="display:none">
+      <table class="problems_table">
+         <tr><td>题目</td></tr>
+         <th>编号</th><th>题型</th><th>难易</th><th>描述</th>
+         <tr id="problem_template"></tr>
+      </table>
+   </div>
    <table class="exam_info" style="display: none">
-         <th colspan="4" class="submitBtns">
-         <a class="btn_submit_new"><input name="saveProbsButton" class="saveProbsButton" type="button" value="储存考题"></a>
-         </th>
-         </tr>
+
          <tr><td>考卷名称&nbsp;</td><td> <input type="text" size="100" id="exam_name"></td></tr>
          <tr>
             <td>是否上架&nbsp;</td>
@@ -588,20 +654,12 @@ function loaded() {
                <textarea id="exam_desc" rows="5" cols="50"></textarea>
             </td>
          </td>
-   </table>
-
-   <div class="problem_info" style="display:none">
-      <table class="problems_table">
-         <tr><td>题目</td></tr>
-         <th>描述</th><th>题型</th><th>难易</th>
-         <tr id="problem_template"></tr>
-      </table>
-      <th colspan="4" class="submitBtns">
+         <tr>
+         <th colspan="4" class="submitBtns">
          <a class="btn_submit_new"><input name="saveProbsButton" class="saveProbsButton" type="button" value="储存考题"></a>
-      </th>   
-   </div>
-   
-   
+         </th>
+         </tr>
+   </table>
 </div>
 </body>
 </html>
