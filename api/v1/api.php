@@ -299,7 +299,7 @@
                             "ans_type"=>(int)$row["ExamAnsType"],
                             "description"=>$row["ExamDesc"],
                             "location"=>(int)$row["ExamLocation"],
-                            "pwd"=>$row["ExamPassword"]);
+                            "password"=>$row["ExamPassword"]);
       }
       return $exam_info;
    }
