@@ -143,7 +143,7 @@
          $syz->functionId = $row["FunctionId"];
          $syz->functionName = $row["FunctionName"];
          $syz->createdTime = $row["CreatedTime"];
-         array_push($datasyz,$syz);
+         array_push($datacpmc,$syz);
       }
    }
    
@@ -154,7 +154,7 @@
          $cpmc->functionId = $row["FunctionId"];
          $cpmc->functionName = $row["FunctionName"];
          $cpmc->createdTime = $row["CreatedTime"];
-         array_push($datacpmc,$cpmc);
+         array_push($datasyz,$cpmc);
       }
    }
    
