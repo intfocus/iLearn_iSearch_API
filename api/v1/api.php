@@ -170,6 +170,8 @@
             }
          }
 
+         update_the_submit_status($exam_id, $user_id, true);
+         
          $tmp_file_path = EXAM_RESULT_UPLOAD_DIR."/".time().hash('md5', $user_id).".json";
          $file_path = EXAM_RESULT_UPLOAD_DIR."/".$exam_id."_".$user_id.".json";
 
@@ -449,6 +451,26 @@ EOD;
       return SUCCESS;
    }
 
+   function update_the_submit_status($exam_id, $user_id, $status)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = <<<EOD
+               Update examroll set isSubmit=$status
+               where ExamId=$exam_id AND UserId=$user_id AND Status=1
+EOD;
+      if(!mysqli_query($link, $str_query))
+      {
+         return ERR_UPDATE_DATABASE;
+      }
+      return SUCCESS;
+   }
+   
+   
    function get_answer_string($answers)
    {
       $answer_str = "";
