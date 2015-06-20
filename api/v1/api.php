@@ -240,11 +240,11 @@
                echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
                return;
             }
-
-            echo json_encode(array("status"=>"success"));
-            return;
          }
 
+         update_the_submit_status($exam_id, $user_id, true);
+         echo json_encode(array("status"=>"success"));
+         return;
       }
       else
       {
