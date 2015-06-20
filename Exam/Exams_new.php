@@ -487,12 +487,12 @@ function loaded() {
       <tr>
          <th>易中难比重：</th>
          <td>易<select class="problem_level" id=NewExamEasyLevel>
-             </select>
+             </select>%
              中<select class="problem_level" id=NewExamMidLevel disabled>
              <option id="problem_mid_level" selected value=100>100</option>
-             </select>
+             </select>%
              难<select class="problem_level" id=NewExamHardLevel>
-             </select>
+             </select>%
          </td>
       </tr>
       <tr>
