@@ -1,0 +1,14 @@
+.error {
+   color: #ff0000;
+}
+
+.status {
+   color: #0000ff;
+}
+
+.exam_info {
+   margin-top: 20px;
+}
+.problems_table {
+   width: 70%;
+}
