@@ -1383,7 +1383,8 @@ $(function()
            + "&searchDeptsto1=" + searchDeptsto1 + "&statusCheckbox=" + statusCheckbox;
       url_str = "Dept/Depts_load.php?";
       
-      // alert(str);
+      alert(url_str + str);
+      //return;
       $('#loadingWrap').show();
       $.ajax
       ({
