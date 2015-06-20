@@ -289,7 +289,7 @@
       if($result = mysqli_query($link, $str_query)){
          $row = mysqli_fetch_assoc($result);
          $exam_info = array("exam_id"=>(int)$row["ExamId"],
-                            "exam_name"=>(int)$row["ExamName"],
+                            "exam_name"=>$row["ExamName"],
                             "submit"=>(int)$is_submit,
                             "status"=>(int)$row["Status"],
                             "type"=>(int)$row["ExamType"],
