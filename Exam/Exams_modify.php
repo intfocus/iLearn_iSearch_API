@@ -343,11 +343,11 @@ function modifyExamsContent(ExamId)
    
    if (ExpireTime.length == 0)
    {
-      expire_timestamp = <? echo strtotime($ExpireTime);?>;
+      expire_timestamp = <? echo strtotime($ExpireTime);?> * 1000;
    }
    else
    {
-      expire_timestamp = new Date(exam_expire_date).getTime();
+      expire_timestamp = new Date(ExpireTime).getTime();
    }
 
    if (ExamFromDate.length > 0 && ExamFromHour.length > 0 && ExamFromMin.length > 0 &&
@@ -387,8 +387,8 @@ function modifyExamsContent(ExamId)
    }
 
    str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + 
-         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp) +         
-         "&ExamBeginTime=" + encodeURIComponent(from_timestamp) + "&ExamEndTime=" + encodeURIComponent(to_timestamp);
+         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp/1000) +         
+         "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
 
    $.ajax
