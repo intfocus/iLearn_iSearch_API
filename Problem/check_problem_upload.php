@@ -51,6 +51,7 @@ date_default_timezone_set(TIME_ZONE);
 
 // since phpexcel maybe execute very long time, so currently set time limit to 0
 set_time_limit(0);
+ini_set('memory_limit', '-1');
 
 $target_dir = "uploads/";
 $file_type = pathinfo($_FILES["fileToUpload"]["name"],PATHINFO_EXTENSION);
@@ -173,6 +174,7 @@ function read_excel_and_insert_into_database($target_file)
       
       for ($row=2; $row<=$highest_row; $row++)
       {
+         $tmp = array();
          $functions = array();
          for ($col=0; $col<=$highest_col; $col++)
          {
