@@ -122,7 +122,6 @@
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -194,8 +193,8 @@ function modifyUsersContent(exam_id)
          }
          else  //success
          {
-            //alert("工号批次新增成功，页面关闭后请自行刷新");
-            //window.close();
+            alert("工号批次新增成功，页面关闭后请自行刷新");
+            window.close();
          }
       },
       error: function(xhr)
