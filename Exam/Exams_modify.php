@@ -201,6 +201,20 @@ EOD;
 
       if(mysqli_query($link, $str_query1))
       {
+
+         $json_file = EXAM_FILES_DIR."/".$ExamId.".json";
+         $exam_json = json_decode(file_get_contents($json_file));
+
+         $exam_json->exam_name = $ExamName;
+         $exam_json->description = $ExamDesc;
+         $exam_json->expire_time = $ExpireTime;
+         $exam_json->begin = $ExamBeginTime;
+         $exam_json->end = $ExamEndTime;
+         
+         $tmp_file = EXAM_FILES_DIR."/".$ExamId.time();
+         file_put_contents($tmp_file, json_encode($exam_json));
+         copy($tmp_file, $json_file);
+         
          echo "0";
          return;
       }
@@ -343,11 +357,11 @@ function modifyExamsContent(ExamId)
    
    if (ExpireTime.length == 0)
    {
-      expire_timestamp = <? echo strtotime($ExpireTime);?>;
+      expire_timestamp = <? echo strtotime($ExpireTime);?> * 1000;
    }
    else
    {
-      expire_timestamp = new Date(exam_expire_date).getTime();
+      expire_timestamp = new Date(ExpireTime).getTime();
    }
 
    if (ExamFromDate.length > 0 && ExamFromHour.length > 0 && ExamFromMin.length > 0 &&
@@ -387,8 +401,8 @@ function modifyExamsContent(ExamId)
    }
 
    str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + 
-         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp) +         
-         "&ExamBeginTime=" + encodeURIComponent(from_timestamp) + "&ExamEndTime=" + encodeURIComponent(to_timestamp);
+         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp/1000) +         
+         "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
 
    $.ajax
