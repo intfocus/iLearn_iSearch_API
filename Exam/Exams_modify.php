@@ -201,6 +201,20 @@ EOD;
 
       if(mysqli_query($link, $str_query1))
       {
+
+         $json_file = EXAM_FILES_DIR."/".$ExamId.".json";
+         $exam_json = json_decode(file_get_contents($json_file));
+
+         $exam_json->exam_name = $ExamName;
+         $exam_json->description = $ExamDesc;
+         $exam_json->expire_time = $ExpireTime;
+         $exam_json->begin = $ExamBeginTime;
+         $exam_json->end = $ExamEndTime;
+         
+         $tmp_file = EXAM_FILES_DIR."/".$ExamId.time();
+         file_put_contents($tmp_file, json_encode($exam_json));
+         copy($tmp_file, $json_file);
+         
          echo "0";
          return;
       }
