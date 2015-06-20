@@ -369,7 +369,7 @@
       }
       
       $str_query = <<<EOD
-                Update examscore set ExamId=$exam_id, UserId=$user_id, Score=$score
+                Update examscore set Score=$score where ExamId=$exam_id AND UserId=$user_id
 EOD;
       mysqli_query($link, $str_query);
       if(!mysqli_query($link, $str_query))
