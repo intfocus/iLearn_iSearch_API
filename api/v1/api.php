@@ -106,97 +106,76 @@
       {
          $user_id = $matches[1];
          $exam_id = $matches[2];
-         $putdata = fopen("php://input", "r");
-         // check user exist
-         // check exam id exist
- 
+         $data = file_get_contents("php://input");
+
+         if (strlen($data) == 0)
+         {
+            http_response_code(400);
+            echo json_encode(array("message"=> "empty result file", "code"=> ERR_EMPTY_FILE));
+            return;
+         }
+
+         $content_obj = json_decode($data);
+
+         // check rule
+         if (!isset($content_obj->exam_id) || !isset($content_obj->user_id) ||
+             !isset($content_obj->score)|| !isset($content_obj->result))
+         {               
+            http_response_code(400);
+            echo json_encode(array("message"=> "invalid file", "code"=> ERR_INVALID_API));
+            return;
+         }
+
+         if (!is_upload_exam_exist($content_obj->exam_id))
+         {
+            http_response_code(404);
+            echo json_encode(array("message"=> "exam not found", "code"=> ERR_EXAM_NOT_FOUND));
+            return;
+         }
+         if (!is_upload_user_exist($content_obj->user_id))
+         {
+            http_response_code(404);
+            echo json_encode(array("message"=>"user not found", "code"=> ERR_USER_NOT_FOUND));
+            return;
+         }
+
+         if (is_result_upload_before($content_obj->exam_id, $content_obj->user_id))
+         {
+            if (($ret = update_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to update exam score", "code"=> ERR_OTHER));
+               return;
+            }
+            if (($ret = update_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to update exam result", "code"=> ERR_OTHER));
+               return;
+            }
+         }               
+         else
+         {
+            if (($ret = insert_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
+               return;
+            }
+            if (($ret = insert_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to insert exam result", "code"=> ERR_OTHER));
+               return;
+            }
+         }
+
          $tmp_file_path = EXAM_RESULT_UPLOAD_DIR."/".time().hash('md5', $user_id).".json";
          $file_path = EXAM_RESULT_UPLOAD_DIR."/".$exam_id."_".$user_id.".json";
-         $fp = fopen($tmp_file_path, "w");
-         
 
-         // check data size > if large than 4*1024*1024, reject it
-         //check putdata status
+         file_put_contents($tmp_file_path, $data);
+         copy($tmp_file_path, $file_path);
 
-         
-         while($data = fread($putdata, 4*1024*1024))
-         {
-            // get index of Content-Type: application/octet-stream\n\n
-            $start = strpos($data, "Content-Type: application/octet-stream\r\n");
-            $content_start = strpos($data, "{", $start);
-            //echo $content_start;
-            
-            if (($end = strpos($data, "\r\n", $content_start)) == 0) {
-               if (($end = strpos($data, "\n", $content_start)) == 0) {
-                  // error
-                  // return
-               }
-            }
-               
-            $content_length = $end - $content_start;
-         
-            $content = substr($data, $content_start, $content_length);
-            $content_obj = json_decode($content);
-
-            // check rule
-            if (!isset($content_obj->exam_id) || !isset($content_obj->user_id) ||
-                !isset($content_obj->score)|| !isset($content_obj->result))
-            {               
-               http_response_code(400);
-               echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
-               return;
-            }
-
-            if (!is_upload_exam_exist($content_obj->exam_id))
-            {
-               http_response_code(404);
-               echo json_encode(array("message"=> "exam not found", "code"=> ERR_EXAM_NOT_FOUND));
-               return;
-            }
-            if (!is_upload_user_exist($content_obj->user_id))
-            {
-               http_response_code(404);
-               echo json_encode(array("message"=>"user not found", "code"=> ERR_USER_NOT_FOUND));
-               return;
-            }
-
-            if (is_result_upload_before($content_obj->exam_id, $content_obj->user_id))
-            {
-               if (($ret = update_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to update exam score", "code"=> ERR_OTHER));
-                  return;
-               }
-               if (($ret = update_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to update exam result", "code"=> ERR_OTHER));
-                  return;
-               }
-            }               
-            else
-            {
-               if (($ret = insert_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
-                  return;
-               }
-               if (($ret = insert_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to insert exam result", "code"=> ERR_OTHER));
-                  return;
-               }
-            }
-            
-            fwrite($fp, $content);
-            copy($tmp_file_path, $file_path);
-         } 
-         fclose($fp);
-         fclose($putdata);
-         
          echo json_encode(array("status"=>"success"));
          return;
       }
