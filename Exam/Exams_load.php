@@ -301,7 +301,7 @@
                   . "<td><A OnClick=\"actionSearchExams($ExamId,$ExamStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchExams($ExamId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchExams($ExamId);\">删除</A><br/>"
-                  . "<A OnClick=\"uploadUserExams($ExamId);\">上傳考試人員名單</A></td>"
+                  . "<A OnClick=\"uploadUserExams($ExamId);\">上传考试人员名单</A></td>"
                   . "</tr>";
 
                $i++;
