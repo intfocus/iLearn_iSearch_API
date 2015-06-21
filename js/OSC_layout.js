@@ -162,7 +162,7 @@ $(function() {
    });
    
    var dates7 = $("#from7, #to7" ).datepicker({
-      maxDate: new Date(),
+      minDate: new Date(),
 		defaultDate: "+1w",
 		changeMonth: true,
       changeYear: true,
@@ -179,7 +179,26 @@ $(function() {
 		}
 	});
    
-   var dates8 = $("#exam_expire_time").datepicker({
+
+ var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
+     minDate: new Date(),
+     defaultDate: "+1w",
+     changeMonth: true,
+     changeYear: true,
+     numberOfMonths: 1,
+
+     onSelect: function( selectedDate ) {
+        var option = this.id == "exam_begin_time" ? "minDate" : "maxDate",
+        instance = $( this ).data( "datepicker" ),
+        date7 = $.datepicker.parseDate( instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
+        selectedDate, instance.settings );
+        dates100.not( this ).datepicker( "option", option, date7 );}
+ });
+
+
+
+
+   var dates101 = $("#exam_expire_time").datepicker({
       minDate: new Date(),
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -193,7 +212,7 @@ $(function() {
 					instance.settings.dateFormat ||
 					$.datepicker._defaults.dateFormat,
 					selectedDate, instance.settings );
-			dates8.not( this ).datepicker( "option", option, date8 );
+			dates101.not( this ).datepicker( "option", option, date8 );
 		}
 	});
 	

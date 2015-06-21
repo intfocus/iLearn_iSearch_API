@@ -75,7 +75,6 @@
    $exam_probs_id = $_POST["exam_probs_id"];
    $exam_content = $_POST["exam_content"];
    $exam_desc = $_POST["exam_desc"];
-   $exam_password = $_POST["exam_password"];
    
    if (!isset($_POST["exam_functions_id"]))
    {
@@ -119,6 +118,11 @@
       $to_timestamp = $expire_timestamp;
    }
 
+   $exam_password = "";
+   if ($exam_location == ONSITE_TEST)
+   {
+      $exam_password = get_random_password();
+   }
    // begin, end, expire time to datetime
    $sql_begin_datetime = timestamp_to_datetime($from_timestamp);
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);

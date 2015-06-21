@@ -144,7 +144,7 @@ DROP TABLE IF EXISTS `exams`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `exams` (
   `ExamId` int(11) NOT NULL AUTO_INCREMENT,
-  `ExamName` varchar(100) NOT NULL,
+  `ExamName` varchar(200) NOT NULL,
   `ExamType` int(11) NOT NULL DEFAULT '0',
   `ExamLocation` int(11) DEFAULT NULL,
   `ExamBegin` datetime DEFAULT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE `exams` (
   `ExamPassword` varchar(100) DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT '0',
   `ExamDesc` varchar(255) DEFAULT NULL,
-  `ExamContent` varchar(255) NOT NULL,
+  `ExamContent` varchar(100) NOT NULL,
   `ExpireTime` datetime NOT NULL,
   `CreatedUser` int(11) NOT NULL,
   `CreatedTime` datetime NOT NULL,
@@ -196,16 +196,6 @@ LOCK TABLES `examscore` WRITE;
 /*!40000 ALTER TABLE `examscore` DISABLE KEYS */;
 /*!40000 ALTER TABLE `examscore` ENABLE KEYS */;
 UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `ExamDetail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ExamDetail` (
-  `ExamId` int(11) NOT NULL,
-  `ProblemId` int(11) NOT NULL,
-  PRIMARY KEY (`ExamId`, `ProblemId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `files`

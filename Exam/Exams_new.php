@@ -203,7 +203,6 @@ function loaded() {
       {    
          $("#exam_answer_selections").hide();
          $("#exam_time_selections").hide();
-         $("#exam_password_sections").hide();
          $("#exam_location_selections").hide();
       }
       else if ($(this).val() == 1) 
@@ -227,18 +226,9 @@ function loaded() {
       }
    });
 
-   $("#exam_location").change(function(){
-      if ($(this).val() == 0)
-      {
-         $("#exam_password_sections").hide();
-      }
-      else
-      {
-         $("#exam_password_sections").show();
-      }
-   });
-   
    $("#genProbsButton").click(function(){
+      functions_id = [];
+      
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
       multi_selection_amount =$("#NewExamMutiSelProbType").val();
@@ -317,7 +307,7 @@ function loaded() {
             }
             
             if (res.hasOwnProperty("problems")) {
-               sequence = 0;
+               sequence = 1;
                $.each(res.problems, function(key, val){
                   type_str = get_type_str_from_id(val.type);
                   level_str = get_level_str_from_id(val.level);
@@ -345,14 +335,13 @@ function loaded() {
       exam_status = $("#exam_status").val();
       exam_type = $("#exam_type").val();
       exam_answer_type = $("#exam_answer_type").val();
-      exam_from_date = $("#from7").val();
+      exam_from_date = $("#exam_begin_time").val();
       exam_from_hour = $("#exam_from_hour").val();
       exam_from_min = $("#exam_from_min").val();
       exam_expire_date = $("#exam_expire_time").val();
-      exam_to_date = $("#to7").val();
+      exam_to_date = $("#exam_end_time").val();
       exam_to_hour = $("#exam_to_hour").val();
       exam_to_min = $("#exam_to_min").val();
-      exam_password = $("#exam_password").val();
       exam_desc = $("#exam_desc").val();
       exam_location = $("#exam_location").val();
       exam_selected_functions = functions_id;
@@ -374,6 +363,12 @@ function loaded() {
          return;
       }
 
+      if (exam_desc.length > 500)
+      {
+         alert("考卷描述不能超过500字元");
+         return;
+      }
+      
       if (exam_expire_date.length == 0)
       {
          alert("有限时间不能为空");
@@ -403,15 +398,6 @@ function loaded() {
             alert("有效日期必须大于结束时间");
             return;
          }
-         
-         if (exam_location == 1)
-         {
-            if (exam_password.match(/[0-9][0-9][0-9][0-9]/) == null)
-            {
-               alert("考试密码必须为四位数的数字");
-               return;
-            }
-         }
       }
 
       // collect all problems id
@@ -435,7 +421,6 @@ function loaded() {
                   "exam_type": exam_type,
                   "exam_answer_type": exam_answer_type,
                   "exam_probs_id": exam_probs_id,
-                  "exam_password": exam_password,
                   "from_timestamp": (from_timestamp/1000),
                   "to_timestamp": (to_timestamp/1000),
                   "exam_expire_timestamp": (expire_timestamp/1000),
@@ -591,9 +576,9 @@ function loaded() {
    </div>
 
    <div class="problem_info" style="display:none">
+      <h1>题目</h1>
       <table class="problems_table">
-         <tr><td>题目</td></tr>
-         <th>编号</th><th>题型</th><th>难易</th><th>描述</th>
+         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
          <tr id="problem_template"></tr>
       </table>
    </div>
@@ -643,19 +628,13 @@ function loaded() {
          <tr id="exam_time_selections" style="display:none">
             <td>考试时间段&nbsp;</td>
             <td>
-               <input id="from7" type="text" name="exam_from_date6" class="from" readonly="true">
+               <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
                <select id="exam_from_hour"></select>
                <select id="exam_from_min"></select>
                ~
-               <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
+               <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
                <select id="exam_to_hour"></select>
                <select id="exam_to_min"></select>
-            </td>
-         </tr>
-         <tr id="exam_password_sections" style="display:none">
-            <td>考卷密码&nbsp;</td>
-            <td>
-               <input type="text" id="exam_password" size=4>
             </td>
          </tr>
          <tr>

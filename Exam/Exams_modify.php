@@ -115,6 +115,8 @@
    }   
 
    $TitleStr = MSG_EXAM_MODIFY;
+   
+   $problems = array();
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if (strcmp($cmd, "read") == 0) // Load
@@ -149,14 +151,19 @@
          }
          else
          {
-            $DeptId = 0;
-            $DeptName = "";
-            $DeptCode = 0;
-            $ParentId = 0;
-            $PAList = "";
-            $ProductList = "";
-            $TitleStr = "部门新增";
-            $Status = 0;
+            header("Location: ../index.php");
+            die();
+         }
+
+         $str_query = "select * from examdetail where ExamId=$ExamId";
+         if($result = mysqli_query($link, $str_query))
+         {
+            $row_number = mysqli_num_rows($result);
+            for ($i=0; $i<$row_number; $i++)
+            {
+               $row = mysqli_fetch_assoc($result);
+               array_push($problems, get_problems_info($row["ProblemId"]));
+            }
          }
       }
    }
@@ -225,6 +232,27 @@ EOD;
       }
    }
    
+   function get_problems_info($problem_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         return DB_ERROR;       
+      }
+      
+      
+      $str_query = "select * from problems where ProblemId=$problem_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         $problem = new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]);
+         return $problem;
+      }
+      
+      return;
+   }
+   
    function get_content_str($content_str)
    {
       //input format: yes_no, single_choice, multi_choice, easy_level, mid_level, hard_level, categories....
@@ -272,6 +300,7 @@ EOD;
       }
       return $str;
    }
+   
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -284,6 +313,8 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link rel="stylesheet" type="text/css" href="../css/exam.css">
+<link rel="stylesheet" type="text/css" href="../css/problem.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -341,10 +372,10 @@ function modifyExamsContent(ExamId)
    ExamName = document.getElementsByName("ExamNameModify")[0].value.trim();
    ExamDesc = document.getElementsByName("ExamDescModify")[0].value.trim();
 
-   ExamFromDate = document.getElementById("from7").value;
+   ExamFromDate = document.getElementById("exam_begin_time").value;
    ExamFromHour = document.getElementById("exam_from_hour").value;
    ExamFromMin = document.getElementById("exam_from_min").value;
-   ExamToDate = document.getElementById("to7").value;
+   ExamToDate = document.getElementById("exam_end_time").value;
    ExamToHour = document.getElementById("exam_to_hour").value;
    ExamToMin = document.getElementById("exam_to_min").value;
    ExpireTime = document.getElementById("exam_expire_time").value;
@@ -354,6 +385,19 @@ function modifyExamsContent(ExamId)
       alert("考卷描述及考卷答案不可为空白");
       return;
    }
+   
+   if (ExamName.length > 100)
+   {
+      alert("考卷名称不能超过100字元");
+      return;
+   }
+   
+   if (ExamDesc.length > 500)
+   {
+      alert("考卷描述不能超过500字元");
+      return;
+   }
+   
    
    if (ExpireTime.length == 0)
    {
@@ -459,18 +503,18 @@ function modifyExamsContent(ExamId)
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
 </div>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+   <table class="searchField" border="0" cellspacing="0" cellpadding="0" style="width:100%">
       <tr>
          <th>考卷名称: </th>
-         <td><Input type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
+         <td><Input style="width:100%" type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
       </tr>
       <tr>
          <th>考卷描述：</th>
-         <td><Input type=text name=ExamDescModify size=50 value="<?php echo $ExamDesc;?>"></td>
+         <td><textarea style="width:100%" name=ExamDescModify rows=3><?php echo $ExamDesc;?></textarea></td>
       </tr>
       <tr>
          <th>考卷类型：</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamType == MOCK_EXAM) 
             {
                echo MSG_MOCK_EXAM;
@@ -484,7 +528,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考卷答案类型:</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamAnsType == GIVE_ANSWER_AFTER_SUBMIT) 
             {
                echo MSG_GIVE_ANSWER_AFTER_SUBMIT;
@@ -498,11 +542,11 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr <? if ($ExamLocation == OLINE_TEST){ echo "style='display:none'";}?>>
          <th>考卷密码：</th>
-         <td><Input type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
+         <td><Input style="width:100%" type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
       </tr>
       <tr>
          <th>考试地点: </th>
-         <td><Input type=text name=ExamLocation size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamLocation size=50 disabled="disabled" value="<?php
             if ($ExamLocation == OLINE_TEST) 
             {
                echo MSG_ONLINE_TEST;
@@ -516,7 +560,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考试内容: </th>
-          <td><Input type=text name=ExamContentModify size=200 disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
+          <td><Input style="width:100%" type=text name=ExamContentModify  disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
          </td>
       </tr>
          <th>原始有效日期: </th>
@@ -541,15 +585,30 @@ function modifyExamsContent(ExamId)
       <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
          <th>新考试时间段: </th>
          <td>
-            <input id="from7" type="text" name="exam_from_date6" class="from" readonly="true">
+            <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
             <select id="exam_from_hour"></select>
             <select id="exam_from_min"></select>
             ~
-            <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
+            <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>
-      </tr>
+      </tr>   
+  
+   </table>
+   <div class="problem_info">
+      <h1>题目</h1>
+      <table class="problems_table">
+         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
+<?php
+         for ($i=0; $i<count($problems); $i++)
+         {
+            $sequence = $i + 1;
+            echo "<tr><td>".$sequence."</td><td>".get_type_name_from_id($problems[$i]->type)."</td><td>".get_level_name($problems[$i]->level)."</td><td>".$problems[$i]->desc."</td></tr>";
+         }
+?>         
+      </table>
+   </div>
 <?php
    if ($ExamStatus != 1)
    {
@@ -561,8 +620,7 @@ function modifyExamsContent(ExamId)
       </tr>      
 <?php
    }
-?>   
-   </table>
+?> 
 </div>
 </body>
 </html>
