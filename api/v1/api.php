@@ -37,13 +37,22 @@
    
    $request_method = $_SERVER["REQUEST_METHOD"];
    $request_uri = $_SERVER["REQUEST_URI"];
-   $resource = explode(URI_START_WITH, $request_uri);
-   array_shift($resource);
+   
+   if (preg_match("/.*\/api\/v1(\/.*)/", $request_uri, $matches))
+   {
+      $resource = $matches[1];
+   }
+   else
+   {
+      http_response_code(404);
+      echo json_encode(array("message"=>"not valid api url", "code"=> ERR_INVALID_API));
+      return;
+   }
 
    if ($request_method == "GET")
    {
       // /exam/{exam_id}, download the exam json file
-      if (preg_match("/exam\/([0-9]+)/", $resource[0], $matches))
+      if (preg_match("/exam\/([0-9]+)/", $resource, $matches))
       {
          $exam_id = $matches[1];
          $exam_json_file_path = EXAM_JSON_FILE_DIR."/$exam_id.json";
@@ -62,7 +71,7 @@
          readfile($exam_json_file_path);
       }
       // /user/{user_id}/exam, list all exams related to this user
-      else if (preg_match("/user\/([0-9]+)\/exam/", $resource[0], $matches))
+      else if (preg_match("/user\/([0-9]+)\/exam/", $resource, $matches))
       {
          $exams_info = array();
          
@@ -85,7 +94,11 @@
             {
                //get exam info
                $row = mysqli_fetch_assoc($result);
-               array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               // pus exam only when exam is active
+               if (is_exam_active($row["ExamId"]))
+               {
+                  array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               }
             }   
          }
    
@@ -94,15 +107,15 @@
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
    }
    else if ($request_method == "PUT")
    {
       // upload result
-      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)/", $resource[0], $matches))
+      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)/", $resource, $matches))
       {
          $user_id = $matches[1];
          $exam_id = $matches[2];
@@ -183,14 +196,14 @@
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
    }
    else if ($request_method == "POST")
    {
-      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)\/offline/", $resource[0], $matches))
+      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)\/offline/", $resource, $matches))
       {
          $user_id = $matches[1];
          $exam_id = $matches[2];
@@ -248,8 +261,8 @@
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
      
@@ -404,8 +417,7 @@ EOD;
       
       return SUCCESS;
    }
-   
-   
+ 
    function insert_exam_score($exam_id, $user_id, $score)
    {
       $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
@@ -441,7 +453,6 @@ EOD;
                         INSERT INTO examanswer (ExamId, ProblemId, UserId, ProblemType, Score, Answer, Result)
                         Values ($exam_id, $result->problem_id, $user_id, $result->type, $result->score, '$answer', $result->result)
 EOD;
-         print_r($str_query);
          if(!mysqli_query($link, $str_query))
          {
             return ERR_INSERT_DATABASE;
@@ -481,6 +492,26 @@ EOD;
       }
       
       return $answer_str;
+   }
+ 
+   function is_exam_active($exam_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = "select * from exams where ExamId=$exam_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         if ($row["Status"] == EXAM_ACTIVE)
+         {
+            return true;
+         }
+      }
+      return false;
    }
  
 ?>

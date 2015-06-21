@@ -3,6 +3,22 @@
 ?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
+function expandSearchExamsContentFunc()
+{
+   if ($('span.ExamName').hasClass('fixWidth'))
+   {
+      $('span.ExamName').removeClass('fixWidth');
+      $('span.ExamName').addClass('breakAll');
+      $('.expandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ExamName').addClass('fixWidth');
+      $('span.ExamName').removeClass('breakAll');
+      $('.expandSR').text('显示过长内容');
+   }
+}
+
 function actionSearchExams(ExamId, Status)
 {
    //ajax
@@ -36,7 +52,6 @@ function actionSearchExams(ExamId, Status)
          alert("ajax error: " + xhr.status + " " + xhr.statusText);
       }
    });
-
 }
 
 //***Step10 列表中动作删除Ajax呼叫
@@ -92,7 +107,6 @@ function uploadUserExams(ExamId)
    url_str = "Exam/Exams_roll_list.php?";
    window.open(url_str + str);
 }
-
 
 function clickSearchExamssPage(obj, n)  //搜尋換頁
 {
@@ -163,6 +177,7 @@ function occurTimeDatePicker()
          <div id="searchExamsPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
+               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -192,6 +207,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
+               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>
