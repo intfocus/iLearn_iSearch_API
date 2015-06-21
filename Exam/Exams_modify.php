@@ -386,6 +386,18 @@ function modifyExamsContent(ExamId)
       return;
    }
    
+   if (ExanName.length > 100)
+   {
+      alert("考卷名称不能超过100字元");
+      return;
+   }
+   
+   if (ExamDesc.length > 500)
+   {
+      alert("考卷描述不能超过500字元");
+   }
+   
+   
    if (ExpireTime.length == 0)
    {
       expire_timestamp = <? echo strtotime($ExpireTime);?> * 1000;
@@ -490,18 +502,18 @@ function modifyExamsContent(ExamId)
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
 </div>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+   <table class="searchField" border="0" cellspacing="0" cellpadding="0" style="width:100%">
       <tr>
          <th>考卷名称: </th>
-         <td><Input type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
+         <td><Input style="width:100%" type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
       </tr>
       <tr>
          <th>考卷描述：</th>
-         <td><Input type=text name=ExamDescModify size=50 value="<?php echo $ExamDesc;?>"></td>
+         <td><textarea style="width:100%" name=ExamDescModify rows=3><?php echo $ExamDesc;?></textarea></td>
       </tr>
       <tr>
          <th>考卷类型：</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamType == MOCK_EXAM) 
             {
                echo MSG_MOCK_EXAM;
@@ -515,7 +527,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考卷答案类型:</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamAnsType == GIVE_ANSWER_AFTER_SUBMIT) 
             {
                echo MSG_GIVE_ANSWER_AFTER_SUBMIT;
@@ -529,11 +541,11 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr <? if ($ExamLocation == OLINE_TEST){ echo "style='display:none'";}?>>
          <th>考卷密码：</th>
-         <td><Input type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
+         <td><Input style="width:100%" type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
       </tr>
       <tr>
          <th>考试地点: </th>
-         <td><Input type=text name=ExamLocation size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamLocation size=50 disabled="disabled" value="<?php
             if ($ExamLocation == OLINE_TEST) 
             {
                echo MSG_ONLINE_TEST;
@@ -547,7 +559,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考试内容: </th>
-          <td><Input type=text name=ExamContentModify size=200 disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
+          <td><Input style="width:100%" type=text name=ExamContentModify  disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
          </td>
       </tr>
          <th>原始有效日期: </th>
