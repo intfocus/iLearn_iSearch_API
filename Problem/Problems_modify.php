@@ -162,31 +162,6 @@
          }
       }
    }
-   else if ($ProbId == 0) // Insert
-   {
-      /* read excel and parse question */
-      /* check syntax, mark any wrong place */
-      /* if all okay, insert it
-      
-      $DeptName = $_GET["DeptName"];
-      $DeptCode = $_GET["DeptCode"];
-      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
-      $ParentId = $_GET["ParentId"];
-      $str_query1 = "Insert into Depts (DeptName,DeptCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$DeptName','$DeptCode',$ParentId,'$PAList','$ProductList',1,now(),1,now(),1)" ;
-      if(mysqli_query($link, $str_query1))
-      {
-         echo "0";
-         return;
-      }
-      else
-      {
-         echo -__LINE__ . $str_query1;
-         return;
-      }
-      */
-   }
    else if ($cmd == "update")// Update
    {
       $ProbId = $_GET["ProbId"];
@@ -199,7 +174,6 @@
       $ProbSelF = $_GET["ProbSelF"];
       $ProbSelG = $_GET["ProbSelG"];
       $ProbSelH = $_GET["ProbSelH"];
-      $ProbSelI = $_GET["ProbSelI"];
       $ProbAnswer = $_GET["ProbAnswer"];
       $ProbCategory = $_GET["ProbCategory"];
       $ProbLevel = $_GET["ProbLevel"];
@@ -227,7 +201,7 @@
          return;
       }
 
-      $selections = [$ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH, $ProbSelI];
+      $selections = [$ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH];
       if (!is_correct_prob_selection_format($selections, $ProbType))
       {
          echo ERR_PROB_SELECTOR_FORMAT;
@@ -261,8 +235,8 @@
                       ProblemSelectB='$ProbSelB', ProblemSelectC='$ProbSelC',
                       ProblemSelectD='$ProbSelD', ProblemSelectE='$ProbSelE',
                       ProblemSelectF='$ProbSelF', ProblemSelectG='$ProbSelG',
-                      ProblemSelectH='$ProbSelH', ProblemSelectI='$ProbSelI',
-                      ProblemAnswer='$ProbAnswer', ProblemCategory='$ProbCategory',
+                      ProblemSelectH='$ProbSelH', ProblemAnswer='$ProbAnswer',
+                      ProblemCategory='$ProbCategory',
                       ProblemLevel='$ProbLevel', ProblemMemo='$ProbMemo' where ProblemId=$ProbId
 EOD;
 
@@ -333,13 +307,11 @@ function make_selection_modify_query_str()
    selF = document.getElementById("ProbSelF").value;
    selG = document.getElementById("ProbSelG").value;
    selH = document.getElementById("ProbSelH").value;
-   selI = document.getElementById("ProbSelI").value;
    
    return ("ProbSelA=" + encodeURIComponent(selA) + "&ProbSelB=" + encodeURIComponent(selB) + 
            "&ProbSelC=" + encodeURIComponent(selC) + "&ProbSelD=" + encodeURIComponent(selD) + 
            "&ProbSelE=" + encodeURIComponent(selE) + "&ProbSelF=" + encodeURIComponent(selF) +
-           "&ProbSelG=" + encodeURIComponent(selG) + "&ProbSelH=" + encodeURIComponent(selH) +
-           "&ProbSelI=" + encodeURIComponent(selI));
+           "&ProbSelG=" + encodeURIComponent(selG) + "&ProbSelH=" + encodeURIComponent(selH));
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作
@@ -435,11 +407,11 @@ function modifyProbsContent(ProbId)
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
          <th>题目描述：</th>
-         <td><Input type=text name=ProbDescModify size=50 value="<?php echo $ProbDesc;?>"></td>
+         <td><textarea name=ProbDescModify rows=3 cols=100><?php echo $ProbDesc;?></textarea></td>
       </tr>
       <tr>
          <th>题目类型：</th>
-         <td><Input type=text name=ProbType size=50 disabled="disabled" value="<?php
+         <td><Input type=text name=ProbType size=100 disabled="disabled" value="<?php
             if ($ProbType == TRUE_FALSE_PROB) 
             {
                echo "是非";
@@ -456,7 +428,7 @@ function modifyProbsContent(ProbId)
          </td>
       </tr>
    <?php
-      for ($i=ord("A"); $i<=ord("I"); $i++)
+      for ($i=ord("A"); $i<=ord("H"); $i++)
       {
          $selector = "ProbSel".chr($i);
 
@@ -466,7 +438,7 @@ function modifyProbsContent(ProbId)
    ?>
       <tr>
          <th>题目答案:</th>
-         <td><Input type=text name=ProbAnswerModify size=50 value="<?php echo $ProbAnswer?>"></td>
+         <td><Input type=text name=ProbAnswerModify size=100 value="<?php echo $ProbAnswer?>"></td>
       </tr>
       <?php
          // Function Adaptation
@@ -571,7 +543,7 @@ function modifyProbsContent(ProbId)
       </tr>
       <tr>
          <th>题目备注：</th>
-         <td><Input type=text name=ProbMemoModify size=50 value="<?php echo $ProbMemo?>"></td>
+         <td><textarea name=ProbMemoModify rows=3 cols=100><?php echo $ProbMemo?></textarea></td>
       </tr>
       <tr>
       </tr>

@@ -1,8 +1,6 @@
-<?php
+<?php 
    require_once("Problems_utility.php");
 ?>
-
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchProbs(ProbId, Status)
@@ -11,8 +9,6 @@ function actionSearchProbs(ProbId, Status)
    str = "cmd=actionProbs" + "&ProbId=" + ProbId + "&Status=" + Status;
    url_str = "Problem/Problems_action.php?";
 
-   //alert(str);
-   $('#loadingWrap').show();
    $.ajax
    ({
       beforeSend: function()
@@ -24,19 +20,15 @@ function actionSearchProbs(ProbId, Status)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchProbsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchProbsButton")[0].click();
+         }
+         else  //failed
+         {  
+            //echo "1.0";
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {
@@ -56,9 +48,7 @@ function deleteSearchProbs(ProbId)
    //ajax
    str = "cmd=deleteProbs" + "&" + "ProbId=" + ProbId;
    url_str = "Problem/Problems_delete.php?";
-   
-   //alert(str);
-   $('#loadingWrap').show();
+
    $.ajax
    ({
       beforeSend: function()
@@ -70,20 +60,14 @@ function deleteSearchProbs(ProbId)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchProbsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               $('#loadingWrap').hide();
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchProbsButton")[0].click();
+         }
+         else  //failed
+         {
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {
@@ -159,7 +143,7 @@ function occurTimeDatePicker()
                <th>难易：</th>
                <td>
                <select id="searchProbsLevel">
-                  <option value=<?php echo NO_LEVEL?>>無
+                  <option value=<?php echo NO_LEVEL?>>全部
                   <option value=<?php echo EASY_LEVEL?>>易
                   <option value=<?php echo MID_LEVEL?>>中
                   <option value=<?php echo HIGH_LEVEL?>>难

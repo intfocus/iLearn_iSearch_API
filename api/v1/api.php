@@ -240,11 +240,11 @@
                echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
                return;
             }
-
-            echo json_encode(array("status"=>"success"));
-            return;
          }
 
+         update_the_submit_status($exam_id, $user_id, true);
+         echo json_encode(array("status"=>"success"));
+         return;
       }
       else
       {
@@ -369,7 +369,7 @@
       }
       
       $str_query = <<<EOD
-                Update examscore set ExamId=$exam_id, UserId=$user_id, Score=$score
+                Update examscore set Score=$score where ExamId=$exam_id AND UserId=$user_id
 EOD;
       mysqli_query($link, $str_query);
       if(!mysqli_query($link, $str_query))
