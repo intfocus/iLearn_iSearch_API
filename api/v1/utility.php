@@ -10,4 +10,5 @@
    define("ERR_USER_NOT_FOUND", 3000);
    define("ERR_FILE_NOT_EXIST", 4000);
    define("ERR_EXAM_NOT_FOUND", 4000);
+
 ?>
