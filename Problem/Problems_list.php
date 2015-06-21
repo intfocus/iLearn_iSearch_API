@@ -3,6 +3,49 @@
 ?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
+function expandSearchProbsContentFunc()
+{
+   if ($('span.ProbDesc').hasClass('fixWidth'))
+   {
+      $('span.ProbDesc').removeClass('fixWidth');
+      $('span.ProbDesc').addClass('breakAll');
+      $('.expandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbDesc').addClass('fixWidth');
+      $('span.ProbDesc').removeClass('breakAll');
+      $('.expandSR').text('显示过长内容');
+   }
+   
+   if ($('span.ProbCategory').hasClass('fixWidth'))
+   {
+      $('span.ProbCategory').removeClass('fixWidth');
+      $('span.ProbCategory').addClass('breakAll');
+      $('.expandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbCategory').addClass('fixWidth');
+      $('span.ProbCategory').removeClass('breakAll');
+      $('.expandSR').text('显示过长内容');
+   }
+
+   if ($('span.ProbMemo').hasClass('fixWidth'))
+   {
+      $('span.ProbMemo').removeClass('fixWidth');
+      $('span.ProbMemo').addClass('breakAll');
+      $('.expandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbMemo').addClass('fixWidth');
+      $('span.ProbMemo').removeClass('breakAll');
+      $('.expandSR').text('显示过长内容');
+   }
+   
+}
+
 function actionSearchProbs(ProbId, Status)
 {
    //ajax
@@ -153,6 +196,7 @@ function occurTimeDatePicker()
             <tr>
                <th colspan="4" class="submitBtns">
                   <a class="btn_submit_new searchProbs"><input name="searchProbsButton" type="button" value="开始查询"></a>
+                  <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
                </th>
             </tr>
          </table>
@@ -164,6 +208,7 @@ function occurTimeDatePicker()
          <div id="searchProbsPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
+               <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -190,6 +235,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
+               <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

@@ -208,6 +208,7 @@
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
                        . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
+                       . "<span class=\"btn expandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -334,6 +335,7 @@
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
                         . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
+                        . "<span class=\"btn expandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----
