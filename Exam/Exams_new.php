@@ -374,6 +374,12 @@ function loaded() {
          return;
       }
 
+      if (exam_expire_date.length == 0)
+      {
+         alert("有限时间不能为空");
+         return;
+      }
+      
       // test type
       if (exam_type == 1)
       {
@@ -446,7 +452,11 @@ function loaded() {
             }
             else
             {
-               alert(res);
+               if (res == <? echo ERR_INSERT_DATABASE;?>)
+               {
+                  alert("无法新增，可能为已新增过之考题内容");
+               }
+               return;
             }
 
          },
