@@ -228,7 +228,7 @@ function loaded() {
 
    $("#genProbsButton").click(function(){
       functions_id = [];
-
+      
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
       multi_selection_amount =$("#NewExamMutiSelProbType").val();
@@ -307,7 +307,7 @@ function loaded() {
             }
             
             if (res.hasOwnProperty("problems")) {
-               sequence = 0;
+               sequence = 1;
                $.each(res.problems, function(key, val){
                   type_str = get_type_str_from_id(val.type);
                   level_str = get_level_str_from_id(val.level);
@@ -570,9 +570,9 @@ function loaded() {
    </div>
 
    <div class="problem_info" style="display:none">
+      <h1>题目</h1>
       <table class="problems_table">
-         <tr><td>题目</td></tr>
-         <th>编号</th><th>题型</th><th>难易</th><th>描述</th>
+         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
          <tr id="problem_template"></tr>
       </table>
    </div>
