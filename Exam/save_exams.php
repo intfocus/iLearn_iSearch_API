@@ -113,7 +113,12 @@
       echo SYMBOL_ERROR;
       return;
    }
-   
+
+   if ($exam_type == MOCK_EXAM)
+   {
+      $to_timestamp = $expire_timestamp;
+   }
+
    // begin, end, expire time to datetime
    $sql_begin_datetime = timestamp_to_datetime($from_timestamp);
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);
@@ -183,7 +188,7 @@ EOD;
          mysqli_close($link);
       }
       sleep(DELAY_SEC);
-      echo -__LINE__;
+      echo ERR_INSERT_DATABASE;
       return;
    }
    
@@ -332,8 +337,7 @@ EOD;
       if (!$link)  //connect to server failure    
       {
          sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return;
+         return DB_ERROR;
       }  
 
       $str_query = "INSERT INTO examdetail (ExamId, ProblemId) Values ($exam_id, $prob_id)";

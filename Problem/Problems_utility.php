@@ -207,14 +207,13 @@
       {
          return MID_LEVEL_NAME;
       }
-      else if ($level == HARD_LEVEL)
+      else if ($level == HIGH_LEVEL)
       {
          return HARD_LEVEL_NAME;
       }
       
    }
-   
-   
+
    function get_function_id($category_str)
    {  
       $removed_start_end_comma_str = substr($category_str, 1, strlen($category_str)-2);
@@ -242,7 +241,19 @@
       
       return $output_str;
    }
-   
+
+   function is_empty_row($row)
+   {
+      foreach ($row as $element)
+      {
+         if (strlen($element) > 0)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+
    // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析
    function is_valid_syntax_import_file($row)
    {
@@ -288,10 +299,15 @@
             $selections_count++;
          }
       }
-      
+
+      if ($selections[0] == "" || $selections[1] == "")
+      {
+         return false;
+      }
+
       if ($prob_type == TRUE_FALSE_PROB)
       {
-         if ($selections_count != 0)
+         if ($selections_count != 2)
          {
             return false;
          }
@@ -308,8 +324,8 @@
 
    function is_correct_prob_answer_format($prob_answer, $selections, $prob_type)
    {
-      // only [A-I]+
-      if (!preg_match('/[A-I]+/', $prob_answer))
+      // only [A-H]+
+      if (!preg_match('/^[A-H]+$/', $prob_answer))
       {
          return false;
       }

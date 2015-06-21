@@ -179,7 +179,7 @@ $(function() {
 	});
    
    var dates8 = $("#exam_expire_time").datepicker({
-      //maxDate: new Date(),
+      minDate: new Date(),
 		defaultDate: "+1w",
 		changeMonth: true,
       changeYear: true,
