@@ -94,7 +94,11 @@
             {
                //get exam info
                $row = mysqli_fetch_assoc($result);
-               array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               // pus exam only when exam is active
+               if (is_exam_active($row["ExamId"]))
+               {
+                  array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               }
             }   
          }
    
@@ -488,6 +492,26 @@ EOD;
       }
       
       return $answer_str;
+   }
+ 
+   function is_exam_active($exam_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = "select * from exams where ExamId=$exam_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         if ($row["Status"] == EXAM_ACTIVE)
+         {
+            return true;
+         }
+      }
+      return false;
    }
  
 ?>

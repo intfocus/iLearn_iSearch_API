@@ -7,6 +7,10 @@
    define("NOT_SUBMIT", 0);
    define("SUBMIT", 1);
 
+   define("EXAM_DELETED", -1);
+   define("EXAM_INACTIVE", 0);
+   define("EXAM_ACTIVE", 1);
+   
    define("ERR_NOT_ENOUGH_PROBLEM", -500);
    
    define("ERR_ADJUST_LEVEL", -1000);
