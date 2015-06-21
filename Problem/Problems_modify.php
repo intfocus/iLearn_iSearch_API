@@ -405,41 +405,56 @@ function modifyProbsContent(ProbId)
 </div>
 <div id="content">
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+      <div id="problem_overview">
       <tr>
          <th>题目描述：</th>
          <td><textarea name=ProbDescModify rows=3 cols=100><?php echo $ProbDesc;?></textarea></td>
       </tr>
-      <tr>
-         <th>题目类型：</th>
-         <td><Input type=text name=ProbType size=100 disabled="disabled" value="<?php
-            if ($ProbType == TRUE_FALSE_PROB) 
-            {
-               echo "是非";
-            }
-            else if ($ProbType == SINGLE_CHOICE_PROB)
-            {
-               echo "单选";
-            }
-            else if ($ProbType == MULTI_CHOICE_PROB)
-            {
-               echo "多选";
-            }
-            ?>">
-         </td>
-      </tr>
-   <?php
-      for ($i=ord("A"); $i<=ord("H"); $i++)
-      {
-         $selector = "ProbSel".chr($i);
+         <tr>
+            <th>题目类型：</th>
+            <td><Input type=text name=ProbType size=100 disabled="disabled" value="<?php
+               if ($ProbType == TRUE_FALSE_PROB) 
+               {
+                  echo "是非";
+               }
+               else if ($ProbType == SINGLE_CHOICE_PROB)
+               {
+                  echo "单选";
+               }
+               else if ($ProbType == MULTI_CHOICE_PROB)
+               {
+                  echo "多选";
+               }
+               ?>">
+            </td>
+         </tr>
+         <tr>
+            <th>题目难易:</th>
+            <td>
+               <select name="ProbLevelModify">
+                  <option value=<?php echo EASY_LEVEL?> <?php if ($ProbLevel == EASY_LEVEL) {echo "selected";}?>/>易
+                  <option value=<?php echo MID_LEVEL?> <?php if ($ProbLevel == MID_LEVEL) {echo "selected";}?>/>中
+                  <option value=<?php echo HIGH_LEVEL?> <?php if ($ProbLevel == HIGH_LEVEL) {echo "selected";}?>/>难
+               <select>
+            </td>
+         </tr>
+      </div>
+      <div id="problem_problem">
+      <?php
+         for ($i=ord("A"); $i<=ord("H"); $i++)
+         {
+            $selector = "ProbSel".chr($i);
 
-         echo "<tr><th>题目".chr($i)."</th>";
-         echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"</td></tr>";
-      }
-   ?>
-      <tr>
-         <th>题目答案:</th>
-         <td><Input type=text name=ProbAnswerModify size=100 value="<?php echo $ProbAnswer?>"></td>
-      </tr>
+            echo "<tr><th>题目".chr($i)."</th>";
+            echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"</td></tr>";
+         }
+      ?>
+         <tr>
+            <th>题目答案:</th>
+            <td><Input type=text name=ProbAnswerModify size=100 value="<?php echo $ProbAnswer?>"></td>
+         </tr>
+      </div>
+      <div id="problem_functions">
       <?php
          // Function Adaptation
          $func_type = FUNCTION_ADAPTATION;
@@ -531,34 +546,25 @@ function modifyProbsContent(ProbId)
             }
          }
       ?>
-      <tr>
-         <th>题目难易:</th>
-         <td>
-            <select name="ProbLevelModify">
-               <option value=<?php echo EASY_LEVEL?> <?php if ($ProbLevel == EASY_LEVEL) {echo "selected";}?>/>易
-               <option value=<?php echo MID_LEVEL?> <?php if ($ProbLevel == MID_LEVEL) {echo "selected";}?>/>中
-               <option value=<?php echo HIGH_LEVEL?> <?php if ($ProbLevel == HIGH_LEVEL) {echo "selected";}?>/>难
-            <select>
-         </td>
-      </tr>
-      <tr>
-         <th>题目备注：</th>
-         <td><textarea name=ProbMemoModify rows=3 cols=100><?php echo $ProbMemo?></textarea></td>
-      </tr>
-      <tr>
-      </tr>
-<?php
-   if ($ProbStatus != 1)
-   {
-?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyProbsContent"><input name="modifyProbsButton" type="button" value="保存" OnClick="modifyProbsContent(<?php echo $ProbId;?>)"></a>
-         </th>
-      </tr>      
-<?php
-   }
-?>   
+      </div>
+      <div id="problem_memo">
+         <tr>
+            <th>题目备注：</th>
+            <td><textarea name=ProbMemoModify rows=3 cols=100><?php echo $ProbMemo?></textarea></td>
+         </tr>
+      </div>
+      <div class="probem_submit">
+      <?php
+         if ($ProbStatus != 1)
+         {?>         
+            <tr>
+               <th colspan="4" class="submitBtns">
+                  <a class="btn_submit_new modifyProbsContent"><input name="modifyProbsButton" type="button" value="保存" OnClick="modifyProbsContent(<?php echo $ProbId;?>)"></a>
+               </th>
+            </tr>      
+      <?php
+         }?>
+      </div>
    </table>
 </div>
 </body>
