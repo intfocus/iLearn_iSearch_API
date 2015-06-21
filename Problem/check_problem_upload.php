@@ -474,19 +474,22 @@ function loaded() {
 ?>
 <?if ($file_status->status != SUCCESS)
    {?>
-   <form action="check_problem_upload.php" method="post" enctype="multipart/form-data">
-      <table>
+   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+      <form enctype="multipart/form-data" action="check_problem_upload.php" method="POST" enctype="multipart/form-data">
+      
       <tr>
-         选择题目档案上传:
+         <th>选取上传文档：</th>
+         <td>
+            <Input type=file size=50 name="fileToUpload" />
+         </td>
       </tr>
       <tr>
-         <td><input type="file" name="fileToUpload" id="fileToUpload"></td>
-      </tr>
-      <tr>
-         <td><input type="submit" value="上传档案" name="submit"></td>
-      </td>
-      </table>
-   </form>
+         <th colspan="2" class="submitBtns">
+               <input type="submit" value="上传文档" name="submit">
+         </th>
+      </tr>      
+      </Form>
+   </table>
    <div class="error_info">
       <table class="report">
          <tr><th>页签</th><th>列</th><th>錯誤</th></tr>
