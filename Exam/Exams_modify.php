@@ -372,10 +372,10 @@ function modifyExamsContent(ExamId)
    ExamName = document.getElementsByName("ExamNameModify")[0].value.trim();
    ExamDesc = document.getElementsByName("ExamDescModify")[0].value.trim();
 
-   ExamFromDate = document.getElementById("from7").value;
+   ExamFromDate = document.getElementById("exam_begin_time").value;
    ExamFromHour = document.getElementById("exam_from_hour").value;
    ExamFromMin = document.getElementById("exam_from_min").value;
-   ExamToDate = document.getElementById("to7").value;
+   ExamToDate = document.getElementById("exam_end_time").value;
    ExamToHour = document.getElementById("exam_to_hour").value;
    ExamToMin = document.getElementById("exam_to_min").value;
    ExpireTime = document.getElementById("exam_expire_time").value;
@@ -386,7 +386,7 @@ function modifyExamsContent(ExamId)
       return;
    }
    
-   if (ExanName.length > 100)
+   if (ExamName.length > 100)
    {
       alert("考卷名称不能超过100字元");
       return;
@@ -585,11 +585,11 @@ function modifyExamsContent(ExamId)
       <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
          <th>新考试时间段: </th>
          <td>
-            <input id="from7" type="text" name="exam_from_date6" class="from" readonly="true">
+            <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
             <select id="exam_from_hour"></select>
             <select id="exam_from_min"></select>
             ~
-            <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
+            <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>

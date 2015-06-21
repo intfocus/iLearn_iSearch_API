@@ -335,11 +335,11 @@ function loaded() {
       exam_status = $("#exam_status").val();
       exam_type = $("#exam_type").val();
       exam_answer_type = $("#exam_answer_type").val();
-      exam_from_date = $("#from7").val();
+      exam_from_date = $("#exam_begin_time").val();
       exam_from_hour = $("#exam_from_hour").val();
       exam_from_min = $("#exam_from_min").val();
       exam_expire_date = $("#exam_expire_time").val();
-      exam_to_date = $("#to7").val();
+      exam_to_date = $("#exam_end_time").val();
       exam_to_hour = $("#exam_to_hour").val();
       exam_to_min = $("#exam_to_min").val();
       exam_desc = $("#exam_desc").val();
@@ -628,11 +628,11 @@ function loaded() {
          <tr id="exam_time_selections" style="display:none">
             <td>考试时间段&nbsp;</td>
             <td>
-               <input id="from7" type="text" name="exam_from_date6" class="from" readonly="true">
+               <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
                <select id="exam_from_hour"></select>
                <select id="exam_from_min"></select>
                ~
-               <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
+               <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
                <select id="exam_to_hour"></select>
                <select id="exam_to_min"></select>
             </td>
