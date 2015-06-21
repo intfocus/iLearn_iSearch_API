@@ -207,7 +207,7 @@
       {
          return MID_LEVEL_NAME;
       }
-      else if ($level == HARD_LEVEL)
+      else if ($level == HIGH_LEVEL)
       {
          return HARD_LEVEL_NAME;
       }
