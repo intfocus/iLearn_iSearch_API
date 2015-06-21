@@ -203,7 +203,7 @@ DROP TABLE IF EXISTS `exams`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `exams` (
   `ExamId` int(11) NOT NULL AUTO_INCREMENT,
-  `ExamName` varchar(100) NOT NULL,
+  `ExamName` varchar(200) NOT NULL,
   `ExamType` int(11) NOT NULL DEFAULT '0',
   `ExamLocation` int(11) DEFAULT NULL,
   `ExamBegin` datetime DEFAULT NULL,
@@ -212,7 +212,7 @@ CREATE TABLE `exams` (
   `ExamPassword` varchar(100) DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT '0',
   `ExamDesc` varchar(255) DEFAULT NULL,
-  `ExamContent` varchar(255) NOT NULL,
+  `ExamContent` varchar(1000) NOT NULL,
   `ExpireTime` datetime NOT NULL,
   `CreatedUser` int(11) NOT NULL,
   `CreatedTime` datetime NOT NULL,
