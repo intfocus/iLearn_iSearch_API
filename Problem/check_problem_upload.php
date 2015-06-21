@@ -163,7 +163,7 @@ function read_excel_and_insert_into_database($target_file)
 
       for ($col=0; $col<=$highest_col; $col++)
       {
-         array_push($tmp, $sheet->getCellByColumnAndRow($col, 1)->getValue());
+         array_push($tmp, trim($sheet->getCellByColumnAndRow($col, 1)->getValue()));
       }
       if (!is_valid_syntax_import_file($tmp))
       {
@@ -178,9 +178,13 @@ function read_excel_and_insert_into_database($target_file)
          $functions = array();
          for ($col=0; $col<=$highest_col; $col++)
          {
-            array_push($tmp, $sheet->getCellByColumnAndRow($col, $row)->getValue());
+            array_push($tmp, trim($sheet->getCellByColumnAndRow($col, $row)->getValue()));
          }
-
+         if (is_empty_row($tmp))
+         {
+            continue;
+         }
+         
          $cur_problem = new UploadProblem($tmp);
 
          if (!is_correct_prob_type_format($cur_problem->type))
@@ -255,7 +259,6 @@ function read_excel_and_insert_into_database($target_file)
             }
          }
 
-         
          if (is_no_any_functions($functions))
          {
             $file_status->status = ERR_FILE_LOAD;
