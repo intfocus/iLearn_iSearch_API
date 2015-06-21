@@ -63,7 +63,7 @@
    
    //----- query -----
    $str_dept = "select DeptName, DeptCode, ParentId, PAList, ProductList, EditTime from depts 
-      where DeptId = $deptid and Status <> 0;";
+      where DeptId = $deptid and Status = 1;";
    if($rs = mysqli_query($link, $str_dept)){
       $deptcount = mysqli_num_rows($rs);
       if ($deptcount > 0)

@@ -241,7 +241,8 @@
    {
       $str_query1 = $str_query1 . "AND (U.UserName like '%$searchUsersNameEmail%' OR " . 
                                        "U.Email like '%$searchUsersNameEmail%' OR " . 
-                                       "U.EmployeeId like '%$searchUsersNameEmail%') ";
+                                       "U.EmployeeId like '%$searchUsersNameEmail%' OR " . 
+                                       "DeptName like '%$searchUsersNameEmail%') ";
    }
    
    if ($searchUsersfrom1 != '')

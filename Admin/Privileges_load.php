@@ -268,7 +268,8 @@
    {
       $str_query1 = $str_query1 . "AND (U.UserName like '%$searchPrivilegesNameEmail%' OR " . 
                                        "U.Email like '%$searchPrivilegesNameEmail%' OR " . 
-                                       "U.EmployeeId like '%$searchPrivilegesNameEmail%') ";
+                                       "U.EmployeeId like '%$searchPrivilegesNameEmail%' OR " . 
+                                       "D.DeptName like '%$searchPrivilegesNameEmail%') ";
    }
    
    if ($searchPrivilegesfrom1 != '')

@@ -151,7 +151,7 @@ function occurTimeDatePicker()
             <tr>
                <th>最后修改时间 ：</th>
                <td>
-                  <input id="from4" type="text" name="searchFilesfrom1" class="from" readonly="true"/> ~ <input id="to4" type="text" class="to" name="searchFilesto1" readonly="true"/>
+                  <input id="from6" type="text" name="searchFilesfrom1" class="from" readonly="true"/> ~ <input id="to6" type="text" class="to" name="searchFilesto1" readonly="true"/>
                </td>
             </tr>
             <tr>

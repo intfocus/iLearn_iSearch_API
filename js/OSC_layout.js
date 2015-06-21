@@ -162,6 +162,7 @@ $(function() {
    });
    
    var dates7 = $("#from7, #to7" ).datepicker({
+      maxDate: new Date(),
 		defaultDate: "+1w",
 		changeMonth: true,
       changeYear: true,
