@@ -41,7 +41,7 @@ function clickSearchPrivilegesPage(obj, n)  //搜尋換頁
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>用户名称/用户邮箱/工号 ：</th>
+               <th>用户名称/用户邮箱/工号/部门名称 ：</th>
                <td><input id="searchPrivilegesNameEmail" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
