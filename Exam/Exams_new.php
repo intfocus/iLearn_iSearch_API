@@ -363,6 +363,12 @@ function loaded() {
          return;
       }
 
+      if (exam_desc.length > 500)
+      {
+         alert("考卷描述不能超过500字元");
+         return;
+      }
+      
       if (exam_expire_date.length == 0)
       {
          alert("有限时间不能为空");
