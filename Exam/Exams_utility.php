@@ -183,4 +183,15 @@
       return $answers;
    }
    
+   function get_random_password()
+   {
+      $pwd = "";
+      for ($i=0; $i<4; $i++)
+      {
+         $chr = (string)rand(0, 9);
+         $pwd = $pwd.$chr;
+      }
+      return $pwd;
+   }
+   
 ?>

@@ -203,7 +203,6 @@ function loaded() {
       {    
          $("#exam_answer_selections").hide();
          $("#exam_time_selections").hide();
-         $("#exam_password_sections").hide();
          $("#exam_location_selections").hide();
       }
       else if ($(this).val() == 1) 
@@ -227,17 +226,6 @@ function loaded() {
       }
    });
 
-   $("#exam_location").change(function(){
-      if ($(this).val() == 0)
-      {
-         $("#exam_password_sections").hide();
-      }
-      else
-      {
-         $("#exam_password_sections").show();
-      }
-   });
-   
    $("#genProbsButton").click(function(){
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
@@ -352,7 +340,6 @@ function loaded() {
       exam_to_date = $("#to7").val();
       exam_to_hour = $("#exam_to_hour").val();
       exam_to_min = $("#exam_to_min").val();
-      exam_password = $("#exam_password").val();
       exam_desc = $("#exam_desc").val();
       exam_location = $("#exam_location").val();
       exam_selected_functions = functions_id;
@@ -403,15 +390,6 @@ function loaded() {
             alert("有效日期必须大于结束时间");
             return;
          }
-         
-         if (exam_location == 1)
-         {
-            if (exam_password.match(/[0-9][0-9][0-9][0-9]/) == null)
-            {
-               alert("考试密码必须为四位数的数字");
-               return;
-            }
-         }
       }
 
       // collect all problems id
@@ -435,7 +413,6 @@ function loaded() {
                   "exam_type": exam_type,
                   "exam_answer_type": exam_answer_type,
                   "exam_probs_id": exam_probs_id,
-                  "exam_password": exam_password,
                   "from_timestamp": (from_timestamp/1000),
                   "to_timestamp": (to_timestamp/1000),
                   "exam_expire_timestamp": (expire_timestamp/1000),
@@ -650,12 +627,6 @@ function loaded() {
                <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
                <select id="exam_to_hour"></select>
                <select id="exam_to_min"></select>
-            </td>
-         </tr>
-         <tr id="exam_password_sections" style="display:none">
-            <td>考卷密码&nbsp;</td>
-            <td>
-               <input type="text" id="exam_password" size=4>
             </td>
          </tr>
          <tr>

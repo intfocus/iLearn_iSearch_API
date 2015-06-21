@@ -1,4 +1,3 @@
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <?php
    require_once("Exams_utility.php");
 
@@ -212,6 +211,7 @@
                                          . "<col class=\"ExamName\"/>"
                                          . "<col class=\"ExamType\"/>"
                                          . "<col class=\"ExamStatus\"/>"
+                                         . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
                                          . "<col class=\"EditTime\"/>"
@@ -222,6 +222,7 @@
                                          . "<th>名称</th>"
                                          . "<th>类型</th>"
                                          . "<th>状态</th>"
+                                         . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
                                          . "<th>最后修改时间</th>"
@@ -253,6 +254,7 @@
                                          . "<col class=\"ExamName\"/>"
                                          . "<col class=\"ExamType\"/>"
                                          . "<col class=\"ExamStatus\"/>"
+                                         . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
                                          . "<col class=\"EditTime\"/>"
@@ -263,6 +265,7 @@
                                          . "<th>名称</th>"
                                          . "<th>类型</th>"
                                          . "<th>状态</th>"
+                                         . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
                                          . "<th>最后修改时间</th>"
@@ -277,6 +280,7 @@
                $ExamName = $row["ExamName"];
                $ExamTypeStr = get_exam_type_name_from_id($row["ExamType"]);
                $ExamStatus = $row["Status"];
+               $ExamPassword = $row["ExamPassword"];
                $CreatedUserId = $row["CreatedUser"];
                $CreatedUserName = get_user_name($CreatedUserId);
                $CreatedTime = $row["CreatedTime"];
@@ -290,6 +294,7 @@
                   . "<td><span class=\"ExamName fixWidth\">$ExamName</span></td>"
                   . "<td><span class=\"ExamType fixWidth\">$ExamTypeStr</span></td>"
                   . "<td><span class=\"ExamStatus fixWidth\">$StatusStr</span></td>"
+                   . "<td><span class=\"ExamStatus fixWidth\">$ExamPassword</span></td>"
                   . "<td><span class=\"CreatedUser fixWidth\">$CreatedUserName</span></td>"
                   . "<td><span class=\"CreatedTime fixWidth\">$CreatedTime</span></td>"
                   . "<td><span class=\"EditTime fixWidth\">$EditTime</span></td>"
