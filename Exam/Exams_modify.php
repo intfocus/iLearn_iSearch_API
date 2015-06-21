@@ -115,6 +115,8 @@
    }   
 
    $TitleStr = MSG_EXAM_MODIFY;
+   
+   $problems = array();
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if (strcmp($cmd, "read") == 0) // Load
@@ -149,14 +151,19 @@
          }
          else
          {
-            $DeptId = 0;
-            $DeptName = "";
-            $DeptCode = 0;
-            $ParentId = 0;
-            $PAList = "";
-            $ProductList = "";
-            $TitleStr = "部门新增";
-            $Status = 0;
+            header("Location: ../index.php");
+            die();
+         }
+
+         $str_query = "select * from examdetail where ExamId=$ExamId";
+         if($result = mysqli_query($link, $str_query))
+         {
+            $row_number = mysqli_num_rows($result);
+            for ($i=0; $i<$row_number; $i++)
+            {
+               $row = mysqli_fetch_assoc($result);
+               array_push($problems, get_problems_info($row["ProblemId"]));
+            }
          }
       }
    }
@@ -225,6 +232,27 @@ EOD;
       }
    }
    
+   function get_problems_info($problem_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         return DB_ERROR;       
+      }
+      
+      
+      $str_query = "select * from problems where ProblemId=$problem_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         $problem = new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]);
+         return $problem;
+      }
+      
+      return;
+   }
+   
    function get_content_str($content_str)
    {
       //input format: yes_no, single_choice, multi_choice, easy_level, mid_level, hard_level, categories....
@@ -272,6 +300,7 @@ EOD;
       }
       return $str;
    }
+   
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -284,6 +313,8 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link rel="stylesheet" type="text/css" href="../css/exam.css">
+<link rel="stylesheet" type="text/css" href="../css/problem.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -549,7 +580,22 @@ function modifyExamsContent(ExamId)
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>
-      </tr>
+      </tr>   
+  
+   </table>
+   <div class="problem_info">
+      <h1>题目</h1>
+      <table class="problems_table">
+         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
+<?php
+         for ($i=0; $i<count($problems); $i++)
+         {
+            $sequence = $i + 1;
+            echo "<tr><td>".$sequence."</td><td>".get_type_name_from_id($problems[$i]->type)."</td><td>".get_level_name($problems[$i]->level)."</td><td>".$problems[$i]->desc."</td></tr>";
+         }
+?>         
+      </table>
+   </div>
 <?php
    if ($ExamStatus != 1)
    {
@@ -561,8 +607,7 @@ function modifyExamsContent(ExamId)
       </tr>      
 <?php
    }
-?>   
-   </table>
+?> 
 </div>
 </body>
 </html>
