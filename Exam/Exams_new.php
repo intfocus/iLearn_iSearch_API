@@ -227,6 +227,8 @@ function loaded() {
    });
 
    $("#genProbsButton").click(function(){
+      functions_id = [];
+
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
       multi_selection_amount =$("#NewExamMutiSelProbType").val();
