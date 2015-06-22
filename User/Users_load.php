@@ -249,8 +249,8 @@
       $str_query1 = $str_query1 . "AND U.EditTime >= '$searchUsersfrom1' ";
    if ($searchUsersto1 != '')
       $str_query1 = $str_query1 . "AND U.EditTime <= '$searchUsersto1' ";
-   
-   $str_query1 = $str_query1. "AND U.CanApprove = $searchUsersRadio ";
+   if ($searchUsersRadio != '2')
+      $str_query1 = $str_query1. "AND U.CanApprove = $searchUsersRadio ";
    
    //***Step16 页面搜索SQl语句 结束
    
