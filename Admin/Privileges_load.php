@@ -277,7 +277,8 @@
    if ($searchPrivilegesto1 != '')
       $str_query1 = $str_query1 . "AND U.EditTime <= '$searchPrivilegesto1' ";
    
-   $str_query1 = $str_query1. "AND U.CanApprove = $searchPrivilegesRadio ";
+   if($searchPrivilegesRadio != '2')
+      $str_query1 = $str_query1. "AND U.CanApprove = $searchPrivilegesRadio ";
    
    //***Step16 页面搜索SQl语句 结束
    

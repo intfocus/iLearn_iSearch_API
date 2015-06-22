@@ -1263,6 +1263,10 @@ $(function()
       {
          searchPrivilegesRadio = 1; 
       }
+      if (document.getElementById("searchPrivilegesRadio3").checked == true)
+      {
+         searchPrivilegesRadio = 2; 
+      }
       var str;                            //送出内文字串  
       
       //ajax
