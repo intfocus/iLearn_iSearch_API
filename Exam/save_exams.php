@@ -85,13 +85,6 @@
       $exam_functions_id = $_POST["exam_functions_id"];
    }
  
-   if(($exam_status = check_number($_POST["exam_status"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-
    if(($exam_type = check_number($_POST["exam_type"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
@@ -123,6 +116,8 @@
    {
       $exam_password = get_random_password();
    }
+
+   $exam_status = EXAM_INACTIVE;
    // begin, end, expire time to datetime
    $sql_begin_datetime = timestamp_to_datetime($from_timestamp);
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);
