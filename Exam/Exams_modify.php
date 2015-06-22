@@ -293,7 +293,7 @@ EOD;
          }
          else if ($i == 1)
          {// single choice problem
-            $str = $str."單选题题数: ".$contents[$i].", ";
+            $str = $str."单选题题数: ".$contents[$i].", ";
          }
          else if ($i == 2)
          {// multi level problem
