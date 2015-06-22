@@ -1,5 +1,6 @@
 <?php
    require_once("../Problem/Problems_utility.php");
+   require_once("../Exam/Exams_utility.php");
 
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -68,7 +69,6 @@
    define("UPLOAD_FILE_NAME","upload.pdf");
 
    //return value
-   define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -374,7 +374,6 @@ function loaded() {
       from_timestamp = 0;
       to_timestamp = 0;
       expire_timestamp = new Date(exam_expire_date).getTime();
-      user_id = $("#userid").val();
       
       if (exam_name == 0)
       {
@@ -452,21 +451,22 @@ function loaded() {
                   "exam_content": exam_content,
                   "exam_functions_id": exam_selected_functions,
                   "exam_location": exam_location,
-                  "user_id": user_id
                 },
          success: function(res) {
-            if (!res.match(/^-\d+$/)) 
+            if (res == 0) 
             {
                alert("新增考卷成功，页面关闭后请自行刷新")
                window.close();
             }
             else
             {
-               alert(res);
-               return;
                if (res == <? echo ERR_INSERT_DATABASE;?>)
                {
                   alert("无法新增，可能为已新增过之考题内容");
+               }
+               else if (res == <? echo ERR_SAVE_JSON_FILE;?>)
+               {
+                  alert("储存考卷JSON文档失败")
                }
                return;
             }
@@ -485,7 +485,6 @@ function loaded() {
 </head>
 <body Onload="loaded();">
 <div id="header">
-   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
    <form name=logoutform action=logout.php>
    </form>
    <span class="global">使用者 : <?php echo $login_name ?>

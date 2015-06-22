@@ -105,13 +105,6 @@
       echo SYMBOL_ERROR;
       return;
    }
-   
-   if(($user_id = check_number($_POST["user_id"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
 
    if ($exam_type == MOCK_EXAM)
    {
@@ -184,8 +177,8 @@
                   ExamPassword,Status,ExamDesc,ExamContent,ExpireTime,CreatedUser,
                   CreatedTime,EditUser,EditTime) VALUES
                 ('$exam_name',$exam_type,$exam_location,'$sql_begin_datetime','$sql_end_datetime',$exam_answer_type,
-                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',$user_id,
-                 now(),$user_id,now())
+                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
+                 now(),1,now())
 EOD;
    
    if(!($result = mysqli_query($link, $str_query)))
@@ -305,8 +298,11 @@ EOD;
          if($link){
             mysqli_close($link);
          }
+
+         clear_exam("exams", $ExamId);
+         
          sleep(DELAY_SEC);
-         echo -__LINE__;
+         echo ERR_INSERT_DATABASE;
          return;
       }
    }
@@ -330,7 +326,13 @@ EOD;
       )
    );
 
-   file_put_contents($json_file_name, $exam_json);
+   if (file_put_contents($json_file_name, $exam_json))
+   {
+      clear_exam("exams", $exam_id);
+      clear_exam("examdetail", $exam_id);
+      echo ERR_SAVE_JSON_FILE;
+      return;
+   }
 
    echo 0;
    return;
@@ -358,4 +360,26 @@ EOD;
 
       return $ret;
    }
+   
+   function clear_exam($table_name, $exam_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         return DB_ERROR;
+      }
+      
+      $str_query = "delete from $table_name where ExamID=$exam_id";
+      if(!mysqli_query($link, $str_query))
+      {
+         $ret = ERR_DELETE_DATABASE;
+      }
+      
+      if($link){
+         mysqli_close($link);
+      }
+      return true;  
+   }
+   
 ?>
