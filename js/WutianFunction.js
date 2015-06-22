@@ -1194,6 +1194,11 @@ $(function()
       {
          searchUsersRadio = 1; 
       }
+      
+      if (document.getElementById("searchUsersRadio3").checked == true)
+      {
+         searchUsersRadio = 2; 
+      }
       var str;                            //送出内文字串  
       
       //ajax
@@ -1201,7 +1206,7 @@ $(function()
             + "searchUsersto1=" + searchUsersto1 + "&" + "statusCheckbox=" + statusCheckbox + "&searchUsersRadio=" + searchUsersRadio;
       url_str = "User/Users_load.php?";
       
-      //alert(str);
+      alert(str);
       $('#loadingWrap').show();
       $.ajax
       ({

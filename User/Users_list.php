@@ -217,8 +217,9 @@ function delUsersBatch()
                </td>
                <th>是否为审批者 ：</th>
                <td colspan="3">
-                  <label><input id="searchUsersRadio1" name="CanA" type="radio" value="" checked="true" />是</label>
+                  <label><input id="searchUsersRadio1" name="CanA" type="radio" value="" />是</label>
                   <label><input id="searchUsersRadio2" name="CanA" type="radio" value="" />否</label>
+                  <label><input id="searchUsersRadio3" name="CanA" type="radio" value="" checked />全部</label>
                </td>
             </tr>
             <tr>
