@@ -5,12 +5,12 @@ function expandSearchNewsContentFunc()
    if ($('span.NewTitle, span.NewMsg').hasClass('fixWidth'))
    {
       $('span.NewTitle, span.NewMsg').removeClass('fixWidth');
-      $('.expandSR').text('隐藏过长内容');
+      $('.NewsexpandSR').text('隐藏过长内容');
    }
    else
    {
       $('span.NewTitle, span.NewMsg').addClass('fixWidth');
-      $('.expandSR').text('显示过长内容');
+      $('.NewsexpandSR').text('显示过长内容');
    }
 }
 
@@ -190,7 +190,7 @@ function occurTimeDatePicker()
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchNewsContentFunc();">新增</span>
-               <span class="btn expandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
+               <span class="btn NewsexpandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -217,7 +217,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchNewsContentFunc();">新增</span>
-               <span class="btn expandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
+               <span class="btn NewsexpandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

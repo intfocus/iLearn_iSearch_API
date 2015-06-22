@@ -9,13 +9,13 @@ function expandSearchExamsContentFunc()
    {
       $('span.ExamName').removeClass('fixWidth');
       $('span.ExamName').addClass('breakAll');
-      $('.expandSR').text('隐藏过长内容');
+      $('.ExamsexpandSR').text('隐藏过长内容');
    }
    else
    {
       $('span.ExamName').addClass('fixWidth');
       $('span.ExamName').removeClass('breakAll');
-      $('.expandSR').text('显示过长内容');
+      $('.ExamsexpandSR').text('显示过长内容');
    }
 }
 
@@ -177,7 +177,7 @@ function occurTimeDatePicker()
          <div id="searchExamsPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
-               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
+               <span class="btn ExamsexpandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -207,7 +207,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
-               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
+               <span class="btn ExamsexpandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>
