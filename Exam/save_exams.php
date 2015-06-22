@@ -78,7 +78,7 @@
    
    if (!isset($_POST["exam_functions_id"]))
    {
-      $exam_functions_id = [];
+      $exam_functions_id = array();
    }
    else
    {
@@ -128,7 +128,7 @@
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);
    $sql_expire_datetime = timestamp_to_datetime($expire_timestamp);
    // get all function name
-   $functions_name = [];
+   $functions_name = array();
    
    //link
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    

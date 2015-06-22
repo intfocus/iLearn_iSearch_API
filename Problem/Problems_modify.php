@@ -201,7 +201,7 @@
          return;
       }
 
-      $selections = [$ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH];
+      $selections =  array($ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH);
       if (!is_correct_prob_selection_format($selections, $ProbType))
       {
          echo ERR_PROB_SELECTOR_FORMAT;
