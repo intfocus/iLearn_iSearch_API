@@ -14,8 +14,18 @@
       echo FILE_ERROR;
       return;
    }
-   session_start();
-   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   try{
+      // TODO: 从 Session 里面拿到 login_name + user_id
+      session_start();
+      if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
+      {
+         session_write_close();
+         sleep(DELAY_SEC);
+         header("Location:". $web_path . "main.php?cmd=err");
+         exit();
+      }
+   }
+   catch(exception $ex)
    {
       session_write_close();
       sleep(DELAY_SEC);
