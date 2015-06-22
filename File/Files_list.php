@@ -140,7 +140,7 @@ function occurTimeDatePicker()
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>文档标题/文档说明 ：</th>
+               <th>文档标题/文档说明/分类名称 ：</th>
                <td><input id="searchFilesNameCode" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
