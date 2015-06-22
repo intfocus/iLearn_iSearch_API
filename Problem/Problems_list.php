@@ -196,7 +196,6 @@ function occurTimeDatePicker()
             <tr>
                <th colspan="4" class="submitBtns">
                   <a class="btn_submit_new searchProbs"><input name="searchProbsButton" type="button" value="开始查询"></a>
-                  <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
                </th>
             </tr>
          </table>
