@@ -102,6 +102,9 @@
    $result;                 //query result
    $row;                    //1 data array
    $return_string;
+   
+
+   
    //1.get information from client
    if(($cmd = check_command($_GET["cmd"])) == SYMBOL_ERROR)
    {
@@ -136,6 +139,8 @@
       echo DB_ERROR;       
       return;
    }   
+ 
+   $funcs_id_name_mapping = get_all_funcs_id_name_mapping();
  
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
@@ -289,8 +294,8 @@
                $ProbTypeStr = get_type_name_from_id($ProbType);
                $ProbDesc = $row["ProblemDesc"];
                $ProbCategory = $row["ProblemCategory"];
-               $funcs_id = get_function_id($ProbCategory);
-               $funcs_name = get_funcs_name($funcs_id);
+               $funcs_id = get_function_id($ProbCategory);               
+               $funcs_name = get_funcs_name($funcs_id, $funcs_id_name_mapping);
                $funcs_name_str = get_funcs_name_str($funcs_name);
                $ProbLevel = $row["ProblemLevel"];
                $ProbLevelStr = get_level_name($ProbLevel);
@@ -366,45 +371,18 @@
       return;
    }
    
-   function get_funcs_name($funcs_id)
+   function get_funcs_name($funcs_id, $funcs_name_id_mapping)
    {
-
       $funcs_name = array();
 
-      $str_query = "select * from functions where ";
-      $funcs_count = count($funcs_id);
-      for ($i=0;$i<$funcs_count;$i++)
+      foreach ($funcs_id as $func_id)
       {
-         if ($i < ($funcs_count-1))
-         {
-            $str_query = $str_query."FunctionId=".$funcs_id[$i]." OR ";
-         }
-         else if ($i == ($funcs_count-1))
-         {
-            $str_query = $str_query."FunctionId=".$funcs_id[$i];
-         }
+         array_push($funcs_name, $funcs_name_id_mapping[$func_id]);
       }
-      
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-      if (!$link)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return;
-      }
-      
-      if($result = mysqli_query($link, $str_query)){
-         $row_number = mysqli_num_rows($result);
-         for ($i=0; $i<$row_number;$i++)
-         {
-            $row = mysqli_fetch_assoc($result);
-            array_push($funcs_name, $row["FunctionName"]);
-         }
-      }
-      
+
       return $funcs_name;
    }
-   
+
    function get_funcs_name_Str($funcs_name)
    {
       $str = "";
@@ -423,5 +401,30 @@
       }
       
       return $str;
+   }
+   
+   
+   function get_all_funcs_id_name_mapping()
+   {
+      $funcs_id_name_mapping = array();
+
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }
+      
+      $str_query = "select * from functions where FunctionType=".FUNCTION_PRODUCT." or FunctionType=".FUNCTION_ADAPTATION." or FunctionType=".FUNCTION_OTHER;
+      if($result = mysqli_query($link, $str_query)){
+         $row_number = mysqli_num_rows($result);
+         for ($i=0; $i<$row_number;$i++)
+         {
+            $row = mysqli_fetch_assoc($result);
+            $funcs_id_name_mapping[$row["FunctionId"]] = $row["FunctionName"];
+         }
+      }
+      return $funcs_id_name_mapping;
    }
 ?>

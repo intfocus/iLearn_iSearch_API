@@ -357,7 +357,6 @@ function loaded() {
    $(".saveProbsButton").click(function(){
       // exam name
       exam_name = $("#exam_name").val();
-      exam_status = $("#exam_status").val();
       exam_type = $("#exam_type").val();
       exam_answer_type = $("#exam_answer_type").val();
       exam_from_date = $("#exam_begin_time").val();
@@ -443,7 +442,6 @@ function loaded() {
          cache: false,
          data: {
                   "exam_name": exam_name, 
-                  "exam_status": exam_status,
                   "exam_type": exam_type,
                   "exam_answer_type": exam_answer_type,
                   "exam_probs_id": exam_probs_id,
@@ -615,15 +613,6 @@ function loaded() {
    <table class="exam_info" style="display: none">
 
          <tr><td>考卷名称&nbsp;</td><td> <input type="text" size="100" id="exam_name"></td></tr>
-         <tr>
-            <td>是否上架&nbsp;</td>
-            <td>
-               <select id="exam_status">
-                  <option value=0>下架</option>
-                  <option value=1>上架</option>
-               </select>
-            </td>
-         </tr>
          <tr>
             <td>类型&nbsp;</td>
             <td>
