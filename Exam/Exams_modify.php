@@ -280,11 +280,11 @@ EOD;
          }
          else if ($i == 4)
          {// mid level problem
-            $str = $str."中等難度题数: ".$contents[$i].", ";
+            $str = $str."中等难度题数: ".$contents[$i].", ";
          }
          else if ($i == 5)
          {// hard level problem
-            $str = $str."困難题数: ".$contents[$i].", ";
+            $str = $str."困难难度: ".$contents[$i].", ";
          }
          else if ($i == 6)
          {// category
