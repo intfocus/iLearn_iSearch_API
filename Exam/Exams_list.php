@@ -108,25 +108,25 @@ function uploadUserExams(ExamId)
    window.open(url_str + str);
 }
 
-function clickSearchExamssPage(obj, n)  //搜尋換頁
+function clickSearchExamsPage(obj, n)  //搜尋換頁
 {
-   if (obj.className == "search_page active")
+   if (obj.className == "search_exam_page active")
       return;
-   nPage = document.getElementsByName("search_page_no")[0].value;
-   document.getElementsByName("search_page_no")[0].value = n;
-   str = "search_page_begin_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_end_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_begin_no_" + n;
-   document.getElementById(str).className = "search_page active";
-   str = "search_page_end_no_" + n;
-   document.getElementById(str).className = "search_page active"; 
+   nPage = document.getElementsByName("search_exam_page_no")[0].value;
+   document.getElementsByName("search_exam_page_no")[0].value = n;
+   str = "search_exam_page_begin_no_" + nPage;
+   document.getElementById(str).className = "search_exam_page";
+   str = "search_exam_page_end_no_" + nPage;
+   document.getElementById(str).className = "search_exam_page";
+   str = "search_exam_page_begin_no_" + n;
+   document.getElementById(str).className = "search_exam_page active";
+   str = "search_exam_page_end_no_" + n;
+   document.getElementById(str).className = "search_exam_page active"; 
    
    //clear current table
-   str = "search_page" + nPage;
+   str = "search_exam_page" + nPage;
    document.getElementById(str).style.display = "none";
-   str = "search_page" + n;
+   str = "search_exam_page" + n;
    document.getElementById(str).style.display = "block";
 }
 
