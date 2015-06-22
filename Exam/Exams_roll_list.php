@@ -127,6 +127,7 @@
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
+<script type="text/javascript" src="../js/utility.js"></script>
 <!-- for tree view -->
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
@@ -160,9 +161,14 @@ function modifyUsersContent(exam_id)
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
    users_id = newUsersBatchInput.match(/[^\r\n]+/g);
    
+   if (!users_id)
+   {
+      alert("1234");
+   }
+   
    for (i=0;i<users_id.length;i++)
    {
-      users_id[i] = users_id[i].trim();
+      users_id[i] = trim_start_end(users_id[i]);
       if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
       {
          alert(users_id[i] + "有非数字及英文之字元");
@@ -187,15 +193,14 @@ function modifyUsersContent(exam_id)
       cache: false,
       success: function(res)
       {
-         //alert("Data Saved: " + res);
-         if (res.match(/^-/))  //failed
+         if (res != 0)  //failed
          {
-            alert("错误信息："+res);
+            alert(res);
          }
          else  //success
          {
-            alert("工号批次新增成功，页面关闭后请自行刷新");
-            window.close();
+            alert("用户批次新增成功，页面关闭后请自行刷新");
+            //window.close();
          }
       },
       error: function(xhr)
@@ -203,7 +208,6 @@ function modifyUsersContent(exam_id)
          alert("ajax error: " + xhr.status + " " + xhr.statusText);
       }
    });
-
 }
 </Script>
 <!--Step15 新增修改页面    起始 -->
@@ -225,7 +229,7 @@ function modifyUsersContent(exam_id)
    <div id="exam_id" style="disply:none;"></div>
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 "工号" 或着使用者数据里的 "UserId" )</th>
+         <th>批次上传内容：(一行一笔数据，数据格式为 "工号" 或着 "使用者ID")</th>
       </tr>
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100><?   
