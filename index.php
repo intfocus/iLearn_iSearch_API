@@ -83,7 +83,7 @@
    $str_query1 = "Select F.FunctionName as func_name, 
       F.Icon as icon, F.CodePath as codepath, F.Rank as rank 
       from privileges P, functions F 
-      where P.UserId=$user_id and P.FunctionId = F.FunctionId
+      where P.UserId=$user_id and P.FunctionId = F.FunctionId and F.FunctionType = 0 
       order by F.Rank";
    $func_array = Array();
    class Stufun{
