@@ -92,7 +92,10 @@
 
    $users_id = $_POST["users_id"];// employId & userId
 
-   $users_id = transfer_all_id_to_user_id($users_id);
+   if(!($users_id = transfer_all_id_to_user_id($users_id)))
+   {
+      return;
+   }
    $users_id = array_unique($users_id);
 
    /////////////////////////////////////
@@ -132,7 +135,7 @@
          }
       }   
    }
-   
+
    // left ids are all new ids, so just insert it
    foreach ($users_id as $user_id)
    {
@@ -169,38 +172,65 @@
    }
    
    function transfer_all_id_to_user_id($ids)
-   {
+   {        
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;
+         die("连接DB失败");
+      }
+
       $users_id = array();
-      
-      // if all digit, it is user_id, and just push it
+
+      // if Exxxx, xxxx is digit
       // else if it is composed by alpha & digit, it is employID, and get it user_id, and push it
       foreach ($ids as $id)
       {
-         if (preg_match("/^[0-9]+$/", $id))
-         {
-            array_push($users_id, $id);
-         }
-         else if(preg_match("/[0-9|a-zA-Z]+/", $id))
-         { 
-            $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-            if (!$link)  //connect to server failure    
-            {
-               sleep(DELAY_SEC);
-               echo DB_ERROR;
-               die("连接DB失败");
-            }
-            
-            //print_r
+         if (preg_match("/^E[0-9]+$/", $id))
+         {  
             $str_query = "select * from users where EmployeeId='$id'";
             if(($result = mysqli_query($link, $str_query))){
-               $row = mysqli_fetch_assoc($result);
-               array_push($users_id, $row["UserId"]);
+               if ($row = mysqli_fetch_assoc($result))
+               {
+                  array_push($users_id, $row["UserId"]);
+               }
+               else
+               {
+                  echo "不存在工号 $id";
+                  return false;
+               }
             }
             else
             {
                echo DB_ERROR;
                die("操作资料库失败");
             }
+         }
+         else if(preg_match("/^[0-9|a-zA-Z]+$/", $id))
+         { 
+            $str_query = "select * from users where UserWId='$id'";
+            if(($result = mysqli_query($link, $str_query))){
+               if ($row = mysqli_fetch_assoc($result))
+               {
+                  array_push($users_id, $row["UserId"]);
+               }
+               else
+               {
+                  echo "不存在使用者ID $id";
+                  return false;
+               }
+            }
+            else
+            {
+               echo DB_ERROR;
+               die("操作资料库失败");
+            }
+         }
+         else
+         {
+            echo "不存在使用者 $id";
+            return false; 
          }
       }  
       return $users_id;

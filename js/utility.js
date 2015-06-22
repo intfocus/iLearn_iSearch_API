@@ -32,3 +32,9 @@ function output_category_str_from_func_array(func_array)
    
    return output_str;
 }
+
+function trim_start_end(str)
+{
+   return str.replace(/^\s+|\s+$/g, "");
+}
+
