@@ -441,7 +441,16 @@ function modifyProbsContent(ProbId)
       </div>
       <div id="problem_problem">
       <?php
-         for ($i=ord("A"); $i<=ord("H"); $i++)
+         // only show the first two option when the problem type is true_false
+         if ($ProbType == TRUE_FALSE_PROB)
+         {
+            $end = ord("B");
+         }
+         else
+         {
+            $end = ord("H");
+         }
+         for ($i=ord("A"); $i<=$end; $i++)
          {
             $selector = "ProbSel".chr($i);
 
