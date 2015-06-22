@@ -15,7 +15,31 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   
+   try{
+      // TODO: 从 Session 里面拿到 login_name + user_id
+      session_start();
+      if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
+      {
+         session_write_close();
+         sleep(DELAY_SEC);
+         header("Location:". $web_path . "main.php?cmd=err");
+         exit();
+      }
+   }
+   catch(exception $ex)
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
    
    //query          
    $link;
@@ -118,7 +142,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="Tue", 01 Jan 1980 1:00:00 GMT">
+<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
 <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">

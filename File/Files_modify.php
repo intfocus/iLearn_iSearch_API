@@ -14,8 +14,19 @@
       echo FILE_ERROR;
       return;
    }
-   session_start();
-   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   
+   try{
+      // TODO: 从 Session 里面拿到 login_name + user_id
+      session_start();
+      if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
+      {
+         session_write_close();
+         sleep(DELAY_SEC);
+         header("Location:". $web_path . "main.php?cmd=err");
+         exit();
+      }
+   }
+   catch(exception $ex)
    {
       session_write_close();
       sleep(DELAY_SEC);
@@ -230,7 +241,7 @@
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 部门页面</title>
+<title>武田 - 文档页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function checkFileTypeModify() {
