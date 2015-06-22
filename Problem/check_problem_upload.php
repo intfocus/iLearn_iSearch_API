@@ -63,21 +63,21 @@ $file_status->status = UPLOAD_SUCCESS;
 
  if ($_FILES['fileToUpload']['size'] == 0) {
    $file_status->status = ERR_EMPTY_FILE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_EMPTY_FILE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_EMPTY_FILE));
    goto err_exit;
 }
 
 if (file_exists($target_file))
 {
    $file_status->status = ERR_FILE_EXIST; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
    goto err_exit;
 } 
 
 if (file_exists($target_file))
 {
    $file_status->status = ERR_FILE_EXIST; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
    goto err_exit;
 }
 
@@ -85,14 +85,14 @@ if (file_exists($target_file))
 if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) 
 {
    $file_status->status = ERR_MOVE_FILE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_MOVE_FILE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_MOVE_FILE));
    goto err_exit;
 }
 
 if (!is_valid_excel_type($target_file))
 {
    $file_status->status = ERR_FILE_TYPE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_TYPE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_TYPE));
    goto err_exit;
 }
 
@@ -101,11 +101,11 @@ if (($ret = read_excel_and_insert_into_database($target_file)) != SUCCESS)
    $file_status->status = $ret;
    if ($ret == ERR_UPDATE_DATABASE)
    {
-      array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_UPDATE_DATABASE));
+      array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_UPDATE_DATABASE));
    }
    else if ($ret == ERR_INSERT_DATABASE)
    {
-      array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_INSERT_DATABASE));
+      array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_INSERT_DATABASE));
    }
 }
   
@@ -146,7 +146,7 @@ function read_excel_and_insert_into_database($target_file)
    catch (Exception $e)
    {
      $file_status->status = ERR_FILE_LOAD; 
-     array_push($file_status->errors, array("lines"=>0, "message"=>$e->getMessage()));
+     array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>$e->getMessage()));
      return $file_status->status;
    }
  
@@ -430,6 +430,7 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link rel="stylesheet" type="text/css" href="../css/problem.css">
+<link rel="stylesheet" type="text/css" href="../css/exam.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -490,10 +491,11 @@ function loaded() {
       </tr>      
       </Form>
    </table>
-   <div class="error_info">
-      <table class="report">
-         <tr><th>页签</th><th>列</th><th>錯誤</th></tr>
-         <? foreach ($file_status->errors as $error)
+   <div class="problem_info, error_info">
+      <h1>题目</h1>
+      <table class="problems_table">
+         <th style="width:5%">页签</th><th style="width:5%">列</th><th>錯誤</th>
+      <? foreach ($file_status->errors as $error)
             {?>
                <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["message"];?></td></tr>
          <? }?>
