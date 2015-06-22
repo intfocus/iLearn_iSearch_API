@@ -224,7 +224,7 @@ function modifyUsersContent(exam_id)
          else  //success
          {
             alert("用户批次新增成功，页面关闭后请自行刷新");
-            //window.close();
+            window.close();
          }
       },
       error: function(xhr)
