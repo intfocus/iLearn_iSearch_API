@@ -374,6 +374,7 @@ function loaded() {
       from_timestamp = 0;
       to_timestamp = 0;
       expire_timestamp = new Date(exam_expire_date).getTime();
+      user_id = $("#userid").val();
       
       if (exam_name == 0)
       {
@@ -451,6 +452,7 @@ function loaded() {
                   "exam_content": exam_content,
                   "exam_functions_id": exam_selected_functions,
                   "exam_location": exam_location,
+                  "user_id": user_id
                 },
          success: function(res) {
             if (!res.match(/^-\d+$/)) 
@@ -460,6 +462,8 @@ function loaded() {
             }
             else
             {
+               alert(res);
+               return;
                if (res == <? echo ERR_INSERT_DATABASE;?>)
                {
                   alert("无法新增，可能为已新增过之考题内容");
@@ -481,6 +485,7 @@ function loaded() {
 </head>
 <body Onload="loaded();">
 <div id="header">
+   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
    <form name=logoutform action=logout.php>
    </form>
    <span class="global">使用者 : <?php echo $login_name ?>

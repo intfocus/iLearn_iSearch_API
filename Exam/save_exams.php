@@ -105,6 +105,13 @@
       echo SYMBOL_ERROR;
       return;
    }
+   
+   if(($user_id = check_number($_POST["user_id"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
 
    if ($exam_type == MOCK_EXAM)
    {
@@ -177,8 +184,8 @@
                   ExamPassword,Status,ExamDesc,ExamContent,ExpireTime,CreatedUser,
                   CreatedTime,EditUser,EditTime) VALUES
                 ('$exam_name',$exam_type,$exam_location,'$sql_begin_datetime','$sql_end_datetime',$exam_answer_type,
-                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
-                 now(),1,now())
+                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',$user_id,
+                 now(),$user_id,now())
 EOD;
    
    if(!($result = mysqli_query($link, $str_query)))
