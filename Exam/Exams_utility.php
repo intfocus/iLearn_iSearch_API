@@ -114,8 +114,7 @@
       return $selected_problems;
    }
    
-   function add_one_level_and_remove_one_level($problems, &$selected_problems,
-                                               $added_level, $removed_level)
+   function add_one_level_and_remove_one_level($problems, &$selected_problems, $added_level, $removed_level)
    {
       $added_problems;
       

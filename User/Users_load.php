@@ -221,7 +221,7 @@
    //***Step16 页面搜索SQl语句 起始
    $str_query1 = "
       select U.UserId, U.UserName, U.Email, U.Status, U.CanApprove, U.EditTime, D.DeptName, U.EmployeeId
-      from Users U, Depts D where U.deptId=D.deptId AND U.status";
+      from Users U left join Depts D on U.deptId=D.deptId where U.status";
 
    if ($statusCheckbox == 1)
    {

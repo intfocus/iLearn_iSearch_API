@@ -68,7 +68,6 @@
    define("ILLEGAL_CHAR", "'-;<>");                         //illegal char
    define("UPLOAD_FILE_NAME","upload.pdf");
 
-   //return value
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -374,6 +373,13 @@ function loaded() {
       from_timestamp = 0;
       to_timestamp = 0;
       expire_timestamp = new Date(exam_expire_date).getTime();
+      
+      if(exam_type == 1){
+         if(exam_from_date.length == 0 || exam_to_date.length == 0){
+            alert("考试时间段不能为空");
+            return;
+         }
+      }
       
       if (exam_name == 0)
       {

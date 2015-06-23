@@ -279,7 +279,7 @@
          die(MSG_ERR_CONNECT_TO_DATABASE);
       }
       
-      $str_query = "select * from exams where ExamId=$exam_id";
+      $str_query = "select * from exams where ExamId=$exam_id and Status = 1";
       if($result = mysqli_query($link, $str_query)){
          $row = mysqli_fetch_assoc($result);
          $exam_info = array("exam_id"=>(int)$row["ExamId"],

@@ -180,7 +180,7 @@
                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
                  now(),1,now())
 EOD;
-   
+
    if(!($result = mysqli_query($link, $str_query)))
    {
       if($link){
@@ -300,7 +300,6 @@ EOD;
          }
 
          clear_exam("exams", $ExamId);
-         
          sleep(DELAY_SEC);
          echo ERR_INSERT_DATABASE;
          return;
@@ -326,7 +325,7 @@ EOD;
       )
    );
 
-   if (file_put_contents($json_file_name, $exam_json))
+   if (!file_put_contents($json_file_name, $exam_json))
    {
       clear_exam("exams", $exam_id);
       clear_exam("examdetail", $exam_id);
@@ -381,5 +380,4 @@ EOD;
       }
       return true;  
    }
-   
 ?>
