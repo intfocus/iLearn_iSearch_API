@@ -1,5 +1,6 @@
 <?php
    require_once("../Problem/Problems_utility.php");
+   require_once("../Exam/Exams_utility.php");
 
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -68,7 +69,7 @@
    define("UPLOAD_FILE_NAME","upload.pdf");
 
    //return value
-   define("SUCCESS", 0);
+   //define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -376,6 +377,13 @@ function loaded() {
       expire_timestamp = new Date(exam_expire_date).getTime();
       user_id = $("#userid").val();
       
+      if(exam_type == 1){
+         if(exam_from_date.length == 0 || exam_to_date.length == 0){
+            alert("考试时间段不能为空");
+            return;
+         }
+      }
+      
       if (exam_name == 0)
       {
          alert("考卷名称不能为空");
@@ -455,18 +463,21 @@ function loaded() {
                   "user_id": user_id
                 },
          success: function(res) {
-            if (!res.match(/^-\d+$/)) 
+            //if (!res.match(/^-\d+$/))
+            if (res == 0) 
             {
                alert("新增考卷成功，页面关闭后请自行刷新")
                window.close();
             }
             else
             {
-               alert(res);
-               return;
                if (res == <? echo ERR_INSERT_DATABASE;?>)
                {
                   alert("无法新增，可能为已新增过之考题内容");
+               }
+               else if (res == <? echo ERR_SAVE_JSON_FILE;?>)
+               {
+                  alert("储存考卷JSON文档失败")
                }
                return;
             }
