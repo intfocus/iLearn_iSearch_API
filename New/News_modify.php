@@ -181,7 +181,7 @@
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),1)" ;
+                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),0)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";

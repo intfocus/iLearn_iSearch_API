@@ -1206,7 +1206,7 @@ $(function()
             + "searchUsersto1=" + searchUsersto1 + "&" + "statusCheckbox=" + statusCheckbox + "&searchUsersRadio=" + searchUsersRadio;
       url_str = "User/Users_load.php?";
       
-      alert(str);
+      //alert(str);
       $('#loadingWrap').show();
       $.ajax
       ({
