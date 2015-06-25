@@ -187,7 +187,7 @@
                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',$user_id,
                  now(),$user_id,now())
 EOD;
-
+   
    if(!($result = mysqli_query($link, $str_query)))
    {
       if($link){
@@ -305,10 +305,8 @@ EOD;
          if($link){
             mysqli_close($link);
          }
-         clear_exam("exams", $ExamId);
          sleep(DELAY_SEC);
-         //echo -__LINE__;
-         echo ERR_INSERT_DATABASE;
+         echo -__LINE__;
          return;
       }
    }
@@ -333,13 +331,6 @@ EOD;
    );
 
    file_put_contents($json_file_name, $exam_json);
-   // if (file_put_contents($json_file_name, $exam_json))
-   // {
-      // clear_exam("exams", $exam_id);
-      // clear_exam("examdetail", $exam_id);
-      // echo ERR_SAVE_JSON_FILE;
-      // return;
-   // }
 
    echo 0;
    return;
@@ -366,26 +357,5 @@ EOD;
       }
 
       return $ret;
-   }
-   
-   function clear_exam($table_name, $exam_id)
-   {
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-      if (!$link)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         return DB_ERROR;
-      }
-      
-      $str_query = "delete from $table_name where ExamID=$exam_id";
-      if(!mysqli_query($link, $str_query))
-      {
-         $ret = ERR_DELETE_DATABASE;
-      }
-      
-      if($link){
-         mysqli_close($link);
-      }
-      return true;  
    }
 ?>

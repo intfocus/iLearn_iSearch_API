@@ -354,8 +354,8 @@ function loaded()
          }
       }
    }
-   window.setTimeout("expandTo()",1000);
-   window.setTimeout("expandToDept()", 1000);
+   window.setTimeout("expandTo()",2000);
+   window.setTimeout("expandToDept()", 2000);
 }
 //***Step23 PAList and ProductList begin
 function PAListStr(){

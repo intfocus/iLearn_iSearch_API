@@ -4,7 +4,6 @@
    define("ERR_UPDATE_DATABASE", -10);
    define("ERR_INSERT_DATABASE", -11);
    define("ERR_SELECT_DATABASE", -12);
-   define("ERR_DELETE_DATABASE", -13);
    
    define("ERR_PROB_NOT_EXIST", -100);
    define("ERR_PROB_DESC_FORMAT", -101);

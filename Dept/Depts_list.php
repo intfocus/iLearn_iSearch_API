@@ -6,13 +6,12 @@ function actionSearchDepts(DeptId, Status)
    str = "cmd=actionDepts" + "&DeptId=" + DeptId + "&Status=" + Status;
    url_str = "Dept/Depts_action.php?";
    
-   //alert(str);
    //$('#loadingWrap').show();
    $.ajax
    ({
       beforeSend: function()
       {
-         //alert(url_str + str);
+         alert(url_str + str);
       },
       type: 'GET',
       url: url_str + str,

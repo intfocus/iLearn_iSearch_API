@@ -181,7 +181,7 @@
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),0)" ;
+                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -273,7 +273,7 @@ function loaded()
            }
        }
    });
-   window.setTimeout("expandToDept()", 1000);
+   window.setTimeout("expandToDept()", 2000);
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作
@@ -390,6 +390,7 @@ function modifyNewsContent(NewId)
                      $('#depttree').tree('check', node.target);
                   }
                   $('#depttree').tree('expandToDept', node.target);
+                  
                }
                
                function getCheckedDept(){

@@ -1,6 +1,5 @@
 <?php
    require_once("../Problem/Problems_utility.php");
-   require_once("../Exam/Exams_utility.php");
 
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -69,7 +68,7 @@
    define("UPLOAD_FILE_NAME","upload.pdf");
 
    //return value
-   //define("SUCCESS", 0);
+   define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -102,34 +101,62 @@
 
    $resultStr = "上传成功，文档格式转换需要数分钟";
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
 <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
-<link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
-<link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
-<link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+
 <link rel="stylesheet" type="text/css" href="../css/exam.css">
 <link rel="stylesheet" type="text/css" href="../css/problem.css">
+<!--[if lt IE 10]>
+<script type="text/javascript" src="lib/PIE.js"></script>
+<![endif]-->
+
+        <!-- Bootstrap core CSS -->
+        <link href="../newui/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../newui/css/bootstrap-reset.css" rel="stylesheet">
+
+        <!--Animation css-->
+        <link href="../newui/css/animate.css" rel="stylesheet">
+
+        <!--Icon-fonts css-->
+        <link href="../newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="../newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+
+        <!--Morris Chart CSS -->
+        <link rel="stylesheet" href="../newui/assets/morris/morris.css">
+
+        <!-- sweet alerts -->
+        <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="../newui/css/style.css" rel="stylesheet">
+        <link href="../newui/css/helper.css" rel="stylesheet">
+        <link href="../newui/css/style-responsive.css" rel="stylesheet" />
+		
+		
+        <!--Form Wizard-->
+        <link rel="stylesheet" type="text/css" href="../newui/assets/form-wizard/jquery.steps.css" />
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+        <!--[if lt IE 9]>
+          <script src="../newui/js/html5shiv.js"></script>
+          <script src="../newui/js/respond.min.js"></script>
+        <![endif]-->
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
-<!-- for tree view -->
-<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="../css/demo.css">
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-<!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
 <title>武田 - 考卷页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
+
 <Script Language=JavaScript>
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
 {
@@ -377,13 +404,6 @@ function loaded() {
       expire_timestamp = new Date(exam_expire_date).getTime();
       user_id = $("#userid").val();
       
-      if(exam_type == 1){
-         if(exam_from_date.length == 0 || exam_to_date.length == 0){
-            alert("考试时间段不能为空");
-            return;
-         }
-      }
-      
       if (exam_name == 0)
       {
          alert("考卷名称不能为空");
@@ -392,20 +412,27 @@ function loaded() {
       
       if (exam_name.length > 100)
       {
-         alert("考卷名称不能超过100字元");
+         alert("考卷名称不能超过100字");
          return;
       }
 
       if (exam_desc.length > 500)
       {
-         alert("考卷描述不能超过500字元");
+         alert("考卷描述不能超过500字");
          return;
       }
       
       if (exam_expire_date.length == 0)
       {
-         alert("有限时间不能为空");
+         alert("有效果时间不能为空");
          return;
+      }
+	  
+	  if(exam_type == 1){
+         if(exam_from_date.length == 0 || exam_to_date.length == 0){
+            alert("考试时间段不能为空");
+            return;
+         }
       }
       
       // test type
@@ -463,21 +490,18 @@ function loaded() {
                   "user_id": user_id
                 },
          success: function(res) {
-            //if (!res.match(/^-\d+$/))
-            if (res == 0) 
+            if (!res.match(/^-\d+$/)) 
             {
                alert("新增考卷成功，页面关闭后请自行刷新")
                window.close();
             }
             else
             {
+               alert(res);
+               return;
                if (res == <? echo ERR_INSERT_DATABASE;?>)
                {
                   alert("无法新增，可能为已新增过之考题内容");
-               }
-               else if (res == <? echo ERR_SAVE_JSON_FILE;?>)
-               {
-                  alert("储存考卷JSON文档失败")
                }
                return;
             }
@@ -493,66 +517,111 @@ function loaded() {
 
 </Script>
 <!--Step15 新增修改页面    起始 -->
+
+<style>
+
+.wizard > .content
+{
+    min-height: 470px;
+	background: #fafafa;
+}
+</style>
+
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>新增考卷</span><span class="bArrow"></span></span>
-</div>
-<div id="content">
 
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>题型题数</th>
-         <td>是非 <Input type=text class="problem_type_count" id=NewExamTrueFalseProbType size=3 value=0>&nbsp;
-             单选 <Input type=text class="problem_type_count" id=NewExamSingleSelProbType size=3 value=0>&nbsp;
-             多选 <Input type=text class="problem_type_count" id=NewExamMutiSelProbType size=3 value=0>&nbsp;
-         </td>
-      </tr>
-      <tr>
-         <th>易中难比重：</th>
-         <td>易<select class="problem_level" id=NewExamEasyLevel>
-             </select>%
-             中<select class="problem_level" id=NewExamMidLevel disabled>
-             <option id="problem_mid_level" selected value=100>100</option>
-             </select>%
-             难<select class="problem_level" id=NewExamHardLevel>
-             </select>%
-         </td>
-      </tr>
-      <tr>
+        <!--Main Content Start -->
+        <div class="" id="content">
+            
+            <!-- Header -->
+            <header class="top-head container-fluid">
+                <button type="button" class="navbar-toggle pull-left">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                
+                <!-- Left navbar -->
+                <nav class=" navbar-default hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Right navbar -->
+                <ul class="list-inline navbar-right top-menu top-right-menu">  
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown text-center">
+              	
+						   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
+						   <form name=logoutform action=logout.php>
+						   </form>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
+                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->       
+                </ul>
+                <!-- End right navbar -->
+
+            </header>
+            <!-- Header Ends -->
+
+
+            <!-- Page Content Start -->
+            <!-- ================== -->
+
+            <div class="wraper container-fluid">
+                <div class="page-title"> 
+                    <h3 class="title">新增考卷</h3> 
+                </div>
+
+                <!-- Basic Form Wizard -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body"> 
+                                <form id="basic-form" action="#">
+                                    <div>
+                                        <h3>考试类别-至少选一项</h3>
+                                        <section>
+                                            <div class="form-group"  style="height:420px;">
+                                                <div class="col-lg-12">
+									
+
+
+									
 <?php
-         // Function Adaptation
-         $func_type = FUNCTION_ADAPTATION;
+
+         // Function Other
+         $func_type = FUNCTION_OTHER;
          $str_query = "Select * from functions where FunctionType=$func_type";
-         
          if($result = mysqli_query($link, $str_query))
          { 
             $row_number = mysqli_num_rows($result);
             if ($row_number > 0)
             {
-               echo "<tr><th>".get_func_type_name($func_type)."</th><td>";
+               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
  
                $i = 0;
                while ($i < $row_number)
                {
                   $row = mysqli_fetch_assoc($result);
-                  echo "<Input type=checkbox class=functions value=\"".$row['FunctionId']."\">".$row['FunctionName'].'&nbsp;';
+                  echo "<label class='cr-styled'><Input type=checkbox class='functions' value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
                   $i++;
                }
-               echo "</tr>";
+               echo "</div>";
             }
          }
- 
+
          // Function Product
          $func_type = FUNCTION_PRODUCT;
          $str_query = "Select * from functions where FunctionType=$func_type";
@@ -562,123 +631,342 @@ function loaded() {
             $row_number = mysqli_num_rows($result);
             if ($row_number > 0)
             {
-               echo "<tr><th>".get_func_type_name($func_type)."</th><td>";
+               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
 
                $i = 0;
                while ($i < $row_number)
                {
                   $row = mysqli_fetch_assoc($result);
-                  echo "<Input type=checkbox class=functions value=\"".$row['FunctionId']."\">".$row['FunctionName'].'&nbsp;';
+                  echo "<label class='cr-styled'><Input type=checkbox class=functions value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
                   $i++;
                }
-               echo "</tr>";
+               echo "</div>";
             }
          }
- 
-         // Function Other
-         $func_type = FUNCTION_OTHER;
+          // Function Adaptation
+         $func_type = FUNCTION_ADAPTATION;
          $str_query = "Select * from functions where FunctionType=$func_type";
+         
          if($result = mysqli_query($link, $str_query))
          { 
             $row_number = mysqli_num_rows($result);
             if ($row_number > 0)
             {
-               echo "<tr><th>".get_func_type_name($func_type)."</th><td>";
+               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
  
                $i = 0;
                while ($i < $row_number)
                {
                   $row = mysqli_fetch_assoc($result);
-                  echo "<Input type=checkbox class=functions value=\"".$row['FunctionId']."\">".$row['FunctionName'].'&nbsp;';
+                  echo "<label class='cr-styled'><Input type=checkbox class=functions value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
                   $i++;
                }
-               echo "</tr>";
+               echo "</div>";
             }
          }
+ 
       ?>
-      </tr>
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new"><input name="genProbsButton" id="genProbsButton" type="button" value="产生考题"></a>
-         </th>
-      </tr>
-   </table>
-   <div id="selected_functions" style="display:none"></div>
-   <div class="error" id="error_template" style="display:none"></div>
-   <div class="status" id="status_template" style="display:none">
+	  
+   
+											
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <h3>题型选择</h3>
+                                        <section>
+												<div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="NewExamSingleSelProbType" class="control-label">单选题数量</label>
+											<Input type=text class="problem_type_count form-control" id=NewExamSingleSelProbType value=0>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamMutiSelProbType" class="control-label">多选题数量</label>
+											<Input type=text class="problem_type_count form-control" id=NewExamMutiSelProbType value=0>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamTrueFalseProbType" class="control-label">是非题数量</label>
+											<Input type=text class="problem_type_count form-control" id=NewExamTrueFalseProbType value=0>
+                                    </div>
+												</div>
+
+												<div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="NewExamSingleSelScore" class="control-label">每题分值</label>
+										<select class="form-control" id=NewExamSingleSelScore disabled>
+											<option selected value=1>1</option>
+											<option value=2>2</option>
+											<option value=3>3</option>
+											<option value=4>4</option>
+											<option value=5>5</option>
+										</select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamMutiSelScore" class="control-label">每题分值</label>
+										<select class="form-control" id=NewExamMutiSelScore disabled>
+											<option selected value=1>1</option>
+											<option value=2>2</option>
+											<option value=3>3</option>
+											<option value=4>4</option>
+											<option value=5>5</option>
+										</select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamTrueFalseScore" class="control-label">每题分值</label>
+										<select class="form-control" id=NewExamTrueFalseScore disabled>
+											<option selected value=1>1</option>
+											<option value=2>2</option>
+											<option value=3>3</option>
+											<option value=4>4</option>
+											<option value=5>5</option>
+										</select>
+                                    </div>
+												</div>
+												
+												
+												<div class="col-md-4">
+													<div class="panel panel-default">
+														<div class="panel-heading"><h3 class="panel-title">难易配比</h3></div>
+														<div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="NewExamEasyLevel">易 %</label>
+										<select class="problem_level form-control" id=NewExamEasyLevel></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamMidLevel">中 %</label>
+										<select class="problem_level form-control" id=NewExamMidLevel disabled>
+											<option id="problem_mid_level" selected value=100>100</option>
+										</select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NewExamHardLevel">难 %</label>
+										<select class="problem_level form-control" id=NewExamHardLevel></select>
+                                    </div>
+
+														</div>
+													</div>
+                                            </div>
+                                        </section>
+                                        <h3>产生考题</h3>
+                                        <section>
+                                            <div class="form-group clearfix">
+                                                <div class="col-lg-12">
+												
+												<div class="col-md-6">
+                                                    <p class="lead">条件选择完成，可以产生考题了</p>
+													<p>产生考题后，可以在下方预览结果</p>
+													<p>如需调整请回到上一步</p>
+													<p>如考题无误，继续下一步完善考卷信息</p>
+													<p></p>
+													<p></p>
+										
+													<div class="form-group">
+            <a class="btn_submit_new"><input name="genProbsButton" id="genProbsButton" type="button" class="btn btn-warning m-b-5" value="产生考题" >
+			   </a>
+													</div>
+                                                </div>
+												
+												<div class="col-md-6 status" id="status_template" style="display:none">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> 
+                                <h3 class="panel-title">本次产生题目摘要</h3> 
+                            </div> 
+                            <div class="panel-body"> 
+		<div id="selected_functions" style="display:none"></div>
+		<div class="error" id="error_template" style="display:none"></div>
+   
       <div>是非题目题数: <u id="content0"></u></div>
       <div>单选题目题数: <u id="content1"></u></div>
       <div>多选题目题数: <u id="content2"></u></div>
       <div>简易题目题数: <u id="content3"></u></div>
       <div>中等题目题数: <u id="content4"></u></div>
       <div>困难题目题数: <u id="content5"></u></div>
-   </div>
+   
+
+							
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+             
+												</div>
+                                            </div>
+										</div>
+                                        </section>
+                                        <h3>考试信息</h3>
+                                        <section>
+                                            <div class="form-group clearfix">
+                                            <div class="col-lg-12 exam_info" style="display: none">
+						
+												<div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exam_name">考试名称</label>
+										<input type="text" size="100" id="exam_name" class="form-control">
+										
+                                    </div>
+                                    <div class="form-group">
+										   <select id="exam_type" class="form-control">
+											  <option selected value=0>模拟考试</option>
+											  <option value=1>正式考试</option>
+										   </select>
+                                    </div>
+                                    <div class="form-group">
+										<input id="exam_expire_time" type="text" name="exam_expire_time" class="from form-control" readonly="true" placeholder="有效日期(到期自动下架)">
+                                    </div>
+                                    <div class="form-group">
+										<textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>
+                                    </div>
+									
+									<div class="form-group">   
+										<a class="btn_submit_new"><input name="saveProbsButton" class="saveProbsButton btn btn-success" type="button" value="保存试卷"></a>
+									</div>
+
+												</div>			
+												
+												<div class="col-md-6" id="exam_answer_selections" style="display:none">
+													<div class="panel panel-default">
+														<div class="panel-body">
+                                    <div class="form-group" style="display:none">
+                                        <label for="exam_answer_type">答案公布类型</label>
+										<select id="exam_answer_type" class="form-control">
+											<option value=1>考试交卷后公布答案</option>
+											<option value=2 selected>考试结束后公布答案</option>
+										</select>
+										
+                                    </div>
+									
+                                    <div class="form-group" id="exam_location_selections"  style="display: none">
+                                        <label for="exam_location">考试方式</label>
+										   <select id="exam_location" class="form-control">
+											  <option value=0 selected>线上</option>
+											  <option value=1>落地考</option>
+										   </select>
+                                    </div>
+                                    <div class="form-group" id="exam_password_sections" style="display:none">
+										<input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
+                                    </div>
+									
+									<div  id="exam_time_selections" style="display:none">
+									<div>
+									<form class="form-inline" role="form">
+										<div class="form-group">
+											<label class="sr-only" for="to73">test</label>
+										</div>
+                                    </form>
+									<form class="form-inline" role="form">
+										<div class="form-group">
+											<label class="sr-only" for="exam_begin_time">考试时间</label>
+											<input id="exam_begin_time" type="text" name="exam_from_date6" class="to form-control" readonly="true" placeholder="考试日期/小时/分钟">
+										</div>
+										  
+										<div class="form-group m-l-10">
+										   <select id="exam_from_hour" class="form-control m-b-5" placeholder="小时"></select>
+										</div>
+										<div class="form-group m-l-10">
+										   <select id="exam_from_min" class="form-control m-b-5" placeholder="分钟"></select>
+										</div>
+                                    </form>
+									</div>
+									<div>
+									<form class="form-inline" role="form">
+										<div class="form-group">
+											<label class="sr-only" for="exam_end_time">结束时间</label>
+											<input id="exam_end_time" type="text" name="exam_to_date6" class="to form-control" readonly="true" placeholder="结束日期/小时/分钟">
+										</div>
+										  
+										<div class="form-group m-l-10">
+										   <select id="exam_to_hour" class="form-control m-b-5" placeholder="小时"></select>
+										</div>
+										<div class="form-group m-l-10">
+										   <select id="exam_to_min" class="form-control m-b-5" placeholder="分钟"></select>
+										</div>
+									
+                                    </form>
+									</div>
+									</div>
+														</div>	
+													</div>
+												</div>
+
+                                            </div>
+											</div>
+                                        </section>
+                                    </div>
+                                </form> 
+                            </div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+
+                    </div> <!-- end col -->
+
+                </div> <!-- End row -->
+
+  
+               <select id="exam_status" style="display: none">
+                  <option value=0>下架</option>
+               </select>
+
+                <!-- Wizard with Validation -->
+
+                <!-- Wizard with Validation -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> 
+                                <h3 class="panel-title">题目结果预览</h3> 
+                            </div> 
+                            <div class="panel-body"> 
+							
 
    <div class="problem_info" style="display:none">
-      <h1>题目</h1>
-      <table class="problems_table">
-         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
+      <table class="table">
+         <th>编号</th><th>题型</th><th>难易</th><th>描述</th>
          <tr id="problem_template"></tr>
       </table>
    </div>
-   <table class="exam_info" style="display: none">
+							
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+                    </div> <!-- end col -->
+                </div> <!-- End row -->
+             
 
-         <tr><td>考卷名称&nbsp;</td><td> <input type="text" size="100" id="exam_name"></td></tr>
-         <tr>
-            <td>类型&nbsp;</td>
-            <td>
-               <select id="exam_type">
-                  <option value=0>模拟考试</option>
-                  <option value=1>正式考试</option>
-               </select>
-            </td>
-         </tr>
-         <tr id="exam_answer_selections" style="display:none">
-            <td>答案公布类型&nbsp;</td>
-            <td>
-               <select id="exam_answer_type">
-                  <option value=1>考试交卷后公布答案</option>
-                  <option value=2 selected>考试结束后公布答案</option>
-               </select>
-            </td>
-         </tr>
-         <tr id="exam_expire_time_selections">
-            <td>有效日期&nbsp;</td>
-            <td> <input id="exam_expire_time" type="text" name="exam_expire_time" class="from" readonly="true"></td>
-         </tr>
-         <tr id="exam_location_selections"  style="display: none">
-            <td>考试地点&nbsp;</td>
-            <td>
-               <select id="exam_location">
-                  <option value=0 selected>线上</option>
-                  <option value=1>落地考</option>
-               </select>
-            </td>
-         </tr>
-         <tr id="exam_time_selections" style="display:none">
-            <td>考试时间段&nbsp;</td>
-            <td>
-               <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
-               <select id="exam_from_hour"></select>
-               <select id="exam_from_min"></select>
-               ~
-               <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
-               <select id="exam_to_hour"></select>
-               <select id="exam_to_min"></select>
-            </td>
-         </tr>
-         <tr>
-            <td>考卷描述&nbsp;</td>
-            <td>
-               <textarea id="exam_desc" rows="5" cols="50"></textarea>
-            </td>
-         </td>
-         <tr>
-         <th colspan="4" class="submitBtns">
-         <a class="btn_submit_new"><input name="saveProbsButton" class="saveProbsButton" type="button" value="储存考题"></a>
-         </th>
-         </tr>
-   </table>
-</div>
-</body>
+            </div>
+            <!-- Page Content Ends -->
+            <!-- ================== -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                2015 © Takeda.
+            </footer>
+            <!-- Footer Ends -->
+
+
+
+        </div>
+        <!-- Main Content Ends -->
+
+        <!-- js placed at the end of the document so the pages load faster -->
+        <script src="../newui/js/jquery.js"></script>
+        <script src="../newui/js/bootstrap.min.js"></script>
+        <script src="../newui/js/pace.min.js"></script>
+        <script src="../newui/js/wow.min.js"></script>
+        <script src="../newui/js/jquery.nicescroll.js" type="text/javascript"></script>
+
+
+        <!--Form Validation-->
+        <script src="../newui/assets/form-wizard/bootstrap-validator.min.js" type="text/javascript"></script>
+
+        <!--Form Wizard-->
+        <script src="../newui/assets/form-wizard/jquery.steps.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../newui/assets/jquery.validate/jquery.validate.min.js"></script>
+
+        <!--wizard initialization-->
+        <script src="../newui/assets/form-wizard/wizard-init.js" type="text/javascript"></script>
+
+
+        <script src="../newui/js/jquery.app.js"></script>
+
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+
+    </body>
 </html>

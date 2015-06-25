@@ -142,7 +142,7 @@
    
    $login_name = mysqli_real_escape_string($link, $login_name);   #002
    
-   $str_query1 = "select UserId, status, UserName from users where (EmployeeId = '$login_name' or UserWId = '$login_name') and status=1";
+   $str_query1 = "select UserId, status, UserName from users where EmployeeId = '$login_name' and status=1";
 
    if($result = mysqli_query($link, $str_query1))
    {   //query success
