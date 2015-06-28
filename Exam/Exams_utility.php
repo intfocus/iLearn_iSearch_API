@@ -43,14 +43,11 @@
    define("MSG_ONSITE_TEST", "落地考");
 
    define("ERR_INVALID_PARAMETER", -10);
+   //define("ERR_EXAM_NOT_EXIST", -11);
    define("ERR_EXAM_NOT_EXIST", -59);
    define("ERR_SAVE_JSON_FILE",-60);
-<<<<<<< HEAD
-   
-=======
    define("ERR_PROBLEM_COUNT_NOT_ENOUGH", -61);
 
->>>>>>> master
    class Problem
    {
       function __construct($id, $desc, $type, $level)

@@ -68,6 +68,8 @@
    define("ILLEGAL_CHAR", "'-;<>");                         //illegal char
    define("UPLOAD_FILE_NAME","upload.pdf");
 
+   //return value
+   //define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -424,12 +426,8 @@ function loaded() {
       exam_content = [$("#content0").html(), $("#content1").html(), $("#content2").html(), $("#content3").html(), $("#content4").html(), $("#content5").html()];
       from_timestamp = 0;
       to_timestamp = 0;
-<<<<<<< HEAD
-      expire_timestamp = new Date(exam_expire_date).getTime();
-=======
 
       user_id = $("#userid").val();
->>>>>>> master
       
       if (exam_single_score < 1 || exam_single_score > 5 || exam_multi_score < 1 || exam_multi_score > 5 || exam_true_false_score < 1 || exam_true_false_score > 5)
       {
@@ -521,8 +519,10 @@ function loaded() {
                   "exam_content": exam_content,
                   "exam_functions_id": exam_selected_functions,
                   "exam_location": exam_location,
+                  "user_id": user_id
                 },
          success: function(res) {
+            //if (!res.match(/^-\d+$/))
             if (res == 0) 
             {
                alert("新增考卷成功，页面关闭后请自行刷新")
@@ -572,42 +572,6 @@ function loaded() {
 
 </head>
 <body Onload="loaded();">
-<<<<<<< HEAD
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>新增考卷</span><span class="bArrow"></span></span>
-</div>
-<div id="content">
-
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>题型题数</th>
-         <td>是非 <Input type=text class="problem_type_count" id=NewExamTrueFalseProbType size=3 value=0>&nbsp;
-             单选 <Input type=text class="problem_type_count" id=NewExamSingleSelProbType size=3 value=0>&nbsp;
-             多选 <Input type=text class="problem_type_count" id=NewExamMutiSelProbType size=3 value=0>&nbsp;
-         </td>
-      </tr>
-      <tr>
-         <th>易中难比重：</th>
-         <td>易<select class="problem_level" id=NewExamEasyLevel>
-             </select>%
-             中<select class="problem_level" id=NewExamMidLevel disabled>
-             <option id="problem_mid_level" selected value=100>100</option>
-             </select>%
-             难<select class="problem_level" id=NewExamHardLevel>
-             </select>%
-         </td>
-      </tr>
-      <tr>
-=======
 
         <!--Main Content Start -->
         <div class="" id="content">
@@ -678,7 +642,6 @@ function loaded() {
 
 
 									
->>>>>>> master
 <?php
 
          // Function Other

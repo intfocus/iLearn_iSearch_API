@@ -125,10 +125,6 @@
       echo SYMBOL_ERROR;
       return;
    }
-<<<<<<< HEAD
-
-   if ($exam_type == MOCK_EXAM)
-=======
    
    if(($user_id = check_number($_POST["user_id"])) == SYMBOL_ERROR)
    {
@@ -138,7 +134,6 @@
    }
    
    if(($exam_duration = check_number($_POST["exam_duration"])) == SYMBOL_ERROR)
->>>>>>> master
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -211,13 +206,8 @@
                   ExamPassword,Status,ExamDesc,ExamContent,Duration,CreatedUser,
                   CreatedTime,EditUser,EditTime) VALUES
                 ('$exam_name',$exam_type,$exam_location,'$sql_begin_datetime','$sql_end_datetime',$exam_answer_type,
-<<<<<<< HEAD
-                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
-                 now(),1,now())
-=======
                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str',$exam_duration,$user_id,
                  now(),$user_id,now())
->>>>>>> master
 EOD;
 
    if(!($result = mysqli_query($link, $str_query)))
@@ -345,12 +335,8 @@ EOD;
          if($link){
             mysqli_close($link);
          }
-<<<<<<< HEAD
-
-         clear_exam("exams", $ExamId);
-=======
->>>>>>> master
          sleep(DELAY_SEC);
+         //echo -__LINE__;
          echo ERR_INSERT_DATABASE;
          return;
       }
@@ -382,11 +368,7 @@ EOD;
       echo ERR_SAVE_JSON_FILE;
       return;
    }
-<<<<<<< HEAD
 
-=======
-
->>>>>>> master
    echo 0;
    return;
    
