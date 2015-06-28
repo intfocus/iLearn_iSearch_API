@@ -1,0 +1,1133 @@
+<!DOCTYPE HTML>
+<html><head>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+/** include from Yui **/
+/*
+YUI 3.4.1 (build 4118)
+Copyright 2011 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
+body{font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small}select,input,button,textarea{font:99% arial,helvetica,clean,sans-serif}table{font-size:inherit;font:100%}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%}
+
+/** include from Yui End**/
+
+html, body {
+	background:#fff;
+	overflow:auto;
+	overflow-x:hidden;
+	color:#000;
+}
+
+.createTime {
+	float:right;
+	font-size:14px;
+	font-weight:normal;
+}
+.reportBanner {
+	padding:15px;
+	color:#333;
+	font-size:24px;
+	font-weight:bold;
+}
+.reportDetail {
+	margin:5px 15px;	
+}
+.reportDetail .reportName {
+	background-color:#595757;
+	border:1px solid #ECEFC5;
+	color:#DAE879;
+	font-weight:bold;
+	font-size:18px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .reportName span.name {
+	margin:5px 10px;
+	display:block;
+}
+.reportDetail .reportName .funcBtn {
+	float:right;
+	display:inline-block;
+	line-height:32px;
+	border-left:1px solid #eee;
+	padding:0 20px 0 5px;
+	font-size:14px;
+	color:#eee;
+	cursor:pointer;
+	position:relative;
+	z-index:3;
+	background: #787878;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#787878), to(#464646));
+	background: -webkit-linear-gradient(#787878, #464646);
+	background: -moz-linear-gradient(#787878, #464646);
+	background: -ms-linear-gradient(#787878, #464646);
+	background: -o-linear-gradient(#787878, #464646);
+	background: linear-gradient(#787878, #464646);
+	-pie-background: linear-gradient(#787878, #464646);
+}
+.reportDetail .reportName .funcBtn:hover {
+	background: #999999;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#999999), to(#464646));
+	background: -webkit-linear-gradient(#999999, #464646);
+	background: -moz-linear-gradient(#999999, #464646);
+	background: -ms-linear-gradient(#999999, #464646);
+	background: -o-linear-gradient(#999999, #464646);
+	background: linear-gradient(#999999, #464646);
+	-pie-background: linear-gradient(#999999, #464646);
+}
+
+.reportDetail .reportName .funcBtn.disabled, .reportDetail .reportName .funcBtn.disabled:hover {
+	background-color:#3E3A39;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#3E3A39), to(#3E3A39));
+	background: -webkit-linear-gradient(#3E3A39, #3E3A39);
+	background: -moz-linear-gradient(#3E3A39, #3E3A39);
+	background: -ms-linear-gradient(#3E3A39, #3E3A39);
+	background: -o-linear-gradient(#3E3A39, #3E3A39);
+	background: linear-gradient(#3E3A39, #3E3A39);
+	-pie-background: linear-gradient(#3E3A39, #3E3A39);
+	cursor:default;
+	color:#727171;
+}
+.reportDetail .reportName .icon {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	background-repeat:no-repeat;
+	background-position:center;
+	margin:4px 5px;
+	vertical-align:middle;
+}
+.reportDetail .reportName span.print .icon {
+	background:url(../../../images/icon_print.png);
+}
+.reportDetail .reportName span.send .icon {
+	background:url(../../../images/icon_email.png);
+}
+.reportDetail .reportName span.download .icon {
+	background:url(../../../images/icon_download.png);
+}
+.reportDetail .reportName span.disabled.download .icon {
+	background-position:bottom;
+}
+.reportDetail .rSubmenuW {
+	margin:20px 10px 0 10px;
+}
+.reportDetail .rSubmenuW .rSubmenu {
+	border:1px solid #E9EBC3;
+	padding:5px 10px;
+	cursor:pointer;
+	font-weight:bold;
+	margin:0;
+	display:inline-block;
+	font-size:14px;
+}
+.reportDetail .rSubmenuW .rSubmenu:hover {
+	background-color:#666;
+}
+.reportDetail .rSubmenuW .rSubmenu.active {
+	background-color:#5B7300;
+}
+
+.condition a.showHide {
+	text-decoration:underline;
+	cursor:pointer;
+	color:#778E13;
+	position:absolute;
+	right:0px;
+	top:6px;
+}
+.condition .comList {
+	margin-right:70px;
+	*height:1%; /*fix ie7 dis*/
+}
+.condition .comList.hide {
+	overflow:hidden;
+	height:25px;
+}
+.condition .comList span.com {
+	display:inline-block;
+	background:#E1E5CA;
+	padding:2px 8px;
+	margin:5px 10px 0 0;
+}
+.reportDetail .resultW {
+	margin:30px 10px 0 10px;
+	clear:both;
+	width:100%;
+	*width:auto;
+}
+
+/**
+.reportDetail .resultW .divide {
+	width:47%;
+	display:inline-block;
+	margin-right:20px;
+	vertical-align:top;
+}
+.reportDetail .resultW .divide ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .divide li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW .divideC {
+	color:#555;
+}
+.reportDetail .resultW .divideC p {
+	padding-bottom:10px;
+}
+**/
+
+.reportDetail .resultW  ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW  li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW p {
+	padding-bottom:10px;
+	width:95%;
+<!-- 	max-width:1000px; -->
+}
+.reportDetail .resultW p span {
+	color:#f00;
+}
+
+.reportDetail .resultW .title {
+	font-weight:bold;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .title .hint {
+	font-weight:normal;
+	color:#aaa;
+}
+
+
+/**
+.reportDetail .resultW .riskResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+}
+.reportDetail .resultW .riskResult ul {
+	list-style-type:none;
+}
+.reportDetail .resultW .riskResult li {
+	padding:10px;
+	clear:right;
+	color:#fff;
+	font-weight:bold;
+	margin:0;
+}
+.reportDetail .resultW .riskResult li.highest {
+	background-color:#A680A7;
+}
+.reportDetail .resultW .riskResult li.high {
+	background-color:#FEA49C;
+}
+.reportDetail .resultW .riskResult li.mid {
+	background-color:#F37000;
+}
+.reportDetail .resultW .riskResult li.low {
+	background-color:#F39800;
+}
+.reportDetail .resultW .riskResult li span.result {
+	float:right;
+	font-weight:bold;
+}
+**/
+
+
+.reportDetail .resultW .totalResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+	list-style-type:none;
+}
+.reportDetail .resultW .totalResult li {
+	padding:5px 10px;
+	clear:right;
+	color:#333;
+	margin:5px 0;
+	border:1px solid #999;
+}
+.reportDetail .resultW .totalResult li span.result {
+	float:right;
+	font-weight:bold;
+	color:#f00;
+}
+
+
+.reportDetail .resultW .otherResultW {
+	margin-left:350px;
+}
+.reportDetail .resultW .otherResultW .otherResult {
+	width:168px;
+	background-color:#eee;
+	padding:5px 10px;
+	float:left;
+	color:#595757;
+	margin:2px 2px 0 0;
+}
+.otherResultW .otherResult .field, 
+.otherResultW .otherResult .result {
+	display:block;
+}
+.otherResultW .otherResult .result {
+	color:#f00;
+}
+.reportDetail .resultW .description {
+	clear:both;
+	padding-top:10px;
+	color:#D1D1D1;
+}
+.reportDetail .resultW .chartW{
+	margin-top:10px;
+	width:100%;
+}
+.reportDetail .resultW .chartW .chart{
+	display:inline-block;
+	width:49%;
+	text-align:center;
+}
+.fixRelative { /*fix firefox relative problem*/
+	position:relative;
+	display:block;
+}
+
+.reportDetail .resultW .rList {
+	margin-top:10px;
+	width:95%;
+}
+.reportDetail .resultW th, .reportDetail .resultW td {
+	padding:5px;
+	white-space:nowrap;
+}
+.reportDetail .resultW th {
+	border:1px solid #ccc;
+	background:#666;
+	text-align:center;
+	font-weight:bold;
+	color:#000;
+}
+.reportDetail .resultW tr.highest th {
+	background-color:#A680A7;
+
+}
+.reportDetail .resultW tr.high th {
+	background-color:#FEA49C;
+
+}
+.reportDetail .resultW td {
+	border:1px solid #999;
+	text-align:left;
+}
+
+.reportDetail .resultW td.path, .reportDetail .resultW td.fileName {
+	white-space:normal;
+}
+.reportDetail .resultW.conditionW {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .resultW.conditionW table.condition {
+	background-color:#F7F8F8;
+	width:98%;
+}
+.reportDetail .resultW.conditionW th,
+.reportDetail .resultW.conditionW td {
+	padding:5px 10px;
+	border:1px solid #999;
+}
+.reportDetail .resultW.conditionW th {
+	width:1px;
+	color:#666;
+	background-color:transparent;
+	text-align:left;
+	font-weight:normal;
+}
+.reportDetail .resultW.conditionW th span {
+	white-space:nowrap;
+}
+.reportDetail ..resultW.conditionW td {
+	color:#222;
+}
+.reportDetail .resultW p.hint {
+	margin-top:5px;
+	color:#666;
+}
+
+
+.reportDetail .resultW.assess table.aList {
+	width:95%;
+}
+.reportDetail .resultW.assess th,
+.reportDetail .resultW.assess td {
+	padding:10px;
+	border-bottom:1px solid #999;
+	border-color:#aaa;
+}
+.reportDetail .resultW.assess th {
+	width:1px;
+	color:#000;
+	background-color:transparent;
+	text-align:left;
+	font-weight:bold;
+}
+.reportDetail .resultW.assess th.highest {
+	background-color:#A680A7;
+}
+.reportDetail .resultW.assess th.high {
+	background-color:#FEA49C;
+}
+.reportDetail .resultW.assess th.mid {
+	background-color:#A9D589; 
+}
+.reportDetail .resultW.assess th.low {
+	background-color:#98CFE8;
+}
+.reportDetail .resultW.assess th span {
+	white-space:nowrap;
+}
+.reportDetail .resultW.assess td {
+	color:#222;
+	white-space:normal;
+}
+.reportDetail .resultW .command {
+	border:1px solid #777;
+	padding:5px;
+	height:200px;
+	width:94%;
+	color:#777;
+}
+
+/** send through mail start **/
+.funcBtn.send {
+	position:relative;
+}
+.sendW .msg {
+	background:#FC0;
+	padding:5px 10px;
+	text-align:center;
+}
+.sendW {
+	background:#F5F5F5;
+	padding:10px;
+	position:absolute;
+	color:#333;
+	right:16px;
+	top:115px;
+	font-size:12px;
+	width:270px;
+	border-color:#999 #000 #000 #999;
+	border-width:1px;
+	border-style:solid;
+	-webkit-box-shadow: #666 0px 2px 3px;
+	-moz-box-shadow: #666 0px 2px 3px;
+	box-shadow: #666 0px 2px 3px;
+}
+.sendW p {
+	line-height:20px;
+	color:#169447;
+	margin-top:5px;
+}
+.sendW input {
+	vertical-align:middle;
+}
+.sendW .attW {
+	padding-bottom:10px;
+	font-weight:normal;
+}
+.sendW input.subject {
+}
+.sendW input.subject, .sendW textarea, .sendW .attW, .sendW p {
+	width:100%;
+}
+.sendW input.subject, .sendW textarea {
+	border-style:solid;
+	border-width:1px;
+	border-color:#666 #aaa #aaa #666;
+}
+.sendW textarea.reciever {
+	height:50px;
+}
+.sendW textarea.content {
+	height:100px;
+}
+.sendW label {
+	margin-right:10px;
+	display:inline-block;
+	*display:inline;
+	zoom:1;
+}
+.sendW button {
+	float:left;
+}
+/** send through mail start **/
+
+</style>
+<script type="text/javascript" src="../../../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../../../js/css3pie.js"></script><!--[if lt IE 10]>
+<script type="text/javascript" src="lib/PIE.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+function mailBox()
+{
+   if(document.getElementById("sendW").style.display == "none")
+      document.getElementById("sendW").style.display = "block";
+   else
+   {
+      document.getElementById("sendW").style.display = "none";
+      document.getElementById("sendMSG").style.display = "none";
+   }
+}
+
+function closeMailBox()
+{
+   document.getElementById("sendW").style.display = "none";
+   document.getElementById("sendMSG").style.display = "none";
+}
+
+function sendMailBox()
+{
+   //todo send email
+
+}
+     function submitForm1() 
+     {
+        //document.getElementById("sendMSG").style.display = "block";
+         function closeMailBox()
+         {
+            document.getElementById("sendW").style.display = "none";
+            document.getElementById("sendMSG").style.display = "none";
+         }        
+        document.getElementsByName("form1")[0].submit();
+     }   
+</script><title>Openfind P-Marker</title></head><body>
+<div style="padding: 15px; color: rgb(51, 51, 51); font-size: 24px; font-weight: bold;" align="left">  $companyName - 個人資料檔案清查分析報告</div>
+<div style="font-size: 14px; font-weight: normal;" align="right">報告產製時間：$createTime</div>
+
+<div class="reportDetail">
+   <div class="reportName">
+      <!--replaceStart-->     
+      <!-- send through mail start -->
+      <div id="sendW" class="sendW" style="display: none;">
+         <div id="sendMSG" class="msg" style="display: none;">寄送成功! / 寄送失敗!</div>
+          <form id="form1" name="form1" method="post" action="$url_prefix/sendMail.php" target="_blank">
+            <p>傳送給 : (逗點分隔)</p>
+            <textarea name = "reciever" class="reciever"></textarea>
+            <p>主旨 : </p>
+            <input name = "title" class="subject" type="text">
+            <!-- <p>附檔 : </p>
+            <div class="attW">
+               <label><input type="checkbox" name = "checkbox" > 報表</label><label>
+            </div> -->
+            <p>內文 : </p>
+            <textarea name = "content" class="content"></textarea> 
+            <button type="button" onclick="submitForm1();">寄出</button> <button type="button" class="close" onclick="closeMailBox();">關閉</button>
+            <input name="reportID" type=hidden value = "$reportID"/>
+         </form>
+      </div>    
+      <!-- send through mail end -->
+      <!--replaceButtonStart-->    
+      <span class="funcBtn download" title="下載準備中" onclick="alert('下載準備中，請稍候!')"><span class="icon"></span>下載準備中，請稍候...</span>
+      <!--replaceButtonEnd-->        
+      <!--replaceEnd-->      
+      <span class="name">$reportName</span>
+   </div>
+   <!--
+   <div class="rSubmenuW">
+      <span class="rSubmenu active">報表摘要</span>
+      <span class="rSubmenu">報表分析</span>
+   </div>
+   -->
+   <div class="resultW clearfix conditionW">
+      <div class="title"><b>壹、基本資料</b></div>
+      <table class="condition" border="1" cellpadding="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <th><span>一、	機關名稱: </span></th>
+               <td>$companyName</td>
+            </tr>
+            <tr>
+               <th><span>二、	清查時間： </span></th>
+               <td>$timeBegin~$timeEnd</td>
+            </tr>
+            <tr>
+               <th><span>三、	清查電腦數量： </span></th>
+               <td>合計 <span>$computerCheckCount</span> 台</td>
+            </tr>  
+            <tr>
+               <th><span>四、	清查個資類型: </span></th>
+               <td>$riskTypeNames</td>
+            </tr>
+         </tbody>
+      </table> 
+   </div> 
+   <div class="resultW clearfix">
+      <div class="title"><b>貳、報告目的</b></div>
+         <p>個人資料保護法，其立法目的係為規範個人資料之蒐集、處理及利用，以避免人格權受侵害，並促進個人資料之合理利用。<br>所稱個人資料其重點在於「得以直接或間接方式識別該個人」之資料。依據個資法規定保有個人資料檔案者，應訂定個人資料檔案安全維護計畫(規定)，並採行適當之安全措施，防止個人資料被竊取、竄改、毀損、滅失或洩漏，若有違反本法規定之情事，致個人資料遭不法蒐集、處理、利用或其他侵害當事人權利者，應負損害賠償責任，最高賠償金額二億元。</p>
+         <div align="left">個人資料檔案，依據其所存在之載體，可以區分為下列四項：</div>          
+            <ul>
+               <li>電子檔案型態</li>
+               <li>網頁型態</li>
+               <li>資料庫型態</li>
+               <li>紙本型態</li>
+            </ul> 
+            <p>上述任何一項型態之資料不當揭露，皆可能面臨損害求償訴訟，導致最高二億元金額之賠償，其中又以電子檔案型態之個人資料檔案最不易管理，因散置於機關內之個人電腦之中，人工清查往往耗時費力，又不易得到成效，使個資保護工作，遭遇重大窒礙，本項服務即是針對電子檔案及網頁型態之個人資料檔案，提供自動化之清查服務，具體呈現機關所可能面臨之衝擊與風險。</p>
+         </div>
+   <div class="resultW clearfix">
+      <div class="title"><b>參、清查結果說明</b></div>
+      <p>本次清查之結果，在&nbsp; <span>$computerCheckCount</span><span>台</span> 電腦中，檢測出&nbsp;<span class="result">$numOfHitComputer</span><span>台</span> 電腦含有個人資料檔案，合計個人資料檔案數 <span class="result">$numOfTotalData</span><span>筆</span> ，共&nbsp;<span class="result">$numOfPersonalData</span><span></span>筆個人資料，包含$dataString<span style="color: rgb(0, 0, 0); font-family: arial,helvetica,clean,sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 16px; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">。</span></p>
+      <ul class="totalResult">
+         <li>清查電腦數 ：<span></span><span class="result">$computerCheckCount 台</span><span class="result"></span></li>
+         <li>含個資檔案電腦數 ：<span class="result">$numOfHitComputer 台</span></li>
+         <li>個人資料檔案總數 ：<span class="result">$numOfTotalData 筆</span></li>
+         <li>個人資料筆數 ：<span class="result">$numOfPersonalData 筆</span></li>
+      </ul>
+      <div class="otherResultW">
+         $dataCellsString
+         <!-- <span class="otherResult"><span class="field">$dataKinds[0]["pattern"]&nbsp; </span><span class="result">$dataKinds[0]["value"]&nbsp;</span></span>
+         <span class="otherResult"><span class="field">$dataKinds[1]["pattern"]&nbsp; </span><span class="result">$dataKinds[1]["value"]&nbsp;</span></span>
+         <span class="otherResult"><span class="field">$dataKinds[2]["pattern"]&nbsp; </span><span class="result">$dataKinds[2]["value"]&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">$dataKinds[3]["pattern"]&nbsp; </span><span class="result">$dataKinds[3]["value"]&nbsp;</span></span>
+         <span class="otherResult"><span class="field">$dataKinds[4]["pattern"]&nbsp; </span><span class="result">$dataKinds[4]["value"]&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">$dataKinds[5]["pattern"]&nbsp; </span><span class="result">$dataKinds[5]["value"]&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">$dataKinds[6]["pattern"]&nbsp; </span><span class="result">$dataKinds[6]["value"]&nbsp;</span></span> -->
+      </div>
+   </div>           
+   <div class="resultW clearfix">
+      <div class="title"><b>肆、部門持有個資狀況統計</b></div>
+      <p>清查結果之部門統計，詳見下表所示。</p>
+
+   </div>
+
+	<div style = "padding : 5px";>
+		<table border = "0">
+			<tr>
+				<td>
+               <div>
+                  <!-- Don't use CSS style, the image size won't change in download doc file. -->
+						<img src="P-Marker_5.png" width="480" height="480"/>
+					</div>
+				</td>
+				<td>		
+					<div>
+						<table border="0">
+							<tbody>            
+								<tr><td bgcolor="#A680A7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;極高</td></tr>
+                        <tr><td bgcolor="#FEA49C">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;高</td></tr>
+                        <!--
+								<tr><td bgcolor="#A9D589">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;中</td></tr>
+                        <tr><td bgcolor="#98CFE8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;低</td></tr>
+                        -->
+							</tbody>
+						</table>
+               </div>
+				</td>
+         </tr>
+         <tr>
+            <td align="center">單位：個資檔案數</td>
+            <td> </td>
+         </tr>
+		</table>
+	</div>
+
+      <div class="resultW clearfix assess">
+         <div class="title"><b>伍、風險等級評定</b></div>
+         <p>本分析報告依據以下方式，針對檢出之個資檔案進行風險等級評定：</p>
+         <table class="aList" border="1" cellpadding="1" cellspacing="1">
+            <tbody>
+               <tr>
+                  <th class="highest" style="font-weight: normal;">極高風險 : </th>
+                  <td>同一檔案內，$riskExtremeTypeNames這些個資種類至少同時出現$riskExtremeTypeNum 種以上，且各包含至少$riskExtremeNum筆。</td>
+               </tr>
+               <tr>
+                  <th class="high" style="font-weight: normal;">高風險 : </th>
+                  <td>同一檔案內，$riskTypeNames的總出現數量超過$riskHigh筆以上。</td>
+               </tr>
+               <tr>
+                  <th class="mid" style="font-weight: normal;">中風險 : </th>
+                  <td>同一檔案內，$riskTypeNames的總出現數量介於$overRiskLow ~$underRiskHigh筆間。</td>
+               </tr>
+               <tr>
+                  <th class="low" style="font-weight: normal;">低風險 : </th>
+                  <td>同一檔案內，$riskTypeNames的總出現數量小於等於$riskLow筆。</td>
+               </tr>
+            </tbody>
+         </table>
+         <p class="hint">受檢機關可依據本報告彙整後之個人資料檔案清冊，進行衝擊評鑑及詳細風險評鑑作業。</p>
+         <p>本次清查之風險等級分類結果，詳見下表所示。</p>
+      <div class="chartW">
+         <span class="chart" style="position: relative; top: -59px;"><img src="P-Marker_1.png"/></span>
+         <span class="chart" style="position: relative; top: -125px;">
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="border: 0px;">
+                        <img style="width: 502px; height: 300px; position: relative; bottom: -115px;" alt="" src="P-Marker_2.png" vspace="100"/></td>
+                  </tr>
+                  <tr>
+                     <td align="center" style="border: 0px; text-align: center;">單位：個資檔案數</td>
+                  </tr>
+               </tbody>
+            </table>
+         </span>
+      </div>
+   </div>    
+<div class="resultW clearfix">
+      <div class="title"><b>陸、極高風險檔案Top10持有人員</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="highest">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+                         
+               <th>個資檔案數</th>
+               <th>極高風險檔案數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td>$personTop10Extreme[0][department]</td>
+               <td>$personTop10Extreme[0][domain_name]</td>
+               <td>$personTop10Extreme[0][login_name]</td>
+               
+               <td>$personTop10Extreme[0][totalFile]</td>
+               <td>$personTop10Extreme[0][nFile]</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td>$personTop10Extreme[1][department]</td>
+               <td>$personTop10Extreme[1][domain_name]</td>
+               <td>$personTop10Extreme[1][login_name]</td>
+               
+               <td>$personTop10Extreme[1][totalFile]</td>
+               <td>$personTop10Extreme[1][nFile]</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td>$personTop10Extreme[2][department]</td>
+               <td>$personTop10Extreme[2][domain_name]</td>
+               <td>$personTop10Extreme[2][login_name]</td>
+               
+               <td>$personTop10Extreme[2][totalFile]</td>
+               <td>$personTop10Extreme[2][nFile]</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td>$personTop10Extreme[3][department]</td>
+               <td>$personTop10Extreme[3][domain_name]</td>
+               <td>$personTop10Extreme[3][login_name]</td>
+               
+               <td>$personTop10Extreme[3][totalFile]</td>
+               <td>$personTop10Extreme[3][nFile]</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td>$personTop10Extreme[4][department]</td>
+               <td>$personTop10Extreme[4][domain_name]</td>
+               <td>$personTop10Extreme[4][login_name]</td>
+               
+               <td>$personTop10Extreme[4][totalFile]</td>
+               <td>$personTop10Extreme[4][nFile]</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td>$personTop10Extreme[5][department]</td>
+               <td>$personTop10Extreme[5][domain_name]</td>
+               <td>$personTop10Extreme[5][login_name]</td>
+               
+               <td>$personTop10Extreme[5][totalFile]</td>
+               <td>$personTop10Extreme[5][nFile]</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td>$personTop10Extreme[6][department]</td>
+               <td>$personTop10Extreme[6][domain_name]</td>
+               <td>$personTop10Extreme[6][login_name]</td>
+               
+               <td>$personTop10Extreme[6][totalFile]</td>
+               <td>$personTop10Extreme[6][nFile]</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td>$personTop10Extreme[7][department]</td>
+               <td>$personTop10Extreme[7][domain_name]</td>
+               <td>$personTop10Extreme[7][login_name]</td>
+               
+               <td>$personTop10Extreme[7][totalFile]</td>
+               <td>$personTop10Extreme[7][nFile]</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td>$personTop10Extreme[8][department]</td>
+               <td>$personTop10Extreme[8][domain_name]</td>
+               <td>$personTop10Extreme[8][login_name]</td>
+               
+               <td>$personTop10Extreme[8][totalFile]</td>
+               <td>$personTop10Extreme[8][nFile]</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td>$personTop10Extreme[9][department]</td>
+               <td>$personTop10Extreme[9][domain_name]</td>
+               <td>$personTop10Extreme[9][login_name]</td>
+               
+               <td>$personTop10Extreme[9][totalFile]</td>
+               <td>$personTop10Extreme[9][nFile]</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+    
+   <div class="resultW clearfix">
+      <div class="title"><b>柒、高風險檔案Top10持有人員</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="high">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+                         
+               <th>個資檔案數</th>
+               <th>高風險檔案數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td>$personTop10High[0][department]</td>
+               <td>$personTop10High[0][domain_name]</td>
+               <td>$personTop10High[0][login_name]</td>
+               
+               <td>$personTop10High[0][totalFile]</td>
+               <td>$personTop10High[0][nFile]</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td>$personTop10High[1][department]</td>
+               <td>$personTop10High[1][domain_name]</td>
+               <td>$personTop10High[1][login_name]</td>
+               
+               <td>$personTop10High[1][totalFile]</td>
+               <td>$personTop10High[1][nFile]</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td>$personTop10High[2][department]</td>
+               <td>$personTop10High[2][domain_name]</td>
+               <td>$personTop10High[2][login_name]</td>
+               
+               <td>$personTop10High[2][totalFile]</td>
+               <td>$personTop10High[2][nFile]</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td>$personTop10High[3][department]</td>
+               <td>$personTop10High[3][domain_name]</td>
+               <td>$personTop10High[3][login_name]</td>
+               
+               <td>$personTop10High[3][totalFile]</td>
+               <td>$personTop10High[3][nFile]</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td>$personTop10High[4][department]</td>
+               <td>$personTop10High[4][domain_name]</td>
+               <td>$personTop10High[4][login_name]</td>
+               
+               <td>$personTop10High[4][totalFile]</td>
+               <td>$personTop10High[4][nFile]</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td>$personTop10High[5][department]</td>
+               <td>$personTop10High[5][domain_name]</td>
+               <td>$personTop10High[5][login_name]</td>
+               
+               <td>$personTop10High[5][totalFile]</td>
+               <td>$personTop10High[5][nFile]</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td>$personTop10High[6][department]</td>
+               <td>$personTop10High[6][domain_name]</td>
+               <td>$personTop10High[6][login_name]</td>
+               
+               <td>$personTop10High[6][totalFile]</td>
+               <td>$personTop10High[6][nFile]</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td>$personTop10High[7][department]</td>
+               <td>$personTop10High[7][domain_name]</td>
+               <td>$personTop10High[7][login_name]</td>
+               
+               <td>$personTop10High[7][totalFile]</td>
+               <td>$personTop10High[7][nFile]</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td>$personTop10High[8][department]</td>
+               <td>$personTop10High[8][domain_name]</td>
+               <td>$personTop10High[8][login_name]</td>
+               
+               <td>$personTop10High[8][totalFile]</td>
+               <td>$personTop10High[8][nFile]</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td>$personTop10High[9][department]</td>
+               <td>$personTop10High[9][domain_name]</td>
+               <td>$personTop10High[9][login_name]</td>
+               
+               <td>$personTop10High[9][totalFile]</td>
+               <td>$personTop10High[9][nFile]</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>      
+   <div class="resultW clearfix">
+      <div class="title"><b>捌、極高風險檔案Top10</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="highest">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+               <th>檔案路徑</th>          
+               <th>個資檔案類別</th>
+               <th>極高風險個資數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td>$dataTop10Extreme[0][department]</td>
+               <td>$dataTop10Extreme[0][domain_name]</td>
+               <td>$dataTop10Extreme[0][login_name]</td>
+               <td>$dataTop10Extreme[0][filePath]</td>
+               <td>$dataTop10Extreme[0][fileType]</td>
+               <td>$dataTop10Extreme[0][nFound]</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td>$dataTop10Extreme[1][department]</td>
+               <td>$dataTop10Extreme[1][domain_name]</td>
+               <td>$dataTop10Extreme[1][login_name]</td>
+               <td>$dataTop10Extreme[1][filePath]</td>
+               <td>$dataTop10Extreme[1][fileType]</td>
+               <td>$dataTop10Extreme[1][nFound]</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td>$dataTop10Extreme[2][department]</td>
+               <td>$dataTop10Extreme[2][domain_name]</td>
+               <td>$dataTop10Extreme[2][login_name]</td>
+               <td>$dataTop10Extreme[2][filePath]</td>
+               <td>$dataTop10Extreme[2][fileType]</td>
+               <td>$dataTop10Extreme[2][nFound]</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td>$dataTop10Extreme[3][department]</td>
+               <td>$dataTop10Extreme[3][domain_name]</td>
+               <td>$dataTop10Extreme[3][login_name]</td>
+               <td>$dataTop10Extreme[3][filePath]</td>
+               <td>$dataTop10Extreme[3][fileType]</td>
+               <td>$dataTop10Extreme[3][nFound]</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td>$dataTop10Extreme[4][department]</td>
+               <td>$dataTop10Extreme[4][domain_name]</td>
+               <td>$dataTop10Extreme[4][login_name]</td>
+               <td>$dataTop10Extreme[4][filePath]</td>
+               <td>$dataTop10Extreme[4][fileType]</td>
+               <td>$dataTop10Extreme[4][nFound]</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td>$dataTop10Extreme[5][department]</td>
+               <td>$dataTop10Extreme[5][domain_name]</td>
+               <td>$dataTop10Extreme[5][login_name]</td>
+               <td>$dataTop10Extreme[5][filePath]</td>
+               <td>$dataTop10Extreme[5][fileType]</td>
+               <td>$dataTop10Extreme[5][nFound]</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td>$dataTop10Extreme[6][department]</td>
+               <td>$dataTop10Extreme[6][domain_name]</td>
+               <td>$dataTop10Extreme[6][login_name]</td>
+               <td>$dataTop10Extreme[6][filePath]</td>
+               <td>$dataTop10Extreme[6][fileType]</td>
+               <td>$dataTop10Extreme[6][nFound]</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td>$dataTop10Extreme[7][department]</td>
+               <td>$dataTop10Extreme[7][domain_name]</td>
+               <td>$dataTop10Extreme[7][login_name]</td>
+               <td>$dataTop10Extreme[7][filePath]</td>
+               <td>$dataTop10Extreme[7][fileType]</td>
+               <td>$dataTop10Extreme[7][nFound]</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td>$dataTop10Extreme[8][department]</td>
+               <td>$dataTop10Extreme[8][domain_name]</td>
+               <td>$dataTop10Extreme[8][login_name]</td>
+               <td>$dataTop10Extreme[8][filePath]</td>
+               <td>$dataTop10Extreme[8][fileType]</td>
+               <td>$dataTop10Extreme[8][nFound]</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td>$dataTop10Extreme[9][department]</td>
+               <td>$dataTop10Extreme[9][domain_name]</td>
+               <td>$dataTop10Extreme[9][login_name]</td>
+               <td>$dataTop10Extreme[9][filePath]</td>
+               <td>$dataTop10Extreme[9][fileType]</td>
+               <td>$dataTop10Extreme[9][nFound]</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+    
+   <div class="resultW clearfix">
+      <div class="title"><b>玖、高風險檔案Top10</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="high">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+               <th>檔案路徑</th>          
+               <th>個資檔案類別</th>
+               <th>高風險個資數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td>$dataTop10High[0][department]</td>
+               <td>$dataTop10High[0][domain_name]</td>
+               <td>$dataTop10High[0][login_name]</td>
+               <td>$dataTop10High[0][filePath]</td>
+               <td>$dataTop10High[0][fileType]</td>
+               <td>$dataTop10High[0][nFound]</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td>$dataTop10High[1][department]</td>
+               <td>$dataTop10High[1][domain_name]</td>
+               <td>$dataTop10High[1][login_name]</td>
+               <td>$dataTop10High[1][filePath]</td>
+               <td>$dataTop10High[1][fileType]</td>
+               <td>$dataTop10High[1][nFound]</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td>$dataTop10High[2][department]</td>
+               <td>$dataTop10High[2][domain_name]</td>
+               <td>$dataTop10High[2][login_name]</td>
+               <td>$dataTop10High[2][filePath]</td>
+               <td>$dataTop10High[2][fileType]</td>
+               <td>$dataTop10High[2][nFound]</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td>$dataTop10High[3][department]</td>
+               <td>$dataTop10High[3][domain_name]</td>
+               <td>$dataTop10High[3][login_name]</td>
+               <td>$dataTop10High[3][filePath]</td>
+               <td>$dataTop10High[3][fileType]</td>
+               <td>$dataTop10High[3][nFound]</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td>$dataTop10High[4][department]</td>
+               <td>$dataTop10High[4][domain_name]</td>
+               <td>$dataTop10High[4][login_name]</td>
+               <td>$dataTop10High[4][filePath]</td>
+               <td>$dataTop10High[4][fileType]</td>
+               <td>$dataTop10High[4][nFound]</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td>$dataTop10High[5][department]</td>
+               <td>$dataTop10High[5][domain_name]</td>
+               <td>$dataTop10High[5][login_name]</td>
+               <td>$dataTop10High[5][filePath]</td>
+               <td>$dataTop10High[5][fileType]</td>
+               <td>$dataTop10High[5][nFound]</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td>$dataTop10High[6][department]</td>
+               <td>$dataTop10High[6][domain_name]</td>
+               <td>$dataTop10High[6][login_name]</td>
+               <td>$dataTop10High[6][filePath]</td>
+               <td>$dataTop10High[6][fileType]</td>
+               <td>$dataTop10High[6][nFound]</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td>$dataTop10High[7][department]</td>
+               <td>$dataTop10High[7][domain_name]</td>
+               <td>$dataTop10High[7][login_name]</td>
+               <td>$dataTop10High[7][filePath]</td>
+               <td>$dataTop10High[7][fileType]</td>
+               <td>$dataTop10High[7][nFound]</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td>$dataTop10High[8][department]</td>
+               <td>$dataTop10High[8][domain_name]</td>
+               <td>$dataTop10High[8][login_name]</td>
+               <td>$dataTop10High[8][filePath]</td>
+               <td>$dataTop10High[8][fileType]</td>
+               <td>$dataTop10High[8][nFound]</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td>$dataTop10High[9][department]</td>
+               <td>$dataTop10High[9][domain_name]</td>
+               <td>$dataTop10High[9][login_name]</td>
+               <td>$dataTop10High[9][filePath]</td>
+               <td>$dataTop10High[9][fileType]</td>
+               <td>$dataTop10High[9][nFound]</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>  
+   <div class="resultW clearfix">
+      <div class="title"><b>拾、個人資料檔案清冊</b></div>
+      <p>詳細之個人資料檔案清冊，詳如附件。</p>
+   </div>
+   <div class="resultW clearfix">
+      <div class="title"><b>拾壹、建議事項</b></div>
+      <div>
+         <table style="border: medium none ; margin-left: 10.4pt; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+            <tbody>
+               <tr style="height: 186.1pt;">
+                  <td style="border: 1pt solid windowtext; padding: 0cm 5.4pt; width: 800.7pt; height: 186.1pt;" valign="top" width="800">
+                     <p><span><font color="darkgray" face="標楷體" size="3">由顧問或是機關保護專人填註意見</font></span></p>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+</body></html>

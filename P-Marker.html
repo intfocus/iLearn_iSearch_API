@@ -1,0 +1,1421 @@
+<!DOCTYPE HTML>
+<html><head>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+/** include from Yui **/
+/*
+YUI 3.4.1 (build 4118)
+Copyright 2011 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
+body{font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small}select,input,button,textarea{font:99% arial,helvetica,clean,sans-serif}table{font-size:inherit;font:100%}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%}
+
+/** include from Yui End**/
+
+html, body {
+	background:#fff;
+	overflow:auto;
+	overflow-x:hidden;
+	color:#000;
+}
+
+.createTime {
+	float:right;
+	font-size:14px;
+	font-weight:normal;
+}
+.reportBanner {
+	padding:15px;
+	color:#333;
+	font-size:24px;
+	font-weight:bold;
+}
+.reportDetail {
+	margin:5px 15px;	
+}
+.reportDetail .reportName {
+	background-color:#595757;
+	border:1px solid #ECEFC5;
+	color:#DAE879;
+	font-weight:bold;
+	font-size:18px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .reportName span.name {
+	margin:5px 10px;
+	display:block;
+}
+.reportDetail .reportName .funcBtn {
+	float:right;
+	display:inline-block;
+	line-height:32px;
+	border-left:1px solid #eee;
+	padding:0 20px 0 5px;
+	font-size:14px;
+	color:#eee;
+	cursor:pointer;
+	position:relative;
+	z-index:3;
+	background: #787878;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#787878), to(#464646));
+	background: -webkit-linear-gradient(#787878, #464646);
+	background: -moz-linear-gradient(#787878, #464646);
+	background: -ms-linear-gradient(#787878, #464646);
+	background: -o-linear-gradient(#787878, #464646);
+	background: linear-gradient(#787878, #464646);
+	-pie-background: linear-gradient(#787878, #464646);
+}
+.reportDetail .reportName .funcBtn:hover {
+	background: #999999;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#999999), to(#464646));
+	background: -webkit-linear-gradient(#999999, #464646);
+	background: -moz-linear-gradient(#999999, #464646);
+	background: -ms-linear-gradient(#999999, #464646);
+	background: -o-linear-gradient(#999999, #464646);
+	background: linear-gradient(#999999, #464646);
+	-pie-background: linear-gradient(#999999, #464646);
+}
+
+.reportDetail .reportName .funcBtn.disabled, .reportDetail .reportName .funcBtn.disabled:hover {
+	background-color:#3E3A39;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#3E3A39), to(#3E3A39));
+	background: -webkit-linear-gradient(#3E3A39, #3E3A39);
+	background: -moz-linear-gradient(#3E3A39, #3E3A39);
+	background: -ms-linear-gradient(#3E3A39, #3E3A39);
+	background: -o-linear-gradient(#3E3A39, #3E3A39);
+	background: linear-gradient(#3E3A39, #3E3A39);
+	-pie-background: linear-gradient(#3E3A39, #3E3A39);
+	cursor:default;
+	color:#727171;
+}
+.reportDetail .reportName .icon {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	background-repeat:no-repeat;
+	background-position:center;
+	margin:4px 5px;
+	vertical-align:middle;
+}
+.reportDetail .reportName span.print .icon {
+	background:url(../../../images/icon_print.png);
+}
+.reportDetail .reportName span.send .icon {
+	background:url(../../../images/icon_email.png);
+}
+.reportDetail .reportName span.download .icon {
+	background:url(../../../images/icon_download.png);
+}
+.reportDetail .reportName span.disabled.download .icon {
+	background-position:bottom;
+}
+.reportDetail .rSubmenuW {
+	margin:20px 10px 0 10px;
+}
+.reportDetail .rSubmenuW .rSubmenu {
+	border:1px solid #E9EBC3;
+	padding:5px 10px;
+	cursor:pointer;
+	font-weight:bold;
+	margin:0;
+	display:inline-block;
+	font-size:14px;
+}
+.reportDetail .rSubmenuW .rSubmenu:hover {
+	background-color:#666;
+}
+.reportDetail .rSubmenuW .rSubmenu.active {
+	background-color:#5B7300;
+}
+
+.condition a.showHide {
+	text-decoration:underline;
+	cursor:pointer;
+	color:#778E13;
+	position:absolute;
+	right:0px;
+	top:6px;
+}
+.condition .comList {
+	margin-right:70px;
+	*height:1%; /*fix ie7 dis*/
+}
+.condition .comList.hide {
+	overflow:hidden;
+	height:25px;
+}
+.condition .comList span.com {
+	display:inline-block;
+	background:#E1E5CA;
+	padding:2px 8px;
+	margin:5px 10px 0 0;
+}
+.reportDetail .resultW {
+	margin:30px 10px 0 10px;
+	clear:both;
+	width:100%;
+	*width:auto;
+}
+
+/**
+.reportDetail .resultW .divide {
+	width:47%;
+	display:inline-block;
+	margin-right:20px;
+	vertical-align:top;
+}
+.reportDetail .resultW .divide ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .divide li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW .divideC {
+	color:#555;
+}
+.reportDetail .resultW .divideC p {
+	padding-bottom:10px;
+}
+**/
+
+.reportDetail .resultW  ul {
+	list-style-type:disc;
+	padding-bottom:10px;
+}
+.reportDetail .resultW  li {
+	margin:5px 0 0 20px;
+}
+.reportDetail .resultW p {
+	padding-bottom:10px;
+	width:95%;
+<!-- 	max-width:1000px; -->
+}
+.reportDetail .resultW p span {
+	color:#f00;
+}
+
+.reportDetail .resultW .title {
+	font-weight:bold;
+	padding-bottom:10px;
+}
+.reportDetail .resultW .title .hint {
+	font-weight:normal;
+	color:#aaa;
+}
+
+
+/**
+.reportDetail .resultW .riskResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+}
+.reportDetail .resultW .riskResult ul {
+	list-style-type:none;
+}
+.reportDetail .resultW .riskResult li {
+	padding:10px;
+	clear:right;
+	color:#fff;
+	font-weight:bold;
+	margin:0;
+}
+.reportDetail .resultW .riskResult li.highest {
+	background-color:#A680A7;
+}
+.reportDetail .resultW .riskResult li.high {
+	background-color:#FEA49C;
+}
+.reportDetail .resultW .riskResult li.mid {
+	background-color:#F37000;
+}
+.reportDetail .resultW .riskResult li.low {
+	background-color:#F39800;
+}
+.reportDetail .resultW .riskResult li span.result {
+	float:right;
+	font-weight:bold;
+}
+**/
+
+
+.reportDetail .resultW .totalResult {
+	float:left;
+	width:330px;
+	margin-right:0 0 0 -350px;
+	list-style-type:none;
+}
+.reportDetail .resultW .totalResult li {
+	padding:5px 10px;
+	clear:right;
+	color:#333;
+	margin:5px 0;
+	border:1px solid #999;
+}
+.reportDetail .resultW .totalResult li span.result {
+	float:right;
+	font-weight:bold;
+	color:#f00;
+}
+
+
+.reportDetail .resultW .otherResultW {
+	margin-left:350px;
+}
+.reportDetail .resultW .otherResultW .otherResult {
+	width:168px;
+	background-color:#eee;
+	padding:5px 10px;
+	float:left;
+	color:#595757;
+	margin:2px 2px 0 0;
+}
+.otherResultW .otherResult .field, 
+.otherResultW .otherResult .result {
+	display:block;
+}
+.otherResultW .otherResult .result {
+	color:#f00;
+}
+.reportDetail .resultW .description {
+	clear:both;
+	padding-top:10px;
+	color:#D1D1D1;
+}
+.reportDetail .resultW .chartW{
+	margin-top:10px;
+	width:100%;
+}
+.reportDetail .resultW .chartW .chart{
+	display:inline-block;
+	width:49%;
+	text-align:center;
+}
+.fixRelative { /*fix firefox relative problem*/
+	position:relative;
+	display:block;
+}
+
+.reportDetail .resultW .rList {
+	margin-top:10px;
+	width:95%;
+}
+.reportDetail .resultW th, .reportDetail .resultW td {
+	padding:5px;
+	white-space:nowrap;
+}
+.reportDetail .resultW th {
+	border:1px solid #ccc;
+	background:#666;
+	text-align:center;
+	font-weight:bold;
+	color:#000;
+}
+.reportDetail .resultW tr.highest th {
+	background-color:#A680A7;
+
+}
+.reportDetail .resultW tr.high th {
+	background-color:#FEA49C;
+
+}
+.reportDetail .resultW td {
+	border:1px solid #999;
+	text-align:left;
+}
+
+.reportDetail .resultW td.path, .reportDetail .resultW td.fileName {
+	white-space:normal;
+}
+.reportDetail .resultW.conditionW {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.reportDetail .resultW.conditionW table.condition {
+	background-color:#F7F8F8;
+	width:98%;
+}
+.reportDetail .resultW.conditionW th,
+.reportDetail .resultW.conditionW td {
+	padding:5px 10px;
+	border:1px solid #999;
+}
+.reportDetail .resultW.conditionW th {
+	width:1px;
+	color:#666;
+	background-color:transparent;
+	text-align:left;
+	font-weight:normal;
+}
+.reportDetail .resultW.conditionW th span {
+	white-space:nowrap;
+}
+.reportDetail ..resultW.conditionW td {
+	color:#222;
+}
+.reportDetail .resultW p.hint {
+	margin-top:5px;
+	color:#666;
+}
+
+
+.reportDetail .resultW.assess table.aList {
+	width:95%;
+}
+.reportDetail .resultW.assess th,
+.reportDetail .resultW.assess td {
+	padding:10px;
+	border-bottom:1px solid #999;
+	border-color:#aaa;
+}
+.reportDetail .resultW.assess th {
+	width:1px;
+	color:#000;
+	background-color:transparent;
+	text-align:left;
+	font-weight:bold;
+}
+.reportDetail .resultW.assess th.highest {
+	background-color:#A680A7;
+}
+.reportDetail .resultW.assess th.high {
+	background-color:#FEA49C;
+}
+.reportDetail .resultW.assess th.mid {
+	background-color:#A9D589; 
+}
+.reportDetail .resultW.assess th.low {
+	background-color:#98CFE8;
+}
+.reportDetail .resultW.assess th span {
+	white-space:nowrap;
+}
+.reportDetail .resultW.assess td {
+	color:#222;
+	white-space:normal;
+}
+.reportDetail .resultW .command {
+	border:1px solid #777;
+	padding:5px;
+	height:200px;
+	width:94%;
+	color:#777;
+}
+
+/** send through mail start **/
+.funcBtn.send {
+	position:relative;
+}
+.sendW .msg {
+	background:#FC0;
+	padding:5px 10px;
+	text-align:center;
+}
+.sendW {
+	background:#F5F5F5;
+	padding:10px;
+	position:absolute;
+	color:#333;
+	right:16px;
+	top:115px;
+	font-size:12px;
+	width:270px;
+	border-color:#999 #000 #000 #999;
+	border-width:1px;
+	border-style:solid;
+	-webkit-box-shadow: #666 0px 2px 3px;
+	-moz-box-shadow: #666 0px 2px 3px;
+	box-shadow: #666 0px 2px 3px;
+}
+.sendW p {
+	line-height:20px;
+	color:#169447;
+	margin-top:5px;
+}
+.sendW input {
+	vertical-align:middle;
+}
+.sendW .attW {
+	padding-bottom:10px;
+	font-weight:normal;
+}
+.sendW input.subject {
+}
+.sendW input.subject, .sendW textarea, .sendW .attW, .sendW p {
+	width:100%;
+}
+.sendW input.subject, .sendW textarea {
+	border-style:solid;
+	border-width:1px;
+	border-color:#666 #aaa #aaa #666;
+}
+.sendW textarea.reciever {
+	height:50px;
+}
+.sendW textarea.content {
+	height:100px;
+}
+.sendW label {
+	margin-right:10px;
+	display:inline-block;
+	*display:inline;
+	zoom:1;
+}
+.sendW button {
+	float:left;
+}
+/** send through mail start **/
+
+</style>
+<script type="text/javascript" src="../../../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../../../js/css3pie.js"></script><!--[if lt IE 10]>
+<script type="text/javascript" src="lib/PIE.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+function mailBox()
+{
+   if(document.getElementById("sendW").style.display == "none")
+      document.getElementById("sendW").style.display = "block";
+   else
+   {
+      document.getElementById("sendW").style.display = "none";
+      document.getElementById("sendMSG").style.display = "none";
+   }
+}
+
+function closeMailBox()
+{
+   document.getElementById("sendW").style.display = "none";
+   document.getElementById("sendMSG").style.display = "none";
+}
+
+function sendMailBox()
+{
+   //todo send email
+
+}
+     function submitForm1() 
+     {
+        //document.getElementById("sendMSG").style.display = "block";
+         function closeMailBox()
+         {
+            document.getElementById("sendW").style.display = "none";
+            document.getElementById("sendMSG").style.display = "none";
+         }        
+        document.getElementsByName("form1")[0].submit();
+     }   
+</script><title>Openfind P-Marker</title></head><body>
+<div style="padding: 15px; color: rgb(51, 51, 51); font-size: 24px; font-weight: bold;" align="left">  網擎資訊軟體股份有限公司 - 個人資料檔案清查分析報告</div>
+<div style="font-size: 14px; font-weight: normal;" align="right">報告產製時間：2014-01-28 13:50:25</div>
+
+<div class="reportDetail">
+   <div class="reportName">
+      <!--replaceStart-->     
+      <!-- send through mail start -->
+      <div id="sendW" class="sendW" style="display: none;">
+         <div id="sendMSG" class="msg" style="display: none;">寄送成功! / 寄送失敗!</div>
+          <form id="form1" name="form1" method="post" action="http://172.16.14.234/p-marker/sendMail.php" target="_blank">
+            <p>傳送給 : (逗點分隔)</p>
+            <textarea name = "reciever" class="reciever"></textarea>
+            <p>主旨 : </p>
+            <input name = "title" class="subject" type="text">
+            <!-- <p>附檔 : </p>
+            <div class="attW">
+               <label><input type="checkbox" name = "checkbox" > 報表</label><label>
+            </div> -->
+            <p>內文 : </p>
+            <textarea name = "content" class="content"></textarea> 
+            <button type="button" onclick="submitForm1();">寄出</button> <button type="button" class="close" onclick="closeMailBox();">關閉</button>
+            <input name="reportID" type=hidden value = "90"/>
+         </form>
+      </div>    
+      <!-- send through mail end -->
+       
+            <!-- send through mail end -->
+            <span class="funcBtn send" onclick="mailBox()"><span class="icon"></span>寄送</span>
+
+            <a style="text-decoration:none;" href='http://172.16.14.234/p-marker/mailPersonalReport.php?reportID=90' target=_blank 
+            onclick="return confirm('提醒您：請先確認已匯入「用戶端電腦清單」，方能將簡易個人報表寄送給每個掃描者。找不到對應 email 的用戶報表將會寄送至指定的管理者。\n\n確定要繼續執行此功能嗎？');">
+            <span class="funcBtn download">
+            <span class="icon"></span>
+            寄送簡易個人報表 
+            </span>
+            </a>
+
+            <a style="text-decoration:none;" href='http://172.16.14.234/p-marker/downloadReport.php?reportID=90' 
+            onclick="alert('提醒您：報表請先將 zip 「解壓縮」另存之後，再使用其中的 Excel 檔，謝謝！');">
+            <span class="funcBtn download">
+            <span class="icon"></span>
+            下載報表
+            </span>
+            </a>
+               
+      <span class="name">test</span>
+   </div>
+   <!--
+   <div class="rSubmenuW">
+      <span class="rSubmenu active">報表摘要</span>
+      <span class="rSubmenu">報表分析</span>
+   </div>
+   -->
+   <div class="resultW clearfix conditionW">
+      <div class="title"><b>壹、基本資料</b></div>
+      <table class="condition" border="1" cellpadding="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <th><span>一、	機關名稱: </span></th>
+               <td>網擎資訊軟體股份有限公司</td>
+            </tr>
+            <tr>
+               <th><span>二、	清查時間： </span></th>
+               <td>2014/01/01~2014/01/28</td>
+            </tr>
+            <tr>
+               <th><span>三、	清查電腦數量： </span></th>
+               <td>合計 <span>0</span> 台</td>
+            </tr>  
+            <tr>
+               <th><span>四、	清查個資類型: </span></th>
+               <td>身分證、手機、住址、電子信箱、信用卡、姓名、集保帳戶</td>
+            </tr>
+         </tbody>
+      </table> 
+   </div> 
+   <div class="resultW clearfix">
+      <div class="title"><b>貳、報告目的</b></div>
+         <p>個人資料保護法，其立法目的係為規範個人資料之蒐集、處理及利用，以避免人格權受侵害，並促進個人資料之合理利用。<br>所稱個人資料其重點在於「得以直接或間接方式識別該個人」之資料。依據個資法規定保有個人資料檔案者，應訂定個人資料檔案安全維護計畫(規定)，並採行適當之安全措施，防止個人資料被竊取、竄改、毀損、滅失或洩漏，若有違反本法規定之情事，致個人資料遭不法蒐集、處理、利用或其他侵害當事人權利者，應負損害賠償責任，最高賠償金額二億元。</p>
+         <div align="left">個人資料檔案，依據其所存在之載體，可以區分為下列四項：</div>          
+            <ul>
+               <li>電子檔案型態</li>
+               <li>網頁型態</li>
+               <li>資料庫型態</li>
+               <li>紙本型態</li>
+            </ul> 
+            <p>上述任何一項型態之資料不當揭露，皆可能面臨損害求償訴訟，導致最高二億元金額之賠償，其中又以電子檔案型態之個人資料檔案最不易管理，因散置於機關內之個人電腦之中，人工清查往往耗時費力，又不易得到成效，使個資保護工作，遭遇重大窒礙，本項服務即是針對電子檔案及網頁型態之個人資料檔案，提供自動化之清查服務，具體呈現機關所可能面臨之衝擊與風險。</p>
+         </div>
+   <div class="resultW clearfix">
+      <div class="title"><b>參、清查結果說明</b></div>
+      <p>本次清查之結果，在&nbsp; <span>0</span><span>台</span> 電腦中，檢測出&nbsp;<span class="result">0</span><span>台</span> 電腦含有個人資料檔案，合計個人資料檔案數 <span class="result">0</span><span>筆</span> ，共&nbsp;<span class="result">0</span><span></span>筆個人資料，包含<span style="color: rgb(0, 0, 0); font-family: arial,helvetica,clean,sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 16px; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">。</span></p>
+      <ul class="totalResult">
+         <li>清查電腦數 ：<span></span><span class="result">0 台</span><span class="result"></span></li>
+         <li>含個資檔案電腦數 ：<span class="result">0 台</span></li>
+         <li>個人資料檔案總數 ：<span class="result">0 筆</span></li>
+         <li>個人資料筆數 ：<span class="result">0 筆</span></li>
+      </ul>
+      <div class="otherResultW">
+         
+         <!-- <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span>
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span>
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span>
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span> 
+         <span class="otherResult"><span class="field">&nbsp; </span><span class="result">&nbsp;</span></span> -->
+      </div>
+   </div>           
+   <div class="resultW clearfix">
+      <div class="title"><b>肆、部門持有個資狀況統計</b></div>
+      <p>清查結果之部門統計，詳見下表所示。</p>
+
+   </div>
+
+	<div style = "padding : 5px";>
+		<table border = "0">
+			<tr>
+				<td>
+               <div>
+                  <!-- Don't use CSS style, the image size won't change in download doc file. -->
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAJZElEQVR42u3avQ2CQACG4ZviVmAN
+R6FnAWdwCXtXcA0LWhMGsLHAhJxCgjHEgtjIwfMkX+iv4A0/Yb+Ladzofj2ZmZnZAjZX+BZ0ACAv
+wREAgKADAEsLulfvsB6P22UYIOiAoAOCDgg6IOiAoAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6
+oIOgA4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDo
+IOiAoAOCDgg6IOiAoAOCDgg6CDog6ICgA4IOCDog6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOC
+Dgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CLugg6ICg
+A4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOgi6oIOg
+A4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDo
+gKADgg4IOiDogKADgg6CDgg6IOiAoAOCDgg6IOiAoIOgA4IOCDog6ICgA4IOCDog6CDogKADgg4I
+OiDogKADgg4IOgg6IOiAoAOCDgg6IOiAoAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6oIOgA4IO
+CDog6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDoIOiAoAOC
+Dgg6IOiAoAOCDgg6CDog6ICgA4IOCDog6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOCDgg6IOiA
+oAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CLugg6ICgA4IOCDog
+6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog
+6ICgA4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4I
+OiDogKADgg6CDgg6IOiAoAOCDgg6IOiAoIOgA4IOCDog6ICgA4IOCDog6CDogKADgg4IOiDogKAD
+gg4IOgg6IOiAoAOCDgg6IOiAoAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICg
+A4IOCDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDoIOiAoAOCDgg6IOiA
+oAOCDgg6CDog6ICgA4IOCDog6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOCDgg6IOiAoAOCDgg6
+IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CLugg6ICgA4IOCDog6ICgA4IO
+CDoIuqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IO
+CDoIuqCDoAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKAD
+gg6CDgg6IOiAoAOCDgg6IOiAoIOgA4IOCDog6ICgA4IOCDog6CDogKADgg4IOiDogKADgg4IOgg6
+IOiAoAOCDgg6IOiAoAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IOCDoI
+uqCDoAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDoIOiAoAOCDgg6IOiAoAOCDgg6
+CDog6ICgA4IOCDog6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOCDgg6IOiAoAOCDgg6IOgg6ICg
+A4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CLugg6ICgA4IOCDog6ICgA4IOCDoIuqCD
+oAOCDgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IOCDoIuqCD
+oAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CDgg6
+IOiAoAOCDgg6IOiAoIOgA4IOCDog6ICgA4IOCDog6CDogKADgg4IOiDogKADgg4IOgg6IOiAoAOC
+Dgg6IOiAoAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IOCDoIuqCDoAOC
+Dgg6IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDoIOiAoAOCDgg6IOiAoAOCDgg6CDog6ICg
+A4IOCDog6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog
+6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CLugg6ICgA4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6
+IOiAoAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6
+IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IOCDoIOiDogKADgg4IOiDogKADgg6CDgg6IOiAoAOC
+Dgg6IOiAoIOgA4IOCDog6ICgA4IOCDog6CDogKADgg4IOiDogKADgg4IOgg6IOiAoAOCDgg6IOiA
+oAOCDoIu6CDogKADgg4IOiDogKADgg4IOgi6oIOgA4IOCDog6ICgA4IOCDoIuqCDoAOCDgg6IOiA
+oAOCDgg6CLqgg6ADgg4IOiDogKADgg4IOiDoIOiAoAOCDgg6IOiAoAOCDgg6CDog6ICgA4IOCDog
+6ICgA4IOgg4IOiDogKADgg4IOiDogKCDoAOCDgg6IOiAoAOCDgg6IOgg6ICgA4IOCDog6ICgA4IO
+CDoIOiDogKADgg4IOiDogKADPwR9GnYzMzP77wTdzMxs60EH8nY+HoYbQX8FNvzKHRB0QNABQQcE
+HQAQdAAQdABA0AEAQQcABB14aZomFUWRQggpxpjqunYoIOhATrquS1VVvSPex70sy9S2rcMBQQdy
+ejr/DPg08ICgA4IOCDog6ICgA7P4hg6CDqzoKd1f7iDoAICgAwCCDgAIOgBs1RO8Jmb5LvOKmAAA
+AABJRU5ErkJggg==
+" width="480" height="480"/>
+					</div>
+				</td>
+				<td>		
+					<div>
+						<table border="0">
+							<tbody>            
+								<tr><td bgcolor="#A680A7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;極高</td></tr>
+                        <tr><td bgcolor="#FEA49C">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;高</td></tr>
+                        <!--
+								<tr><td bgcolor="#A9D589">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;中</td></tr>
+                        <tr><td bgcolor="#98CFE8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;低</td></tr>
+                        -->
+							</tbody>
+						</table>
+               </div>
+				</td>
+         </tr>
+         <tr>
+            <td align="center">單位：個資檔案數</td>
+            <td> </td>
+         </tr>
+		</table>
+	</div>
+
+      <div class="resultW clearfix assess">
+         <div class="title"><b>伍、風險等級評定</b></div>
+         <p>本分析報告依據以下方式，針對檢出之個資檔案進行風險等級評定：</p>
+         <table class="aList" border="1" cellpadding="1" cellspacing="1">
+            <tbody>
+               <tr>
+                  <th class="highest" style="font-weight: normal;">極高風險 : </th>
+                  <td>同一檔案內，身分證、姓名這些個資種類至少同時出現2 種以上，且各包含至少30筆。</td>
+               </tr>
+               <tr>
+                  <th class="high" style="font-weight: normal;">高風險 : </th>
+                  <td>同一檔案內，身分證、手機、住址、電子信箱、信用卡、姓名、集保帳戶的總出現數量超過20筆以上。</td>
+               </tr>
+               <tr>
+                  <th class="mid" style="font-weight: normal;">中風險 : </th>
+                  <td>同一檔案內，身分證、手機、住址、電子信箱、信用卡、姓名、集保帳戶的總出現數量介於6 ~19筆間。</td>
+               </tr>
+               <tr>
+                  <th class="low" style="font-weight: normal;">低風險 : </th>
+                  <td>同一檔案內，身分證、手機、住址、電子信箱、信用卡、姓名、集保帳戶的總出現數量小於等於5筆。</td>
+               </tr>
+            </tbody>
+         </table>
+         <p class="hint">受檢機關可依據本報告彙整後之個人資料檔案清冊，進行衝擊評鑑及詳細風險評鑑作業。</p>
+         <p>本次清查之風險等級分類結果，詳見下表所示。</p>
+      <div class="chartW">
+         <span class="chart" style="position: relative; top: -59px;"><img src="data:image/png;base64,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
+gF+wglIIWagAAAAASUVORK5CYII=
+"/></span>
+         <span class="chart" style="position: relative; top: -125px;">
+            <table>
+               <tbody>
+                  <tr>
+                     <td style="border: 0px;">
+                        <img style="width: 502px; height: 300px; position: relative; bottom: -115px;" alt="" src="data:image/png;base64,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
+" vspace="100"/></td>
+                  </tr>
+                  <tr>
+                     <td align="center" style="border: 0px; text-align: center;">單位：個資檔案數</td>
+                  </tr>
+               </tbody>
+            </table>
+         </span>
+      </div>
+   </div>    
+<div class="resultW clearfix">
+      <div class="title"><b>陸、極高風險檔案Top10持有人員</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="highest">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+                         
+               <th>個資檔案數</th>
+               <th>極高風險檔案數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+    
+   <div class="resultW clearfix">
+      <div class="title"><b>柒、高風險檔案Top10持有人員</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="high">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+                         
+               <th>個資檔案數</th>
+               <th>高風險檔案數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               
+               <td>0</td>
+               <td>0</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>      
+   <div class="resultW clearfix">
+      <div class="title"><b>捌、極高風險檔案Top10</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="highest">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+               <th>檔案路徑</th>          
+               <th>個資檔案類別</th>
+               <th>極高風險個資數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+    
+   <div class="resultW clearfix">
+      <div class="title"><b>玖、高風險檔案Top10</b></div>
+      <table class="rList" border="1" cellpadding="1" cellspacing="1">
+         <tbody>
+            <tr class="high">
+               <th>編號</th>
+               <th>部門</th>
+               <th>電腦編號</th>
+               <th>人員名稱</th>
+               <th>檔案路徑</th>          
+               <th>個資檔案類別</th>
+               <th>高風險個資數量</th>
+            </tr>
+            <tr>
+               <td>1<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>2<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>3<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>4<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>5<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>6<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>7<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>8<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>9<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+            <tr>
+               <td>10<br></td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td> </td>
+               <td>0</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>  
+   <div class="resultW clearfix">
+      <div class="title"><b>拾、個人資料檔案清冊</b></div>
+      <p>詳細之個人資料檔案清冊，詳如附件。</p>
+   </div>
+   <div class="resultW clearfix">
+      <div class="title"><b>拾壹、建議事項</b></div>
+      <div>
+         <table style="border: medium none ; margin-left: 10.4pt; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">
+            <tbody>
+               <tr style="height: 186.1pt;">
+                  <td style="border: 1pt solid windowtext; padding: 0cm 5.4pt; width: 800.7pt; height: 186.1pt;" valign="top" width="800">
+                     <p><span><font color="darkgray" face="標楷體" size="3">由顧問或是機關保護專人填註意見</font></span></p>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+</body></html>

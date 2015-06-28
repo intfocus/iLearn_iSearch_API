@@ -215,7 +215,7 @@
                                          . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
-                                         . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"ExamEnd\"/>"
                                          . "<col class=\"ExamsAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -226,7 +226,7 @@
                                          . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
-                                         . "<th>最后修改时间</th>"
+                                         . "<th>最后截止日期</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
@@ -258,7 +258,7 @@
                                          . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
-                                         . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"ExamEnd\"/>"
                                          . "<col class=\"ExamsAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -269,7 +269,7 @@
                                          . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
-                                         . "<th>最后修改时间</th>"
+                                         . "<th>最后截止日期</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -285,7 +285,9 @@
                $CreatedUserId = $row["CreatedUser"];
                $CreatedUserName = get_user_name($CreatedUserId);
                $CreatedTime = $row["CreatedTime"];
-               $EditTime = $row["EditTime"];
+               $Duration = $row["Duration"];
+               $ExamEnd = $row["ExamEnd"];
+               $ExamEndWithOnlyDate = timestamp_to_datetime_with_only_date(strtotime($ExamEnd));
                $StatusStr = $ExamStatus == 0 ? "下架" : "上架";
                $StatusAction = $ExamStatus == 1 ? "下架" : "上架";
                $page_count_display = $page_count + 1;
@@ -298,7 +300,7 @@
                    . "<td><span class=\"ExamStatus fixWidth\">$ExamPassword</span></td>"
                   . "<td><span class=\"CreatedUser fixWidth\">$CreatedUserName</span></td>"
                   . "<td><span class=\"CreatedTime fixWidth\">$CreatedTime</span></td>"
-                  . "<td><span class=\"EditTime fixWidth\">$EditTime</span></td>"
+                  . "<td><span class=\"ExamEnd fixWidth\">$ExamEndWithOnlyDate</span></td>"
                   . "<td><A OnClick=\"actionSearchExams($ExamId,$ExamStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchExams($ExamId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchExams($ExamId);\">删除</A><br/>"

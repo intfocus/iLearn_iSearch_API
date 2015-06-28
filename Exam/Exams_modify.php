@@ -164,7 +164,7 @@
             $ExamPassword = $row["ExamPassword"];
             $ExamDesc = $row["ExamDesc"];
             $ExamContent = $row["ExamContent"];
-            $ExpireTime = $row["ExpireTime"];
+            $Duration = $row["Duration"];
             $CreatedUser = $row["CreatedUser"];
             $CreatedTime = $row["CreatedTime"];
             $ExamStatus = $row["Status"];
@@ -194,7 +194,7 @@
    }
    else if ($cmd == "update")// Update
    {
-      if (!isset($_GET["ExamName"]) || !isset($_GET["ExamDesc"]) || !isset($_GET["ExpireTime"]) ||
+      if (!isset($_GET["ExamName"]) || !isset($_GET["ExamDesc"]) || !isset($_GET["Duration"]) ||
           !isset($_GET["ExamBeginTime"]) || !isset($_GET["ExamEndTime"]))
       {
          echo ERR_INVALID_PARAMETER;
@@ -204,11 +204,10 @@
       
       $ExamName = $_GET["ExamName"];
       $ExamDesc = $_GET["ExamDesc"];
-      $ExpireTime = $_GET["ExpireTime"];
+      $Duration = $_GET["Duration"];
       $ExamBeginTime = $_GET["ExamBeginTime"];
       $ExamEndTime = $_GET["ExamEndTime"];
 
-      $expire_datetime = timestamp_to_datetime($ExpireTime);
       $from_datetime = timestamp_to_datetime($ExamBeginTime);
       $end_datetime = timestamp_to_datetime($ExamEndTime);
 
@@ -226,7 +225,7 @@
 
       $str_query1 = <<<EOD
                       Update exams set ExamName='$ExamName', ExamDesc='$ExamDesc',
-                      ExpireTime='$expire_datetime', ExamBegin='$from_datetime',
+                      Duration=$Duration, ExamBegin='$from_datetime',
                       ExamEnd='$end_datetime', EditUser=$user_id, EditTime=now() where ExamId=$ExamId
 EOD;
 
@@ -239,9 +238,9 @@ EOD;
 
          $exam_json->exam_name = $ExamName;
          $exam_json->description = $ExamDesc;
-         $exam_json->expire_time = $ExpireTime;
-         $exam_json->begin = $ExamBeginTime;
-         $exam_json->end = $ExamEndTime;
+         $exam_json->duration = (int)$Duration;
+         $exam_json->begin = (int)$ExamBeginTime;
+         $exam_json->end = (int)$ExamEndTime;
          
          $tmp_file = EXAM_FILES_DIR."/".$ExamId.time();
          file_put_contents($tmp_file, json_encode($exam_json));
@@ -425,7 +424,7 @@ function modifyExamsContent(ExamId)
    ExamToDate = document.getElementById("exam_end_time").value;
    ExamToHour = document.getElementById("exam_to_hour").value;
    ExamToMin = document.getElementById("exam_to_min").value;
-   ExpireTime = document.getElementById("exam_expire_time").value;
+   Duration = document.getElementById("exam_duration").value;
 
    if (ExamName.length == 0 || ExamDesc.length == 0)
    {
@@ -446,14 +445,16 @@ function modifyExamsContent(ExamId)
    }
    
    
-   if (ExpireTime.length == 0)
+   if (Duration.length == 0)
    {
-      expire_timestamp = <? echo strtotime($ExpireTime);?> * 1000;
+      alert("考试长度不能为空");
    }
-   else
+   if (isNaN(Duration) || Duration <= 0)
    {
-      expire_timestamp = new Date(ExpireTime).getTime();
+      alert("考试长度必须为大于 0 的正整数");
+      return;
    }
+      
 
    if (ExamFromDate.length > 0 && ExamFromHour.length > 0 && ExamFromMin.length > 0 &&
        ExamToDate.length > 0 && ExamToHour.length > 0 && ExamToMin.length > 0)
@@ -472,12 +473,6 @@ function modifyExamsContent(ExamId)
          alert("考试开始时间不能大于结束时间");
          return;
       }
-      
-      if (expire_timestamp < to_timestamp)
-      {
-         alert("有效日期必须大于结束时间");
-         return;
-      } 
    }
    else if (ExamFromDate.length == 0 && ExamFromHour.length == 0 && ExamFromMin.length == 0 &&
        ExamToDate.length == 0 && ExamToHour.length == 0 && ExamToMin.length == 0)
@@ -492,7 +487,7 @@ function modifyExamsContent(ExamId)
    }
 
    str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + 
-         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp/1000) +         
+         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&Duration=" + encodeURIComponent(Duration) +         
          "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
 
@@ -657,17 +652,9 @@ function modifyExamsContent(ExamId)
          <th>考试内容: </th>
           <td><Input style="width:100%" type=text name=ExamContentModify  disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
          </td>
-      </tr>
-         <th>原始有效日期: </th>
-         <td>
-            <input type="text" readonly="true" disabled="disabled" value="<?
-               echo date("Y/m/d", strtotime($ExpireTime));
-            ?>">
-         </td>
-      </tr>
       <tr>
-         <th>新有效日期: </th>
-         <td> <input id="exam_expire_time" type="text" name="exam_expire_time" class="from" readonly="true"></td>
+         <th>考试长度 (分钟): </th>
+         <td> <input id="exam_duration" type="text" name="exam_duration" class="from" value="<? echo $Duration;?>"></td>
       </tr>
       <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
          <th>原始考试时间段: </th>
