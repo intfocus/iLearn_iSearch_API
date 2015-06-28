@@ -73,7 +73,7 @@
 
    //query
    $link;
-
+   
    if (($exam_id = check_number($_POST["exam_id"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
@@ -90,9 +90,20 @@
       return;
    }
 
-   $users_id = $_POST["users_id"];// employId & userId
+   $users_id = $_POST["users_id"];// employId & userWId
 
-   if(!($users_id = transfer_all_id_to_user_id($users_id)))
+   if ($users_id[0] == "null")
+   {
+      $str_query = "delete from examroll where ExamId=$exam_id";
+      if(!mysqli_query($link, $str_query)){
+         echo DB_ERROR;
+         return;
+      }
+      echo 0;
+      return;
+   }
+
+  if(!($users_id = transfer_all_id_to_user_id($users_id)))
    {
       return;
    }

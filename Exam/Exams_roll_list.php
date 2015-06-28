@@ -136,32 +136,48 @@
    
    
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
 <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
-<link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link rel="stylesheet" type="text/css" href="../css/OSC_layout_new.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
-<script type="text/javascript" src="../js/utility.js"></script>
 <!-- for tree view -->
-<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="../css/demo.css">
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 用户页面</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="../newui/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../newui/css/bootstrap-reset.css" rel="stylesheet">
+
+        <!--Animation css-->
+        <link href="../newui/css/animate.css" rel="stylesheet">
+
+        <!--Icon-fonts css-->
+        <link href="../newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="../newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+
+        <!--Morris Chart CSS -->
+        <link rel="stylesheet" href="../newui/assets/morris/morris.css">
+
+        <!-- sweet alerts -->
+        <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="../newui/css/style.css" rel="stylesheet">
+        <link href="../newui/css/helper.css" rel="stylesheet">
+        <link href="../newui/css/style-responsive.css" rel="stylesheet" />
+		
+<title>武田 - 上传考试用户页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function lockFunction(obj, n)
@@ -185,23 +201,24 @@ function modifyUsersContent(exam_id)
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
    users_id = newUsersBatchInput.match(/[^\r\n]+/g);
    
-   if (!users_id)
+   if (users_id)
    {
-      alert("1234");
-   }
-   
-   for (i=0;i<users_id.length;i++)
-   {
-      users_id[i] = trim_start_end(users_id[i]);
-      if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
+      for (i=0; i<users_id.length; i++)
       {
-         alert(users_id[i] + "有非数字及英文之字元");
-         return;
+         users_id[i] = trim_start_end(users_id[i]);
+         if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
+         {
+            alert(users_id[i] + "有非数字及英文之字元");
+            return;
+         }
       }
    }
+   else
+   {
+      confirm("没有输入员工号时，会刪除此考卷的已有名单。确定刪除？");
+   }
 
-   url_str = "Exams_update_roll.php?";
-
+   url_str = "Exams_update_roll.php";
    $.ajax
    ({
       beforeSend: function()
@@ -212,18 +229,22 @@ function modifyUsersContent(exam_id)
       url: url_str,
       data: {
                "exam_id": exam_id,
-               "users_id": users_id,
+               "users_id[]": users_id,
             },
       cache: false,
       success: function(res)
       {
-         if (res != 0)  //failed
+         if (res.match(/^-\d+$/))
+         {
+            alert("新增 / 删除考试用户名单失败");
+         }
+         else if (res != 0)  //failed
          {
             alert(res);
          }
          else  //success
          {
-            alert("用户批次新增成功，页面关闭后请自行刷新");
+            alert("用户批次新增 / 删除成功，页面关闭后请自行刷新");
             window.close();
          }
       },
@@ -237,26 +258,73 @@ function modifyUsersContent(exam_id)
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>批次上传用户</span><span class="bArrow"></span></span>
-</div>
-<div id="content">
+        <!--Main Content Start -->
+        <div class="" id="content">
+            
+            <!-- Header -->
+            <header class="top-head container-fluid">
+                <button type="button" class="navbar-toggle pull-left">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                
+                <!-- Left navbar -->
+                <nav class=" navbar-default hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Right navbar -->
+                <ul class="list-inline navbar-right top-menu top-right-menu">  
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown text-center">
+              	
+						   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
+						   <form name=logoutform action=logout.php>
+						   </form>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
+                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->       
+                </ul>
+                <!-- End right navbar -->
+
+            </header>
+            <!-- Header Ends -->
+
+
+            <!-- Page Content Start -->
+            <!-- ================== -->
+
+            <div class="wraper container-fluid">
+                <div class="page-title"> 
+                    <h3 class="title">批次上传考试用户</h3> 
+                </div>
+
+                <!-- Basic Form Wizard -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body"> 
+
    <div id="exam_id" style="disply:none;"></div>
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 "工号" 或着 "使用者ID")</th>
+         <th>批次上传：(一行一笔数据，数据格式为 "工号"。直接在表格上修改考试人员异动)</th>
       </tr>
       <tr>
-         <td><Textarea name=newUsersBatchInput rows=30 cols=100><?   
+         <td><Textarea name=newUsersBatchInput rows=30 cols=100 placeholder="员工号 如 E99999"><?   
             // read roll
          $str_query = "select * from examroll where ExamId=$exam_id AND Status=".ACTIVE;
          if($result = mysqli_query($link, $str_query)){
@@ -277,7 +345,34 @@ function modifyUsersContent(exam_id)
          </th>
       </tr>        
    </table>
-</div>
+
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+                    </div> <!-- end col -->
+                </div> <!-- End row -->
+
+				
+            </div>
+            <!-- Page Content Ends -->
+            <!-- ================== -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                2015 © Takeda.
+            </footer>
+            <!-- Footer Ends -->
+
+
+
+        </div>
+        <!-- Main Content Ends -->
+
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
+<script type="text/javascript" src="../js/utility.js"></script>
+
 </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

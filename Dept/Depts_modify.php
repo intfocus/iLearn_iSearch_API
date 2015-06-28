@@ -415,6 +415,7 @@ function modifyDeptsContent(DeptId)
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
 </div>
 <div id="content">
+
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
          <th>部门名称：</th>

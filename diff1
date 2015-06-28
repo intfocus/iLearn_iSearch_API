@@ -1,0 +1,142 @@
+diff --git a/Admin/Privileges_load.php b/Admin/Privileges_load.php
+index bcd6cbd..c1644ed 100644
+--- a/Admin/Privileges_load.php
++++ b/Admin/Privileges_load.php
+@@ -248,7 +248,7 @@
+    //***Step16 页面搜索SQl语句 起始
+    $str_query1 = "
+       select U.UserId, U.UserName, U.Email, U.Status, U.CanApprove, U.EditTime, D.DeptName, U.EmployeeId
+-      from Users U, Depts D where U.deptId=D.deptId AND U.status";
++      from Users U left join Depts D on U.deptId=D.deptId where U.status";
+ 
+    if ($statusCheckbox == 1)
+    {
+diff --git a/Exam/Exams_new.php b/Exam/Exams_new.php
+index 2ca3710..5a39046 100644
+--- a/Exam/Exams_new.php
++++ b/Exam/Exams_new.php
+@@ -68,7 +68,6 @@
+    define("ILLEGAL_CHAR", "'-;<>");                         //illegal char
+    define("UPLOAD_FILE_NAME","upload.pdf");
+ 
+-   //return value
+    define("DB_ERROR", -1);
+    define("SYMBOL_ERROR", -3);
+    define("SYMBOL_ERROR_CMD", -4);
+@@ -375,6 +374,13 @@ function loaded() {
+       to_timestamp = 0;
+       expire_timestamp = new Date(exam_expire_date).getTime();
+       
++      if(exam_type == 1){
++         if(exam_from_date.length == 0 || exam_to_date.length == 0){
++            alert("考试时间段不能为空");
++            return;
++         }
++      }
++      
+       if (exam_name == 0)
+       {
+          alert("考卷名称不能为空");
+diff --git a/Exam/Exams_utility.php b/Exam/Exams_utility.php
+index 33b9441..4f5b1ed 100644
+--- a/Exam/Exams_utility.php
++++ b/Exam/Exams_utility.php
+@@ -114,8 +114,7 @@
+       return $selected_problems;
+    }
+    
+-   function add_one_level_and_remove_one_level($problems, &$selected_problems,
+-                                               $added_level, $removed_level)
++   function add_one_level_and_remove_one_level($problems, &$selected_problems, $added_level, $removed_level)
+    {
+       $added_problems;
+       
+diff --git a/Exam/save_exams.php b/Exam/save_exams.php
+index abd196a..6dd5762 100644
+--- a/Exam/save_exams.php
++++ b/Exam/save_exams.php
+@@ -180,7 +180,7 @@
+                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
+                  now(),1,now())
+ EOD;
+-   
++
+    if(!($result = mysqli_query($link, $str_query)))
+    {
+       if($link){
+@@ -298,9 +298,8 @@ EOD;
+          if($link){
+             mysqli_close($link);
+          }
+-
++
+          clear_exam("exams", $ExamId);
+-         
+          sleep(DELAY_SEC);
+          echo ERR_INSERT_DATABASE;
+          return;
+@@ -326,14 +325,14 @@ EOD;
+       )
+    );
+ 
+-   if (file_put_contents($json_file_name, $exam_json))
++   if (!file_put_contents($json_file_name, $exam_json))
+    {
+       clear_exam("exams", $exam_id);
+       clear_exam("examdetail", $exam_id);
+       echo ERR_SAVE_JSON_FILE;
+       return;
+    }
+-
++
+    echo 0;
+    return;
+    
+@@ -381,5 +380,8 @@ EOD;
+       }
+       return true;  
+    }
++<<<<<<< HEAD
+    
++=======
++>>>>>>> master
+ ?>
+diff --git a/User/Users_load.php b/User/Users_load.php
+index f692f66..8622c15 100644
+--- a/User/Users_load.php
++++ b/User/Users_load.php
+@@ -221,7 +221,7 @@
+    //***Step16 页面搜索SQl语句 起始
+    $str_query1 = "
+       select U.UserId, U.UserName, U.Email, U.Status, U.CanApprove, U.EditTime, D.DeptName, U.EmployeeId
+-      from Users U, Depts D where U.deptId=D.deptId AND U.status";
++      from Users U left join Depts D on U.deptId=D.deptId where U.status";
+ 
+    if ($statusCheckbox == 1)
+    {
+diff --git a/api/Users_Api.php b/api/Users_Api.php
+index 4a0eac8..785ec57 100644
+--- a/api/Users_Api.php
++++ b/api/Users_Api.php
+@@ -63,7 +63,7 @@
+       return;
+    }
+    
+-   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where EmployeeId = '$eid' and Status = 1";
++   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where (EmployeeId = '$eid' or UserWId = '$eid') and Status = 1";
+    if($result = mysqli_query($link, $str_user)){
+       $row_number = mysqli_num_rows($result);
+       if ($row_number > 0)
+diff --git a/api/v1/api.php b/api/v1/api.php
+index 817d834..572864a 100755
+--- a/api/v1/api.php
++++ b/api/v1/api.php
+@@ -279,7 +279,7 @@
+          die(MSG_ERR_CONNECT_TO_DATABASE);
+       }
+       
+-      $str_query = "select * from exams where ExamId=$exam_id";
++      $str_query = "select * from exams where ExamId=$exam_id and Status = 1";
+       if($result = mysqli_query($link, $str_query)){
+          $row = mysqli_fetch_assoc($result);
+          $exam_info = array("exam_id"=>(int)$row["ExamId"],

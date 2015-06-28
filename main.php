@@ -40,8 +40,9 @@
 ?>
 
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html lang="zh-CN">
    <head>
+        <meta charset="utf-8">
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -62,75 +63,91 @@
                document.getElementById("msg").style.display = "block";
          };
       </script>
+	  
+        <!-- Bootstrap core CSS -->
+        <link href="newui/css/bootstrap.min.css" rel="stylesheet">
+        <link href="newui/css/bootstrap-reset.css" rel="stylesheet">
+
+        <!--Animation css-->
+        <link href="newui/css/animate.css" rel="stylesheet">
+
+        <!--Icon-fonts css-->
+        <link href="newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+
+        <!--Morris Chart CSS -->
+        <link rel="newui/stylesheet" href="assets/morris/morris.css">
+
+
+        <!-- Custom styles for this template -->
+        <link href="newui/css/style.css" rel="stylesheet">
+        <link href="newui/css/helper.css" rel="stylesheet">
+        <link href="newui/css/style-responsive.css" rel="stylesheet" />
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+          <script src="js/respond.min.js"></script>
+        <![endif]-->
+
    </head>
    <body>
-      <table class="container" border="0" cellspacing="0" cellpadding="0">
-         <tr>
-            <td>
-               <table class="main" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                     <td>
-                        <div class="leftPart">
-                        <a href="<?php echo URL_PREFIX; ?>/main.php?cmd=login"><div class="logo"></div></a>
-                           <div class="leftPart_TL"></div>
-                           <div class="leftPart_TR"></div>
-                           <div class="leftPart_BL"></div>
-                           <div class="leftPart_BR"></div>
+   
+   
+        <div class="wrapper-page animated fadeInDown">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading"> 
+                   <h3 class="text-center m-t-10"> 武田销售学院 </strong> </h3>
+                </div> 
+
+				<form name=myForm method=POST  class="form-horizontal m-t-40" action=login.php>
+                                            
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <input class="form-control" type="text" name=login_name placeholder="用户帐号">
                         </div>
-                     </td>
-                     <td>
-                        <table class="loginWrap" width="100%" border="0" cellspacing="0" cellpadding="0">
-                           <tr>
-                              <td class="TL"></td>
-                              <td class="T"></td>
-                              <td class="TR">
-                                 <div class="relative">
-                                 </div>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td class="L"></td>
-                              <td class="M" valign="middle">
-                                 <table id="normal" class="loginContentWrap" border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                       <td>
-                                          <div class="listContent2">
-                                             <div class="title"><strong style="font-size:13px;">欢迎使用<br>请输入账号密码进行登录</strong></div>
-                                          </div>
-                                          <form name=myForm method=POST action=login.php>
-                                             <div class="listContent">
-                                                <div class="title">账号 - Login Name :</div>
-                                                <input type="text" name=login_name>
-                                             </div>
-                                             <div class="listContent">
-                                                <div class="title">密码 - Password :</div>
-                                                <input type="password" name=password>
-                                             </div>
-                                             <div class="listContent">
-                                                <!-- <a href="<?php echo URL_PREFIX; ?>/password.html">忘记密码</a> -->
-                                             </div>
-                                             <a class="btn_submit_new relative" href="#">
-                                                <input type="submit" value="登 入">
-                                             <div id="msg" class="msg" style="display:none;">错误 -- 输入账号或密码错误，请重新输入</div>         
-                                             </a>
-                                          </form>
-                                       </td>
-                                    </tr>
-                                 </table>
-                              </td>
-                              <td class="R"></td>
-                           </tr>
-                           <tr>
-                              <td class="BL"></td>
-                              <td class="B"><div class="copyrightWrap"><div class="copyright">Copyright © IntFocus Information Technology INC. All rights reserved</div></div></td>
-                              <td class="BR"></td>
-                           </tr>
-                        </table>
-                     </td>
-                  </tr>
-               </table>
-            </td>
-         </tr>
-      </table>
+                    </div>
+                    <div class="form-group ">
+                        
+                        <div class="col-xs-12">
+                            <input class="form-control" type="password" name=password placeholder="密码">
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+						
+								<div id="msg" class="msg" style="display:none;">错误 -- 输入账号或密码错误，请重新输入</div>    
+                        </div>
+                    </div>
+                    
+                    <div class="form-group text-right">
+                        <div class="col-xs-12">
+                                <input type="submit" class="btn btn-purple w-md" value="登陆">    
+                        </div>
+                    </div>
+                    <div class="form-group m-t-30"
+                        <div class="text-right">
+                            <a href="#">服务电话：400 400 400</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+
+        <!-- js placed at the end of the document so the pages load faster -->
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/pace.min.js"></script>
+        <script src="js/wow.min.js"></script>
+        <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+            
+
+        <!--common script for all pages-->
+        <script src="js/jquery.app.js"></script>
+
+    
    </body>
 </html>

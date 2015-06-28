@@ -273,7 +273,7 @@ function loaded()
            }
        }
    });
-   window.setTimeout("expandToDept()", 1000);
+   window.setTimeout("expandToDept()", 2000);
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作
@@ -390,6 +390,7 @@ function modifyNewsContent(NewId)
                      $('#depttree').tree('check', node.target);
                   }
                   $('#depttree').tree('expandToDept', node.target);
+                  
                }
                
                function getCheckedDept(){

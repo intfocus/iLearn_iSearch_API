@@ -1206,7 +1206,6 @@ $(function()
             + "searchUsersto1=" + searchUsersto1 + "&" + "statusCheckbox=" + statusCheckbox + "&searchUsersRadio=" + searchUsersRadio;
       url_str = "User/Users_load.php?";
       
-      alert(str);
       $('#loadingWrap').show();
       $.ajax
       ({
@@ -1263,7 +1262,7 @@ $(function()
       {
          searchPrivilegesRadio = 1; 
       }
-      if (document.getElementById("searchPrivilegesRadio3").checked == true)
+	  if (document.getElementById("searchPrivilegesRadio3").checked == true)
       {
          searchPrivilegesRadio = 2; 
       }

@@ -71,10 +71,30 @@
    $exam_name = $_POST["exam_name"];
    $from_timestamp = $_POST["from_timestamp"];
    $to_timestamp = $_POST["to_timestamp"];
-   $expire_timestamp = $_POST["exam_expire_timestamp"];
    $exam_probs_id = $_POST["exam_probs_id"];
    $exam_content = $_POST["exam_content"];
    $exam_desc = $_POST["exam_desc"];
+   
+   if (($exam_single_score = check_number($_POST["exam_single_score"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if (($exam_multi_score = check_number($_POST["exam_multi_score"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if (($exam_true_false_score = check_number($_POST["exam_true_false_score"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   
+   $type_scores = array(SINGLE_CHOICE_PROB=>$exam_single_score, MULTI_CHOICE_PROB=>$exam_multi_score, TRUE_FALSE_PROB=>$exam_true_false_score);
    
    if (!isset($_POST["exam_functions_id"]))
    {
@@ -105,11 +125,26 @@
       echo SYMBOL_ERROR;
       return;
    }
+<<<<<<< HEAD
 
    if ($exam_type == MOCK_EXAM)
+=======
+   
+   if(($user_id = check_number($_POST["user_id"])) == SYMBOL_ERROR)
    {
-      $to_timestamp = $expire_timestamp;
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
    }
+   
+   if(($exam_duration = check_number($_POST["exam_duration"])) == SYMBOL_ERROR)
+>>>>>>> master
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   
 
    $exam_password = "";
    if ($exam_location == ONSITE_TEST)
@@ -118,10 +153,9 @@
    }
 
    $exam_status = EXAM_INACTIVE;
-   // begin, end, expire time to datetime
+   // begin, end
    $sql_begin_datetime = timestamp_to_datetime($from_timestamp);
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);
-   $sql_expire_datetime = timestamp_to_datetime($expire_timestamp);
    // get all function name
    $functions_name = array();
    
@@ -174,11 +208,16 @@
 
    $str_query = <<<EOD
                 INSERT INTO exams (ExamName,ExamType,ExamLocation,ExamBegin,ExamEnd,ExamAnsType,
-                  ExamPassword,Status,ExamDesc,ExamContent,ExpireTime,CreatedUser,
+                  ExamPassword,Status,ExamDesc,ExamContent,Duration,CreatedUser,
                   CreatedTime,EditUser,EditTime) VALUES
                 ('$exam_name',$exam_type,$exam_location,'$sql_begin_datetime','$sql_end_datetime',$exam_answer_type,
+<<<<<<< HEAD
                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str','$sql_expire_datetime',1,
                  now(),1,now())
+=======
+                 '$exam_password',$exam_status,'$exam_desc','$exam_content_str',$exam_duration,$user_id,
+                 now(),$user_id,now())
+>>>>>>> master
 EOD;
 
    if(!($result = mysqli_query($link, $str_query)))
@@ -200,6 +239,8 @@ EOD;
    }
    else
    {
+      clear_exam("exams", $exam_id);
+      
       if($link){
          mysqli_close($link);
       }
@@ -232,6 +273,7 @@ EOD;
       }
       else
       {
+         clear_exam("exams", $exam_id);
          if($link){
             mysqli_close($link);
          }
@@ -279,27 +321,35 @@ EOD;
       }
       
       $answers = parse_answer($row["ProblemAnswer"]);
-      
-      
+      $score = $type_scores[$row["ProblemLevel"]];
       array_push($problems, array(
                               "id"=> (int)$row["ProblemId"],
                               "description"=> $row["ProblemDesc"],
                               "level"=> (int)$row["ProblemLevel"],
                               "type"=> (int)$row["ProblemType"],
+                              "score"=> (int)$score,
                               "selectors" => $selectors,
                               "answer" => $answers,
                               "memo"=> $row["ProblemMemo"],
                            )
       );
       
-      // insert into ExamDetail
-      if (insert_into_examdetail($exam_id, $prob_id) != SUCCESS)
+      
+      
+      // insert into ExamDetail,  insert score
+      if (insert_into_examdetail($exam_id, $prob_id, $score) != SUCCESS)
       {
+         clear_exam("exams", $exam_id);
+         clear_exam("examdetail", $exam_id);
+         
          if($link){
             mysqli_close($link);
          }
+<<<<<<< HEAD
 
          clear_exam("exams", $ExamId);
+=======
+>>>>>>> master
          sleep(DELAY_SEC);
          echo ERR_INSERT_DATABASE;
          return;
@@ -316,7 +366,7 @@ EOD;
          "type" => (int)$exam_type,
          "begin" => (int)$from_timestamp,
          "end" => (int)$to_timestamp,
-         "expire_time" => (int)$expire_timestamp,
+         "duration" => (int)$exam_duration,
          "ans_type" => (int)$exam_answer_type,
          "description" => $exam_desc,
          "location" => (int)$exam_location,
@@ -332,11 +382,15 @@ EOD;
       echo ERR_SAVE_JSON_FILE;
       return;
    }
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> master
    echo 0;
    return;
    
-   function insert_into_examdetail($exam_id, $prob_id)
+   function insert_into_examdetail($exam_id, $prob_id, $score)
    {
       $ret = SUCCESS;
       
@@ -347,7 +401,7 @@ EOD;
          return DB_ERROR;
       }  
 
-      $str_query = "INSERT INTO examdetail (ExamId, ProblemId) Values ($exam_id, $prob_id)";
+      $str_query = "INSERT INTO examdetail (ExamId, ProblemId, ProblemScore) Values ($exam_id, $prob_id, $score)";
       if(!mysqli_query($link, $str_query))
       {
          $ret = ERR_UPDATE_DATABASE;

@@ -280,7 +280,7 @@ function click_logout()  //log out
 
 function loaded()
 {
-   window.setTimeout("expandTo()",1000);
+   window.setTimeout("expandTo()",2000);
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作

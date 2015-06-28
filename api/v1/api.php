@@ -279,7 +279,7 @@
          die(MSG_ERR_CONNECT_TO_DATABASE);
       }
       
-      $str_query = "select * from exams where ExamId=$exam_id and Status = 1";
+      $str_query = "select * from exams where ExamId=$exam_id";
       if($result = mysqli_query($link, $str_query)){
          $row = mysqli_fetch_assoc($result);
          $exam_info = array("exam_id"=>(int)$row["ExamId"],
@@ -289,7 +289,7 @@
                             "type"=>(int)$row["ExamType"],
                             "begin"=>strtotime($row["ExamBegin"]),
                             "end"=>strtotime($row["ExamEnd"]),
-                            "expire_time"=>strtotime($row["ExpireTime"]),
+                            "duration"=>(int)($row["Duration"]),
                             "ans_type"=>(int)$row["ExamAnsType"],
                             "description"=>$row["ExamDesc"],
                             "location"=>(int)$row["ExamLocation"],

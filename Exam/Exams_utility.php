@@ -45,7 +45,12 @@
    define("ERR_INVALID_PARAMETER", -10);
    define("ERR_EXAM_NOT_EXIST", -59);
    define("ERR_SAVE_JSON_FILE",-60);
+<<<<<<< HEAD
    
+=======
+   define("ERR_PROBLEM_COUNT_NOT_ENOUGH", -61);
+
+>>>>>>> master
    class Problem
    {
       function __construct($id, $desc, $type, $level)
@@ -72,7 +77,7 @@
          "errors":[message, message..]
       }
       */
-      
+
       function __construct(){}
  
       public $status = array();
@@ -159,6 +164,11 @@
    function timestamp_to_datetime($timestamp)
    {
       return date("Y-m-d H:i:s", $timestamp);
+   }
+   
+   function timestamp_to_datetime_with_only_date($timestamp)
+   {
+      return date("Y-m-d", $timestamp);
    }
    
    function is_empty($str)

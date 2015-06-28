@@ -248,7 +248,7 @@
    //***Step16 页面搜索SQl语句 起始
    $str_query1 = "
       select U.UserId, U.UserName, U.Email, U.Status, U.CanApprove, U.EditTime, D.DeptName, U.EmployeeId
-      from Users U left join Depts D on U.deptId=D.deptId where U.status";
+      from Users U left join Depts D on U.deptId=D.deptId Where U.status";
 
    if ($statusCheckbox == 1)
    {
@@ -269,7 +269,7 @@
       $str_query1 = $str_query1 . "AND (U.UserName like '%$searchPrivilegesNameEmail%' OR " . 
                                        "U.Email like '%$searchPrivilegesNameEmail%' OR " . 
                                        "U.EmployeeId like '%$searchPrivilegesNameEmail%' OR " . 
-                                       "D.DeptName like '%$searchPrivilegesNameEmail%') ";
+									   "D.DeptName like '%$searchPrivilegesNameEmail%') ";
    }
    
    if ($searchPrivilegesfrom1 != '')

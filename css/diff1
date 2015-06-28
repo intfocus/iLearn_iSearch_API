@@ -1,0 +1,191 @@
+diff --git a/Exam/Exams_list.php b/Exam/Exams_list.php
+old mode 100644
+new mode 100755
+index 9de243d..34f7a1e
+--- a/Exam/Exams_list.php
++++ b/Exam/Exams_list.php
+@@ -3,6 +3,22 @@
+ ?>
+ <script type="text/javascript">
+ //***Step9 列表中的动作上架/下架Ajax呼叫
++function expandSearchExamsContentFunc()
++{
++   if ($('span.ExamName').hasClass('fixWidth'))
++   {
++      $('span.ExamName').removeClass('fixWidth');
++      $('span.ExamName').addClass('breakAll');
++      $('.expandSR').text('隐藏过长内容');
++   }
++   else
++   {
++      $('span.ExamName').addClass('fixWidth');
++      $('span.ExamName').removeClass('breakAll');
++      $('.expandSR').text('显示过长内容');
++   }
++}
++
+ function actionSearchExams(ExamId, Status)
+ {
+    //ajax
+@@ -36,7 +52,6 @@ function actionSearchExams(ExamId, Status)
+          alert("ajax error: " + xhr.status + " " + xhr.statusText);
+       }
+    });
+-
+ }
+ 
+ //***Step10 列表中动作删除Ajax呼叫
+@@ -93,7 +108,6 @@ function uploadUserExams(ExamId)
+    window.open(url_str + str);
+ }
+ 
+-
+ function clickSearchExamssPage(obj, n)  //搜尋換頁
+ {
+    if (obj.className == "search_page active")
+@@ -163,6 +177,7 @@ function occurTimeDatePicker()
+          <div id="searchExamsPages">
+             <div class="toolMenu">
+                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
++               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
+             </div>
+             <table class="report" border="0" cellspacing="0" cellpadding="0">
+                <colgroup>
+@@ -192,6 +207,7 @@ function occurTimeDatePicker()
+             </table>
+             <div class="toolMenu">
+                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
++               <span class="btn expandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
+             </div>
+          </div>
+       </div>
+diff --git a/Exam/Exams_load.php b/Exam/Exams_load.php
+index e675147..fd53851 100644
+--- a/Exam/Exams_load.php
++++ b/Exam/Exams_load.php
+@@ -197,6 +197,7 @@
+       //***Step7 function name ==> expandSearchNewsContentFunc
+       $return_string = $return_string . "</span>"
+                        . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
++                       . "<span class=\"btn expandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
+                        . "</div>";                   
+       
+       //----- Print Search Tables -----
+@@ -326,6 +327,7 @@
+ 
+       $return_string = $return_string . "<div class=\"toolMenu\">"
+                         . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
++                        . "<span class=\"btn expandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
+                         . "<span class=\"paging\">";
+       
+       //----- Print Search Pages -----
+diff --git a/Problem/Problems_list.php b/Problem/Problems_list.php
+index 74e09e6..cdd86a1 100644
+--- a/Problem/Problems_list.php
++++ b/Problem/Problems_list.php
+@@ -3,6 +3,49 @@
+ ?>
+ <script type="text/javascript">
+ //***Step9 列表中的动作上架/下架Ajax呼叫
++function expandSearchProbsContentFunc()
++{
++   if ($('span.ProbDesc').hasClass('fixWidth'))
++   {
++      $('span.ProbDesc').removeClass('fixWidth');
++      $('span.ProbDesc').addClass('breakAll');
++      $('.expandSR').text('隐藏过长内容');
++   }
++   else
++   {
++      $('span.ProbDesc').addClass('fixWidth');
++      $('span.ProbDesc').removeClass('breakAll');
++      $('.expandSR').text('显示过长内容');
++   }
++   
++   if ($('span.ProbCategory').hasClass('fixWidth'))
++   {
++      $('span.ProbCategory').removeClass('fixWidth');
++      $('span.ProbCategory').addClass('breakAll');
++      $('.expandSR').text('隐藏过长内容');
++   }
++   else
++   {
++      $('span.ProbCategory').addClass('fixWidth');
++      $('span.ProbCategory').removeClass('breakAll');
++      $('.expandSR').text('显示过长内容');
++   }
++
++   if ($('span.ProbMemo').hasClass('fixWidth'))
++   {
++      $('span.ProbMemo').removeClass('fixWidth');
++      $('span.ProbMemo').addClass('breakAll');
++      $('.expandSR').text('隐藏过长内容');
++   }
++   else
++   {
++      $('span.ProbMemo').addClass('fixWidth');
++      $('span.ProbMemo').removeClass('breakAll');
++      $('.expandSR').text('显示过长内容');
++   }
++   
++}
++
+ function actionSearchProbs(ProbId, Status)
+ {
+    //ajax
+@@ -153,6 +196,7 @@ function occurTimeDatePicker()
+             <tr>
+                <th colspan="4" class="submitBtns">
+                   <a class="btn_submit_new searchProbs"><input name="searchProbsButton" type="button" value="开始查询"></a>
++                  <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
+                </th>
+             </tr>
+          </table>
+@@ -164,6 +208,7 @@ function occurTimeDatePicker()
+          <div id="searchProbsPages">
+             <div class="toolMenu">
+                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
++               <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
+             </div>
+             <table class="report" border="0" cellspacing="0" cellpadding="0">
+                <colgroup>
+@@ -190,6 +235,7 @@ function occurTimeDatePicker()
+             </table>
+             <div class="toolMenu">
+                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
++               <span class="btn expandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
+             </div>
+          </div>
+       </div>
+diff --git a/Problem/Problems_load.php b/Problem/Problems_load.php
+index f8496cd..f726936 100644
+--- a/Problem/Problems_load.php
++++ b/Problem/Problems_load.php
+@@ -208,6 +208,7 @@
+       //***Step7 function name ==> expandSearchNewsContentFunc
+       $return_string = $return_string . "</span>"
+                        . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
++                       . "<span class=\"btn expandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
+                        . "</div>";                   
+       
+       //----- Print Search Tables -----
+@@ -334,6 +335,7 @@
+ 
+       $return_string = $return_string . "<div class=\"toolMenu\">"
+                         . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
++                        . "<span class=\"btn expandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
+                         . "<span class=\"paging\">";
+       
+       //----- Print Search Pages -----
+diff --git a/css/OSC_layout.css b/css/OSC_layout.css
+index 7e64eca..81b74a5 100644
+--- a/css/OSC_layout.css
++++ b/css/OSC_layout.css
+@@ -1285,3 +1285,7 @@ html[xmlns] .clearfix {
+ * html .clearfix {
+ 	height: 1%;
+ }
++
++.breakAll {
++   word-break: break-all;
++}
