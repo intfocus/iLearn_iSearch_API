@@ -9,12 +9,20 @@ function expandSearchExamsContentFunc()
    {
       $('span.ExamName').removeClass('fixWidth');
       $('span.ExamName').addClass('breakAll');
+      
+      $('span.CreatedTime').removeClass('fixWidth');
+      $('span.CreatedTime').addClass('breakAll');
+      
       $('.ExamsexpandSR').text('隐藏过长内容');
    }
    else
    {
       $('span.ExamName').addClass('fixWidth');
       $('span.ExamName').removeClass('breakAll');
+      
+      $('span.CreatedTime').addClass('fixWidth');
+      $('span.CreatedTime').removeClass('breakAll');
+      
       $('.ExamsexpandSR').text('显示过长内容');
    }
 }
@@ -187,7 +195,7 @@ function occurTimeDatePicker()
                   <col class="ExamStatus" /> 
                   <col class="CreatedUser">
                   <col class="CreatedTime">
-                  <col class="EditTime" />
+                  <col class="ExamEnd" />
                   <col class="ExamsAction" />
                </colgroup>
                <tr>
@@ -198,7 +206,7 @@ function occurTimeDatePicker()
                   <th>密码</th>
                   <th>创建人</th>
                   <th>创建时间</th>
-                  <th>最后修改时间</th>
+                  <th>最后截止日期</th>
                   <th>动作</th>
                </tr>
                <tr>

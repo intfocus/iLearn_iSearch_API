@@ -177,7 +177,7 @@
         <link href="../newui/css/helper.css" rel="stylesheet">
         <link href="../newui/css/style-responsive.css" rel="stylesheet" />
 		
-<title>武田 - 用户页面</title>
+<title>武田 - 上传考试用户页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function lockFunction(obj, n)
@@ -201,23 +201,24 @@ function modifyUsersContent(exam_id)
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
    users_id = newUsersBatchInput.match(/[^\r\n]+/g);
    
-   if (!users_id)
+   if (users_id)
    {
-      alert("1234");
-   }
-   
-   for (i=0;i<users_id.length;i++)
-   {
-      users_id[i] = trim_start_end(users_id[i]);
-      if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
+      for (i=0; i<users_id.length; i++)
       {
-         alert(users_id[i] + "有非数字及英文之字元");
-         return;
+         users_id[i] = trim_start_end(users_id[i]);
+         if (!users_id[i].match(/^[0-9|a-zA-Z]+$/))
+         {
+            alert(users_id[i] + "有非数字及英文之字元");
+            return;
+         }
       }
    }
+   else
+   {
+      confirm("没有输入员工号时，会刪除此考卷的已有名单。确定刪除？");
+   }
 
-   url_str = "Exams_update_roll.php?";
-
+   url_str = "Exams_update_roll.php";
    $.ajax
    ({
       beforeSend: function()
@@ -228,18 +229,22 @@ function modifyUsersContent(exam_id)
       url: url_str,
       data: {
                "exam_id": exam_id,
-               "users_id": users_id,
+               "users_id[]": users_id,
             },
       cache: false,
       success: function(res)
       {
-         if (res != 0)  //failed
+         if (res.match(/^-\d+$/))
+         {
+            alert("新增 / 删除考试用户名单失败");
+         }
+         else if (res != 0)  //failed
          {
             alert(res);
          }
          else  //success
          {
-            alert("用户批次新增成功，页面关闭后请自行刷新");
+            alert("用户批次新增 / 删除成功，页面关闭后请自行刷新");
             window.close();
          }
       },

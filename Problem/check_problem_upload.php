@@ -155,7 +155,13 @@ function read_excel_and_insert_into_database($target_file)
    
    for ($cur_sheet=0; $cur_sheet < $sheet_count; $cur_sheet++)
    {
-      $sheet = $excel->getSheet($cur_sheet);      
+      $sheet = $excel->getSheet($cur_sheet);
+      $sheet_title = $sheet->getTitle();
+      if ($sheet_title == "上传题库说明")
+      {
+         continue;
+      }
+      // if sheet name is xxxx, skip it
       $highest_row = $sheet->getHighestRow();
       $highest_col = count($file_status->upload_problem_syntax);
 
@@ -444,7 +450,7 @@ EOD;
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 部门页面</title>
+<title>武田 - 题目页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function loaded() {

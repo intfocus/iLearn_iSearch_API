@@ -82,7 +82,7 @@
       {
          $this->type = get_type_id_from_name($problem_details[0]);
          $this->desc = $problem_details[1];
-         $this->level = $problem_details[2];
+         $this->level = $this->_parse_level($problem_details[2]);
          $this->category_product = $this->_parse_product($problem_details[3]);
          $this->category_adaptaion = $this->_parse_adaptation($problem_details[4]);
          $this->problem_category = $this->_parse_category($problem_details[5]);
@@ -91,15 +91,15 @@
          $this->selections = array_slice($problem_details, 8);
       }
       
-      function _parse_level($level)
+      function _parse_level($level_name)
       {
-         if (strlen($level) == 0)
+         if (strlen($level_name) == 0)
          {
             return MID_LEVEL;
          }
          else
          {
-            return $level;
+            return get_level_id($level_name);
          }
       }
       
@@ -131,10 +131,9 @@
          {
             return array();
          }
-         return preg_split("/,(\s)*/", trim($input));
-      }
-      
-        
+      return preg_split("/,(\s)*/", trim($input));
+      } 
+
       public $type;
       public $desc;
       public $level;
@@ -195,8 +194,7 @@
          return MULTI_CHOICE_CHINESE;
       }
    }
-   
-   
+
    function get_level_name($level)
    {
       if ($level == EASY_LEVEL)
@@ -210,10 +208,25 @@
       else if ($level == HIGH_LEVEL)
       {
          return HARD_LEVEL_NAME;
-      }
-      
+      }  
    }
 
+   function get_level_id($level_name)
+   {
+      if ($level_name == EASY_LEVEL_NAME)
+      {
+         return EASY_LEVEL;
+      }
+      else if ($level_name == MID_LEVEL_NAME)
+      {
+         return MID_LEVEL;
+      }
+      else if ($level_name == HARD_LEVEL_NAME)
+      {
+         return HIGH_LEVEL;
+      }
+   }
+   
    function get_function_id($category_str)
    {  
       $removed_start_end_comma_str = substr($category_str, 1, strlen($category_str)-2);
@@ -257,7 +270,7 @@
    // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析
    function is_valid_syntax_import_file($row)
    {
-      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "适应症" ||
+      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "TA/适应症" ||
           $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "题目解析")
       {
          return false;

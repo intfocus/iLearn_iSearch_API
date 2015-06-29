@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="document.css" />
+  <script type="text/javascript">
+    if(!(document.all?document.all("ajaxContentHolder"):document.getElementById("ajaxContentHolder"))&&!window.location.href.match(/\?alone/i))window.location.href = "index.html?topic=2.15.html"+(window.location.href.match(/#/)?window.location.href.match(/#.*/)[0]:"");
+  </script>
+</head>
+
+<body>
+
+<h2 style="margin-bottom:10px;">如何設定盤點上傳的內容？</h2>
+
+
+<p class="MsoListParagraph s4">&nbsp;</p>
+
+<p class="MsoListParagraph s4"><span class="s3">管理者可以自行設定盤點過程中，上傳到主機的盤點內容。管理者可以透過點選功能列中的<b>設定</b>按鈕，進入盤點內容上傳設定的頁面。</span></p>
+
+<p class="MsoListParagraph s4">&nbsp;</p>
+
+<p class="MsoListParagraph s4"><img border="0" width="539" height="171"
+src="doc.files/image080.jpg"></p>
+
+<p class="MsoListParagraph s4">&nbsp;</p>
+
+<p class="MsoNormal"><span class="s3">系統提供兩個選項讓管理者選擇：</span></p>
+
+<p class="MsoNormal">&nbsp;</p>
+
+<p class="MsoListParagraph s67">（1）<span class="s3">僅記錄檔案路徑及個資筆數：此選項代表盤點的過程中，只會記錄個資檔案的檔案路徑以及包含的個資筆數。</span></p>
+
+<p class="MsoListParagraph s25">&nbsp;</p>
+
+<p class="MsoListParagraph s67">（2）<span class="s3">記錄檔案路徑、個資筆數與資料片段：此選項代表盤點的過程中，除了記錄個資檔案的檔案路徑以及包含的個資筆數外，還會紀錄其中包含的去識別化後的個資片段。去識別化個資片段的說明如下：</span></p>
+
+<p class="MsoListParagraph s69"><span class="s54">去識別化資料片段係將檔案中的個資字串先行複製後，在不破壞原檔案內容之前提下，進行去識別化處理，以去除該資料的可識別性，確保資料的安全性，去識別化範例請見下表說明：</span></p>
+
+<p class="MsoListParagraph s69"><span class="s55" lang="EN-US">&nbsp;</span></p>
+
+<table class="MsoNormalTable s70" border="0" cellspacing="0" cellpadding="0" width="545">
+ <tr class="s71">
+  <td class="s72" width="111" valign="top">
+  <p class="MsoNormal s73" align="center"><span class="s74">個資類型</span><span class="s75"> </span></p>
+  </td>
+  <td class="s77" width="226" valign="top">
+  <p class="MsoNormal s73" align="center"><span class="s74">去識別化前</span><span class="s75"> </span></p>
+  </td>
+  <td class="s78" width="208" valign="top">
+  <p class="MsoNormal s73" align="center"><span class="s74">去識別化後</span><span class="s75"> </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s80" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">姓名</span><span class="s75"> </span></p>
+  </td>
+  <td class="s81" width="226" valign="top">
+  <p class="MsoNormal"><span class="s74">王大明</span><span class="s75"> </span></p>
+  </td>
+  <td class="s82" width="208" valign="top">
+  <p class="MsoNormal"><span class="s74">王</span><span class="s75" lang="EN-US">?</span><span class="s74">明</span><span class="s75"> </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s83" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">市話號碼</span><span class="s75"> </span></p>
+  </td>
+  <td class="s84" width="226" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">(02)25532000</span></p>
+  </td>
+  <td class="s85" width="208" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">(02)????2000 </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s80" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">手機號碼</span><span class="s75"> </span></p>
+  </td>
+  <td class="s81" width="226" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">0912345678 </span></p>
+  </td>
+  <td class="s82" width="208" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">0912???678 </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s83" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">住址</span><span class="s75"> </span></p>
+  </td>
+  <td class="s84" width="226" valign="top">
+  <p class="MsoNormal"><span class="s74">新北市板橋區中山路</span><span class="s75" lang="EN-US">20</span><span class="s74">段</span><span class="s75"
+  lang="EN-US">15</span><span class="s74">號</span><span class="s75"> </span></p>
+  </td>
+  <td class="s85" width="208" valign="top">
+  <p class="MsoNormal"><span class="s74">新北市板橋區中山路</span><span class="s75" lang="EN-US">*</span><span class="s75" lang="EN-US"> </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s80" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">電子郵件地址</span><span class="s75"> </span></p>
+  </td>
+  <td class="s81" width="226" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">Sales@openfind.com </span></p>
+  </td>
+  <td class="s82" width="208" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">Sal??@????????.com </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s83" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">身分證</span><span class="s75"> </span></p>
+  </td>
+  <td class="s84" width="226" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">A123456789 </span></p>
+  </td>
+  <td class="s85" width="208" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">A????56789 </span></p>
+  </td>
+ </tr>
+ <tr class="s79">
+  <td class="s80" width="111" valign="top">
+  <p class="MsoNormal"><span class="s74">信用卡卡號</span><span class="s75"> </span></p>
+  </td>
+  <td class="s81" width="226" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">4567-2222-3333-4444</span></p>
+  </td>
+  <td class="s82" width="208" valign="top">
+  <p class="MsoNormal"><span class="s75" lang="EN-US">4567-????-????-4444</span></p>
+  </td>
+ </tr>
+</table>
+
+<p class="MsoNormal">&nbsp;</p>
+
+
+
+
+</body>
+
+</html>

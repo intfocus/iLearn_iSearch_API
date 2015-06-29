@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<title>Openfind P-Marker 資產清單上傳</title>
+<link rel="stylesheet" type="text/css" href="lib/yui-cssreset-min.css">
+<link rel="stylesheet" type="text/css" href="lib/yui-cssfonts-min.css">
+<link rel="stylesheet" type="text/css" href="css/OSC_layout.css">
+<link type="text/css" href="lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/login.css">
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/OSC_layout.js"></script>
+<script type="text/javascript" src="js/css3pie.js"></script>
+<script type="text/javascript" src="openflashchart/js/swfobject.js"></script>
+<script type="text/javascript" src="openflashchart/js/json/json2.js"></script>
+</head>
+<body>
+<div id="header">
+   <span class="logo"></span>
+</div>
+<div id="banner">
+   <span class="bLink first"><span>用戶端電腦清單製作與上傳</span><span class="bArrow"></span></span>
+</div>
+<div class="listUploadW">
+   <div class="title">步驟一</div>
+   <div class="content"><a href="ComputerList.csv">下載空白用戶端電腦清單表格</a></div>
+   <div class="title">步驟二</div>
+   <div class="content">
+      請使用 excel 開啟空白清單表格，填入貴單位需要個資掃描之電腦清單。<br>
+      請勿修改原本之檔案格式與編碼方式，並且保留原表頭，以避免上傳後 P-Marker 無法辨認格式。
+   </div>
+   <div class="title">步驟三</div>
+   <div class="content">
+      上傳用戶端電腦清單
+      <form enctype="multipart/form-data" action="upload_computerList.php" method="POST" class="listUploadForm">
+         <input name="csvfile" type="file"><br>
+         <a class="btn_submit_new upload"><input type="submit" value="檔案上傳"></a>
+      </form>
+   </div>
+   <div class="title">說明</div>
+   <div class="content">
+      管理者可製作並上傳「用戶端電腦清單」 -- 此清單定義了欲盤點電腦的基本資訊，如：電腦持有人員名稱、部門、電腦名稱…等。<br />
+      <img src="/images/computer_list.png" border="0" /><br /><br />
+      P-Marker Cloud 依據管理者定義的「用戶端電腦清單」，提供以下功能：<br /><br />
+      <ul style="list-style-type:circle;"><li style="margin-left:3em">當清單內的電腦完成掃描後，系統將自動以管理者指定的部門、人員名稱，套用到這些已盤點的記錄中，有助於提高盤點結果的正確性。（不在清單內的電腦掃描結果，僅能顯示用戶端自行輸入的部門及姓名）<br /><br /></li>
+         <li style="margin-left:3em">清單內電腦若未執行個資盤點，「用戶管理」頁面可搜尋出這些電腦並標示為「未實施」狀態。</li>
+      </ul>
+   </div>
+</div>
+<div class="declaration">© 2013 Openfind Information Technology, Inc. All rights reserved.<br>版權所有 網擎資訊軟體股份有限公司</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 <?php
    require_once("../Problem/Problems_utility.php");
+   require_once("../Exam/Exams_utility.php");
 
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -68,7 +69,7 @@
    define("UPLOAD_FILE_NAME","upload.pdf");
 
    //return value
-   define("SUCCESS", 0);
+   //define("SUCCESS", 0);
    define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
@@ -101,7 +102,6 @@
 
    $resultStr = "上传成功，文档格式转换需要数分钟";
 ?>
-
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -160,6 +160,12 @@
 <Script Language=JavaScript>
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
 {
+   if (isNaN(true_false_amount) || isNaN(single_selection_amount) || isNaN(multi_selection_amount))
+   {
+      alert("题数必须为数字");
+      return;
+   }
+
    if (true_false_amount < 0 || single_selection_amount < 0 || multi_selection_amount < 0)
    {
       alert("题目数不能为负数");
@@ -229,13 +235,34 @@ function get_level_str_from_id(level_id)
 function loaded() {
    functions_id = [];
  
-   for (i=0; i<=50; i=i+10)
+   for (i=0; i<=23; i++)
+   {
+      dom = "<option value="+ i +">" + i + "</option>";
+      $(dom).appendTo("#exam_from_hour");
+      $(dom).appendTo("#exam_to_hour");
+   }
+   for (i=0; i<=59; i++)
+   {
+      dom = "<option value="+ i +">" + i + "</option>";
+      $(dom).appendTo("#exam_from_min");
+      $(dom).appendTo("#exam_to_min");
+   }
+ 
+   for (i=0; i<=50; i=i+5)
    {
       dom = "<option value="+ i +">" + i + "</option>";
       $(dom).appendTo("#NewExamEasyLevel");
       $(dom).appendTo("#NewExamHardLevel");
    }
 
+   /*
+   // when click previous button, hide #problem_info, $("#status_template").show();
+   $("a[href='#previous']").click(function(){
+      //$("#err_no_problem").hide();
+      //$(".problem_info").hide();
+      //$("#status_template").hide();
+   });
+   */
    $(".problem_type_count").click(function(){
       if ($(this).val() == 0)
       {
@@ -251,43 +278,34 @@ function loaded() {
    });
    
    $("#exam_type").change(function(){
-
       if ($(this).val() == 0) 
       {    
-         $("#exam_answer_selections").hide();
-         $("#exam_time_selections").hide();
+         $("#exam_ans_type").hide();
+         //$("#exam_time_selections").hide();
          $("#exam_location_selections").hide();
       }
       else if ($(this).val() == 1) 
       {
-         for (i=0; i<=23; i++)
-         {
-            dom = "<option value="+ i +">" + i + "</option>";
-            $(dom).appendTo("#exam_from_hour");
-            $(dom).appendTo("#exam_to_hour");
-         }
-         for (i=0; i<=59; i++)
-         {
-            dom = "<option value="+ i +">" + i + "</option>";
-            $(dom).appendTo("#exam_from_min");
-            $(dom).appendTo("#exam_to_min");
-         }
+
          
-         $("#exam_answer_selections").show();
-         $("#exam_time_selections").show();
+         $("#exam_ans_type").show();
+         //$("#exam_time_selections").show();
          $("#exam_location_selections").show();
       }
    });
 
    $("#genProbsButton").click(function(){
+      $("#genProbsButton").attr("disabled", true);
+      
       functions_id = [];
       
       true_false_amount = $("#NewExamTrueFalseProbType").val();
       single_selection_amount = $("#NewExamSingleSelProbType").val();
       multi_selection_amount =$("#NewExamMutiSelProbType").val();
-      
+            
       if (!is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount))
       {
+         $("#genProbsButton").removeAttr('disabled');
          return;
       }
 
@@ -297,6 +315,7 @@ function loaded() {
 
       if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
       {
+         $("#genProbsButton").removeAttr('disabled');
          return;
       }
 
@@ -308,13 +327,13 @@ function loaded() {
       if (functions_id.length == 0)
       {
          alert("至少需选一个分类");
+         $("#genProbsButton").removeAttr('disabled');
          return;
       }
 
       $.ajax({
          beforeSend: function(){
             $(".tmp_data").remove();
-            // remove error, status and problem div
          },
 
          method: "GET",
@@ -336,6 +355,10 @@ function loaded() {
             {
                if (res.code != <? echo SUCCESS; ?>) {
                   alert(res.message);
+                  $("#err_no_problem").show();
+                  $(".exam_info").hide();
+                  $(".problem_info").hide();
+                  $("#status_template").hide();
                   return;
                }
             }
@@ -353,10 +376,6 @@ function loaded() {
                $("#content4").html(res.status[4]);
                $("#content5").html(res.status[5]);
                $("#status_template").show();
-               /*
-               $.each(res.status, function(key, val){
-                  $("#status_template").clone().html(val).insertBefore("#status_template").removeAttr("id").addClass("tmp_data").show();
-               });*/
             }
             
             if (res.hasOwnProperty("problems")) {
@@ -369,28 +388,34 @@ function loaded() {
                   $("#problem_template").clone().html(val_string).insertBefore("#problem_template").removeAttr("id").addClass("tmp_data").show();
                   sequence++;
                });
+               $("#err_no_problem").hide();
                $(".exam_info").show();
                $(".problem_info").show();
             }
-            
-            //alert(res.errors[0]);
          },
          error: function(xhr)
          {
             alert("ajax error: " + xhr.status + " " + xhr.statusText);
+            
          },
+         complete: function(xhr)
+         {
+            $("#genProbsButton").removeAttr('disabled');
+         }
       });
    }); 
    
    $(".saveProbsButton").click(function(){
-      // exam name
+      exam_single_score = $("#NewExamSingleSelScore").val();
+      exam_multi_score = $("#NewExamMutiSelScore").val();
+      exam_true_false_score = $("#NewExamTrueFalseScore").val();
       exam_name = $("#exam_name").val();
       exam_type = $("#exam_type").val();
       exam_answer_type = $("#exam_answer_type").val();
       exam_from_date = $("#exam_begin_time").val();
       exam_from_hour = $("#exam_from_hour").val();
       exam_from_min = $("#exam_from_min").val();
-      exam_expire_date = $("#exam_expire_time").val();
+      exam_duration = $("#exam_duration_time").val();
       exam_to_date = $("#exam_end_time").val();
       exam_to_hour = $("#exam_to_hour").val();
       exam_to_min = $("#exam_to_min").val();
@@ -401,8 +426,19 @@ function loaded() {
       exam_content = [$("#content0").html(), $("#content1").html(), $("#content2").html(), $("#content3").html(), $("#content4").html(), $("#content5").html()];
       from_timestamp = 0;
       to_timestamp = 0;
-      expire_timestamp = new Date(exam_expire_date).getTime();
+
       user_id = $("#userid").val();
+      
+      if (exam_single_score < 1 || exam_single_score > 5 || exam_multi_score < 1 || exam_multi_score > 5 || exam_true_false_score < 1 || exam_true_false_score > 5)
+      {
+         alert("分数必须为 1~5 之间的整数");
+         return;
+      }
+
+      if(exam_from_date.length == 0 || exam_to_date.length == 0){
+            alert("考试时间段不能为空");
+            return;
+      }
       
       if (exam_name == 0)
       {
@@ -412,29 +448,28 @@ function loaded() {
       
       if (exam_name.length > 100)
       {
-         alert("考卷名称不能超过100字");
+         alert("考卷名称不能超过100字元");
          return;
       }
 
       if (exam_desc.length > 500)
       {
-         alert("考卷描述不能超过500字");
+         alert("考卷描述不能超过500字元");
          return;
       }
       
-      if (exam_expire_date.length == 0)
+      if (exam_duration.length == 0)
       {
-         alert("有效果时间不能为空");
+         alert("考试长度不能为空");
          return;
       }
-	  
-	  if(exam_type == 1){
-         if(exam_from_date.length == 0 || exam_to_date.length == 0){
-            alert("考试时间段不能为空");
-            return;
-         }
+
+      if (isNaN(exam_duration) || exam_duration <= 0)
+      {
+         alert("考试长度必须为大于 0 的正整数");
+         return;
       }
-      
+
       // test type
       if (exam_type == 1)
       {
@@ -450,12 +485,6 @@ function loaded() {
          if (from_timestamp >= to_timestamp)
          {
             alert("考试开始时间不能大于结束时间");
-            return;
-         }
-         
-         if (expire_timestamp < to_timestamp)
-         {
-            alert("有效日期必须大于结束时间");
             return;
          }
       }
@@ -476,13 +505,16 @@ function loaded() {
          url: "save_exams.php",
          cache: false,
          data: {
+                  "exam_single_score": exam_single_score,
+                  "exam_multi_score": exam_multi_score,
+                  "exam_true_false_score": exam_true_false_score,
                   "exam_name": exam_name, 
                   "exam_type": exam_type,
                   "exam_answer_type": exam_answer_type,
                   "exam_probs_id": exam_probs_id,
                   "from_timestamp": (from_timestamp/1000),
                   "to_timestamp": (to_timestamp/1000),
-                  "exam_expire_timestamp": (expire_timestamp/1000),
+                  "exam_duration": exam_duration,
                   "exam_desc": exam_desc,
                   "exam_content": exam_content,
                   "exam_functions_id": exam_selected_functions,
@@ -490,18 +522,29 @@ function loaded() {
                   "user_id": user_id
                 },
          success: function(res) {
-            if (!res.match(/^-\d+$/)) 
+            //if (!res.match(/^-\d+$/))
+            if (res == 0) 
             {
                alert("新增考卷成功，页面关闭后请自行刷新")
                window.close();
             }
             else
             {
-               alert(res);
-               return;
                if (res == <? echo ERR_INSERT_DATABASE;?>)
                {
                   alert("无法新增，可能为已新增过之考题内容");
+               }
+               else if (res == <? echo ERR_SAVE_JSON_FILE;?>)
+               {
+                  alert("储存考卷JSON文档失败");
+               }
+               else if (res == <? echo ERR_PROBLEM_COUNT_NOT_ENOUGH ?>)
+               {
+                  alert("题目数不能为0");
+               }
+               else
+               {
+                  alert("新增考卷失败");
                }
                return;
             }
@@ -691,8 +734,8 @@ function loaded() {
 
 												<div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="NewExamSingleSelScore" class="control-label">每题分值</label>
-										<select class="form-control" id=NewExamSingleSelScore disabled>
+                                        <label for="NewExamSingleSelScore" class="control-label">单选题每题分值</label>
+										<select class="form-control" id=NewExamSingleSelScore>
 											<option selected value=1>1</option>
 											<option value=2>2</option>
 											<option value=3>3</option>
@@ -701,8 +744,8 @@ function loaded() {
 										</select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="NewExamMutiSelScore" class="control-label">每题分值</label>
-										<select class="form-control" id=NewExamMutiSelScore disabled>
+                                        <label for="NewExamMutiSelScore" class="control-label">多选题每题分值</label>
+										<select class="form-control" id=NewExamMutiSelScore>
 											<option selected value=1>1</option>
 											<option value=2>2</option>
 											<option value=3>3</option>
@@ -711,8 +754,8 @@ function loaded() {
 										</select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="NewExamTrueFalseScore" class="control-label">每题分值</label>
-										<select class="form-control" id=NewExamTrueFalseScore disabled>
+                                        <label for="NewExamTrueFalseScore" class="control-label">是非题每题分值</label>
+										<select class="form-control" id=NewExamTrueFalseScore>
 											<option selected value=1>1</option>
 											<option value=2>2</option>
 											<option value=3>3</option>
@@ -793,6 +836,7 @@ function loaded() {
                                         <h3>考试信息</h3>
                                         <section>
                                             <div class="form-group clearfix">
+                                            <div id="err_no_problem">问题题数为 0 时，不会显示考试信息</div>
                                             <div class="col-lg-12 exam_info" style="display: none">
 						
 												<div class="col-md-6">
@@ -808,7 +852,7 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group">
-										<input id="exam_expire_time" type="text" name="exam_expire_time" class="from form-control" readonly="true" placeholder="有效日期(到期自动下架)">
+										<input type="text" id="exam_duration_time" type="text" class="from form-control" placeholder="考试长度 (分鐘)">
                                     </div>
                                     <div class="form-group">
 										<textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>
@@ -820,10 +864,10 @@ function loaded() {
 
 												</div>			
 												
-												<div class="col-md-6" id="exam_answer_selections" style="display:none">
+												<div class="col-md-6" id="exam_answer_selections">
 													<div class="panel panel-default">
 														<div class="panel-body">
-                                    <div class="form-group" style="display:none">
+                                    <div class="form-group" id="exam_ans_type" style="display:none">
                                         <label for="exam_answer_type">答案公布类型</label>
 										<select id="exam_answer_type" class="form-control">
 											<option value=1>考试交卷后公布答案</option>
@@ -843,7 +887,7 @@ function loaded() {
 										<input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
                                     </div>
 									
-									<div  id="exam_time_selections" style="display:none">
+									<div  id="exam_time_selections">
 									<div>
 									<form class="form-inline" role="form">
 										<div class="form-group">
