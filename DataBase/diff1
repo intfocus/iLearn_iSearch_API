@@ -1,0 +1,68 @@
+diff --git a/DataBase/wutian.sql b/DataBase/wutian.sql
+index e59567f..5d04340 100644
+--- a/DataBase/wutian.sql
++++ b/DataBase/wutian.sql
+@@ -144,7 +144,7 @@ DROP TABLE IF EXISTS `exams`;
+ /*!40101 SET character_set_client = utf8 */;
+ CREATE TABLE `exams` (
+   `ExamId` int(11) NOT NULL AUTO_INCREMENT,
+-  `ExamName` varchar(100) NOT NULL,
++  `ExamName` varchar(200) NOT NULL,
+   `ExamType` int(11) NOT NULL DEFAULT '0',
+   `ExamLocation` int(11) DEFAULT NULL,
+   `ExamBegin` datetime DEFAULT NULL,
+@@ -153,7 +153,7 @@ CREATE TABLE `exams` (
+   `ExamPassword` varchar(100) DEFAULT NULL,
+   `Status` int(11) NOT NULL DEFAULT '0',
+   `ExamDesc` varchar(255) DEFAULT NULL,
+-  `ExamContent` varchar(255) NOT NULL,
++  `ExamContent` varchar(100) NOT NULL,
+   `ExpireTime` datetime NOT NULL,
+   `CreatedUser` int(11) NOT NULL,
+   `CreatedTime` datetime NOT NULL,
+@@ -197,16 +197,6 @@ LOCK TABLES `examscore` WRITE;
+ /*!40000 ALTER TABLE `examscore` ENABLE KEYS */;
+ UNLOCK TABLES;
+ 
+-DROP TABLE IF EXISTS `ExamDetail`;
+-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+-/*!40101 SET character_set_client = utf8 */;
+-CREATE TABLE `ExamDetail` (
+-  `ExamId` int(11) NOT NULL,
+-  `ProblemId` int(11) NOT NULL,
+-  PRIMARY KEY (`ExamId`, `ProblemId`)
+-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+-/*!40101 SET character_set_client = @saved_cs_client */;
+-
+ --
+ -- Table structure for table `files`
+ --
+diff --git a/Exam/Exams_modify.php b/Exam/Exams_modify.php
+index 706c8c4..931f53e 100755
+--- a/Exam/Exams_modify.php
++++ b/Exam/Exams_modify.php
+@@ -395,6 +395,7 @@ function modifyExamsContent(ExamId)
+    if (ExamDesc.length > 500)
+    {
+       alert("考卷描述不能超过500字元");
++      return;
+    }
+    
+    
+diff --git a/Exam/Exams_new.php b/Exam/Exams_new.php
+index 17320b8..15dca65 100644
+--- a/Exam/Exams_new.php
++++ b/Exam/Exams_new.php
+@@ -363,6 +363,12 @@ function loaded() {
+          return;
+       }
+ 
++      if (exam_desc.length > 500)
++      {
++         alert("考卷描述不能超过500字元");
++         return;
++      }
++      
+       if (exam_expire_date.length == 0)
+       {
+          alert("有限时间不能为空");

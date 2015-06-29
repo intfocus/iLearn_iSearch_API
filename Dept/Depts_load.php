@@ -234,7 +234,7 @@
    //TODO: trim space
    if (strlen($searchDeptsNameCode) > 0)
    {
-      $str_query1 = $str_query1 . "AND (DeptName like '%$searchDeptsName%' OR DeptCode like '%$searchDeptsCode%') ";
+      $str_query1 = $str_query1 . "AND (DeptName like '%$searchDeptsNameCode%' OR DeptCode like '%$searchDeptsNameCode%') ";
    }
    
    if ($searchDeptsfrom1 != '')

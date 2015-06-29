@@ -29,6 +29,7 @@
    define("MSG_ERR_UPDATE_DATABASE", "无法更新资料库");
    define("MSG_ERR_INSERT_DATABASE", "无法新增资料库");
    
+   define("MSG_ERR_FILE_CONTENT_SYNTAX", "档案格式不为预设的汇入档案格式");
    define("MSG_ERR_PROB_NOT_EXIST", "题目ID不存在");
    define("MSG_ERR_PROB_TYPE_FORMAT","题目类型不正确");
    define("MSG_ERR_PROB_DESC_FORMAT", "题目描述格式不正确");
@@ -55,15 +56,14 @@
    define("EASY_LEVEL_NAME", "易");
    define("MID_LEVEL_NAME", "中");
    define("HARD_LEVEL_NAME", "难");
-   
 
-   define("FUNCTION_ADAPTATION", 1);
-   define("FUNCTION_PRODUCT", 2);
+   define("FUNCTION_PRODUCT", 1);
+   define("FUNCTION_ADAPTATION", 2);
    define("FUNCTION_OTHER", 3);
 
    define("FUNCTION_ADAPTATION_NAME", "适应症");
    define("FUNCTION_PRODUCT_NAME", "产品名称");
-   define("FUNCTION_OTHER_NAME", "其他");
+   define("FUNCTION_OTHER_NAME", "题库类别");
 
  
    class UploadFileStatus
@@ -82,13 +82,25 @@
       {
          $this->type = get_type_id_from_name($problem_details[0]);
          $this->desc = $problem_details[1];
-         $this->level = $problem_details[2];
+         $this->level = $this->_parse_level($problem_details[2]);
          $this->category_product = $this->_parse_product($problem_details[3]);
          $this->category_adaptaion = $this->_parse_adaptation($problem_details[4]);
          $this->problem_category = $this->_parse_category($problem_details[5]);
          $this->answer = trim($problem_details[6]);
          $this->memo = $problem_details[7];
          $this->selections = array_slice($problem_details, 8);
+      }
+      
+      function _parse_level($level_name)
+      {
+         if (strlen($level_name) == 0)
+         {
+            return MID_LEVEL;
+         }
+         else
+         {
+            return get_level_id($level_name);
+         }
       }
       
       function _parse_product($input)
@@ -119,10 +131,9 @@
          {
             return array();
          }
-         return preg_split("/,(\s)*/", trim($input));
-      }
-      
-        
+      return preg_split("/,(\s)*/", trim($input));
+      } 
+
       public $type;
       public $desc;
       public $level;
@@ -183,8 +194,7 @@
          return MULTI_CHOICE_CHINESE;
       }
    }
-   
-   
+
    function get_level_name($level)
    {
       if ($level == EASY_LEVEL)
@@ -195,13 +205,27 @@
       {
          return MID_LEVEL_NAME;
       }
-      else if ($level == HARD_LEVEL)
+      else if ($level == HIGH_LEVEL)
       {
          return HARD_LEVEL_NAME;
-      }
-      
+      }  
    }
-   
+
+   function get_level_id($level_name)
+   {
+      if ($level_name == EASY_LEVEL_NAME)
+      {
+         return EASY_LEVEL;
+      }
+      else if ($level_name == MID_LEVEL_NAME)
+      {
+         return MID_LEVEL;
+      }
+      else if ($level_name == HARD_LEVEL_NAME)
+      {
+         return HIGH_LEVEL;
+      }
+   }
    
    function get_function_id($category_str)
    {  
@@ -229,6 +253,30 @@
       $output_str = $output_str.",";
       
       return $output_str;
+   }
+
+   function is_empty_row($row)
+   {
+      foreach ($row as $element)
+      {
+         if (strlen($element) > 0)
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析
+   function is_valid_syntax_import_file($row)
+   {
+      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "TA/适应症" ||
+          $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "题目解析")
+      {
+         return false;
+      }
+
+      return true;
    }
    
    function is_correct_prob_type_format($prob_type)
@@ -264,10 +312,15 @@
             $selections_count++;
          }
       }
-      
+
+      if ($selections[0] == "" || $selections[1] == "")
+      {
+         return false;
+      }
+
       if ($prob_type == TRUE_FALSE_PROB)
       {
-         if ($selections_count != 0)
+         if ($selections_count != 2)
          {
             return false;
          }
@@ -284,8 +337,8 @@
 
    function is_correct_prob_answer_format($prob_answer, $selections, $prob_type)
    {
-      // only [A-I]+
-      if (!preg_match('/[A-I]+/', $prob_answer))
+      // only [A-H]+
+      if (!preg_match('/^[A-H]+$/', $prob_answer))
       {
          return false;
       }

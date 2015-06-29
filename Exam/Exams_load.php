@@ -181,22 +181,23 @@
       $return_string = $return_string . "<div class=\"toolMenu\">"
                                       . "<span class=\"paging\">"
                                       . "<input type=\"hidden\" id=search_no value=$row_number>"
-                                      . "<input type=\"hidden\" name=search_page_no value=1>"
-                                      . "<input type=\"hidden\" name=search_page_size value=" . $page_size . ">";
+                                      . "<input type=\"hidden\" name=search_exam_page_no value=1>"
+                                      . "<input type=\"hidden\" name=search_exam_page_size value=" . $page_size . ">";
       if ($page_num > 1)
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_exam_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchNewsPage
-            $return_string = $return_string . "\" id=search_page_begin_no_" . ($i + 1) . " OnClick=clickSearchExamsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_exam_page_begin_no_" . ($i + 1) . " OnClick=clickSearchExamsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
                        . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
+                       . "<span class=\"btn ExamsexpandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -211,9 +212,10 @@
                                          . "<col class=\"ExamName\"/>"
                                          . "<col class=\"ExamType\"/>"
                                          . "<col class=\"ExamStatus\"/>"
+                                         . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
-                                         . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"ExamEnd\"/>"
                                          . "<col class=\"ExamsAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -221,13 +223,14 @@
                                          . "<th>名称</th>"
                                          . "<th>类型</th>"
                                          . "<th>状态</th>"
+                                         . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
-                                         . "<th>最后修改时间</th>"
+                                         . "<th>最后截止日期</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"9\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -240,7 +243,7 @@
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_exam_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -252,9 +255,10 @@
                                          . "<col class=\"ExamName\"/>"
                                          . "<col class=\"ExamType\"/>"
                                          . "<col class=\"ExamStatus\"/>"
+                                         . "<col class=\"ExamPassword\"/>"
                                          . "<col class=\"CreatedUser\"/>"
                                          . "<col class=\"CreatedTime\"/>"
-                                         . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"ExamEnd\"/>"
                                          . "<col class=\"ExamsAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -262,9 +266,10 @@
                                          . "<th>名称</th>"
                                          . "<th>类型</th>"
                                          . "<th>状态</th>"
+                                         . "<th>密码</th>"
                                          . "<th>创建人</th>"
                                          . "<th>创建时间</th>"
-                                         . "<th>最后修改时间</th>"
+                                         . "<th>最后截止日期</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -276,10 +281,13 @@
                $ExamName = $row["ExamName"];
                $ExamTypeStr = get_exam_type_name_from_id($row["ExamType"]);
                $ExamStatus = $row["Status"];
+               $ExamPassword = $row["ExamPassword"];
                $CreatedUserId = $row["CreatedUser"];
                $CreatedUserName = get_user_name($CreatedUserId);
                $CreatedTime = $row["CreatedTime"];
-               $EditTime = $row["EditTime"];
+               $Duration = $row["Duration"];
+               $ExamEnd = $row["ExamEnd"];
+               $ExamEndWithOnlyDate = timestamp_to_datetime_with_only_date(strtotime($ExamEnd));
                $StatusStr = $ExamStatus == 0 ? "下架" : "上架";
                $StatusAction = $ExamStatus == 1 ? "下架" : "上架";
                $page_count_display = $page_count + 1;
@@ -289,13 +297,14 @@
                   . "<td><span class=\"ExamName fixWidth\">$ExamName</span></td>"
                   . "<td><span class=\"ExamType fixWidth\">$ExamTypeStr</span></td>"
                   . "<td><span class=\"ExamStatus fixWidth\">$StatusStr</span></td>"
+                   . "<td><span class=\"ExamStatus fixWidth\">$ExamPassword</span></td>"
                   . "<td><span class=\"CreatedUser fixWidth\">$CreatedUserName</span></td>"
                   . "<td><span class=\"CreatedTime fixWidth\">$CreatedTime</span></td>"
-                  . "<td><span class=\"EditTime fixWidth\">$EditTime</span></td>"
+                  . "<td><span class=\"ExamEnd fixWidth\">$ExamEndWithOnlyDate</span></td>"
                   . "<td><A OnClick=\"actionSearchExams($ExamId,$ExamStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchExams($ExamId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchExams($ExamId);\">删除</A><br/>"
-                  . "<A OnClick=\"uploadUserExams($ExamId);\">上傳考試人員名單</A></td>"
+                  . "<A OnClick=\"uploadUserExams($ExamId);\">上传考试人员名单</A></td>"
                   . "</tr>";
 
                $i++;
@@ -320,6 +329,7 @@
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
                         . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
+                        . "<span class=\"btn ExamsexpandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----
@@ -327,10 +337,10 @@
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_exam_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
-            $return_string = $return_string . "\" id=search_page_end_no_" . ($i + 1) . " OnClick=clickSearchExamsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_exam_page_end_no_" . ($i + 1) . " OnClick=clickSearchExamsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       $return_string = $return_string . "</span>"

@@ -3,14 +3,55 @@
 ?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
+function expandSearchProbsContentFunc()
+{
+   if ($('span.ProbDesc').hasClass('fixWidth'))
+   {
+      $('span.ProbDesc').removeClass('fixWidth');
+      $('span.ProbDesc').addClass('breakAll');
+      $('.ProblemsexpandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbDesc').addClass('fixWidth');
+      $('span.ProbDesc').removeClass('breakAll');
+      $('.ProblemsexpandSR').text('显示过长内容');
+   }
+   
+   if ($('span.ProbCategory').hasClass('fixWidth'))
+   {
+      $('span.ProbCategory').removeClass('fixWidth');
+      $('span.ProbCategory').addClass('breakAll');
+      $('.ProblemsexpandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbCategory').addClass('fixWidth');
+      $('span.ProbCategory').removeClass('breakAll');
+      $('.ProblemsexpandSR').text('显示过长内容');
+   }
+
+   if ($('span.ProbMemo').hasClass('fixWidth'))
+   {
+      $('span.ProbMemo').removeClass('fixWidth');
+      $('span.ProbMemo').addClass('breakAll');
+      $('.ProblemsexpandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.ProbMemo').addClass('fixWidth');
+      $('span.ProbMemo').removeClass('breakAll');
+      $('.ProblemsexpandSR').text('显示过长内容');
+   }
+   
+}
+
 function actionSearchProbs(ProbId, Status)
 {
    //ajax
    str = "cmd=actionProbs" + "&ProbId=" + ProbId + "&Status=" + Status;
    url_str = "Problem/Problems_action.php?";
-   
-   //alert(str);
-   $('#loadingWrap').show();
+
    $.ajax
    ({
       beforeSend: function()
@@ -22,19 +63,15 @@ function actionSearchProbs(ProbId, Status)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchProbsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchProbsButton")[0].click();
+         }
+         else  //failed
+         {  
+            //echo "1.0";
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {
@@ -54,9 +91,7 @@ function deleteSearchProbs(ProbId)
    //ajax
    str = "cmd=deleteProbs" + "&" + "ProbId=" + ProbId;
    url_str = "Problem/Problems_delete.php?";
-   
-   //alert(str);
-   $('#loadingWrap').show();
+
    $.ajax
    ({
       beforeSend: function()
@@ -68,20 +103,14 @@ function deleteSearchProbs(ProbId)
       cache: false,
       success: function(res)
       {
-         //alert(res);
-         $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+         if (!res.match(/^-\d+$/))  //success
          {
-            if (!res.match(/^-\d+$/))  //success
-            {
-               document.getElementsByName("searchProbsButton")[0].click();
-            }
-            else  //failed
-            {  
-               //echo "1.0";
-               $('#loadingWrap').hide();
-               alert(MSG_SEARCH_ERROR);
-            }
-         });
+            document.getElementsByName("searchProbsButton")[0].click();
+         }
+         else  //failed
+         {
+            alert(MSG_SEARCH_ERROR);
+         }
       },
       error: function(xhr)
       {
@@ -100,23 +129,23 @@ function modifySearchProbs(ProbId)
 
 function clickSearchProbsPage(obj, n)  //搜尋換頁
 {
-   if (obj.className == "search_page active")
+   if (obj.className == "search_prob_page active")
       return;
-   nPage = document.getElementsByName("search_page_no")[0].value;
-   document.getElementsByName("search_page_no")[0].value = n;
-   str = "search_page_begin_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_end_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_begin_no_" + n;
-   document.getElementById(str).className = "search_page active";
-   str = "search_page_end_no_" + n;
-   document.getElementById(str).className = "search_page active"; 
+   nPage = document.getElementsByName("search_prob_page_no")[0].value;
+   document.getElementsByName("search_prob_page_no")[0].value = n;
+   str = "search_prob_page_begin_no_" + nPage;
+   document.getElementById(str).className = "search_prob_page";
+   str = "search_prob_page_end_no_" + nPage;
+   document.getElementById(str).className = "search_prob_page";
+   str = "search_prob_page_begin_no_" + n;
+   document.getElementById(str).className = "search_prob_page active";
+   str = "search_prob_page_end_no_" + n;
+   document.getElementById(str).className = "search_prob_page active"; 
    
    //clear current table
-   str = "search_page" + nPage;
+   str = "search_prob_page" + nPage;
    document.getElementById(str).style.display = "none";
-   str = "search_page" + n;
+   str = "search_prob_page" + n;
    document.getElementById(str).style.display = "block";
 }
 
@@ -157,7 +186,7 @@ function occurTimeDatePicker()
                <th>难易：</th>
                <td>
                <select id="searchProbsLevel">
-                  <option value=<?php echo NO_LEVEL?>>無
+                  <option value=<?php echo NO_LEVEL?>>全部
                   <option value=<?php echo EASY_LEVEL?>>易
                   <option value=<?php echo MID_LEVEL?>>中
                   <option value=<?php echo HIGH_LEVEL?>>难
@@ -178,6 +207,7 @@ function occurTimeDatePicker()
          <div id="searchProbsPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
+               <span class="btn ProblemsexpandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -204,6 +234,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchProbsContentFunc();">上传题库</span>
+               <span class="btn ProblemsexpandSR" OnClick="expandSearchProbsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

@@ -15,7 +15,32 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   
+   try{
+      // TODO: 从 Session 里面拿到 login_name + user_id
+      session_start();
+      if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
+      {
+         session_write_close();
+         sleep(DELAY_SEC);
+         header("Location:". $web_path . "main.php?cmd=err");
+         exit();
+      }
+   }
+   catch(exception $ex)
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
 
    //query          
    $link;
@@ -162,31 +187,6 @@
          }
       }
    }
-   else if ($ProbId == 0) // Insert
-   {
-      /* read excel and parse question */
-      /* check syntax, mark any wrong place */
-      /* if all okay, insert it
-      
-      $DeptName = $_GET["DeptName"];
-      $DeptCode = $_GET["DeptCode"];
-      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
-      $ParentId = $_GET["ParentId"];
-      $str_query1 = "Insert into Depts (DeptName,DeptCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$DeptName','$DeptCode',$ParentId,'$PAList','$ProductList',1,now(),1,now(),1)" ;
-      if(mysqli_query($link, $str_query1))
-      {
-         echo "0";
-         return;
-      }
-      else
-      {
-         echo -__LINE__ . $str_query1;
-         return;
-      }
-      */
-   }
    else if ($cmd == "update")// Update
    {
       $ProbId = $_GET["ProbId"];
@@ -199,7 +199,6 @@
       $ProbSelF = $_GET["ProbSelF"];
       $ProbSelG = $_GET["ProbSelG"];
       $ProbSelH = $_GET["ProbSelH"];
-      $ProbSelI = $_GET["ProbSelI"];
       $ProbAnswer = $_GET["ProbAnswer"];
       $ProbCategory = $_GET["ProbCategory"];
       $ProbLevel = $_GET["ProbLevel"];
@@ -227,7 +226,7 @@
          return;
       }
 
-      $selections = [$ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH, $ProbSelI];
+      $selections =  array($ProbSelA, $ProbSelB, $ProbSelC, $ProbSelD, $ProbSelE, $ProbSelF, $ProbSelG, $ProbSelH);
       if (!is_correct_prob_selection_format($selections, $ProbType))
       {
          echo ERR_PROB_SELECTOR_FORMAT;
@@ -261,8 +260,8 @@
                       ProblemSelectB='$ProbSelB', ProblemSelectC='$ProbSelC',
                       ProblemSelectD='$ProbSelD', ProblemSelectE='$ProbSelE',
                       ProblemSelectF='$ProbSelF', ProblemSelectG='$ProbSelG',
-                      ProblemSelectH='$ProbSelH', ProblemSelectI='$ProbSelI',
-                      ProblemAnswer='$ProbAnswer', ProblemCategory='$ProbCategory',
+                      ProblemSelectH='$ProbSelH', ProblemAnswer='$ProbAnswer',
+                      ProblemCategory='$ProbCategory',
                       ProblemLevel='$ProbLevel', ProblemMemo='$ProbMemo' where ProblemId=$ProbId
 EOD;
 
@@ -279,29 +278,46 @@ EOD;
       }
    }
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
-<link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link rel="stylesheet" type="text/css" href="../css/OSC_layout_new.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
-<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="../css/demo.css">
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-<!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
+
+        <!-- Bootstrap core CSS -->
+        <link href="../newui/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../newui/css/bootstrap-reset.css" rel="stylesheet">
+
+        <!--Animation css-->
+        <link href="../newui/css/animate.css" rel="stylesheet">
+
+        <!--Icon-fonts css-->
+        <link href="../newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="../newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+
+        <!--Morris Chart CSS -->
+        <link rel="stylesheet" href="../newui/assets/morris/morris.css">
+
+        <!-- sweet alerts -->
+        <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="../newui/css/style.css" rel="stylesheet">
+        <link href="../newui/css/helper.css" rel="stylesheet">
+        <link href="../newui/css/style-responsive.css" rel="stylesheet" />
+		
 <title>武田 - 题目页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <!-- Billy 2012/2/3 -->
@@ -332,13 +348,11 @@ function make_selection_modify_query_str()
    selF = document.getElementById("ProbSelF").value;
    selG = document.getElementById("ProbSelG").value;
    selH = document.getElementById("ProbSelH").value;
-   selI = document.getElementById("ProbSelI").value;
    
    return ("ProbSelA=" + encodeURIComponent(selA) + "&ProbSelB=" + encodeURIComponent(selB) + 
            "&ProbSelC=" + encodeURIComponent(selC) + "&ProbSelD=" + encodeURIComponent(selD) + 
            "&ProbSelE=" + encodeURIComponent(selE) + "&ProbSelF=" + encodeURIComponent(selF) +
-           "&ProbSelG=" + encodeURIComponent(selG) + "&ProbSelH=" + encodeURIComponent(selH) +
-           "&ProbSelI=" + encodeURIComponent(selI));
+           "&ProbSelG=" + encodeURIComponent(selG) + "&ProbSelH=" + encodeURIComponent(selH));
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作
@@ -418,55 +432,128 @@ function modifyProbsContent(ProbId)
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
-<div id="content">
+
+
+        <!--Main Content Start -->
+        <div class="" id="content">
+            
+            <!-- Header -->
+            <header class="top-head container-fluid">
+                <button type="button" class="navbar-toggle pull-left">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                
+                <!-- Left navbar -->
+                <nav class=" navbar-default hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Right navbar -->
+                <ul class="list-inline navbar-right top-menu top-right-menu">  
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown text-center">
+              	
+						   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
+						   <form name=logoutform action=logout.php>
+						   </form>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
+                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->       
+                </ul>
+                <!-- End right navbar -->
+
+            </header>
+            <!-- Header Ends -->
+
+
+            <!-- Page Content Start -->
+            <!-- ================== -->
+
+            <div class="wraper container-fluid">
+                <div class="page-title"> 
+                    <h3 class="title"><?php echo $TitleStr; ?></h3> 
+                </div>
+
+                <!-- Basic Form Wizard -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body"> 
+		
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+      <div id="problem_overview">
       <tr>
          <th>题目描述：</th>
-         <td><Input type=text name=ProbDescModify size=50 value="<?php echo $ProbDesc;?>"></td>
+         <td><textarea name=ProbDescModify rows=3 cols=100><?php echo $ProbDesc;?></textarea></td>
       </tr>
-      <tr>
-         <th>题目类型：</th>
-         <td><Input type=text name=ProbType size=50 disabled="disabled" value="<?php
-            if ($ProbType == TRUE_FALSE_PROB) 
-            {
-               echo "是非";
-            }
-            else if ($ProbType == SINGLE_CHOICE_PROB)
-            {
-               echo "单选";
-            }
-            else if ($ProbType == MULTI_CHOICE_PROB)
-            {
-               echo "多选";
-            }
-            ?>">
-         </td>
-      </tr>
-   <?php
-      for ($i=ord("A"); $i<=ord("I"); $i++)
-      {
-         $selector = "ProbSel".chr($i);
+         <tr>
+            <th>题目类型：</th>
+            <td><Input type=text name=ProbType size=100 disabled="disabled" value="<?php
+               if ($ProbType == TRUE_FALSE_PROB) 
+               {
+                  echo "是非";
+               }
+               else if ($ProbType == SINGLE_CHOICE_PROB)
+               {
+                  echo "单选";
+               }
+               else if ($ProbType == MULTI_CHOICE_PROB)
+               {
+                  echo "多选";
+               }
+               ?>">
+            </td>
+         </tr>
+         <tr>
+            <th>题目难易:</th>
+            <td>
+               <select name="ProbLevelModify">
+                  <option value=<?php echo EASY_LEVEL?> <?php if ($ProbLevel == EASY_LEVEL) {echo "selected";}?>/>易
+                  <option value=<?php echo MID_LEVEL?> <?php if ($ProbLevel == MID_LEVEL) {echo "selected";}?>/>中
+                  <option value=<?php echo HIGH_LEVEL?> <?php if ($ProbLevel == HIGH_LEVEL) {echo "selected";}?>/>难
+               <select>
+            </td>
+         </tr>
+      </div>
+      <div id="problem_problem">
+      <?php
+         // only show the first two option when the problem type is true_false
+         if ($ProbType == TRUE_FALSE_PROB)
+         {
+            $end = ord("B");
+         }
+         else
+         {
+            $end = ord("H");
+         }
+         for ($i=ord("A"); $i<=$end; $i++)
+         {
+            $selector = "ProbSel".chr($i);
 
-         echo "<tr><th>题目".chr($i)."</th>";
-         echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"</td></tr>";
-      }
-   ?>
-      <tr>
-         <th>题目答案:</th>
-         <td><Input type=text name=ProbAnswerModify size=50 value="<?php echo $ProbAnswer?>"></td>
-      </tr>
+            echo "<tr><th>题目".chr($i)."</th>";
+            echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"</td></tr>";
+         }
+      ?>
+         <tr>
+            <th>题目答案:</th>
+            <td><Input type=text name=ProbAnswerModify size=100 value="<?php echo $ProbAnswer?>"></td>
+         </tr>
+      </div>
+      <div id="problem_functions">
       <?php
          // Function Adaptation
          $func_type = FUNCTION_ADAPTATION;
@@ -558,36 +645,52 @@ function modifyProbsContent(ProbId)
             }
          }
       ?>
-      <tr>
-         <th>题目难易:</th>
-         <td>
-            <select name="ProbLevelModify">
-               <option value=<?php echo EASY_LEVEL?> <?php if ($ProbLevel == EASY_LEVEL) {echo "selected";}?>/>易
-               <option value=<?php echo MID_LEVEL?> <?php if ($ProbLevel == MID_LEVEL) {echo "selected";}?>/>中
-               <option value=<?php echo HIGH_LEVEL?> <?php if ($ProbLevel == HIGH_LEVEL) {echo "selected";}?>/>难
-            <select>
-         </td>
-      </tr>
-      <tr>
-         <th>题目备注：</th>
-         <td><Input type=text name=ProbMemoModify size=50 value="<?php echo $ProbMemo?>"></td>
-      </tr>
-      <tr>
-      </tr>
-<?php
-   if ($ProbStatus != 1)
-   {
-?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyProbsContent"><input name="modifyProbsButton" type="button" value="保存" OnClick="modifyProbsContent(<?php echo $ProbId;?>)"></a>
-         </th>
-      </tr>      
-<?php
-   }
-?>   
+      </div>
+      <div id="problem_memo">
+         <tr>
+            <th>题目备注：</th>
+            <td><textarea name=ProbMemoModify rows=3 cols=100><?php echo $ProbMemo?></textarea></td>
+         </tr>
+      </div>
+      <div class="probem_submit">
+      <?php
+         if ($ProbStatus != 1)
+         {?>         
+            <tr>
+               <th colspan="4" class="submitBtns">
+                  <a class="btn_submit_new modifyProbsContent"><input name="modifyProbsButton" type="button" value="保存" OnClick="modifyProbsContent(<?php echo $ProbId;?>)"></a>
+               </th>
+            </tr>      
+      <?php
+         }?>
+      </div>
    </table>
-</div>
+
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+                    </div> <!-- end col -->
+                </div> <!-- End row -->
+
+				
+            </div>
+            <!-- Page Content Ends -->
+            <!-- ================== -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                2015 © Takeda.
+            </footer>
+            <!-- Footer Ends -->
+
+
+
+        </div>
+        <!-- Main Content Ends -->
+
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
 </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

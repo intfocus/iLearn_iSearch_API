@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* CSS Document */
+
+.problem_info, .error_info {
+   margin-top: 20px;
+}
+
+.error_info th {
+   background-color: #DCDDDD;
+   color: #595757;
+   font-weight: bold;
+   white-space: nowrap
+
+}
+
+.problem_info th {
+   background-color: #DCDDDD;
+   color: #595757;
+   font-weight: bold;
+   white-space: nowrap
+
+}
+
+.report {
+   width: 50%;
+}

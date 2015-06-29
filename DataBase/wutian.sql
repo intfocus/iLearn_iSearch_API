@@ -111,6 +111,29 @@ LOCK TABLES `examanswer` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `examdetail`
+--
+
+DROP TABLE IF EXISTS `examdetail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `examdetail` (
+  `ExamId` int(11) NOT NULL,
+  `ProblemId` int(11) NOT NULL,
+  PRIMARY KEY (`ExamId`,`ProblemId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `examdetail`
+--
+
+LOCK TABLES `examdetail` WRITE;
+/*!40000 ALTER TABLE `examdetail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `examdetail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `examroll`
 --
 
@@ -144,7 +167,7 @@ DROP TABLE IF EXISTS `exams`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `exams` (
   `ExamId` int(11) NOT NULL AUTO_INCREMENT,
-  `ExamName` varchar(100) NOT NULL,
+  `ExamName` varchar(200) NOT NULL,
   `ExamType` int(11) NOT NULL DEFAULT '0',
   `ExamLocation` int(11) DEFAULT NULL,
   `ExamBegin` datetime DEFAULT NULL,
@@ -153,7 +176,7 @@ CREATE TABLE `exams` (
   `ExamPassword` varchar(100) DEFAULT NULL,
   `Status` int(11) NOT NULL DEFAULT '0',
   `ExamDesc` varchar(255) DEFAULT NULL,
-  `ExamContent` varchar(255) NOT NULL,
+  `ExamContent` varchar(1000) NOT NULL,
   `ExpireTime` datetime NOT NULL,
   `CreatedUser` int(11) NOT NULL,
   `CreatedTime` datetime NOT NULL,

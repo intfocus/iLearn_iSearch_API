@@ -51,6 +51,7 @@ date_default_timezone_set(TIME_ZONE);
 
 // since phpexcel maybe execute very long time, so currently set time limit to 0
 set_time_limit(0);
+ini_set('memory_limit', '-1');
 
 $target_dir = "uploads/";
 $file_type = pathinfo($_FILES["fileToUpload"]["name"],PATHINFO_EXTENSION);
@@ -62,21 +63,21 @@ $file_status->status = UPLOAD_SUCCESS;
 
  if ($_FILES['fileToUpload']['size'] == 0) {
    $file_status->status = ERR_EMPTY_FILE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_EMPTY_FILE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_EMPTY_FILE));
    goto err_exit;
 }
 
 if (file_exists($target_file))
 {
    $file_status->status = ERR_FILE_EXIST; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
    goto err_exit;
 } 
 
 if (file_exists($target_file))
 {
    $file_status->status = ERR_FILE_EXIST; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_EXIST));
    goto err_exit;
 }
 
@@ -84,14 +85,14 @@ if (file_exists($target_file))
 if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) 
 {
    $file_status->status = ERR_MOVE_FILE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_MOVE_FILE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_MOVE_FILE));
    goto err_exit;
 }
 
 if (!is_valid_excel_type($target_file))
 {
    $file_status->status = ERR_FILE_TYPE; 
-   array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_FILE_TYPE));
+   array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_FILE_TYPE));
    goto err_exit;
 }
 
@@ -100,11 +101,11 @@ if (($ret = read_excel_and_insert_into_database($target_file)) != SUCCESS)
    $file_status->status = $ret;
    if ($ret == ERR_UPDATE_DATABASE)
    {
-      array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_UPDATE_DATABASE));
+      array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_UPDATE_DATABASE));
    }
    else if ($ret == ERR_INSERT_DATABASE)
    {
-      array_push($file_status->errors, array("lines"=>0, "message"=>MSG_ERR_INSERT_DATABASE));
+      array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>MSG_ERR_INSERT_DATABASE));
    }
 }
   
@@ -145,7 +146,7 @@ function read_excel_and_insert_into_database($target_file)
    catch (Exception $e)
    {
      $file_status->status = ERR_FILE_LOAD; 
-     array_push($file_status->errors, array("lines"=>0, "message"=>$e->getMessage()));
+     array_push($file_status->errors, array("sheet"=>0, "lines"=>0, "message"=>$e->getMessage()));
      return $file_status->status;
    }
  
@@ -155,19 +156,41 @@ function read_excel_and_insert_into_database($target_file)
    for ($cur_sheet=0; $cur_sheet < $sheet_count; $cur_sheet++)
    {
       $sheet = $excel->getSheet($cur_sheet);
-      
+      $sheet_title = $sheet->getTitle();
+      if ($sheet_title == "上传题库说明")
+      {
+         continue;
+      }
+      // if sheet name is xxxx, skip it
       $highest_row = $sheet->getHighestRow();
       $highest_col = count($file_status->upload_problem_syntax);
-    
+
+      $tmp = array();
+
+      for ($col=0; $col<=$highest_col; $col++)
+      {
+         array_push($tmp, trim($sheet->getCellByColumnAndRow($col, 1)->getValue()));
+      }
+      if (!is_valid_syntax_import_file($tmp))
+      {
+         $file_status->status = ERR_FILE_LOAD;
+         array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>0, "message"=>MSG_ERR_FILE_CONTENT_SYNTAX));
+         return $file_status->status;
+      }
+      
       for ($row=2; $row<=$highest_row; $row++)
       {
-         $functions = array();
          $tmp = array();
+         $functions = array();
          for ($col=0; $col<=$highest_col; $col++)
          {
-            array_push($tmp, $sheet->getCellByColumnAndRow($col, $row)->getValue());
+            array_push($tmp, trim($sheet->getCellByColumnAndRow($col, $row)->getValue()));
          }
-
+         if (is_empty_row($tmp))
+         {
+            continue;
+         }
+         
          $cur_problem = new UploadProblem($tmp);
 
          if (!is_correct_prob_type_format($cur_problem->type))
@@ -242,7 +265,6 @@ function read_excel_and_insert_into_database($target_file)
             }
          }
 
-         
          if (is_no_any_functions($functions))
          {
             $file_status->status = ERR_FILE_LOAD;
@@ -414,6 +436,7 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link rel="stylesheet" type="text/css" href="../css/problem.css">
+<link rel="stylesheet" type="text/css" href="../css/exam.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
@@ -427,7 +450,7 @@ EOD;
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 部门页面</title>
+<title>武田 - 题目页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function loaded() {
@@ -458,23 +481,27 @@ function loaded() {
 ?>
 <?if ($file_status->status != SUCCESS)
    {?>
-   <form action="check_problem_upload.php" method="post" enctype="multipart/form-data">
-      <table>
+   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+      <form enctype="multipart/form-data" action="check_problem_upload.php" method="POST" enctype="multipart/form-data">
+      
       <tr>
-         选择题目档案上传:
+         <th>选取上传文档：</th>
+         <td>
+            <Input type=file size=50 name="fileToUpload" />
+         </td>
       </tr>
       <tr>
-         <td><input type="file" name="fileToUpload" id="fileToUpload"></td>
-      </tr>
-      <tr>
-         <td><input type="submit" value="上传档案" name="submit"></td>
-      </td>
-      </table>
-   </form>
-   <div class="error_info">
-      <table class="report">
-         <tr><th>页签</th><th>列</th><th>錯誤</th></tr>
-         <? foreach ($file_status->errors as $error)
+         <th colspan="2" class="submitBtns">
+               <input type="submit" value="上传文档" name="submit">
+         </th>
+      </tr>      
+      </Form>
+   </table>
+   <div class="problem_info, error_info">
+      <h1>题目</h1>
+      <table class="problems_table">
+         <th style="width:5%">页签</th><th style="width:5%">列</th><th>錯誤</th>
+      <? foreach ($file_status->errors as $error)
             {?>
                <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["message"];?></td></tr>
          <? }?>

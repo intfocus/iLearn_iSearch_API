@@ -16,7 +16,32 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
+   
+   try{
+      // TODO: 从 Session 里面拿到 login_name + user_id
+      session_start();
+      if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
+      {
+         session_write_close();
+         sleep(DELAY_SEC);
+         header("Location:". $web_path . "main.php?cmd=err");
+         exit();
+      }
+   }
+   catch(exception $ex)
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      header("Location:". $web_path . "main.php?cmd=err");
+      exit();
+   }
+   
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iLearn";
+   session_write_close();
 
    //query          
    $link;
@@ -115,6 +140,8 @@
    }   
 
    $TitleStr = MSG_EXAM_MODIFY;
+   
+   $problems = array();
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if (strcmp($cmd, "read") == 0) // Load
@@ -137,7 +164,7 @@
             $ExamPassword = $row["ExamPassword"];
             $ExamDesc = $row["ExamDesc"];
             $ExamContent = $row["ExamContent"];
-            $ExpireTime = $row["ExpireTime"];
+            $Duration = $row["Duration"];
             $CreatedUser = $row["CreatedUser"];
             $CreatedTime = $row["CreatedTime"];
             $ExamStatus = $row["Status"];
@@ -149,20 +176,25 @@
          }
          else
          {
-            $DeptId = 0;
-            $DeptName = "";
-            $DeptCode = 0;
-            $ParentId = 0;
-            $PAList = "";
-            $ProductList = "";
-            $TitleStr = "部门新增";
-            $Status = 0;
+            header("Location: ../index.php");
+            die();
+         }
+
+         $str_query = "select * from examdetail where ExamId=$ExamId";
+         if($result = mysqli_query($link, $str_query))
+         {
+            $row_number = mysqli_num_rows($result);
+            for ($i=0; $i<$row_number; $i++)
+            {
+               $row = mysqli_fetch_assoc($result);
+               array_push($problems, get_problems_info($row["ProblemId"]));
+            }
          }
       }
    }
    else if ($cmd == "update")// Update
    {
-      if (!isset($_GET["ExamName"]) || !isset($_GET["ExamDesc"]) || !isset($_GET["ExpireTime"]) ||
+      if (!isset($_GET["ExamName"]) || !isset($_GET["ExamDesc"]) || !isset($_GET["Duration"]) ||
           !isset($_GET["ExamBeginTime"]) || !isset($_GET["ExamEndTime"]))
       {
          echo ERR_INVALID_PARAMETER;
@@ -172,11 +204,10 @@
       
       $ExamName = $_GET["ExamName"];
       $ExamDesc = $_GET["ExamDesc"];
-      $ExpireTime = $_GET["ExpireTime"];
+      $Duration = $_GET["Duration"];
       $ExamBeginTime = $_GET["ExamBeginTime"];
       $ExamEndTime = $_GET["ExamEndTime"];
 
-      $expire_datetime = timestamp_to_datetime($ExpireTime);
       $from_datetime = timestamp_to_datetime($ExamBeginTime);
       $end_datetime = timestamp_to_datetime($ExamEndTime);
 
@@ -194,13 +225,27 @@
 
       $str_query1 = <<<EOD
                       Update exams set ExamName='$ExamName', ExamDesc='$ExamDesc',
-                      ExpireTime='$expire_datetime', ExamBegin='$from_datetime',
-                      ExamEnd='$end_datetime', EditUser=1, EditTime=now() where ExamId=$ExamId
+                      Duration=$Duration, ExamBegin='$from_datetime',
+                      ExamEnd='$end_datetime', EditUser=$user_id, EditTime=now() where ExamId=$ExamId
 EOD;
 
 
       if(mysqli_query($link, $str_query1))
       {
+
+         $json_file = EXAM_FILES_DIR."/".$ExamId.".json";
+         $exam_json = json_decode(file_get_contents($json_file));
+
+         $exam_json->exam_name = $ExamName;
+         $exam_json->description = $ExamDesc;
+         $exam_json->duration = (int)$Duration;
+         $exam_json->begin = (int)$ExamBeginTime;
+         $exam_json->end = (int)$ExamEndTime;
+         
+         $tmp_file = EXAM_FILES_DIR."/".$ExamId.time();
+         file_put_contents($tmp_file, json_encode($exam_json));
+         copy($tmp_file, $json_file);
+         
          echo "0";
          return;
       }
@@ -209,6 +254,27 @@ EOD;
          echo -__LINE__ . $str_query1;
          return;
       }
+   }
+   
+   function get_problems_info($problem_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         return DB_ERROR;       
+      }
+      
+      
+      $str_query = "select * from problems where ProblemId=$problem_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         $problem = new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]);
+         return $problem;
+      }
+      
+      return;
    }
    
    function get_content_str($content_str)
@@ -226,7 +292,7 @@ EOD;
          }
          else if ($i == 1)
          {// single choice problem
-            $str = $str."單选题题数: ".$contents[$i].", ";
+            $str = $str."单选题题数: ".$contents[$i].", ";
          }
          else if ($i == 2)
          {// multi level problem
@@ -238,11 +304,11 @@ EOD;
          }
          else if ($i == 4)
          {// mid level problem
-            $str = $str."中等難度题数: ".$contents[$i].", ";
+            $str = $str."中等难度题数: ".$contents[$i].", ";
          }
          else if ($i == 5)
          {// hard level problem
-            $str = $str."困難题数: ".$contents[$i].", ";
+            $str = $str."困难难度: ".$contents[$i].", ";
          }
          else if ($i == 6)
          {// category
@@ -258,26 +324,52 @@ EOD;
       }
       return $str;
    }
+   
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link rel="stylesheet" type="text/css" href="../css/exam.css">
+<link rel="stylesheet" type="text/css" href="../css/problem.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
-<!-- for tree view -->
+<!-- for tree view
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+ -->
+
+        <!-- Bootstrap core CSS -->
+        <link href="../newui/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../newui/css/bootstrap-reset.css" rel="stylesheet">
+
+        <!--Animation css-->
+        <link href="../newui/css/animate.css" rel="stylesheet">
+
+        <!--Icon-fonts css-->
+        <link href="../newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="../newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+
+        <!--Morris Chart CSS -->
+        <link rel="stylesheet" href="../newui/assets/morris/morris.css">
+
+        <!-- sweet alerts -->
+        <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="../newui/css/style.css" rel="stylesheet">
+        <link href="../newui/css/helper.css" rel="stylesheet">
+        <link href="../newui/css/style-responsive.css" rel="stylesheet" />
+		
+
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
@@ -326,13 +418,13 @@ function modifyExamsContent(ExamId)
    ExamName = document.getElementsByName("ExamNameModify")[0].value.trim();
    ExamDesc = document.getElementsByName("ExamDescModify")[0].value.trim();
 
-   ExamFromDate = document.getElementById("from7").value;
+   ExamFromDate = document.getElementById("exam_begin_time").value;
    ExamFromHour = document.getElementById("exam_from_hour").value;
    ExamFromMin = document.getElementById("exam_from_min").value;
-   ExamToDate = document.getElementById("to7").value;
+   ExamToDate = document.getElementById("exam_end_time").value;
    ExamToHour = document.getElementById("exam_to_hour").value;
    ExamToMin = document.getElementById("exam_to_min").value;
-   ExpireTime = document.getElementById("exam_expire_time").value;
+   Duration = document.getElementById("exam_duration").value;
 
    if (ExamName.length == 0 || ExamDesc.length == 0)
    {
@@ -340,14 +432,29 @@ function modifyExamsContent(ExamId)
       return;
    }
    
-   if (ExpireTime.length == 0)
+   if (ExamName.length > 100)
    {
-      expire_timestamp = <? echo strtotime($ExpireTime);?>;
+      alert("考卷名称不能超过100字元");
+      return;
    }
-   else
+   
+   if (ExamDesc.length > 500)
    {
-      expire_timestamp = new Date(exam_expire_date).getTime();
+      alert("考卷描述不能超过500字元");
+      return;
    }
+   
+   
+   if (Duration.length == 0)
+   {
+      alert("考试长度不能为空");
+   }
+   if (isNaN(Duration) || Duration <= 0)
+   {
+      alert("考试长度必须为大于 0 的正整数");
+      return;
+   }
+      
 
    if (ExamFromDate.length > 0 && ExamFromHour.length > 0 && ExamFromMin.length > 0 &&
        ExamToDate.length > 0 && ExamToHour.length > 0 && ExamToMin.length > 0)
@@ -366,12 +473,6 @@ function modifyExamsContent(ExamId)
          alert("考试开始时间不能大于结束时间");
          return;
       }
-      
-      if (expire_timestamp < to_timestamp)
-      {
-         alert("有效日期必须大于结束时间");
-         return;
-      } 
    }
    else if (ExamFromDate.length == 0 && ExamFromHour.length == 0 && ExamFromMin.length == 0 &&
        ExamToDate.length == 0 && ExamToHour.length == 0 && ExamToMin.length == 0)
@@ -386,8 +487,8 @@ function modifyExamsContent(ExamId)
    }
 
    str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + 
-         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&ExpireTime=" + encodeURIComponent(expire_timestamp) +         
-         "&ExamBeginTime=" + encodeURIComponent(from_timestamp) + "&ExamEndTime=" + encodeURIComponent(to_timestamp);
+         "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&Duration=" + encodeURIComponent(Duration) +         
+         "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
 
    $.ajax
@@ -431,31 +532,79 @@ function modifyExamsContent(ExamId)
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
-<div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+
+        <!--Main Content Start -->
+        <div class="" id="content">
+            
+            <!-- Header -->
+            <header class="top-head container-fluid">
+                <button type="button" class="navbar-toggle pull-left">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                
+                <!-- Left navbar -->
+                <nav class=" navbar-default hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Right navbar -->
+                <ul class="list-inline navbar-right top-menu top-right-menu">  
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown text-center">
+              	
+						   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
+						   <form name=logoutform action=logout.php>
+						   </form>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
+                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->       
+                </ul>
+                <!-- End right navbar -->
+
+            </header>
+            <!-- Header Ends -->
+
+
+            <!-- Page Content Start -->
+            <!-- ================== -->
+
+            <div class="wraper container-fluid">
+                <div class="page-title"> 
+                    <h3 class="title"><?php echo $TitleStr; ?></h3> 
+                </div>
+
+                <!-- Basic Form Wizard -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body"> 
+
+   <table class="searchField" border="0" cellspacing="0" cellpadding="0" style="width:100%">
       <tr>
          <th>考卷名称: </th>
-         <td><Input type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
+         <td><Input style="width:100%" type=text name=ExamNameModify size=50 value="<?php echo $ExamName?>"></td>
       </tr>
       <tr>
          <th>考卷描述：</th>
-         <td><Input type=text name=ExamDescModify size=50 value="<?php echo $ExamDesc;?>"></td>
+         <td><textarea style="width:100%" name=ExamDescModify rows=3><?php echo $ExamDesc;?></textarea></td>
       </tr>
       <tr>
          <th>考卷类型：</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamType == MOCK_EXAM) 
             {
                echo MSG_MOCK_EXAM;
@@ -469,7 +618,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考卷答案类型:</th>
-         <td><Input type=text name=ExamType size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamType size=50 disabled="disabled" value="<?php
             if ($ExamAnsType == GIVE_ANSWER_AFTER_SUBMIT) 
             {
                echo MSG_GIVE_ANSWER_AFTER_SUBMIT;
@@ -483,11 +632,11 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr <? if ($ExamLocation == OLINE_TEST){ echo "style='display:none'";}?>>
          <th>考卷密码：</th>
-         <td><Input type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
+         <td><Input style="width:100%" type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
       </tr>
       <tr>
          <th>考试地点: </th>
-         <td><Input type=text name=ExamLocation size=50 disabled="disabled" value="<?php
+         <td><Input style="width:100%" type=text name=ExamLocation size=50 disabled="disabled" value="<?php
             if ($ExamLocation == OLINE_TEST) 
             {
                echo MSG_ONLINE_TEST;
@@ -501,19 +650,11 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr>
          <th>考试内容: </th>
-          <td><Input type=text name=ExamContentModify size=200 disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
+          <td><Input style="width:100%" type=text name=ExamContentModify  disabled="disabled" value="<?php echo $ExamContentStr;?>"></td>
          </td>
-      </tr>
-         <th>原始有效日期: </th>
-         <td>
-            <input type="text" readonly="true" disabled="disabled" value="<?
-               echo date("Y/m/d", strtotime($ExpireTime));
-            ?>">
-         </td>
-      </tr>
       <tr>
-         <th>新有效日期: </th>
-         <td> <input id="exam_expire_time" type="text" name="exam_expire_time" class="from" readonly="true"></td>
+         <th>考试长度 (分钟): </th>
+         <td> <input id="exam_duration" type="text" name="exam_duration" class="from" value="<? echo $Duration;?>"></td>
       </tr>
       <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
          <th>原始考试时间段: </th>
@@ -526,15 +667,46 @@ function modifyExamsContent(ExamId)
       <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
          <th>新考试时间段: </th>
          <td>
-            <input id="from7" type="text" name="exam_from_date6" class="from" readonly="true">
+            <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
             <select id="exam_from_hour"></select>
             <select id="exam_from_min"></select>
             ~
-            <input id="to7" type="text" class="to" name="exam_to_date6" readonly="true">
+            <input id="exam_end_time" type="text" class="to" name="exam_to_date6" readonly="true">
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>
-      </tr>
+      </tr>   
+  
+   </table>
+   
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+
+                    </div> <!-- end col -->
+
+                </div> <!-- End row -->
+   
+   
+   
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> 
+                                <h3 class="panel-title">题目</h3> 
+                            </div> 
+                            <div class="panel-body"> 
+   <div class="problem_info">
+      <table class="problems_table table">
+         <th style="width:3%">编号</th><th style="width:5%">题型</th><th style="width:5%">难易</th><th>描述</th>
+<?php
+         for ($i=0; $i<count($problems); $i++)
+         {
+            $sequence = $i + 1;
+            echo "<tr><td>".$sequence."</td><td>".get_type_name_from_id($problems[$i]->type)."</td><td>".get_level_name($problems[$i]->level)."</td><td>".$problems[$i]->desc."</td></tr>";
+         }
+?>         
+      </table>
+   </div>
 <?php
    if ($ExamStatus != 1)
    {
@@ -546,9 +718,33 @@ function modifyExamsContent(ExamId)
       </tr>      
 <?php
    }
-?>   
-   </table>
-</div>
+?> 
+
+							</div>  <!-- End panel-body -->
+                        </div> <!-- End panel -->
+                    </div> <!-- end col -->
+                </div> <!-- End row -->
+
+				
+            </div>
+            <!-- Page Content Ends -->
+            <!-- ================== -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                2015 © Takeda.
+            </footer>
+            <!-- Footer Ends -->
+
+
+
+        </div>
+        <!-- Main Content Ends -->
+
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
 </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

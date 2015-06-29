@@ -37,13 +37,22 @@
    
    $request_method = $_SERVER["REQUEST_METHOD"];
    $request_uri = $_SERVER["REQUEST_URI"];
-   $resource = explode(URI_START_WITH, $request_uri);
-   array_shift($resource);
+   
+   if (preg_match("/.*\/api\/v1(\/.*)/", $request_uri, $matches))
+   {
+      $resource = $matches[1];
+   }
+   else
+   {
+      http_response_code(404);
+      echo json_encode(array("message"=>"not valid api url", "code"=> ERR_INVALID_API));
+      return;
+   }
 
    if ($request_method == "GET")
    {
       // /exam/{exam_id}, download the exam json file
-      if (preg_match("/exam\/([0-9]+)/", $resource[0], $matches))
+      if (preg_match("/exam\/([0-9]+)/", $resource, $matches))
       {
          $exam_id = $matches[1];
          $exam_json_file_path = EXAM_JSON_FILE_DIR."/$exam_id.json";
@@ -62,7 +71,7 @@
          readfile($exam_json_file_path);
       }
       // /user/{user_id}/exam, list all exams related to this user
-      else if (preg_match("/user\/([0-9]+)\/exam/", $resource[0], $matches))
+      else if (preg_match("/user\/([0-9]+)\/exam/", $resource, $matches))
       {
          $exams_info = array();
          
@@ -85,7 +94,11 @@
             {
                //get exam info
                $row = mysqli_fetch_assoc($result);
-               array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               // pus exam only when exam is active
+               if (is_exam_active($row["ExamId"]))
+               {
+                  array_push($exams_info, get_exam_info($row["ExamId"], $row["IsSubmit"]));
+               }
             }   
          }
    
@@ -94,122 +107,103 @@
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
    }
    else if ($request_method == "PUT")
    {
       // upload result
-      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)/", $resource[0], $matches))
+      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)/", $resource, $matches))
       {
          $user_id = $matches[1];
          $exam_id = $matches[2];
-         $putdata = fopen("php://input", "r");
-         // check user exist
-         // check exam id exist
- 
+         $data = file_get_contents("php://input");
+
+         if (strlen($data) == 0)
+         {
+            http_response_code(400);
+            echo json_encode(array("message"=> "empty result file", "code"=> ERR_EMPTY_FILE));
+            return;
+         }
+
+         $content_obj = json_decode($data);
+
+         // check rule
+         if (!isset($content_obj->exam_id) || !isset($content_obj->user_id) ||
+             !isset($content_obj->score)|| !isset($content_obj->result))
+         {               
+            http_response_code(400);
+            echo json_encode(array("message"=> "invalid file", "code"=> ERR_INVALID_API));
+            return;
+         }
+
+         if (!is_upload_exam_exist($content_obj->exam_id))
+         {
+            http_response_code(404);
+            echo json_encode(array("message"=> "exam not found", "code"=> ERR_EXAM_NOT_FOUND));
+            return;
+         }
+         if (!is_upload_user_exist($content_obj->user_id))
+         {
+            http_response_code(404);
+            echo json_encode(array("message"=>"user not found", "code"=> ERR_USER_NOT_FOUND));
+            return;
+         }
+
+         if (is_result_upload_before($content_obj->exam_id, $content_obj->user_id))
+         {
+            if (($ret = update_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to update exam score", "code"=> ERR_OTHER));
+               return;
+            }
+            if (($ret = update_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to update exam result", "code"=> ERR_OTHER));
+               return;
+            }
+         }               
+         else
+         {
+            if (($ret = insert_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
+               return;
+            }
+            if (($ret = insert_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
+            {
+               http_response_code(500);
+               echo json_encode(array("message"=>"failed to insert exam result", "code"=> ERR_OTHER));
+               return;
+            }
+         }
+
+         update_the_submit_status($exam_id, $user_id, true);
+         
          $tmp_file_path = EXAM_RESULT_UPLOAD_DIR."/".time().hash('md5', $user_id).".json";
          $file_path = EXAM_RESULT_UPLOAD_DIR."/".$exam_id."_".$user_id.".json";
-         $fp = fopen($tmp_file_path, "w");
-         
 
-         // check data size > if large than 4*1024*1024, reject it
-         //check putdata status
+         file_put_contents($tmp_file_path, $data);
+         copy($tmp_file_path, $file_path);
 
-         
-         while($data = fread($putdata, 4*1024*1024))
-         {
-            // get index of Content-Type: application/octet-stream\n\n
-            $start = strpos($data, "Content-Type: application/octet-stream\r\n");
-            $content_start = strpos($data, "{", $start);
-            //echo $content_start;
-            
-            if (($end = strpos($data, "\r\n", $content_start)) == 0) {
-               if (($end = strpos($data, "\n", $content_start)) == 0) {
-                  // error
-                  // return
-               }
-            }
-               
-            $content_length = $end - $content_start;
-         
-            $content = substr($data, $content_start, $content_length);
-            $content_obj = json_decode($content);
-
-            // check rule
-            if (!isset($content_obj->exam_id) || !isset($content_obj->user_id) ||
-                !isset($content_obj->score)|| !isset($content_obj->result))
-            {               
-               http_response_code(400);
-               echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
-               return;
-            }
-
-            if (!is_upload_exam_exist($content_obj->exam_id))
-            {
-               http_response_code(404);
-               echo json_encode(array("message"=> "exam not found", "code"=> ERR_EXAM_NOT_FOUND));
-               return;
-            }
-            if (!is_upload_user_exist($content_obj->user_id))
-            {
-               http_response_code(404);
-               echo json_encode(array("message"=>"user not found", "code"=> ERR_USER_NOT_FOUND));
-               return;
-            }
-
-            if (is_result_upload_before($content_obj->exam_id, $content_obj->user_id))
-            {
-               if (($ret = update_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to update exam score", "code"=> ERR_OTHER));
-                  return;
-               }
-               if (($ret = update_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to update exam result", "code"=> ERR_OTHER));
-                  return;
-               }
-            }               
-            else
-            {
-               if (($ret = insert_exam_score($content_obj->exam_id, $content_obj->user_id, $content_obj->score)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
-                  return;
-               }
-               if (($ret = insert_exam_result($content_obj->exam_id, $content_obj->user_id, $content_obj->score, $content_obj->result)) != SUCCESS)
-               {
-                  http_response_code(500);
-                  echo json_encode(array("message"=>"failed to insert exam result", "code"=> ERR_OTHER));
-                  return;
-               }
-            }
-            
-            fwrite($fp, $content);
-            copy($tmp_file_path, $file_path);
-         } 
-         fclose($fp);
-         fclose($putdata);
-         
          echo json_encode(array("status"=>"success"));
          return;
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
    }
    else if ($request_method == "POST")
    {
-      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)\/offline/", $resource[0], $matches))
+      if (preg_match("/user\/([0-9]+)\/result\/([0-9]+)\/offline/", $resource, $matches))
       {
          $user_id = $matches[1];
          $exam_id = $matches[2];
@@ -259,16 +253,16 @@
                echo json_encode(array("message"=>"failed to insert exam score", "code"=> ERR_OTHER));
                return;
             }
-
-            echo json_encode(array("status"=>"success"));
-            return;
          }
 
+         update_the_submit_status($exam_id, $user_id, true);
+         echo json_encode(array("status"=>"success"));
+         return;
       }
       else
       {
-         http_response_code(400);
-         echo json_encode(array("message"=> "invalid parameter", "code"=> ERR_INVALID_API));
+         http_response_code(404);
+         echo json_encode(array("message"=> "not valid api url", "code"=> ERR_INVALID_API));
          return;
       }
      
@@ -289,17 +283,17 @@
       if($result = mysqli_query($link, $str_query)){
          $row = mysqli_fetch_assoc($result);
          $exam_info = array("exam_id"=>(int)$row["ExamId"],
-                            "exam_name"=>(int)$row["ExamName"],
+                            "exam_name"=>$row["ExamName"],
                             "submit"=>(int)$is_submit,
                             "status"=>(int)$row["Status"],
                             "type"=>(int)$row["ExamType"],
                             "begin"=>strtotime($row["ExamBegin"]),
                             "end"=>strtotime($row["ExamEnd"]),
-                            "expire_time"=>strtotime($row["ExpireTime"]),
+                            "duration"=>(int)($row["Duration"]),
                             "ans_type"=>(int)$row["ExamAnsType"],
                             "description"=>$row["ExamDesc"],
                             "location"=>(int)$row["ExamLocation"],
-                            "pwd"=>$row["ExamPassword"]);
+                            "password"=>$row["ExamPassword"]);
       }
       return $exam_info;
    }
@@ -388,7 +382,7 @@
       }
       
       $str_query = <<<EOD
-                Update examscore set ExamId=$exam_id, UserId=$user_id, Score=$score
+                Update examscore set Score=$score where ExamId=$exam_id AND UserId=$user_id
 EOD;
       mysqli_query($link, $str_query);
       if(!mysqli_query($link, $str_query))
@@ -423,8 +417,7 @@ EOD;
       
       return SUCCESS;
    }
-   
-   
+ 
    function insert_exam_score($exam_id, $user_id, $score)
    {
       $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
@@ -460,7 +453,6 @@ EOD;
                         INSERT INTO examanswer (ExamId, ProblemId, UserId, ProblemType, Score, Answer, Result)
                         Values ($exam_id, $result->problem_id, $user_id, $result->type, $result->score, '$answer', $result->result)
 EOD;
-         print_r($str_query);
          if(!mysqli_query($link, $str_query))
          {
             return ERR_INSERT_DATABASE;
@@ -470,6 +462,26 @@ EOD;
       return SUCCESS;
    }
 
+   function update_the_submit_status($exam_id, $user_id, $status)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = <<<EOD
+               Update examroll set isSubmit=$status
+               where ExamId=$exam_id AND UserId=$user_id AND Status=1
+EOD;
+      if(!mysqli_query($link, $str_query))
+      {
+         return ERR_UPDATE_DATABASE;
+      }
+      return SUCCESS;
+   }
+   
+   
    function get_answer_string($answers)
    {
       $answer_str = "";
@@ -480,6 +492,26 @@ EOD;
       }
       
       return $answer_str;
+   }
+ 
+   function is_exam_active($exam_id)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      if (!$link) 
+      {   
+         die(MSG_ERR_CONNECT_TO_DATABASE);
+      }
+      
+      $str_query = "select * from exams where ExamId=$exam_id";
+      if($result=mysqli_query($link, $str_query))
+      {
+         $row = mysqli_fetch_assoc($result);
+         if ($row["Status"] == EXAM_ACTIVE)
+         {
+            return true;
+         }
+      }
+      return false;
    }
  
 ?>

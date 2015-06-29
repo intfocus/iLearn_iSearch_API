@@ -202,7 +202,7 @@ function delUsersBatch()
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>用户名称/用户邮箱/工号 ：</th>
+               <th>用户名称/用户邮箱/工号/部门名称 ：</th>
                <td><input id="searchUsersNameEmail" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
@@ -217,8 +217,9 @@ function delUsersBatch()
                </td>
                <th>是否为审批者 ：</th>
                <td colspan="3">
-                  <label><input id="searchUsersRadio1" name="CanA" type="radio" value="" checked="true" />是</label>
+                  <label><input id="searchUsersRadio1" name="CanA" type="radio" value="" />是</label>
                   <label><input id="searchUsersRadio2" name="CanA" type="radio" value="" />否</label>
+                  <label><input id="searchUsersRadio3" name="CanA" type="radio" value="" checked />全部</label>
                </td>
             </tr>
             <tr>

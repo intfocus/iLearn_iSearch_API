@@ -1,0 +1,3 @@
+﻿MySQL User/Password: root/123456;
+直接IIS中建立虚拟目录;
+工作目录: D:\phptest;

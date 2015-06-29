@@ -41,7 +41,7 @@ function clickSearchPrivilegesPage(obj, n)  //搜尋換頁
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>用户名称/用户邮箱/工号 ：</th>
+               <th>用户名称/用户邮箱/工号/部门名称 ：</th>
                <td><input id="searchPrivilegesNameEmail" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
@@ -52,12 +52,13 @@ function clickSearchPrivilegesPage(obj, n)  //搜尋換頁
             <tr>
                <th>最后修改时间 ：</th>
                <td>
-                  <input id="from3" type="text" name="searchPrivilegesfrom1" class="from" readonly="true"/> ~ <input id="to3" type="text" class="to" name="searchPrivilegesto1" readonly="true"/>
+                  <input id="from7" type="text" name="searchPrivilegesfrom1" class="from" readonly="true"/> ~ <input id="to7" type="text" class="to" name="searchPrivilegesto1" readonly="true"/>
                </td>
                <th>是否为审批者 ：</th>
                <td colspan="3">
-                  <label><input id="searchPrivilegesRadio1" name="CanA" type="radio" value="" checked="true" />是</label>
+                  <label><input id="searchPrivilegesRadio1" name="CanA" type="radio" value="" />是</label>
                   <label><input id="searchPrivilegesRadio2" name="CanA" type="radio" value="" />否</label>
+				  <label><input id="searchPrivilegesRadio3" name="CanA" type="radio" value="" checked />全部</label>
                </td>
             </tr>
             <tr>

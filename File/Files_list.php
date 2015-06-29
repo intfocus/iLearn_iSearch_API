@@ -140,7 +140,7 @@ function occurTimeDatePicker()
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>文档标题/文档说明 ：</th>
+               <th>文档标题/文档说明/分类名称 ：</th>
                <td><input id="searchFilesNameCode" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
@@ -151,7 +151,7 @@ function occurTimeDatePicker()
             <tr>
                <th>最后修改时间 ：</th>
                <td>
-                  <input id="from4" type="text" name="searchFilesfrom1" class="from" readonly="true"/> ~ <input id="to4" type="text" class="to" name="searchFilesto1" readonly="true"/>
+                  <input id="from6" type="text" name="searchFilesfrom1" class="from" readonly="true"/> ~ <input id="to6" type="text" class="to" name="searchFilesto1" readonly="true"/>
                </td>
             </tr>
             <tr>

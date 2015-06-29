@@ -124,6 +124,8 @@
       return;
    }
    
+   // get each type score
+   
    if (!isset($_GET["functions_id"]))
    {
       $functions_id = array();

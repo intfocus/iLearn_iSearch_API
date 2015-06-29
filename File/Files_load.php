@@ -235,7 +235,7 @@
    //TODO: trim space
    if (strlen($searchFilesNameCode) > 0)
    {
-      $str_query1 = $str_query1 . "AND (F.FileTitle like '%$searchFilesNameCode%' OR F.FileDesc like '%$searchFilesNameCode%') ";
+      $str_query1 = $str_query1 . "AND (F.FileTitle like '%$searchFilesNameCode%' OR F.FileDesc like '%$searchFilesNameCode%' OR C.CategoryName like '%$searchFilesNameCode%') ";
    }
    
    if ($searchFilesfrom1 != '')

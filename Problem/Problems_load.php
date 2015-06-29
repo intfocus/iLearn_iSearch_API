@@ -102,6 +102,9 @@
    $result;                 //query result
    $row;                    //1 data array
    $return_string;
+   
+
+   
    //1.get information from client
    if(($cmd = check_command($_GET["cmd"])) == SYMBOL_ERROR)
    {
@@ -136,6 +139,8 @@
       echo DB_ERROR;       
       return;
    }   
+ 
+   $funcs_id_name_mapping = get_all_funcs_id_name_mapping();
  
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
@@ -192,22 +197,23 @@
       $return_string = $return_string . "<div class=\"toolMenu\">"
                                       . "<span class=\"paging\">"
                                       . "<input type=\"hidden\" id=search_no value=$row_number>"
-                                      . "<input type=\"hidden\" name=search_page_no value=1>"
-                                      . "<input type=\"hidden\" name=search_page_size value=" . $page_size . ">";
+                                      . "<input type=\"hidden\" name=search_prob_page_no value=1>"
+                                      . "<input type=\"hidden\" name=search_prob_page_size value=" . $page_size . ">";
       if ($page_num > 1)
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_prob_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchNewsPage
-            $return_string = $return_string . "\" id=search_page_begin_no_" . ($i + 1) . " OnClick=clickSearchProbsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_prob_page_begin_no_" . ($i + 1) . " OnClick=clickSearchProbsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
                        . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
+                       . "<span class=\"btn ProblemsexpandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -251,7 +257,7 @@
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_prob_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -288,8 +294,8 @@
                $ProbTypeStr = get_type_name_from_id($ProbType);
                $ProbDesc = $row["ProblemDesc"];
                $ProbCategory = $row["ProblemCategory"];
-               $funcs_id = get_function_id($ProbCategory);
-               $funcs_name = get_funcs_name($funcs_id);
+               $funcs_id = get_function_id($ProbCategory);               
+               $funcs_name = get_funcs_name($funcs_id, $funcs_id_name_mapping);
                $funcs_name_str = get_funcs_name_str($funcs_name);
                $ProbLevel = $row["ProblemLevel"];
                $ProbLevelStr = get_level_name($ProbLevel);
@@ -334,6 +340,7 @@
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
                         . "<span align=right class=\"btn\" OnClick=\"newSearchProbsContentFunc();\">上传题库</span>&nbsp;"
+                        . "<span class=\"btn ProblemsexpandSR\" OnClick=\"expandSearchProbsContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----
@@ -341,10 +348,10 @@
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_prob_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
-            $return_string = $return_string . "\" id=search_page_end_no_" . ($i + 1) . " OnClick=clickSearchProbsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_prob_page_end_no_" . ($i + 1) . " OnClick=clickSearchProbsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       $return_string = $return_string . "</span>"
@@ -364,45 +371,18 @@
       return;
    }
    
-   function get_funcs_name($funcs_id)
+   function get_funcs_name($funcs_id, $funcs_name_id_mapping)
    {
-
       $funcs_name = array();
 
-      $str_query = "select * from functions where ";
-      $funcs_count = count($funcs_id);
-      for ($i=0;$i<$funcs_count;$i++)
+      foreach ($funcs_id as $func_id)
       {
-         if ($i < ($funcs_count-1))
-         {
-            $str_query = $str_query."FunctionId=".$funcs_id[$i]." OR ";
-         }
-         else if ($i == ($funcs_count-1))
-         {
-            $str_query = $str_query."FunctionId=".$funcs_id[$i];
-         }
+         array_push($funcs_name, $funcs_name_id_mapping[$func_id]);
       }
-      
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-      if (!$link)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return;
-      }
-      
-      if($result = mysqli_query($link, $str_query)){
-         $row_number = mysqli_num_rows($result);
-         for ($i=0; $i<$row_number;$i++)
-         {
-            $row = mysqli_fetch_assoc($result);
-            array_push($funcs_name, $row["FunctionName"]);
-         }
-      }
-      
+
       return $funcs_name;
    }
-   
+
    function get_funcs_name_Str($funcs_name)
    {
       $str = "";
@@ -421,5 +401,30 @@
       }
       
       return $str;
+   }
+   
+   
+   function get_all_funcs_id_name_mapping()
+   {
+      $funcs_id_name_mapping = array();
+
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }
+      
+      $str_query = "select * from functions where FunctionType=".FUNCTION_PRODUCT." or FunctionType=".FUNCTION_ADAPTATION." or FunctionType=".FUNCTION_OTHER;
+      if($result = mysqli_query($link, $str_query)){
+         $row_number = mysqli_num_rows($result);
+         for ($i=0; $i<$row_number;$i++)
+         {
+            $row = mysqli_fetch_assoc($result);
+            $funcs_id_name_mapping[$row["FunctionId"]] = $row["FunctionName"];
+         }
+      }
+      return $funcs_id_name_mapping;
    }
 ?>

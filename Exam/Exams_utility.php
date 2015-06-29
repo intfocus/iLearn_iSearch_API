@@ -7,6 +7,10 @@
    define("NOT_SUBMIT", 0);
    define("SUBMIT", 1);
 
+   define("EXAM_DELETED", -1);
+   define("EXAM_INACTIVE", 0);
+   define("EXAM_ACTIVE", 1);
+   
    define("ERR_NOT_ENOUGH_PROBLEM", -500);
    
    define("ERR_ADJUST_LEVEL", -1000);
@@ -39,7 +43,10 @@
    define("MSG_ONSITE_TEST", "落地考");
 
    define("ERR_INVALID_PARAMETER", -10);
-   define("ERR_EXAM_NOT_EXIST", -11);
+   //define("ERR_EXAM_NOT_EXIST", -11);
+   define("ERR_EXAM_NOT_EXIST", -59);
+   define("ERR_SAVE_JSON_FILE",-60);
+   define("ERR_PROBLEM_COUNT_NOT_ENOUGH", -61);
 
    class Problem
    {
@@ -67,7 +74,7 @@
          "errors":[message, message..]
       }
       */
-      
+
       function __construct(){}
  
       public $status = array();
@@ -109,8 +116,7 @@
       return $selected_problems;
    }
    
-   function add_one_level_and_remove_one_level($problems, &$selected_problems,
-                                               $added_level, $removed_level)
+   function add_one_level_and_remove_one_level($problems, &$selected_problems, $added_level, $removed_level)
    {
       $added_problems;
       
@@ -157,6 +163,11 @@
       return date("Y-m-d H:i:s", $timestamp);
    }
    
+   function timestamp_to_datetime_with_only_date($timestamp)
+   {
+      return date("Y-m-d", $timestamp);
+   }
+   
    function is_empty($str)
    {
       if (!isset($str)) 
@@ -181,6 +192,17 @@
       }
 
       return $answers;
+   }
+   
+   function get_random_password()
+   {
+      $pwd = "";
+      for ($i=0; $i<4; $i++)
+      {
+         $chr = (string)rand(0, 9);
+         $pwd = $pwd.$chr;
+      }
+      return $pwd;
    }
    
 ?>

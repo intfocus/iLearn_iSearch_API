@@ -1,0 +1,18 @@
+.error {
+   color: #ff0000;
+}
+
+.status {
+   color: #0000ff;
+}
+
+.exam_info {
+   margin-top: 20px;
+}
+.problems_table {
+   table-layout:fixed ;
+   width: 100%;
+   color: #595757;
+   white-space: nowrap;
+   padding: 5px 8px;
+}

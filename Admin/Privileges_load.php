@@ -248,7 +248,7 @@
    //***Step16 页面搜索SQl语句 起始
    $str_query1 = "
       select U.UserId, U.UserName, U.Email, U.Status, U.CanApprove, U.EditTime, D.DeptName, U.EmployeeId
-      from Users U, Depts D where U.deptId=D.deptId AND U.status";
+      from Users U left join Depts D on U.deptId=D.deptId Where U.status";
 
    if ($statusCheckbox == 1)
    {
@@ -268,7 +268,8 @@
    {
       $str_query1 = $str_query1 . "AND (U.UserName like '%$searchPrivilegesNameEmail%' OR " . 
                                        "U.Email like '%$searchPrivilegesNameEmail%' OR " . 
-                                       "U.EmployeeId like '%$searchPrivilegesNameEmail%') ";
+                                       "U.EmployeeId like '%$searchPrivilegesNameEmail%' OR " . 
+									   "D.DeptName like '%$searchPrivilegesNameEmail%') ";
    }
    
    if ($searchPrivilegesfrom1 != '')
@@ -276,7 +277,8 @@
    if ($searchPrivilegesto1 != '')
       $str_query1 = $str_query1 . "AND U.EditTime <= '$searchPrivilegesto1' ";
    
-   $str_query1 = $str_query1. "AND U.CanApprove = $searchPrivilegesRadio ";
+   if($searchPrivilegesRadio != '2')
+      $str_query1 = $str_query1. "AND U.CanApprove = $searchPrivilegesRadio ";
    
    //***Step16 页面搜索SQl语句 结束
    
