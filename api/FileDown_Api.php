@@ -62,13 +62,15 @@
       return;
    }
    
-   $str_user = "select FilePath from files where FileId = " . $fileid;
+   $file_size;
+   $str_user = "select FilePath, ZipSize from files where FileId = " . $fileid;
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)
       {
          $filerow = mysqli_fetch_assoc($result);
-         $file_dir = $filerow["FilePath"] . "/";;
+         $file_dir = $filerow["FilePath"] . "/";
+         $file_size = $filerow["ZipSize"];
       }
       else {
          if($link){
@@ -86,14 +88,20 @@
      exit;   
    }
    else{
-      $file = fopen($file_dir . $file_name,"r"); // 打开文件
       // 输入文件标签
       Header("Content-type: application/octet-stream");
       Header("Accept-Ranges: bytes");
       Header("Accept-Length: ".filesize($file_dir . $file_name));
       Header("Content-Disposition: attachment; filename=" . $file_name);
       // 输出文件内容
-      echo fread($file,filesize($file_dir . $file_name));
+      //echo fread($file,filesize($file_dir . $file_name));
+	  $file = fopen($file_dir . $file_name,"r"); // 打开文件
+	  while(1) {
+        $str = fread($file,1024);
+        echo $str;
+        if (strlen($str) < 1024)
+          break;
+      }
       fclose($file);
       exit();
    }

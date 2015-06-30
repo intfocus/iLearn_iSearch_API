@@ -752,7 +752,7 @@ $(function()
    {
       $(this).addClass('active').siblings('li.active').removeClass('active');
       var cur = $(this).index();
-      $('.container').eq(cur).show().siblings().hide();
+      $('.container2').eq(cur).show().siblings().hide();
    });
    
    //Billy 2012/2/1
@@ -1890,7 +1890,7 @@ $(function()
    // exam search
    $('.btn_submit_new.searchExams').click(function()
    {
-      var searchExamsName = document.getElementById("searchExamsName").value;
+      var searchExamsNameAndMemo = document.getElementById("searchExamsNameAndMemo").value;
    
       var statusCheckbox = 0;
       if (document.getElementById("searchExamsCheckBox1").checked == true)
@@ -1902,11 +1902,27 @@ $(function()
          statusCheckbox += 2; 
       }
       
+      var searchType = 0;
+      if (document.getElementById("searchExamsType1").checked == true)
+      {
+         searchType += 1; 
+      }
+      if (document.getElementById("searchExamsType2").checked == true)
+      {
+         searchType += 2; 
+      }
+      
+      var range_begin = document.getElementById("from20").value;
+      var range_end = document.getElementById("to20").value;
+      
+      
       var str;                            //送出内文字串  
       
       //ajax
-      str = "cmd=searchExams" + "&searchExamsName=" + encodeURIComponent(searchExamsName) +
-            "&statusCheckbox=" + statusCheckbox;
+      str = "cmd=searchExams" + "&searchExamsNameAndMemo=" + encodeURIComponent(searchExamsNameAndMemo) +
+            "&statusCheckbox=" + statusCheckbox + "&searchType=" + searchType + "&range_begin=" + encodeURIComponent(range_begin) + "&"
+            + "range_end=" + encodeURIComponent(range_end);
+
       url_str = "Exam/Exams_load.php?";
 
       $('#loadingWrap').show();

@@ -188,7 +188,8 @@
       $str_query3 = "update Files set ZipSize = $FileSize where FileId = $FileId";
       mysqli_query($link,$str_query3);
    }else{
-      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.zip"))
+      $path_parts = pathinfo($FileName);
+      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId." .$path_parts['extension']))
       {
          sleep(DELAY_SEC);
          $resultStr = "文档上传失败 - " . -__LINE__;
@@ -199,7 +200,7 @@
    ///////////////////////////////////
    // 4. 写入 $pdf2image_temp
    //    写入 $pdf2image_bin, FileId, FilePath
-   if ($FileTypeModify == 1 || $FileTypeModify ==2){
+   if ($FileTypeModify == 1 || $FileTypeModify ==2 || $FileTypeModify ==3){
       $fp = fopen($pdf2image_temp,"a+");
       if (!$fp)
       {
