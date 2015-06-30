@@ -163,12 +163,23 @@ function occurTimeDatePicker()
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>名称：</th>
-               <td><input id="searchExamsName" type="text" maxlength="50"></td>
+               <th>名称/考试描述 ：</th>
+               <td><input id="searchExamsNameAndMemo" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
                   <label><input id="searchExamsCheckBox1" type="checkbox" checked> 上架</label>
                   <label><input id="searchExamsCheckBox2" type="checkbox" checked> 下架</label>
+               </td>
+               <th>考试类型 ：</th>
+               <td colspan="3">
+                  <label><input id="searchExamsType1" type="checkbox" checked>模拟考</label>
+                  <label><input id="searchExamsType2" type="checkbox" checked>正式考</label>
+               </td>
+            </tr>
+            <tr>
+               <th>最后截止日期 ：</th>
+               <td>
+                  <input id="from20" type="text" name="endtime_from" class="from" readonly="true"/> ~ <input id="to20" type="text" class="to" name="endtime_to" readonly="true"/>
                </td>
             </tr>
             <tr>

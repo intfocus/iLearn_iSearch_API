@@ -306,6 +306,10 @@ function loaded() {
       if (!is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount))
       {
          $("#genProbsButton").removeAttr('disabled');
+         $("#err_no_problem").show();
+         $(".exam_info").hide();
+         $(".problem_info").hide();
+         $("#status_template").hide();
          return;
       }
 
@@ -354,6 +358,7 @@ function loaded() {
             if (res.hasOwnProperty("code"))
             {
                if (res.code != <? echo SUCCESS; ?>) {
+                  alert("Error");
                   alert(res.message);
                   $("#err_no_problem").show();
                   $(".exam_info").hide();
@@ -470,24 +475,21 @@ function loaded() {
          return;
       }
 
-      // test type
-      if (exam_type == 1)
+      //calculate from time stamp, and end time stamp
+      date_timestamp = new Date(exam_from_date).getTime();
+      hour_min_timestamp = (60 * 60 * exam_from_hour + 60 * exam_from_min) * 1000;
+      from_timestamp = date_timestamp + hour_min_timestamp;
+      
+      date_timestamp = new Date(exam_to_date).getTime();
+      hour_min_timestamp = (60 * 60 * exam_to_hour + 60 * exam_to_min) * 1000;
+      to_timestamp = date_timestamp + hour_min_timestamp;
+      
+      if (from_timestamp >= to_timestamp)
       {
-         //calculate from time stamp, and end time stamp
-         date_timestamp = new Date(exam_from_date).getTime();
-         hour_min_timestamp = (60 * 60 * exam_from_hour + 60 * exam_from_min) * 1000;
-         from_timestamp = date_timestamp + hour_min_timestamp;
-         
-         date_timestamp = new Date(exam_to_date).getTime();
-         hour_min_timestamp = (60 * 60 * exam_to_hour + 60 * exam_to_min) * 1000;
-         to_timestamp = date_timestamp + hour_min_timestamp;
-         
-         if (from_timestamp >= to_timestamp)
-         {
-            alert("考试开始时间不能大于结束时间");
-            return;
-         }
+         alert("考试开始时间不能大于结束时间");
+         return;
       }
+
 
       // collect all problems id
       $(".problem_id").each(function(){
@@ -852,7 +854,7 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group">
-										<input type="text" id="exam_duration_time" type="text" class="from form-control" placeholder="考试长度 (分鐘)">
+										<input type="text" id="exam_duration_time" type="text" class="from form-control" placeholder="考试长度 (分钟)">
                                     </div>
                                     <div class="form-group">
 										<textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>

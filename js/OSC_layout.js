@@ -215,5 +215,21 @@ $(function() {
 			dates101.not( this ).datepicker( "option", option, date8 );
 		}
 	});
+   
+   var dates20 = $( "#from20, #to20" ).datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+      changeYear: true,
+		numberOfMonths: 1,
+		onSelect: function( selectedDate ) {
+			var option = this.id == "from20" ? "minDate" : "maxDate",
+				instance = $( this ).data( "datepicker" ),
+				date4 = $.datepicker.parseDate(
+					instance.settings.dateFormat ||
+					$.datepicker._defaults.dateFormat,
+					selectedDate, instance.settings );
+			dates20.not( this ).datepicker( "option", option, date4 );
+		}
+	});
 	
 });
