@@ -89,6 +89,58 @@
       }
       return $check_str;
    }
+   
+   function check_range_begin($check_str)
+   {
+      //----- check illegal char -----
+      if(strpbrk($check_str, ILLEGAL_CHAR) == true)
+      {
+         return SYMBOL_ERROR;
+      }
+      //----- check empty string -----
+      if(trim($check_str) == "")
+      {
+         return $check_str;
+      }
+      //----- format begin range mm/dd/yy to yyyy-mm-dd 00:00:00 -----
+      date_default_timezone_set(TIME_ZONE);
+      $check_str = $check_str . " 00:00:00";
+      if(($check_str = strtotime($check_str)) == "")
+      {
+         //----- str to time failure -----
+         return SYMBOL_ERROR;
+      }
+      $check_str = date("Y-m-d H:i:s", $check_str);
+      return $check_str; 
+   }
+   //----- Check report range end -----
+   function check_range_end($check_str)
+   {
+      //----- check illegal char -----
+      if(strpbrk($check_str, ILLEGAL_CHAR) == true)
+      {
+         return SYMBOL_ERROR;
+      }
+      //----- check empty string -----
+      if(trim($check_str) == "")
+      {
+         return $check_str;
+      }
+      //----- format end range mm/dd/yy to yyyy-mm-dd 23:59:59 -----
+      date_default_timezone_set(TIME_ZONE);
+      $check_str = $check_str . " 23:59:59";
+
+      if(($check_str = strtotime($check_str)) == "")
+      {
+         //----- str to time failure -----
+         return SYMBOL_ERROR;
+      }
+      $check_str = date("Y-m-d H:i:s", $check_str);
+      return $check_str;
+   }
+   
+   
+   
    //get data from client
    $cmd;
    $ProbName;
@@ -108,7 +160,7 @@
       echo SYMBOL_ERROR_CMD;
       return;
    }
-   if(($searchExamsName = check_name($_GET["searchExamsName"])) == SYMBOL_ERROR)
+   if(($searchExamsNameAndMemo = check_name($_GET["searchExamsNameAndMemo"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -116,6 +168,26 @@
    }
 
    if(($statusCheckbox = check_number($_GET["statusCheckbox"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   
+   if(($searchType = check_number($_GET["searchType"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   
+   if(($searchExamsfrom1 = check_range_begin($_GET["range_begin"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if(($searchExamsto1 = check_range_end($_GET["range_end"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -149,12 +221,32 @@
    {
       $str_query1 = $str_query1 . "AND status>=0 ";
    }
- 
-   $searchExamsName = trim($searchExamsName);
-   if (strlen($searchExamsName) > 0)
+   
+   if ($searchType == 1)
    {
-      $str_query1 = $str_query1 . "AND (ExamName like '%$searchExamsName%')";
+      $str_query1 = $str_query1 . "AND ExamType=0 ";
    }
+   else if ($searchType == 2)
+   {
+      $str_query1 = $str_query1 . "AND ExamType=1 ";
+   }
+   else if ($searchType == 3)
+   {
+      $str_query1 = $str_query1 . "AND ExamType>=0 ";
+   }
+   
+ 
+   $searchExamsNameAndMemo = trim($searchExamsNameAndMemo);
+   if (strlen($searchExamsNameAndMemo) > 0)
+   {
+      $str_query1 = $str_query1 . "AND (ExamName like '%$searchExamsNameAndMemo%' or ExamDesc like '%$searchExamsNameAndMemo%')";
+   }
+   
+   if ($searchExamsfrom1 != '')
+      $str_query1 = $str_query1 . "AND ExamEnd >= '$searchExamsfrom1' ";
+   if ($searchExamsto1 != '')
+      $str_query1 = $str_query1 . "AND ExamEnd <= '$searchExamsto1' ";
+   
    
    //***Step16 页面搜索SQl语句 结束
    
