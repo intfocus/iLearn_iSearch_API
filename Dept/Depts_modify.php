@@ -473,6 +473,7 @@ for($i=0; $i<count($datacpmc); $i++)
                   var node = $('#tt').tree('find',<?php echo $ParentId; ?>);
                   $('#tt').tree('expandTo', node.target).tree('select', node.target);
                   $('#displayExpandToButton').hide();
+                  $('#tt').tree('collapseAll');
                }
                function getSelected(){
                   var node = $('#tt').tree('getSelected');

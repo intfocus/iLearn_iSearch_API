@@ -507,6 +507,7 @@ for($i=0; $i<count($datacpmc); $i++)
                   var node = $('#tt').tree('find',<?php echo $ParentId; ?>);
                   $('#tt').tree('expandTo', node.target).tree('select', node.target);
                   $('#displayExpandToButton').hide();
+                  $('#tt').tree('collapseAll');
                }
                function getSelected(){
                   var node = $('#tt').tree('getSelected');
@@ -563,6 +564,7 @@ for($i=0; $i<count($datacpmc); $i++)
             </div>
             <script type="text/javascript">
                function expandToDept(){
+                  $('#depttree').tree('collapseAll');
                   $('#displayExpandToDeptButton').hide();
                   var dlstr = "<?php echo $DeptList; ?>";
                   var dlstr1 = dlstr.substring(1,dlstr.length-1);

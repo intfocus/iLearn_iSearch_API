@@ -178,6 +178,42 @@ $(function() {
 			dates7.not( this ).datepicker( "option", option, date7 );
 		}
 	});
+	
+	var dates8 = $("#from8, #to8" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from7" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date8 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates8.not( this ).datepicker( "option", option, date8 );
+      }
+   });
+   
+   var dates9 = $("#from9, #to9" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from7" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date9 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates9.not( this ).datepicker( "option", option, date9);
+      }
+   });
    
 
  var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({

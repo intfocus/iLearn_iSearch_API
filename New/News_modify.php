@@ -380,6 +380,7 @@ function modifyNewsContent(NewId)
             </div>
             <script type="text/javascript">
                function expandToDept(){
+                  $('#depttree').tree('collapseAll');
                   $('#displayExpandToDeptButton').hide();
                   var dlstr = "<?php echo $DeptList; ?>";
                   var dlstr1 = dlstr.substring(1,dlstr.length-1);

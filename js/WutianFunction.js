@@ -1111,6 +1111,66 @@ $(function()
       //alert(str);
       ajax_genReportChart(str);
    });
+   
+   //***Step4 searchTrainings begin
+   $('.btn_submit_new.searchTrainings').click(function()
+   {
+      var searchTrainingsTitleMsg = document.getElementById("searchTrainingsTitleMsg").value;
+      var searchTrainingsfrom1 = document.getElementsByName("searchTrainingsfrom1")[0].value;
+      var searchTrainingsto1 = document.getElementsByName("searchTrainingsto1")[0].value;
+      var searchTrainingsfrom2 = document.getElementsByName("searchTrainingsfrom2")[0].value;
+      var searchTrainingsto2 = document.getElementsByName("searchTrainingsto2")[0].value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchTrainingsCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchTrainingsCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchTrainings" + "&" + "searchTrainingsTitleMsg=" + encodeURIComponent(searchTrainingsTitleMsg) + "&" + "searchTrainingsfrom1=" + searchTrainingsfrom1 + "&"
+            + "searchTrainingsto1=" + searchTrainingsto1 + "&" + "searchTrainingsfrom2=" + searchTrainingsfrom2 + "&" + "searchTrainingsto2=" + searchTrainingsto2 + "&" + "statusCheckbox=" + statusCheckbox;
+      url_str = "Training/Trainings_load.php?";
+      
+      //alert(str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchTrainingsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchTrainings end
 
    //***Step4 searchNews begin
    $('.btn_submit_new.searchNews').click(function()

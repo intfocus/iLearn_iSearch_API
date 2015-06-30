@@ -413,6 +413,7 @@ function modifyFilesContent(FileId)
                   var node = $('#tt').tree('find',<?php echo $CategoryId; ?>);
                   $('#tt').tree('expandTo', node.target).tree('select', node.target);
                   $('#displayExpandToButton').hide();
+                  $('#tt').tree('collapseAll');
                }
                function getSelected(){
                   var node = $('#tt').tree('getSelected');

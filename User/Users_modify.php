@@ -394,6 +394,7 @@ function modifyUsersContent(UserId)
 			var node = $('#tt').tree('find',<?php echo $DeptId; ?>);
 			$('#tt').tree('expandTo', node.target).tree('select', node.target);
          $('#displayExpandToButton').hide();
+         $('#tt').tree('collapseAll');
 		}
 		function getSelected(){
 			var node = $('#tt').tree('getSelected');
