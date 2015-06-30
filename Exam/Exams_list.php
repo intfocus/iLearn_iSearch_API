@@ -177,7 +177,7 @@ function occurTimeDatePicker()
                </td>
             </tr>
             <tr>
-               <th>最后修改时间 ：</th>
+               <th>最后截止日期 ：</th>
                <td>
                   <input id="from20" type="text" name="endtime_from" class="from" readonly="true"/> ~ <input id="to20" type="text" class="to" name="endtime_to" readonly="true"/>
                </td>
