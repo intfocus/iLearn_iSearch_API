@@ -352,7 +352,7 @@ EOD;
          "type" => (int)$exam_type,
          "begin" => (int)$from_timestamp,
          "end" => (int)$to_timestamp,
-         "duration" => (int)$exam_duration,
+         "duration" => (int)$exam_duration*60,
          "ans_type" => (int)$exam_answer_type,
          "description" => $exam_desc,
          "location" => (int)$exam_location,

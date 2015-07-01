@@ -91,16 +91,17 @@
       // 输入文件标签
       Header("Content-type: application/octet-stream");
       Header("Accept-Ranges: bytes");
-      Header("Accept-Length: ".filesize($file_dir . $file_name));
+      Header("Accept-Length: " . $file_size);
       Header("Content-Disposition: attachment; filename=" . $file_name);
       // 输出文件内容
       //echo fread($file,filesize($file_dir . $file_name));
-	  $file = fopen($file_dir . $file_name,"r"); // 打开文件
-	  while(1) {
-        $str = fread($file,1024);
-        echo $str;
-        if (strlen($str) < 1024)
-          break;
+      $filepath = $file_dir . $file_name;
+	   $file = fopen($filepath,"r"); // 打开文件
+	   while(1) {
+         $str = fread($file,1024);
+         echo $str;
+         if (strlen($str) < 1024)
+            break;
       }
       fclose($file);
       exit();

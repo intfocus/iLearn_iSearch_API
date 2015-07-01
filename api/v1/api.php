@@ -289,7 +289,7 @@
                             "type"=>(int)$row["ExamType"],
                             "begin"=>strtotime($row["ExamBegin"]),
                             "end"=>strtotime($row["ExamEnd"]),
-                            "duration"=>(int)($row["Duration"]),
+                            "duration"=>(int)($row["Duration"])*60,
                             "ans_type"=>(int)$row["ExamAnsType"],
                             "description"=>$row["ExamDesc"],
                             "location"=>(int)$row["ExamLocation"],

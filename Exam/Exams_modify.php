@@ -238,7 +238,7 @@ EOD;
 
          $exam_json->exam_name = $ExamName;
          $exam_json->description = $ExamDesc;
-         $exam_json->duration = (int)$Duration;
+         $exam_json->duration = (int)$Duration*60;
          $exam_json->begin = (int)$ExamBeginTime;
          $exam_json->end = (int)$ExamEndTime;
          
