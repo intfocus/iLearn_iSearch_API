@@ -411,6 +411,7 @@ function loaded() {
    }); 
    
    $(".saveProbsButton").click(function(){
+
       exam_single_score = $("#NewExamSingleSelScore").val();
       exam_multi_score = $("#NewExamMutiSelScore").val();
       exam_true_false_score = $("#NewExamTrueFalseScore").val();
@@ -502,6 +503,7 @@ function loaded() {
          return;
       }
       
+      $(".saveProbsButton").attr("disabled", true);
       $.ajax({
          type: "POST",
          url: "save_exams.php",
@@ -555,7 +557,11 @@ function loaded() {
          error: function(xhr)
          {
             alert("ajax error: " + xhr.status + " " + xhr.statusText);
-         },      
+         },
+         complete: function(xhr)
+         {
+            $(".saveProbsButton").removeAttr('disabled');
+         }         
       });
    });
 }
