@@ -477,8 +477,8 @@ function modifyExamsContent(ExamId)
    else if (ExamFromDate.length == 0 && ExamFromHour.length == 0 && ExamFromMin.length == 0 &&
        ExamToDate.length == 0 && ExamToHour.length == 0 && ExamToMin.length == 0)
    {
-      from_timestamp = <? echo strtotime($ExamBegin); ?>;
-      to_timestamp = <? echo strtotime($ExamEnd); ?>; 
+      from_timestamp = <? echo strtotime($ExamBegin); ?> * 1000;
+      to_timestamp = <? echo strtotime($ExamEnd); ?> * 1000;
    }
    else
    {
@@ -656,7 +656,7 @@ function modifyExamsContent(ExamId)
          <th>考试长度 (分钟): </th>
          <td> <input id="exam_duration" type="text" name="exam_duration" class="from" value="<? echo $Duration;?>"></td>
       </tr>
-      <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
+      <tr>
          <th>原始考试时间段: </th>
          <td>
             <input type="text" readonly="true" disabled="disabled" value="<?echo $ExamBegin?>">
@@ -664,7 +664,7 @@ function modifyExamsContent(ExamId)
             <input type="text" readonly="true" disabled="disabled" value="<?echo $ExamEnd?>">
          </td>
       </tr>
-      <tr <? if ($ExamType == MOCK_EXAM){ echo "style='display:none'";}?>>
+      <tr>
          <th>新考试时间段: </th>
          <td>
             <input id="exam_begin_time" type="text" name="exam_from_date6" class="from" readonly="true">
@@ -675,7 +675,7 @@ function modifyExamsContent(ExamId)
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>
-      </tr>   
+      </tr>
   
    </table>
    
