@@ -139,7 +139,7 @@
       echo SYMBOL_ERROR;
       return;
    }
-   
+  $exam_duration = $exam_duration * 60 ;
 
    $exam_password = "";
    if ($exam_location == ONSITE_TEST)
@@ -352,7 +352,7 @@ EOD;
          "type" => (int)$exam_type,
          "begin" => (int)$from_timestamp,
          "end" => (int)$to_timestamp,
-         "duration" => (int)$exam_duration*60,
+         "duration" => (int)$exam_duration,
          "ans_type" => (int)$exam_answer_type,
          "description" => $exam_desc,
          "location" => (int)$exam_location,
