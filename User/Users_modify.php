@@ -161,6 +161,7 @@
             $UserId = $row["UserId"];
             $UserName = $row["UserName"];
             $EmployeeId = $row["EmployeeId"];
+            $WinId = $row["UserWId"];
             $UserEmail = $row["Email"];
             $DeptId = $row["DeptId"];
             $CanApprove = $row["CanApprove"];
@@ -178,6 +179,7 @@
             $UserId = 0;
             $UserName = "";
             $EmployeeId = "";
+            $WinId = "";
             $UserEmail = "";
             $DeptId = 1;
             $CanApprove = 0;
@@ -191,6 +193,7 @@
    {
       $UserName = $_GET["UserName"];
       $EmployeeId = $_GET["EmployeeId"];
+      $WinId = $_GET["WinId"];
       $UserEmail = $_GET["UserEmail"];
       $CanApprove = $_GET["CanApprove"];
       $DeptId = $_GET["DeptId"];
@@ -200,8 +203,8 @@
          echo "-- Email 格式错误 -- $UserEmail";
          return;
       }
-      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,$user_id,now(),$user_id,now(),1)" ;
+      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,UserWId,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,'$WinId',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -217,6 +220,7 @@
    {
       $UserName = $_GET["UserName"];
       $EmployeeId = $_GET["EmployeeId"];
+      $WinId = $_GET["WinId"];
       $UserEmail = $_GET["UserEmail"];
       $CanApprove = $_GET["CanApprove"];
       $DeptId = $_GET["DeptId"];
@@ -227,7 +231,7 @@
          return;
       }
       //TODO EditUser=UserId
-      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now() where UserId=$UserId";
+      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', UserWId='$WinId', Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now() where UserId=$UserId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -287,6 +291,7 @@ function modifyUsersContent(UserId)
 {
    UserName = document.getElementsByName("UserNameModify")[0].value.trim();
    EmployeeId = document.getElementsByName("EmployeeId")[0].value.trim();
+   WinId = document.getElementsByName("WinId")[0].value.trim();
    UserEmail = document.getElementsByName("UserEmailModify")[0].value.trim();
    DeptId = getSelectedId();
    
@@ -296,14 +301,15 @@ function modifyUsersContent(UserId)
       searchUsersRadio = 1; 
    }
    
-   if (UserName.length == 0 || EmployeeId.length == 0 || UserEmail.length == 0)
+   if (UserName.length == 0 || EmployeeId.length == 0 || UserEmail.length == 0 || WinId.length == 0)
    {
-      alert("用户名称，工号，及用户邮箱不可为空白");
+      alert("用户名称，工号，用户WinId，及用户邮箱不可为空白");
       return;
    }
    
    str = "cmd=write&UserId=" + UserId + "&UserName=" + encodeURIComponent(UserName) + 
          "&EmployeeId=" + encodeURIComponent(EmployeeId) +
+         "&WinId=" + encodeURIComponent(WinId) +
          "&UserEmail=" + encodeURIComponent(UserEmail) + "&CanApprove=" + searchUsersRadio + "&DeptId=" + DeptId;
    url_str = "../User/Users_modify.php?";
 
@@ -361,6 +367,10 @@ function modifyUsersContent(UserId)
       <tr>
          <th>工号：</th>
          <td><Input type=text name=EmployeeId size=50 value="<?php echo $EmployeeId;?>"></td>
+      </tr>
+      <tr>
+         <th>用户WinID：</th>
+         <td><Input type=text name=WinId size=50 value="<?php echo $WinId;?>"></td>
       </tr>
       <tr>
          <th>用户邮箱：</th>

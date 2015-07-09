@@ -113,7 +113,7 @@
 
 <link rel="stylesheet" type="text/css" href="lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="lib/yui-cssfonts-min.css">
-<link rel="stylesheet" type="text/css" href="css/OSC_layout_new.css">
+<link rel="stylesheet" type="text/css" href="css/OSC_layout.css">
 
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>

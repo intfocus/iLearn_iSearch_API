@@ -180,14 +180,14 @@ $(function() {
 	});
 	
 	var dates8 = $("#from8, #to8" ).datepicker({
-      maxDate: new Date(),
+      minDate: new Date(),
       defaultDate: "+1w",
       changeMonth: true,
       changeYear: true,
       numberOfMonths: 1,
       
       onSelect: function( selectedDate ) {
-         var option = this.id == "from7" ? "minDate" : "maxDate",
+         var option = this.id == "from8" ? "minDate" : "maxDate",
             instance = $( this ).data( "datepicker" ),
             date8 = $.datepicker.parseDate(
                instance.settings.dateFormat ||
@@ -198,20 +198,56 @@ $(function() {
    });
    
    var dates9 = $("#from9, #to9" ).datepicker({
-      maxDate: new Date(),
+      minDate: new Date(),
       defaultDate: "+1w",
       changeMonth: true,
       changeYear: true,
       numberOfMonths: 1,
       
       onSelect: function( selectedDate ) {
-         var option = this.id == "from7" ? "minDate" : "maxDate",
+         var option = this.id == "from9" ? "minDate" : "maxDate",
             instance = $( this ).data( "datepicker" ),
             date9 = $.datepicker.parseDate(
                instance.settings.dateFormat ||
                $.datepicker._defaults.dateFormat,
                selectedDate, instance.settings );
          dates9.not( this ).datepicker( "option", option, date9);
+      }
+   });
+   
+   var dates10 = $("#from10, #to10" ).datepicker({
+      minDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from10" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date10 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates10.not( this ).datepicker( "option", option, date10 );
+      }
+   });
+   
+   var dates11 = $("#from11, #to11" ).datepicker({
+      minDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from11" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date11 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates11.not( this ).datepicker( "option", option, date11);
       }
    });
    

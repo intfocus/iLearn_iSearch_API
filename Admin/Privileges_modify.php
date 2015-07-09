@@ -420,7 +420,7 @@ function modifyPrivilegesContent(UserId)
 
       <!-- 显示所有的 function_name with functionId 以及目前这个 user 有哪些权限 开始-->
 <?php      
-      $str_query1 = "Select * from functions where FunctionType=0" ;
+      $str_query1 = "Select * from functions where FunctionType=0 order by Rank" ;
       if ($result = mysqli_query($link, $str_query1))
       {
          while ($row = mysqli_fetch_assoc($result))

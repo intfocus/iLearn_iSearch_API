@@ -742,10 +742,9 @@ $(function()
    });
 	
    //trim
-   String.prototype.trim = function()
-   {
+   String.prototype.trim = function(){
       return this.replace(/(^[\s]*)|([\s]*$)/g, "");
-   }
+   };
 
    //switch mainTab 
    $('.mainTabW li').click(function()
@@ -804,11 +803,10 @@ $(function()
    });
 
    //new user button
-   $('.settingW #addNewUser').click(function()
-   {
+   $('.settingW #addNewUser').click(function(){
       $("#dialog-addUser").dialog({
          resizeable: false
-      })
+      });
    });
    
    //change validcode
@@ -1112,10 +1110,70 @@ $(function()
       ajax_genReportChart(str);
    });
    
+   //***Step4 searchTrainees begin
+   $('.btn_submit_new.searchTrainees').click(function()
+   {
+      var searchTraineesNameSpeaker = document.getElementById("searchTraineesNameSpeaker").value;
+      var searchTraineesfrom1 = document.getElementsByName("searchTraineesfrom1")[0].value;
+      var searchTraineesto1 = document.getElementsByName("searchTraineesto1")[0].value;
+      var searchTraineesfrom2 = document.getElementsByName("searchTraineesfrom2")[0].value;
+      var searchTraineesto2 = document.getElementsByName("searchTraineesto2")[0].value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchTraineesCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchTraineesCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchTrainees" + "&" + "searchTraineesNameSpeaker=" + encodeURIComponent(searchTraineesNameSpeaker) + "&" + "searchTraineesfrom1=" + searchTraineesfrom1 + "&"
+            + "searchTraineesto1=" + searchTraineesto1 + "&" + "searchTraineesfrom2=" + searchTraineesfrom2 + "&" + "searchTraineesto2=" + searchTraineesto2 + "&" + "statusCheckbox=" + statusCheckbox;
+      url_str = "Trainee/Trainees_load.php?";
+      
+      // alert(url_str+str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchTraineesPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchTrainees end
+   
    //***Step4 searchTrainings begin
    $('.btn_submit_new.searchTrainings').click(function()
    {
-      var searchTrainingsTitleMsg = document.getElementById("searchTrainingsTitleMsg").value;
+      var searchTrainingsNameSpeaker = document.getElementById("searchTrainingsNameSpeaker").value;
       var searchTrainingsfrom1 = document.getElementsByName("searchTrainingsfrom1")[0].value;
       var searchTrainingsto1 = document.getElementsByName("searchTrainingsto1")[0].value;
       var searchTrainingsfrom2 = document.getElementsByName("searchTrainingsfrom2")[0].value;
@@ -1133,11 +1191,11 @@ $(function()
       var str;                            //送出資料字串  
       
       //ajax
-      str = "cmd=searchTrainings" + "&" + "searchTrainingsTitleMsg=" + encodeURIComponent(searchTrainingsTitleMsg) + "&" + "searchTrainingsfrom1=" + searchTrainingsfrom1 + "&"
+      str = "cmd=searchTrainings" + "&" + "searchTrainingsNameSpeaker=" + encodeURIComponent(searchTrainingsNameSpeaker) + "&" + "searchTrainingsfrom1=" + searchTrainingsfrom1 + "&"
             + "searchTrainingsto1=" + searchTrainingsto1 + "&" + "searchTrainingsfrom2=" + searchTrainingsfrom2 + "&" + "searchTrainingsto2=" + searchTrainingsto2 + "&" + "statusCheckbox=" + statusCheckbox;
       url_str = "Training/Trainings_load.php?";
       
-      //alert(str);
+      // alert(url_str+str);
       $('#loadingWrap').show();
       $.ajax
       ({

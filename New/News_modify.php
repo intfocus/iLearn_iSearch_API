@@ -174,10 +174,10 @@
    }
    else if ($NewId == 0) // Insert
    {
-      $NewTitle = $_GET["NewTitle"];
-      $NewMsg = $_GET["NewMsg"];
-      $OccurTime = "'" . $_GET["OccurTime"] . "'";
-      $DeptList = $_GET["DeptList"];
+      $NewTitle = $_POST["NewTitle"];
+      $NewMsg = $_POST["NewMsg"];
+      $OccurTime = "'" . $_POST["OccurTime"] . "'";
+      $DeptList = $_POST["DeptList"];
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
@@ -195,10 +195,10 @@
    }
    else // Update
    {
-      $NewTitle = $_GET["NewTitle"];
-      $NewMsg = $_GET["NewMsg"];
-      $OccurTime = "'" . $_GET["OccurTime"] . "'";
-      $DeptList = $_GET["DeptList"];
+      $NewTitle = $_POST["NewTitle"];
+      $NewMsg = $_POST["NewMsg"];
+      $OccurTime = "'" . $_POST["OccurTime"] . "'";
+      $DeptList = $_POST["DeptList"];
       if ($OccurTime == "''")
          $OccurTime = "NULL";
       //TODO EditUser=UserId
@@ -289,6 +289,12 @@ function modifyNewsContent(NewId)
       alert("公告主题及公告内容不可为空白");
       return;
    }
+   
+   if (NewTitle.length > 255 || NewMsg.length > 255){
+      alert("公告主题及公告内容长度过长！请缩短后重新保存。");
+      return;
+   }
+   
    if (OccurTime.length > 0)
    {
       if (OccurTime.length != 10)
@@ -306,21 +312,29 @@ function modifyNewsContent(NewId)
    
    str = "cmd=write&NewId=" + NewId + "&NewTitle=" + encodeURIComponent(NewTitle) + 
          "&NewMsg=" + encodeURIComponent(NewMsg) + "&OccurTime=" + encodeURIComponent(OccurTime) + "&DeptList=" + encodeURIComponent(DeptList);
-   url_str = "News_modify.php?";
+   url_str = "News_modify.php?cmd=write&NewId=" + NewId;
 
-   // alert(str);
+   // alert(url_str);
    $.ajax
    ({
       beforeSend: function()
       {
          //alert(str);
       },
-      type: "GET",
-      url: url_str + str,
+      type: "POST",
+      url: url_str,
+      data:{
+         NewTitle:NewTitle,
+         NewMsg:NewMsg,
+         OccurTime:OccurTime,
+         DeptList:DeptList
+      },
       cache: false,
+      dataType: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
+         res = String(res);
          if (res.match(/^-\d+$/))  //failed
          {
             alert(MSG_OPEN_CONTENT_ERROR);
