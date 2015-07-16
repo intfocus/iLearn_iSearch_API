@@ -87,7 +87,8 @@
          
          // get active exam list related to this user
          // for each exam, get exam info, and added IsSubmit info
-         $str_query = "select * from examroll where UserId=$user_id AND Status=".ACTIVE;
+         //$str_query = "select * from examroll where UserId=$user_id AND Status=".ACTIVE;
+         $str_query = "select er.ExamId, er.UserId, er.IsSubmit, er.Status from examroll er left join examscore es on er.ExamId = es.ExamId where er.UserId=$user_id and es.ExamId is null AND Status=".ACTIVE;
          if($result = mysqli_query($link, $str_query)){
             $row_number = mysqli_num_rows($result);
             for ($i=0; $i<$row_number; $i++)
