@@ -63,7 +63,7 @@
       public $type;
       public $level;
    }
-   
+
    class ExamDetail
    {
       /*

@@ -238,7 +238,7 @@ EOD;
 
          $exam_json->exam_name = $ExamName;
          $exam_json->description = $ExamDesc;
-         $exam_json->duration = (int)$Duration*60;
+         $exam_json->duration = (int)$Duration;
          $exam_json->begin = (int)$ExamBeginTime;
          $exam_json->end = (int)$ExamEndTime;
          
@@ -478,7 +478,7 @@ function modifyExamsContent(ExamId)
        ExamToDate.length == 0 && ExamToHour.length == 0 && ExamToMin.length == 0)
    {
       from_timestamp = <? echo strtotime($ExamBegin); ?> * 1000;
-      to_timestamp = <? echo strtotime($ExamEnd); ?> * 1000;
+      to_timestamp = <? echo strtotime($ExamEnd); ?> * 1000; 
    }
    else
    {
@@ -675,7 +675,7 @@ function modifyExamsContent(ExamId)
             <select id="exam_to_hour"></select>
             <select id="exam_to_min"></select>
          </td>
-      </tr>
+      </tr>   
   
    </table>
    

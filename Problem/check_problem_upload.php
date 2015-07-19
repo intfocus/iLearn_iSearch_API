@@ -223,6 +223,12 @@ function read_excel_and_insert_into_database($target_file)
             array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_PROB_SELECTOR_FORMAT));
          }
 
+         // if this sheet is OBU, insert OBU function name to $cur_problem->category_product
+         if ($sheet_title == "OBU")
+         {
+            array_push($cur_problem->category_product, "OBU");
+         } 
+
          foreach ($cur_problem->category_product as $product_name)
          {
             $func_id = get_function_id_from_database($product_name);

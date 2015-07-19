@@ -68,34 +68,16 @@
       return $check_str;
    }
 
-   $exam_name = $_POST["exam_name"];
-   $from_timestamp = $_POST["from_timestamp"];
-   $to_timestamp = $_POST["to_timestamp"];
-   $exam_probs_id = $_POST["exam_probs_id"];
-   $exam_content = $_POST["exam_content"];
-   $exam_desc = $_POST["exam_desc"];
+   $exam_name = "CBU7月月考-CV、ENDO、NES";
+   $from_timestamp = 1436889600000;
+   $to_timestamp = 1437321600000;
+   $exams_probs_id = [287,289,290, 291, 294, 298, 299, 302, 304, 307, 312, 313, 314, 315, 318,319,320,323,326,3, 4, 5, 9,10,11,12,13,14,19,20,21,22,31,32,33,34,38,39,40];
+   $exam_desc = "";
    
-   if (($exam_single_score = check_number($_POST["exam_single_score"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   if (($exam_multi_score = check_number($_POST["exam_multi_score"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   if (($exam_true_false_score = check_number($_POST["exam_true_false_score"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   
-   $type_scores = array(SINGLE_CHOICE_PROB=>$exam_single_score, MULTI_CHOICE_PROB=>$exam_multi_score, TRUE_FALSE_PROB=>$exam_true_false_score);
-   
+   $exam_single_score = 2;
+   $exam_multi_score = 2;
+   $exam_true_false_score =2; 
+   /*
    if (!isset($_POST["exam_functions_id"]))
    {
       $exam_functions_id = array();
@@ -103,56 +85,22 @@
    else
    {
       $exam_functions_id = $_POST["exam_functions_id"];
-   }
+   }*/
  
-   if(($exam_type = check_number($_POST["exam_type"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   
-   if(($exam_answer_type = check_number($_POST["exam_answer_type"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   
-   if(($exam_location = check_number($_POST["exam_location"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   
+   $exam_type = OFFICIAL_EXAM;
+   $exam_answer_type = GIVE_ANSWER_AFTER_SUBMIT;
+   $exam_location = OLINE_TEST;
+
+   /*
    if(($user_id = check_number($_POST["user_id"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
       return;
-   }
-   
-   if(($exam_duration = check_number($_POST["exam_duration"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   
-   if (($exam_allow_times = check_number($_POST["exam_allow_times"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
-   if (($exam_qualify_percent = check_number($_POST["exam_qualify_percent"])) == SYMBOL_ERROR)
-   {
-      sleep(DELAY_SEC);
-      echo SYMBOL_ERROR;
-      return;
-   }
+   }*/
+   $exam_duration = 30;
 
+   
 
    $exam_password = "";
    if ($exam_location == ONSITE_TEST)
@@ -161,35 +109,18 @@
    }
 
    $exam_status = EXAM_INACTIVE;
+   $qualify_percent = 80;
+   $fail_times = 1;
+   $exam_id = 1;
+   $type_scores = array(SINGLE_CHOICE_PROB=>$exam_single_score, MULTI_CHOICE_PROB=>$exam_multi_score, TRUE_FALSE_PROB=>$exam_true_false_score);
+   
    // begin, end
+   /*
    $sql_begin_datetime = timestamp_to_datetime($from_timestamp);
    $sql_end_datetime = timestamp_to_datetime($to_timestamp);
    // get all function name
    $functions_name = array();
-   
-   // exam rule settings
-   $select_problems = array();
-   if (isset($_POST["select_problems"]))
-   {
-      $select_problems = $_POST["select_problems"];
-      //print_r($select_problems);
-   }
-
-   $problem_sets = array();
-   if (isset($_POST["problem_sets"]))
-   {
-      $problem_sets = $_POST["problem_sets"];
-      //print_r($problem_sets);
-   }
-   else
-   {
-      sleep(DELAY_SEC);
-      //echo SYMBOL_ERROR;
-      echo -100;
-      return;
-   }
-   $problem_sets = json_decode($problem_sets);
-
+   */
    //link
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
    if (!$link)  //connect to server failure    
@@ -198,8 +129,8 @@
       echo DB_ERROR;       
       return;
    }   
-
-   /*
+   
+     /* 
    foreach ($exam_functions_id as $function_id)
    {
       $str_query = "select * from functions where FunctionId=$function_id";
@@ -218,7 +149,7 @@
          return;
       }   
    }
-   
+
    // ExamContent = exam_content + exam_selected_functions
    // yes_true,single,multi,easy,mid,hard, function name ...
    $exam_content = array_merge($exam_content, $functions_name);
@@ -235,15 +166,15 @@
       {
          $exam_content_str = $exam_content_str.",".$exam_content[$i];
       }
-   }*/
-   $exam_content_str = "";
+   }
+
    $str_query = <<<EOD
                 INSERT INTO exams (ExamName,ExamType,ExamLocation,ExamBegin,ExamEnd,ExamAnsType,
                   ExamPassword,Status,ExamDesc,ExamContent,Duration,CreatedUser,
-                  CreatedTime,EditUser,EditTime, AllowTime, QualifyPercent) VALUES
+                  CreatedTime,EditUser,EditTime) VALUES
                 ('$exam_name',$exam_type,$exam_location,'$sql_begin_datetime','$sql_end_datetime',$exam_answer_type,
                  '$exam_password',$exam_status,'$exam_desc','$exam_content_str',$exam_duration,$user_id,
-                 now(),$user_id,now(),$exam_allow_times, $exam_qualify_percent)
+                 now(),$user_id,now())
 EOD;
 
    if(!($result = mysqli_query($link, $str_query)))
@@ -275,7 +206,7 @@ EOD;
       return;
    }
  
-
+*/
    // construct the problems json array
    /*
      {
@@ -289,17 +220,18 @@ EOD;
       }
    */
    $problems = array();
-   
-   foreach ($exam_probs_id as $prob_id)
+   print_r(count($exams_probs_id));
+   foreach ($exams_probs_id as $prob_id)
    {
       $str_query = "select * from problems where ProblemId=$prob_id";
+      print_r($str_query);
       if($result = mysqli_query($link, $str_query))
       {
          $row = mysqli_fetch_assoc($result);
+         print_r($row);
       }
       else
-      {
-         clear_exam("exams", $exam_id);
+      {  print_r("qqq");
          if($link){
             mysqli_close($link);
          }
@@ -347,7 +279,8 @@ EOD;
       }
       
       $answers = parse_answer($row["ProblemAnswer"]);
-      $score = $type_scores[$row["ProblemLevel"]];
+      //$score = $type_scores[$row["ProblemLevel"]];
+      $score=2;
       array_push($problems, array(
                               "id"=> (int)$row["ProblemId"],
                               "description"=> $row["ProblemDesc"],
@@ -359,13 +292,12 @@ EOD;
                               "memo"=> $row["ProblemMemo"],
                            )
       );
-
+      
+      
+      /*
       // insert into ExamDetail,  insert score
       if (insert_into_examdetail($exam_id, $prob_id, $score) != SUCCESS)
       {
-         clear_exam("exams", $exam_id);
-         clear_exam("examdetail", $exam_id);
-         
          if($link){
             mysqli_close($link);
          }
@@ -373,7 +305,7 @@ EOD;
          //echo -__LINE__;
          echo ERR_INSERT_DATABASE;
          return;
-      }
+      }*/
    }
 
    // save to json file, file_name id.json
@@ -391,22 +323,17 @@ EOD;
          "description" => $exam_desc,
          "location" => (int)$exam_location,
          "password" => $exam_password,
-         "allow_times" => (int)$exam_allow_times,
-         "qualify_percent" => (int)$exam_qualify_percent, 
          "questions" => $problems,
+         "qualify_percent" => (int)$qualify_percent,
+         "fail_times" => (int)$fail_times
       )
    );
 
    if (!file_put_contents($json_file_name, $exam_json))
    {
-      clear_exam("exams", $exam_id);
-      clear_exam("examdetail", $exam_id);
       echo ERR_SAVE_JSON_FILE;
       return;
    }
-
-   insert_select_problems($exam_id, $select_problems);
-   insert_problem_sets($exam_id, $problem_sets);             
 
    echo 0;
    return;
@@ -455,89 +382,4 @@ EOD;
       }
       return true;  
    }
-
-   function insert_select_problems($exam_id, $select_problems)
-   {
-
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-      if (!$link)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         return DB_ERROR;
-      }
-
-      foreach ($select_problems as $problem_id)
-      {
-         $str_query = "insert  into selectproblem (ExamId, SelectProblem) VALUES ($exam_id, $problem_id)";
-         if(!mysqli_query($link, $str_query))
-         {
-            $ret = ERR_INSERT_DATABASE;
-         }
-      }
-      if($link){
-         mysqli_close($link);
-      }
-      return true;  
-   }
-
-   function insert_problem_sets($exam_id, $problem_sets)
-   {
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-      if (!$link)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         return DB_ERROR;
-      }
-
-      foreach ($problem_sets as $problem_set)
-      {
-         // insert problemrule
-         $str_query = "insert into problemrule (RuleName) VALUES (NULL)";
-         if(!mysqli_query($link, $str_query))
-         {
-            $ret = ERR_INSERT_DATABASE;
-         }
-         $rule_id = mysqli_insert_id($link);
-
-         // insert requirefunction
-          // insert problemrule
-         $str_query = "insert into requirefunction (RuleId, RequireFunction) VALUES ($rule_id, $problem_set->require_function_id)";
-         if(!mysqli_query($link, $str_query))
-         {
-            $ret = ERR_INSERT_DATABASE;
-         }
-         
-         // insert productfunction
-         foreach ($problem_set->product_functions_id as $product_function_id)
-         {
-            $str_query = "insert into productfunction (RuleId, ProductFunction) VALUES ($rule_id, $product_function_id)";
-            if(!mysqli_query($link, $str_query))
-            {
-               $ret = ERR_INSERT_DATABASE;
-            }
-         }
-
-         // insert adapation
-         foreach ($problem_set->adapation_functions_id as $adapation_function_id)
-         {
-            $str_query = "insert into adapationfunction (RuleId, AdapationFunction) VALUES ($rule_id, $adapation_function_id)";
-            if(!mysqli_query($link, $str_query))
-            {
-               $ret = ERR_INSERT_DATABASE;
-            }
-         }
-
-         // inser examrule
-         $str_query = "insert into examrule (ExamId, RuleId) VALUES ($exam_id, $rule_id)";
-         if(!mysqli_query($link, $str_query))
-         {
-            $ret = ERR_INSERT_DATABASE;
-         }
-
-      }
-
-
-   }
-
-
 ?>
