@@ -2,27 +2,16 @@
    require_once("../Problem/Problems_utility.php");
    require_once("../Exam/Exams_utility.php");
 
-   define("FILE_NAME", "../DB.conf");
-   define("DELAY_SEC", 3);
-   define("FILE_ERROR", -2);
-   
-   if (file_exists(FILE_NAME))
-   {
-      include(FILE_NAME);
-   }
-   else
-   {
-      sleep(DELAY_SEC);
-      $resultStr = FILE_ERROR . " " . __LINE__;
-   }
-   
+
+   define("SLEEP_SEC", 3);
+
    try{
       // TODO: 从 Session 里面拿到 login_name + user_id
       session_start();
       if (isset($_SESSION["GUID"]) == "" || isset($_SESSION["username"]) == "")
       {
          session_write_close();
-         sleep(DELAY_SEC);
+         sleep(SLEEP_SEC);
          header("Location:". $web_path . "main.php?cmd=err");
          exit();
       }
@@ -30,7 +19,7 @@
    catch(exception $ex)
    {
       session_write_close();
-      sleep(DELAY_SEC);
+      sleep(SLEEP_SEC);
       header("Location:". $web_path . "main.php?cmd=err");
       exit();
    }
@@ -42,49 +31,22 @@
    $current_func_name = "iSearch";
    session_write_close();
 
-   //query          
-   $link;
-   $db_host;
-   $admin_account;
-   $admin_password;
-   $connect_db;
-   $str_query;
-   $str_query1;
-   $result;                 //query result
-   $result1;
-   $row;                    //result data array
-   $row1;
-   $row_number;
-   $refresh_str;
 
    header('Content-Type:text/html;charset=utf-8');
    
    //define
-   define("DB_HOST", $db_host);
-   define("ADMIN_ACCOUNT", $admin_account);
-   define("ADMIN_PASSWORD", $admin_password);
-   define("CONNECT_DB", $connect_db);
    define("TIME_ZONE", "Asia/Shanghai");
    define("ILLEGAL_CHAR", "'-;<>");                         //illegal char
    define("UPLOAD_FILE_NAME","upload.pdf");
 
    //return value
    //define("SUCCESS", 0);
-   define("DB_ERROR", -1);
    define("SYMBOL_ERROR", -3);
    define("SYMBOL_ERROR_CMD", -4);
    define("MAPPING_ERROR", -5);
    
    //timezone
    date_default_timezone_set(TIME_ZONE);
-   
-   //----- Connect to MySql -----
-   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-   if (!$link)  //connect to server failure   
-   {   
-      sleep(DELAY_SEC);
-      $resultStr =  "文档上传失败 - " . -__LINE__;
-   }
  
    //----- Check number -----
    function check_number($check_str)
@@ -232,7 +194,29 @@ function get_level_str_from_id(level_id)
    }
 }
 
+var select_problems = new Array();
+var problem_sets = new Array();
+
+
+var estimated_problem_count = 0;
+
 function loaded() {
+
+   function get_num_selected_problems()
+   {
+      total_problems_count = 0;
+      // all problem set num count
+      $(".problem_type_count").each(function(){
+         total_problems_count += Number($(this).val());
+      });
+
+      // selected_problems + rule problems
+      total_problems_count += estimated_problem_count;
+      //$("#num_selected_problems").html(total_problems_count);
+      $("#num_selected_problems").html(total_problems_count);
+   }
+
+
    functions_id = [];
  
    for (i=0; i<=23; i++)
@@ -250,19 +234,24 @@ function loaded() {
  
    for (i=0; i<=50; i=i+5)
    {
-      dom = "<option value="+ i +">" + i + "</option>";
-      $(dom).appendTo("#NewExamEasyLevel");
-      $(dom).appendTo("#NewExamHardLevel");
+      dom = "<option value="+ i + ">" + i + "</option>";
+      $(dom).appendTo(".NewExamEasyLevel");
+      $(dom).appendTo(".NewExamHardLevel");
    }
 
-   /*
+
+   for (i=0; i<=100; i=i+5)
+   {
+      dom = "<option value=" + i + ">" + i + "</option>";
+      $(dom).appendTo("#exam_qualify_percent");
+   }
+
    // when click previous button, hide #problem_info, $("#status_template").show();
    $("a[href='#previous']").click(function(){
       //$("#err_no_problem").hide();
       //$(".problem_info").hide();
       //$("#status_template").hide();
    });
-   */
    $(".problem_type_count").click(function(){
       if ($(this).val() == 0)
       {
@@ -270,11 +259,16 @@ function loaded() {
       }
    });
 
+   $(".problem_type_count").change(function(){
+      get_num_selected_problems();
+   });
+
    $(".problem_level").change(function(){
-      mid_level = 100 - $("#NewExamEasyLevel").val() - $("#NewExamHardLevel").val();
-      $("#problem_mid_level").val(mid_level);
-      $("#problem_mid_level").html(mid_level);
       
+      index = $(this).attr("data-index");
+      mid_level = 100 - $(".NewExamEasyLevel[data-index=" + index + "]").val() - $(".NewExamHardLevel[data-index=" + index + "]").val();
+      $(".NewExamMidLevel[data-index=" + index + "]").find(".problem_mid_level").val(mid_level);
+      $(".NewExamMidLevel[data-index=" + index + "]").find(".problem_mid_level").html(mid_level);
    });
    
    $("#exam_type").change(function(){
@@ -297,42 +291,79 @@ function loaded() {
    $("#genProbsButton").click(function(){
       $("#genProbsButton").attr("disabled", true);
       
-      functions_id = [];
-      
-      true_false_amount = $("#NewExamTrueFalseProbType").val();
-      single_selection_amount = $("#NewExamSingleSelProbType").val();
-      multi_selection_amount =$("#NewExamMutiSelProbType").val();
-            
-      if (!is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount))
+      problem_sets = [];
+      // get each problmeset_rule
+      for (i=0; i <= cur_problem_set_index; i++)
       {
-         $("#genProbsButton").removeAttr('disabled');
-         $("#err_no_problem").show();
-         $(".exam_info").hide();
-         $(".problem_info").hide();
-         $("#status_template").hide();
-         return;
-      }
+         // get each problem set attribute in DOM
+         cur_problem_set = $("#problem_set_"+i);
+         product_functions_id = [];
+         adapation_functions_id = [];
 
-      easy_level_percent = $("#NewExamEasyLevel").val();
-      mid_level_percent = $("#NewExamMidLevel").val();
-      hard_level_percent = $("#NewExamHardLevel").val();
+         is_obu_require = cur_problems_set.find(".ps_is_obu_require").val()
 
-      if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
-      {
-         $("#genProbsButton").removeAttr('disabled');
-         return;
-      }
+         require_function_id = cur_problem_set.find(".ps_required_function").val();
+         j = 0;
+         cur_problem_set.find(".ps_product_functions:checked").each(function(){
+            product_functions_id[j++] = $(this).val();
+         });
+         j = 0;
+         cur_problem_set.find(".ps_adapation_functions:checked").each(function(){
+            adapation_functions_id[j++] = $(this).val();
+         });
 
-      i = 0;
-      $(".functions:checked").each(function(){
-         functions_id[i++] = $(this).val();
-      });
-      // how to check valid functions id?
-      if (functions_id.length == 0)
-      {
-         alert("至少需选一个分类");
-         $("#genProbsButton").removeAttr('disabled');
-         return;
+         true_false_amount = cur_problem_set.find(".NewExamTrueFalseProbType").val();
+         single_selection_amount = cur_problem_set.find(".NewExamSingleSelProbType").val();
+         multi_selection_amount = cur_problem_set.find(".NewExamMutiSelProbType").val();
+
+         if (true_false_amount == "");
+         {
+            true_false_amount = "0";
+         }
+         if (single_selection_amount == "");
+         {
+            single_selection_amount = "0";
+         }
+         if (multi_selection_amount == "");
+         {
+            multi_selection_amount = "0";
+         }
+
+
+         if (!is_valid_prob_type_amount(parseInt(true_false_amount,10), parseInt(single_selection_amount,10), parseInt(multi_selection_amount,10)))
+         {
+            $("#genProbsButton").removeAttr('disabled');
+            $("#err_no_problem").show();
+            $(".exam_info").hide();
+            $(".problem_info").hide();
+            $("#status_template").hide();
+            return;
+         }
+
+         easy_level_percent = cur_problem_set.find(".NewExamEasyLevel").val();
+         mid_level_percent = cur_problem_set.find(".NewExamMidLevel").val();
+         hard_level_percent = cur_problem_set.find(".NewExamHardLevel").val();
+
+         if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
+         {
+            $("#genProbsButton").removeAttr('disabled');
+            return;
+         }
+
+         cur_prob_json = {};
+         cur_prob_json["is_obu_require"] = is_obu_require;
+         cur_prob_json["require_function_id"] = require_function_id;
+         cur_prob_json["product_functions_id"] = product_functions_id;
+         cur_prob_json["adapation_functions_id"] = adapation_functions_id;
+         cur_prob_json["true_false_amount"] = true_false_amount;
+         cur_prob_json["single_selection_amount"] = single_selection_amount;
+         cur_prob_json["multi_selection_amount"] = multi_selection_amount;
+         cur_prob_json["easy_level_percent"] = easy_level_percent;
+         cur_prob_json["mid_level_percent"] = mid_level_percent;
+         cur_prob_json["hard_level_percent"] = hard_level_percent;
+
+
+         problem_sets.push(cur_prob_json);
       }
 
       $.ajax({
@@ -344,21 +375,16 @@ function loaded() {
          url: "gen_problems.php",
          cache: false,
          data: {
-                "true_false_amount": true_false_amount, 
-                "single_selection_amount": single_selection_amount,
-                "multi_selection_amount": multi_selection_amount,
-                "easy_level_percent": easy_level_percent,
-                "mid_level_percent": mid_level_percent,
-                "hard_level_percent": hard_level_percent,
-                "functions_id": functions_id,
-                },
+            "select_problems": select_problems,
+            "problem_sets": JSON.stringify(problem_sets),
+         },
          dataType: "json",
          success: function(res)
          {  
+            //alert(res);
             if (res.hasOwnProperty("code"))
             {
                if (res.code != <? echo SUCCESS; ?>) {
-                  alert("Error");
                   alert(res.message);
                   $("#err_no_problem").show();
                   $(".exam_info").hide();
@@ -430,6 +456,8 @@ function loaded() {
       exam_selected_functions = functions_id;
       exam_probs_id = [];
       exam_content = [$("#content0").html(), $("#content1").html(), $("#content2").html(), $("#content3").html(), $("#content4").html(), $("#content5").html()];
+      exam_allow_times = $("#exam_allow_time").val();
+      exam_qualify_percent = $("#exam_qualify_percent").val()
       from_timestamp = 0;
       to_timestamp = 0;
 
@@ -476,6 +504,22 @@ function loaded() {
          return;
       }
 
+      if (exam_allow_times.length == 0)
+      {
+         exam_allow_times = 1;
+      }
+      else  if (isNaN(exam_allow_times))
+      {
+         alert("考试次数必須為大於等於 1 的正整數");
+         return;
+      }
+
+      if (exam_qualify_percent.length == 0)
+      {
+         alert("及格百分比不能为空");
+         return;
+      }
+
       //calculate from time stamp, and end time stamp
       date_timestamp = new Date(exam_from_date).getTime();
       hour_min_timestamp = (60 * 60 * exam_from_hour + 60 * exam_from_min) * 1000;
@@ -491,18 +535,12 @@ function loaded() {
          return;
       }
 
-
       // collect all problems id
       $(".problem_id").each(function(){
          exam_probs_id.push($(this).html());
       });
-
-      if (exam_selected_functions.length == 0)
-      {
-         alert("至少需选一个分类");
-         return;
-      }
       
+      //alert(JSON.stringify(problem_sets));
       $(".saveProbsButton").attr("disabled", true);
       $.ajax({
          type: "POST",
@@ -523,6 +561,10 @@ function loaded() {
                   "exam_content": exam_content,
                   "exam_functions_id": exam_selected_functions,
                   "exam_location": exam_location,
+                  "exam_allow_times": exam_allow_times,
+                  "exam_qualify_percent": exam_qualify_percent,
+                  "select_problems":select_problems,
+                  "problem_sets": JSON.stringify(problem_sets),
                   "user_id": user_id
                 },
          success: function(res) {
@@ -564,6 +606,123 @@ function loaded() {
          }         
       });
    });
+
+   $('.btn_submit_new.searchExamProbs').click(function()
+   {
+      i = 0;
+      product_functions_id = [];
+      adapation_functions_id = [];
+
+      is_obu_require = $("#is_obu_or_not").val();
+
+      require_function_id = $("#select_specific_problem_set").val();
+      $(".product_functions:checked").each(function(){
+         product_functions_id[i++] = $(this).val();
+      });
+      $(".adapation_functions:checked").each(function(){
+         adapation_functions_id[i++] = $(this).val();
+      });
+
+      $.ajax
+      ({
+         type: 'GET',
+         url: "gen_specific_problems.php",
+         data: {
+            "is_obu_require": is_obu_require,
+            "require_function_id": require_function_id,
+            "product_functions_id": product_functions_id,
+            "adapation_functions_id": adapation_functions_id,
+         },
+         dataType: "json",
+         cache: false,
+         beforeSend: function()
+         {
+            $(".select_tmp_problem").remove();
+            select_problems = [];
+         },
+         success: function(res)
+         {
+            if (res.hasOwnProperty("problems"))
+            {
+               sequence = 1;
+               $.each(res.problems, function(key, val){
+                  type_str = get_type_str_from_id(val.type);
+                  level_str = get_level_str_from_id(val.level);
+                  val_string = "<td class='select_problem_id'><input class='select_problems_checkbox' type='checkbox' value=" + val.id + "></td><td>" + sequence + "</td><td>" + type_str + "</td><td>" + level_str + "</td><td>" + val.desc + "</td>";
+                  $("#select_problem_template").clone().html(val_string).insertBefore("#select_problem_template").removeAttr("id").addClass("select_tmp_problem").show();
+                  sequence++;
+               });
+               $(".select_problems_checkbox").on("click", function(){
+                  select_problems = [];
+                  i = 0;
+                  $(".select_problems_checkbox:checked").each(function(){
+                     select_problems[i++] = $(this).val();
+                  });
+                  estimated_problem_count = select_problems.length;
+                  get_num_selected_problems();
+               });
+            }
+            else
+            {
+               if (res == <? echo ERR_NOT_ENOUGH_PROBLEM;?>)
+               {
+                  alert("查询无结果");
+               }
+               else
+               {
+                  alert("查询失败");
+               }
+            }
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+
+
+   cur_problem_set_index = 0
+   $(".btn_submit_new.next_problem_set").click(function(){
+
+      // hide cur_problem_set
+      $(".cur_problem_set").removeClass("cur_problem_set").hide();
+      // add one problem set button
+      new_problem_set_btn_val = "probem_set_btn_" + cur_problem_set_index;
+      $("#problem_set_btn_template").clone().insertBefore("#problem_set_btn_template").attr("id", new_problem_set_btn_val).show();
+ 
+      ui_cur_problem_set_index = cur_problem_set_index + 1;
+      $("#"+new_problem_set_btn_val).find("input").val("题目规则"+ui_cur_problem_set_index);
+      cur_problem_set_index++;
+
+      // clone problem_set and 
+      problem_set_id = "problem_set_" + cur_problem_set_index;
+      $("#problem_set_template").clone().insertBefore("#problem_set_template").attr("id", problem_set_id).addClass("cur_problem_set").show();
+      cur_problem_set = $("#"+problem_set_id);
+      easy_level_percent = cur_problem_set.find(".NewExamEasyLevel").attr("data-index", cur_problem_set_index);
+      mid_level_percent = cur_problem_set.find(".NewExamMidLevel").attr("data-index", cur_problem_set_index);
+      hard_level_percent = cur_problem_set.find(".NewExamHardLevel").attr("data-index", cur_problem_set_index);
+      // bind problem level change for new dom
+      $(".problem_level").change(function(){
+      
+         index = $(this).attr("data-index");
+         mid_level = 100 - $(".NewExamEasyLevel[data-index=" + index + "]").val() - $(".NewExamHardLevel[data-index=" + index + "]").val();
+         $(".NewExamMidLevel[data-index=" + index + "]").find(".problem_mid_level").val(mid_level);
+         $(".NewExamMidLevel[data-index=" + index + "]").find(".problem_mid_level").html(mid_level);
+      });
+
+      $(".problem_type_count").click(function(){
+         if ($(this).val() == 0)
+         {
+            $(this).val("");
+         }
+      });
+
+      $(".problem_type_count").change(function(){
+         get_num_selected_problems();
+      });
+   });
+   // click problem set button, show the problem setting
 }
 
 </Script>
@@ -573,7 +732,7 @@ function loaded() {
 
 .wizard > .content
 {
-    min-height: 470px;
+   min-height: 1000px;
 	background: #fafafa;
 }
 </style>
@@ -644,158 +803,15 @@ function loaded() {
                                     <div>
                                         <h3>考试类别-至少选一项</h3>
                                         <section>
-                                            <div class="form-group"  style="height:420px;">
+                                 <div class="form-group"  style="height:420px;">
                                                 <div class="col-lg-12">
-									
-
-
-									
-<?php
-
-         // Function Other
-         $func_type = FUNCTION_OTHER;
-         $str_query = "Select * from functions where FunctionType=$func_type";
-         if($result = mysqli_query($link, $str_query))
-         { 
-            $row_number = mysqli_num_rows($result);
-            if ($row_number > 0)
-            {
-               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
- 
-               $i = 0;
-               while ($i < $row_number)
-               {
-                  $row = mysqli_fetch_assoc($result);
-                  echo "<label class='cr-styled'><Input type=checkbox class='functions' value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
-                  $i++;
-               }
-               echo "</div>";
-            }
-         }
-
-         // Function Product
-         $func_type = FUNCTION_PRODUCT;
-         $str_query = "Select * from functions where FunctionType=$func_type";
-         
-         if($result = mysqli_query($link, $str_query))
-         { 
-            $row_number = mysqli_num_rows($result);
-            if ($row_number > 0)
-            {
-               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
-
-               $i = 0;
-               while ($i < $row_number)
-               {
-                  $row = mysqli_fetch_assoc($result);
-                  echo "<label class='cr-styled'><Input type=checkbox class=functions value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
-                  $i++;
-               }
-               echo "</div>";
-            }
-         }
-          // Function Adaptation
-         $func_type = FUNCTION_ADAPTATION;
-         $str_query = "Select * from functions where FunctionType=$func_type";
-         
-         if($result = mysqli_query($link, $str_query))
-         { 
-            $row_number = mysqli_num_rows($result);
-            if ($row_number > 0)
-            {
-               echo "<div class='form-group'><label for=''>".get_func_type_name($func_type)."</label> <br/>";
- 
-               $i = 0;
-               while ($i < $row_number)
-               {
-                  $row = mysqli_fetch_assoc($result);
-                  echo "<label class='cr-styled'><Input type=checkbox class=functions value=\"".$row['FunctionId']."\"><i class='fa'></i> ".$row['FunctionName'].'</label>';
-                  $i++;
-               }
-               echo "</div>";
-            }
-         }
- 
-      ?>
-	  
-   
-											
+									                        <? include("select_questions_by_yourself.php");?>
                                                 </div>
                                             </div>
                                         </section>
                                         <h3>题型选择</h3>
                                         <section>
-												<div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="NewExamSingleSelProbType" class="control-label">单选题数量</label>
-											<Input type=text class="problem_type_count form-control" id=NewExamSingleSelProbType value=0>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamMutiSelProbType" class="control-label">多选题数量</label>
-											<Input type=text class="problem_type_count form-control" id=NewExamMutiSelProbType value=0>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamTrueFalseProbType" class="control-label">是非题数量</label>
-											<Input type=text class="problem_type_count form-control" id=NewExamTrueFalseProbType value=0>
-                                    </div>
-												</div>
-
-												<div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="NewExamSingleSelScore" class="control-label">单选题每题分值</label>
-										<select class="form-control" id=NewExamSingleSelScore>
-											<option selected value=1>1</option>
-											<option value=2>2</option>
-											<option value=3>3</option>
-											<option value=4>4</option>
-											<option value=5>5</option>
-										</select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamMutiSelScore" class="control-label">多选题每题分值</label>
-										<select class="form-control" id=NewExamMutiSelScore>
-											<option selected value=1>1</option>
-											<option value=2>2</option>
-											<option value=3>3</option>
-											<option value=4>4</option>
-											<option value=5>5</option>
-										</select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamTrueFalseScore" class="control-label">是非题每题分值</label>
-										<select class="form-control" id=NewExamTrueFalseScore>
-											<option selected value=1>1</option>
-											<option value=2>2</option>
-											<option value=3>3</option>
-											<option value=4>4</option>
-											<option value=5>5</option>
-										</select>
-                                    </div>
-												</div>
-												
-												
-												<div class="col-md-4">
-													<div class="panel panel-default">
-														<div class="panel-heading"><h3 class="panel-title">难易配比</h3></div>
-														<div class="panel-body">
-                                    <div class="form-group">
-                                        <label for="NewExamEasyLevel">易 %</label>
-										<select class="problem_level form-control" id=NewExamEasyLevel></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamMidLevel">中 %</label>
-										<select class="problem_level form-control" id=NewExamMidLevel disabled>
-											<option id="problem_mid_level" selected value=100>100</option>
-										</select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="NewExamHardLevel">难 %</label>
-										<select class="problem_level form-control" id=NewExamHardLevel></select>
-                                    </div>
-
-														</div>
-													</div>
-                                            </div>
+                                          <? include("Exam_problem_set.php")?>
                                         </section>
                                         <h3>产生考题</h3>
                                         <section>
@@ -862,6 +878,14 @@ function loaded() {
                                     <div class="form-group">
 										<input type="text" id="exam_duration_time" type="text" class="from form-control" placeholder="考试长度 (分钟)">
                                     </div>
+                                    <div class="form-group">
+                              <input type="text" id="exam_allow_time" type="text" class="from form-control" placeholder="考试次数">
+                                    </div>
+                                    及格百分比
+                                    <div class="form-group">
+                                       <select id="exam_qualify_percent" class="from form-control">
+                                    </div>
+                                    <br>
                                     <div class="form-group">
 										<textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>
                                     </div>
@@ -931,6 +955,36 @@ function loaded() {
 										</div>
 									
                                     </form>
+                              <div class="form-group">
+                                 单选题分数
+                                 <select id="NewExamSingleSelScore"  class="to form-control" readonly="true">
+                                    <option value=1 selected>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 多选题分数
+                                 <select id="NewExamMutiSelScore"  class="to form-control" readonly="true">
+                                    <option value=1 selected>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                 </select>
+                              </div>
+                              <div class="form-group">
+                                 是非题分数
+                                 <select id="NewExamTrueFalseScore"  class="to form-control" readonly="true">
+                                    <option value=1 selected>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                 </select>
+                              </div>
 									</div>
 									</div>
 														</div>	
@@ -965,7 +1019,9 @@ function loaded() {
                             </div> 
                             <div class="panel-body"> 
 							
-
+   <div>
+      已选题数:<b id="num_selected_problems"></b>
+   </div>
    <div class="problem_info" style="display:none">
       <table class="table">
          <th>编号</th><th>题型</th><th>难易</th><th>描述</th>

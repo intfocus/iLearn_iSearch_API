@@ -13,7 +13,7 @@
 
 }
 
-.problem_info th {
+.problem_info, .select_problem_info th {
    background-color: #DCDDDD;
    color: #595757;
    font-weight: bold;
