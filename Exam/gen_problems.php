@@ -248,7 +248,7 @@
 
       // get obu require id
       $func_type = FUNCTION_OTHER;
-      $str_query = "Select * from functions where FunctionType=$func_type AND FunctionName='OBU'";
+      $str_query = "Select * from functions where FunctionType=$func_type AND FunctionName='OBL'";
       if($result = mysqli_query($link, $str_query))
       {
          $row_number = mysqli_num_rows($result);
