@@ -125,11 +125,11 @@
                </td>
             </tr>
             <tr>
-               <th>OBU</th>
+               <th>OBL</th>
             </tr>
             <tr>
                <td>
-                  <select class="ps_is_obu_or_not">
+                  <select class="ps_is_obu_require">
                      <option value=1>是</option>
                      <option value=0 selected>否</option>
                   </select>
@@ -274,11 +274,11 @@
                </td>
             </tr>
             <tr>
-              <th>OBU</th>
+              <th>OBL</th>
             </tr>
             <tr>
                <td>
-                  <select class="ps_is_obu_or_not">
+                  <select class="ps_is_obu_require">
                      <option value=1>是</option>
                      <option value=0 selected>否</option>
                   </select>

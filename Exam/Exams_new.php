@@ -300,7 +300,7 @@ function loaded() {
          product_functions_id = [];
          adapation_functions_id = [];
 
-         is_obu_require = cur_problems_set.find(".ps_is_obu_require").val()
+         is_obu_require = cur_problem_set.find(".ps_is_obu_require").val();
 
          require_function_id = cur_problem_set.find(".ps_required_function").val();
          j = 0;
@@ -315,7 +315,7 @@ function loaded() {
          true_false_amount = cur_problem_set.find(".NewExamTrueFalseProbType").val();
          single_selection_amount = cur_problem_set.find(".NewExamSingleSelProbType").val();
          multi_selection_amount = cur_problem_set.find(".NewExamMutiSelProbType").val();
-
+         /*
          if (true_false_amount == "");
          {
             true_false_amount = "0";
@@ -327,7 +327,7 @@ function loaded() {
          if (multi_selection_amount == "");
          {
             multi_selection_amount = "0";
-         }
+         }*/
 
 
          if (!is_valid_prob_type_amount(parseInt(true_false_amount,10), parseInt(single_selection_amount,10), parseInt(multi_selection_amount,10)))
@@ -609,26 +609,21 @@ function loaded() {
 
    $('.btn_submit_new.searchExamProbs').click(function()
    {
-      i = 0;
-      j = 0;
+      
       product_functions_id = [];
       adapation_functions_id = [];
 
       is_obu_require = $("#is_obu_or_not").val();
 
+      i = 0;
       require_function_id = $("#select_specific_problem_set").val();
       $(".product_functions:checked").each(function(){
          product_functions_id[i++] = $(this).val();
       });
+      i = 0;
       $(".adapation_functions:checked").each(function(){
          adapation_functions_id[i++] = $(this).val();
       });
-      
-      // alert("is_obu_require: " + is_obu_require + 
-      // " \n require_function_id: " + require_function_id + 
-      // " \n product_functions_id: " + product_functions_id + 
-      // " \n adapation_functions_id: " + adapation_functions_id);
-      // return;
 
       $.ajax
       ({
@@ -1027,7 +1022,7 @@ function loaded() {
                             <div class="panel-body"> 
 							
    <div>
-      已选题数:<b id="num_selected_problems"></b>
+      欲选题数:<b id="num_selected_problems"></b>
    </div>
    <div class="problem_info" style="display:none">
       <table class="table">

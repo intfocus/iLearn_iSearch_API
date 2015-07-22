@@ -157,6 +157,7 @@ function read_excel_and_insert_into_database($target_file)
    {
       $sheet = $excel->getSheet($cur_sheet);
       $sheet_title = $sheet->getTitle();
+      print_r($sheet_title);
       if ($sheet_title == "上传题库说明")
       {
          continue;
@@ -223,10 +224,11 @@ function read_excel_and_insert_into_database($target_file)
             array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_PROB_SELECTOR_FORMAT));
          }
 
-         // if this sheet is OBU, insert OBU function name to $cur_problem->category_product
-         if ($sheet_title == "OBU")
+         // if this sheet is OBL, insert OBL function name to $cur_problem->category_product
+         if ($sheet_title == "OBL")
          {
-            array_push($cur_problem->category_product, "OBU");
+            print_r("OBL");
+            array_push($cur_problem->category_product, "OBL");
          } 
 
          foreach ($cur_problem->category_product as $product_name)
