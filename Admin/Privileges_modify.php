@@ -419,18 +419,32 @@ function modifyPrivilegesContent(UserId)
          <td>
 
       <!-- 显示所有的 function_name with functionId 以及目前这个 user 有哪些权限 开始-->
+      <table>
+         <tr>
 <?php      
       $str_query1 = "Select * from functions where FunctionType=0 order by Rank" ;
+      $i = 1;
       if ($result = mysqli_query($link, $str_query1))
       {
          while ($row = mysqli_fetch_assoc($result))
          {
             $func_name = $row["FunctionName"];
             $func_id = $row["FunctionId"];
-            echo "<Input type=checkbox name='privilegesList' value='$func_id'>$func_name ";
+            echo "<td><Input type=checkbox name='privilegesList' value='$func_id'>$func_name </td>";
+            if($i == 8)
+            {
+               echo "</tr><tr>";
+               $i = 1;
+            }
+            else 
+            {
+                $i = $i + 1;
+            }
          }
       }
 ?>
+         </tr>
+      </table>
       <!-- 显示所有的 function_name with functionId 以及目前这个 user 有哪些权限 结束-->
          </td>
       </tr>
