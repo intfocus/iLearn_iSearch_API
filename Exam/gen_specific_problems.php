@@ -131,7 +131,8 @@
       sleep(DELAY_SEC);
       echo DB_ERROR;       
       return;
-   }   
+   }
+   
  
    // get obu require id
    $func_type = FUNCTION_OTHER;

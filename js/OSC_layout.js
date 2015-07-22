@@ -251,9 +251,26 @@ $(function() {
       }
    });
    
+   var dates12 = $( "#from12, #to12" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from12" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date12 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates12.not( this ).datepicker( "option", option, date12 );
+      }
+   });
+   
 
  var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
-     minDate: new Date(),
+     maxDate: new Date(),
      defaultDate: "+1w",
      changeMonth: true,
      changeYear: true,

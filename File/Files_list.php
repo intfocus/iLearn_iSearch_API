@@ -1,4 +1,17 @@
 <script type="text/javascript">
+function expandSearchFilesContentFunc()
+{
+   if ($('span.FileName, span.FileDesc').hasClass('fixWidth'))
+   {
+      $('span.FileName, span.FileDesc').removeClass('fixWidth');
+      $('.NewsexpandSR').text('隐藏过长内容');
+   }
+   else
+   {
+      $('span.FileName, span.FileDesc').addClass('fixWidth');
+      $('.NewsexpandSR').text('显示过长内容');
+   }
+}
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchFiles(FileId, Status)
 {
@@ -43,7 +56,7 @@ function actionSearchFiles(FileId, Status)
 //***Step10 列表中动作删除Ajax呼叫
 function deleteSearchFiles(FileId)
 {
-   ret = confirm("确定要删除此部门吗?");
+   ret = confirm("确定要删除此文档吗?");
    if (!ret)
       return;
    //ajax
@@ -168,6 +181,7 @@ function occurTimeDatePicker()
          <div id="searchFilesPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchFilesContentFunc();">新增</span>
+               <span class="btn FilesexpandSR" OnClick="expandSearchFilesContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -194,6 +208,7 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchFilesContentFunc();">新增</span>
+               <span class="btn FilesexpandSR" OnClick="expandSearchFilesContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

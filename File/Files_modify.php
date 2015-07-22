@@ -297,6 +297,12 @@ function modifyFilesContent(FileId)
       return;
    }
    
+   if (FileTitle.length > 255 || FileDesc.length > 255)
+   {
+      alert("文档标题及文档说明长度过长！请缩短后重新保存。");
+      return;
+   }
+   
    // 如果 FileId == 0 ==> 代表新增, 走 submit 的方式
    if (FileId == 0)
    {
@@ -391,7 +397,7 @@ function modifyFilesContent(FileId)
       </tr>
       <tr>
          <th>文档说明：</th>
-         <td><Input type=text name=FileDescModify size=50 value="<?php echo $FileDesc;?>"></td>
+         <td><Textarea name="FileDescModify" rows=30 cols=100><?php echo $FileDesc;?></Textarea></td>
       </tr>   
       <tr>
          <th>选择分类：</th>

@@ -610,6 +610,7 @@ function loaded() {
    $('.btn_submit_new.searchExamProbs').click(function()
    {
       i = 0;
+      j = 0;
       product_functions_id = [];
       adapation_functions_id = [];
 
@@ -622,6 +623,12 @@ function loaded() {
       $(".adapation_functions:checked").each(function(){
          adapation_functions_id[i++] = $(this).val();
       });
+      
+      // alert("is_obu_require: " + is_obu_require + 
+      // " \n require_function_id: " + require_function_id + 
+      // " \n product_functions_id: " + product_functions_id + 
+      // " \n adapation_functions_id: " + adapation_functions_id);
+      // return;
 
       $.ajax
       ({

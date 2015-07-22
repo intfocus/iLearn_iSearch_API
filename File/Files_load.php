@@ -284,6 +284,7 @@
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
                        . "<span align=right class=\"btn\" OnClick=\"newSearchFilesContentFunc();\">新增</span>&nbsp;"
+                       . "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -368,8 +369,8 @@
                   . "<tr>"
                   . "<td>$page_count_display</td>"
                   . "<td><span class=\"FileName fixWidth\">$FileTitle</span></td>"
-                  . "<td><span class=\"FileCode fixWidth\">$FileDesc</span></td>"
-                  . "<td><span class=\"FileCode fixWidth\">$CategoryName</span></td>"
+                  . "<td><span class=\"FileDesc fixWidth\">$FileDesc</span></td>"
+                  . "<td>$CategoryName</td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$EditTime</td>"
                   . "<td><A OnClick=\"actionSearchFiles($FileId,$Status);\">$StatusAction</A><br/>"
@@ -399,6 +400,7 @@
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
                         . "<span align=right class=\"btn\" OnClick=\"newSearchFilesContentFunc();\">新增</span>&nbsp;"
+                        . "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----

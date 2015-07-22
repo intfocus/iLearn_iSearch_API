@@ -402,6 +402,12 @@ function modifyCategoriesContent(CategoryId)
       return;
    }
    
+   if (CategoryName.length > 100)
+   {
+      alert("分类名称长度过长！请缩短后重新保存。");
+      return;
+   }
+   
    str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
          "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
          "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath) + "&DeptList=" + encodeURIComponent(DeptList);

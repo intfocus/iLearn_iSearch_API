@@ -11,7 +11,7 @@ function actionSearchDepts(DeptId, Status)
    ({
       beforeSend: function()
       {
-         alert(url_str + str);
+         //alert(url_str + str);
       },
       type: 'GET',
       url: url_str + str,

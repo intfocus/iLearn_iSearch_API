@@ -1110,6 +1110,63 @@ $(function()
       ajax_genReportChart(str);
    });
    
+   //***Step4 searchCoursewares begin
+   $('.btn_submit_new.searchCoursewares').click(function()
+   {
+      var searchCoursewaresNameDesc = document.getElementById("searchCoursewaresNameDesc").value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchTraineesCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchTraineesCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchCoursewares" + 
+      "&searchCoursewaresNameDesc=" + encodeURIComponent(searchCoursewaresNameDesc) + 
+      "&statusCheckbox=" + statusCheckbox;
+      url_str = "Courseware/Coursewares_load.php?";
+      
+      // alert(url_str + str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchCoursewaresPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchCoursewares end
+   
    //***Step4 searchTrainees begin
    $('.btn_submit_new.searchTrainees').click(function()
    {
@@ -1229,6 +1286,64 @@ $(function()
       });
    });
    //***Step4 searchTrainings end
+   
+   //***Step4 searchRollCalls begin
+   $('.btn_submit_new.searchRollCalls').click(function()
+   {
+      var searchRollCallsName = document.getElementById("searchRollCallsName").value;
+      var searchRollCallsfrom12 = document.getElementsByName("searchRollCallsfrom12")[0].value;
+      var searchRollCallsto12 = document.getElementsByName("searchRollCallsto12")[0].value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchRollCallsCheckBox2").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchRollCallsCheckBox3").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchRollCalls" + "&" + "searchRollCallsName=" + encodeURIComponent(searchRollCallsName) + "&" + "searchRollCallsfrom12=" + searchRollCallsfrom12 + "&"
+            + "searchRollCallsto12=" + searchRollCallsto12 + "&" + "statusCheckbox=" + statusCheckbox;
+      url_str = "RollCall/RollCalls_load.php?";
+      
+      // alert(str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchRollCallsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchNews end
 
    //***Step4 searchNews begin
    $('.btn_submit_new.searchNews').click(function()
@@ -1255,7 +1370,7 @@ $(function()
             + "searchNewsto1=" + searchNewsto1 + "&" + "searchNewsfrom2=" + searchNewsfrom2 + "&" + "searchNewsto2=" + searchNewsto2 + "&" + "statusCheckbox=" + statusCheckbox;
       url_str = "New/News_load.php?";
       
-      //alert(str);
+      alert(str);
       $('#loadingWrap').show();
       $.ajax
       ({

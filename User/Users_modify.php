@@ -307,6 +307,12 @@ function modifyUsersContent(UserId)
       return;
    }
    
+   if (UserName.length > 100 || EmployeeId.length > 100 || UserEmail.length > 100 || WinId.length > 100)
+   {
+      alert("用户名称，工号，用户WinId，及用户邮箱长度过长！请缩短后重新保存。");
+      return;
+   }
+   
    str = "cmd=write&UserId=" + UserId + "&UserName=" + encodeURIComponent(UserName) + 
          "&EmployeeId=" + encodeURIComponent(EmployeeId) +
          "&WinId=" + encodeURIComponent(WinId) +

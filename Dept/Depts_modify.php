@@ -364,6 +364,12 @@ function modifyDeptsContent(DeptId)
       return;
    }
    
+   if (DeptName.length > 100 || DeptCode.length > 20)
+   {
+      alert("部门名称及部门编号长度过长！请缩短后重新保存。");
+      return;
+   }
+   
    str = "cmd=write&DeptId=" + DeptId + "&DeptName=" + encodeURIComponent(DeptName) + 
          "&DeptCode=" + encodeURIComponent(DeptCode) + "&ProductList=" + encodeURIComponent(ProductList) + 
          "&PAList=" + encodeURIComponent(PAList) + "&ParentId=" + ParentId;
