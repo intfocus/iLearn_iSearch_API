@@ -270,7 +270,7 @@ $(function() {
    
 
  var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
-     maxDate: new Date(),
+     minDate: new Date(),
      defaultDate: "+1w",
      changeMonth: true,
      changeYear: true,
@@ -279,9 +279,9 @@ $(function() {
      onSelect: function( selectedDate ) {
         var option = this.id == "exam_begin_time" ? "minDate" : "maxDate",
         instance = $( this ).data( "datepicker" ),
-        date7 = $.datepicker.parseDate( instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
+        date100 = $.datepicker.parseDate( instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
         selectedDate, instance.settings );
-        dates100.not( this ).datepicker( "option", option, date7 );}
+        dates100.not( this ).datepicker( "option", option, date100 );}
  });
 
 

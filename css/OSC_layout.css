@@ -295,6 +295,12 @@ body, html {
 .mainTabW li span.tabIcon.courseware {
 	background-image:url(../images/icon_courseware.png);
 }
+.mainTabW li span.tabIcon.coursepacket {
+	background-image:url(../images/icon_coursepacket.png);
+}
+.mainTabW li span.tabIcon.coursewarepacket {
+	background-image:url(../images/icon_coursewarepacket.png);
+}
 .mainTabW li span.tabIcon.rollcall {
 	background-image:url(../images/icon_rollcall.png);
 }
