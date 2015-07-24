@@ -78,7 +78,7 @@
          $scppt = new Stuppt();
          while($row = mysqli_fetch_assoc($rsppt)){      
             $scppt->PPTName = $row['PPTName'];
-            $scppt->PPTList = $row['CoursewareList'];
+            $scppt->PPTList = CList($row['CoursewareList']);
             $scppt->PPTDesc = $row['CoursewareDesc'];
             array_push($datacpstr, $scppt);
          }
@@ -110,7 +110,7 @@
       $Cstr = str_replace(",,",",",$Cstr);
       $str_c = "select CoursewareId, CoursewareName, CoursewareDesc from Coursewares where Status = 1 and CoursewareId in ($Cstr)";
       if($rsc = mysqli_query($strlink, $str_c)){
-         $scc = new Stuppt();
+         $scc = new StuC();
          while($row = mysqli_fetch_assoc($rsc)){      
             $scc->CoursewareId = $row['CoursewareId'];
             $scc->CoursewareName = $row['CoursewareName'];
@@ -202,7 +202,7 @@
    //----- query -----
    $sc = new Stucp();
    $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTime, Status, CoursewarePacketList, CoursewareList, QuestionnaireList, ExamList, EditTime from CoursePacket 
-      where CoursePacketId = " . $cpid;
+      where Status = 1 and CoursePacketId = " . $cpid;
    if($rs = mysqli_query($link, $str_cp)){
       $cpcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
