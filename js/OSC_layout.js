@@ -268,21 +268,55 @@ $(function() {
       }
    });
    
+   var dates13 = $( "#from13, #to13" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from13" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date13 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates13.not( this ).datepicker( "option", option, date13 );
+      }
+   });
+   
+   var dates14 = $( "#from14, #to14" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from14" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date14 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates14.not( this ).datepicker( "option", option, date14 );
+      }
+   });
+   
 
- var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
-     minDate: new Date(),
-     defaultDate: "+1w",
-     changeMonth: true,
-     changeYear: true,
-     numberOfMonths: 1,
-
-     onSelect: function( selectedDate ) {
-        var option = this.id == "exam_begin_time" ? "minDate" : "maxDate",
-        instance = $( this ).data( "datepicker" ),
-        date100 = $.datepicker.parseDate( instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
-        selectedDate, instance.settings );
-        dates100.not( this ).datepicker( "option", option, date100 );}
- });
+   var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
+       minDate: new Date(),
+       defaultDate: "+1w",
+       changeMonth: true,
+       changeYear: true,
+       numberOfMonths: 1,
+   
+       onSelect: function( selectedDate ) {
+          var option = this.id == "exam_begin_time" ? "minDate" : "maxDate",
+          instance = $( this ).data( "datepicker" ),
+          date100 = $.datepicker.parseDate( instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
+          selectedDate, instance.settings );
+          dates100.not( this ).datepicker( "option", option, date100 );}
+   });
 
 
 

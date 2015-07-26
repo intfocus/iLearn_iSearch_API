@@ -94,9 +94,25 @@
          $sf->codepath = $row["codepath"];
          if ($first_func_name == "")
             $first_func_name = $func_name;
-         Array_Push($func_array,$sf);
+         array_push($func_array,$sf);
       }
    }
+   
+   class StuExams{
+      public $ExamId;
+      public $ExamName;
+   }
+   $dataexams = array();
+   $str_exams = "select ExamId,ExamName from exams";
+   if($result = mysqli_query($link, $str_exams)){
+      while($row = mysqli_fetch_assoc($result)){      
+         $se = new StuExams();
+         $se->ExamId = $row["ExamId"];
+         $se->ExamName = $row['ExamName'];
+         array_push($dataexams,$se);
+      }
+   }
+   //print_r($dataexams);
    //eric-edit -end
 ?>
 

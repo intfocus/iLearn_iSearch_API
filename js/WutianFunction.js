@@ -1167,6 +1167,126 @@ $(function()
    });
    //***Step4 searchCoursewares end
    
+   //***Step4 searchCoursewarePackets begin
+   $('.btn_submit_new.searchppts').click(function()
+   {
+      var searchpptsNameDesc = document.getElementById("searchpptsNameDesc").value;
+      var searchpptsfrom1 = document.getElementsByName("searchpptsfrom1")[0].value;
+      var searchpptsto1 = document.getElementsByName("searchpptsto1")[0].value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchpptsCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchpptsCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchppts" + 
+      "&searchpptsNameDesc=" + encodeURIComponent(searchpptsNameDesc) + 
+      "&statusCheckbox=" + statusCheckbox + "&searchpptsfrom1=" + searchpptsfrom1 + "&"
+            + "searchpptsto1=" + searchpptsto1;
+      url_str = "CoursewarePacket/CoursewarePackets_load.php?";
+      
+      // alert(url_str + str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchpptsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchCoursewarePackets end
+   
+   //***Step4 searchCoursePackets begin
+   $('.btn_submit_new.searchCoursePackets').click(function()
+   {
+      var searchCoursePacketsNameDesc = document.getElementById("searchCoursePacketsNameDesc").value;
+      var searchCoursePacketsfrom1 = document.getElementsByName("searchCoursePacketsfrom1")[0].value;
+      var searchCoursePacketsto1 = document.getElementsByName("searchCoursePacketsto1")[0].value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchCoursePacketsCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchCoursePacketsCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchCoursePackets" + 
+      "&searchCoursePacketsNameDesc=" + encodeURIComponent(searchCoursePacketsNameDesc) + 
+      "&statusCheckbox=" + statusCheckbox + "&searchCoursePacketsfrom1=" + searchCoursePacketsfrom1 + "&"
+            + "searchCoursePacketsto1=" + searchCoursePacketsto1;
+      url_str = "CoursePacket/CoursePackets_load.php?";
+      
+      // alert(url_str + str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchCoursePacketsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchCoursewarePackets end
+   
    //***Step4 searchTrainees begin
    $('.btn_submit_new.searchTrainees').click(function()
    {

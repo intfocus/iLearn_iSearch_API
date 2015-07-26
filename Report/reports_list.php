@@ -22,7 +22,8 @@
       var index = myselect.selectedIndex;//获取下拉框中
       //alert(index);
       var srcvalue = myselect.options[index].value;//获取下拉框中的value
-      //alert(srcvalue);
+      srcvalue = "http://baidu.com?l=" + srcvalue; 
+      alert(srcvalue);
       if(srcvalue != "")
       {
          var frame = document.getElementById('report_list');
@@ -38,13 +39,21 @@
 
 <!--快速查詢 從這裡開始-->
    <div class="searchW">
-      <select id="srcpaht" onchange="change()">
-         <option value="http://baidu.com">baidu</option>
-         <option value="http://bing.com">bing</option>
+      <select id="srcpaht" onchange="change();">
+<?php 
+   echo print_r($dataexams);
+   for($de=0; $de<count($dataexams); $de++){
+      $dei = $dataexams[$de]->ExamId;
+      $den = $dataexams[$de]->ExamName;
+?>
+         <option value="<?php echo $dei ?>"><?php echo $den ?></option>
+<?php
+   }
+?>
       </select>
    <!-- ***Step2 搜索框的设计 开始 -->
       <form>
-         <iframe id="report_list" src="http://baidu.com" width="100%" height="100%" frameborder="0"  onLoad="iFrameHeight()"></iframe>
+         <iframe id="report_list" src="" width="100%" height="100%" frameborder="0"  onLoad="iFrameHeight()"></iframe>
       </form>
       <!-- ***Step2 搜索框的设计 结束 -->
    </div>
