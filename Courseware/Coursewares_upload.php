@@ -134,14 +134,17 @@
    $CoursewareDescModify = $_POST["CoursewareDescModify"];
    $PAList = $_POST["PAListValue"];
    $ProductList = $_POST["ProductListValue"];
-   $CoursewareName = $_POST["CoursewareName"];
-   
+   $CoursewareFile = $_POST["CoursewareFile"];
+   $extensions = explode('.',$CoursewareFile);
+   $escount = count($extensions)-1;
+   $extension = $extensions[$escount];
    ///////////////////////////////////
    // 2. 取得 FileId
    //       先 insert 再取得 FileId
    ///////////////////////////////////
-   $str_query1 = "Insert into coursewares (CoursewareName, CoursewareDesc, PAList, ProductList, Status, CreatedUser, CreatedTime, EditUser, EditTime) 
-   VALUES('$CoursewareNameModify','$CoursewareDescModify','$PAList','$ProductList',-1,$user_id,now(),$user_id,now());";
+   $str_query1 = "Insert into coursewares (CoursewareName, CoursewareDesc, PAList, ProductList, Status, CreatedUser, CreatedTime, EditUser, EditTime, CoursewareFile) 
+   VALUES('$CoursewareNameModify','$CoursewareDescModify','$PAList','$ProductList',-1,$user_id,now(),$user_id,now(),'$CoursewareFile');";
+
    mysqli_query($link,$str_query1);
    $FileId = mysqli_insert_id($link);
    if ($FileId == 0) // 取得失败
@@ -160,7 +163,7 @@
    if(!file_exists($total_file_path)) // 建立目录
       system("mkdir $total_file_path");
 
-   if(!copy($_FILES["CoursewarePathModify"]["tmp_name"],"$total_file_path/$FileId.pdf"))
+   if(!copy($_FILES["CoursewarePathModify"]["tmp_name"],"$total_file_path/$FileId." . $extension))
    {
       sleep(DELAY_SEC);
       $resultStr = "文档上传失败 - " . -__LINE__;
@@ -174,7 +177,7 @@
 
    mysqli_close($link);
 errexit:
-   $resultStr = "[" . $CoursewareName . "] " . $resultStr;
+   $resultStr = "[" . $CoursewareFile . "] " . $resultStr;
 ?>
 <!DOCTYPE HTML>
 <html>

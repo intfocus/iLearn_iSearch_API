@@ -99,6 +99,8 @@
       public $CoursewareId;
       public $CoursewareName;
       public $CoursewareDesc;
+      public $CoursewareFile;
+      public $Extension;
    }
    
    function CList($Cstr)
@@ -108,13 +110,17 @@
       $Cstr = substr($Cstr,1);
       $Cstr = substr($Cstr,0,-1);
       $Cstr = str_replace(",,",",",$Cstr);
-      $str_c = "select CoursewareId, CoursewareName, CoursewareDesc from Coursewares where Status = 1 and CoursewareId in ($Cstr)";
+      $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile from Coursewares where Status = 1 and CoursewareId in ($Cstr)";
       if($rsc = mysqli_query($strlink, $str_c)){
          $scc = new StuC();
          while($row = mysqli_fetch_assoc($rsc)){      
             $scc->CoursewareId = $row['CoursewareId'];
             $scc->CoursewareName = $row['CoursewareName'];
             $scc->CoursewareDesc = $row['CoursewareDesc'];
+            $scc->CoursewareFile = $row['CoursewareFile'];
+            $extensions = explode('.',$row['CoursewareFile']);
+            $escount = count($extensions)-1;
+            $scc->Extension = $extensions[$escount];
             array_push($datacstr, $scc);
          }
       }

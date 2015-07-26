@@ -10,12 +10,20 @@
          echo json_encode(array("status"=>-2, "result"=>"课件文件不存在！")); //-2没有传课件ID
          return; 
       }
+      if(isset($_GET["es"])){
+         $extension = $_GET["es"];
+      }
+      else {
+         echo json_encode(array("status"=>-3, "result"=>"课件文件不存在！")); //-2没有传课件扩展名
+         return; 
+      }
    }
    else{
       echo json_encode(array("status"=>-1, "result"=>"课件文件不存在！")); //-1没有传任何参数
       return;
    }
-   $file_name=$coursewaresid . ".pdf";
+   $file_name=$coursewaresid . "." . $extension;
+
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);

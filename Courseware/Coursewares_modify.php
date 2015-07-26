@@ -191,6 +191,7 @@
             $TitleStr = "文档修改 (只允许修改文档标题及文档说明)";
             if ($Status == 1)
                $TitleStr = "文档查看 (上架状态无法修改)";
+            $CoursewareFile = $row["CoursewareFile"];
          }
          else
          {
@@ -203,6 +204,7 @@
             $CoursewareType = 1;
             $TitleStr = "文档新增";
             $Status = 0;
+            $CoursewareFile = "";
          }
       }
    }
@@ -284,6 +286,20 @@ function checkCoursewareTypeModify() {
    extension = CoursewareFile.substring(pos3+1);
    
    if(extension == "pdf"){
+      document.getElementById("FilePath").disabled = false;
+   }
+   else{
+      document.getElementById("FilePath").disabled = true;
+   }
+   
+   if(extension == "mp4"){
+      document.getElementById("FilePath").disabled = false;
+   }
+   else{
+      document.getElementById("FilePath").disabled = true;
+   }
+   
+   if(extension == "zip"){
       document.getElementById("FilePath").disabled = false;
    }
    else{
@@ -392,8 +408,8 @@ function modifyCoursewaresContent(CoursewareId)
 	   var pos2 = CoursewareFile.lastIndexOf('\\');
       var pos  = Math.max(pos1, pos2)
    	if(pos>=0)
-   	CoursewareFile = CoursewareFile.substring(pos+1);
-      document.getElementsByName("CoursewareName")[0].value = CoursewareFile;
+   	  CoursewareFile = CoursewareFile.substring(pos+1);
+      document.getElementsByName("CoursewareFile")[0].value = CoursewareFile;
       document.getElementsByName("PAListValue")[0].value = PAList;
       document.getElementsByName("ProductListValue")[0].value = ProductList;
       document.getElementsByName("uploadCoursewareForm")[0].submit();
@@ -470,14 +486,14 @@ function modifyCoursewaresContent(CoursewareId)
    {
 ?>   
       <tr>
-         <th>文档名称：</th>
-         <td><Input type=text size=50 readonly="true" value="<?php echo $CoursewareName;?>"></td>
+         <th>上传文件名称：</th>
+         <td><Input type=text size=50 readonly="true" value="<?php echo $CoursewareFile;?>"></td>
       </tr>
 <?php
    }
    else
    {
-      echo "<Input type=hidden name=CoursewareName>";
+      echo "<Input type=hidden name=CoursewareFile>";
    }
 ?>
       <tr>
