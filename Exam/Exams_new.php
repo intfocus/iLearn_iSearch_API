@@ -122,9 +122,13 @@
 <Script Language=JavaScript>
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
 {
+   
    if (isNaN(true_false_amount) || isNaN(single_selection_amount) || isNaN(multi_selection_amount))
    {
       alert("题数必须为数字");
+      alert(true_false_amount);
+      alert(single_selection_amount);
+      alert(multi_selection_amount);
       return;
    }
 
@@ -201,6 +205,34 @@ var problem_sets = new Array();
 var estimated_problem_count = 0;
 
 function loaded() {
+
+   $(".problem_set_btn1").click(function(){
+      display_set_id = $(this).attr("data-problem_set");
+      // hide all problem_set
+      $(".problem_set").each(function(){
+         $(this).removeClass("cur_problem_set").hide();
+      });
+
+      // display his problem_set_id
+      display_set = "problem_set_" + display_set_id
+      $("#"+display_set).addClass("cur_problem_set").show();
+   });
+
+   $("#delete_cur_problem").click(function(){
+      if ($(".problem_set").length == 2)
+      {
+         return;
+      }
+      delete_id = parseInt($(".cur_problem_set").attr("data-problem_set"), 10);
+      // get delete remove cur_problem_set
+      $(".cur_problem_set").remove();
+      // give the cur_problem_set to first cur_problem_set
+      $(".problem_set").first().addClass("cur_problem_set").show();
+      // remove prolbem_btn
+
+      delete_problem_btn = "problem_set_btn_" + delete_id;
+      $("#"+delete_problem_btn).remove();
+   });
 
    function get_num_selected_problems()
    {
@@ -293,78 +325,84 @@ function loaded() {
       
       problem_sets = [];
       // get each problmeset_rule
-      for (i=0; i <= cur_problem_set_index; i++)
-      {
-         // get each problem set attribute in DOM
-         cur_problem_set = $("#problem_set_"+i);
-         product_functions_id = [];
-         adapation_functions_id = [];
-
-         is_obu_require = cur_problem_set.find(".ps_is_obu_require").val();
-
-         require_function_id = cur_problem_set.find(".ps_required_function").val();
-         j = 0;
-         cur_problem_set.find(".ps_product_functions:checked").each(function(){
-            product_functions_id[j++] = $(this).val();
-         });
-         j = 0;
-         cur_problem_set.find(".ps_adapation_functions:checked").each(function(){
-            adapation_functions_id[j++] = $(this).val();
-         });
-
-         true_false_amount = cur_problem_set.find(".NewExamTrueFalseProbType").val();
-         single_selection_amount = cur_problem_set.find(".NewExamSingleSelProbType").val();
-         multi_selection_amount = cur_problem_set.find(".NewExamMutiSelProbType").val();
-         /*
-         if (true_false_amount == "");
+      $(".problem_set").each(function(){
+      //for (i=0; i < cur_problem_set_index; i++)
+      //{
+         
+         if ($(this).attr("id") != "problem_set_template")
          {
-            true_false_amount = "0";
+            i = $(this).attr("data-problem_set");
+            // get each problem set attribute in DOM
+            cur_problem_set = $("#problem_set_"+i);
+            product_functions_id = [];
+            adapation_functions_id = [];
+
+            is_obu_require = cur_problem_set.find(".ps_is_obu_require").val();
+
+            require_function_id = cur_problem_set.find(".ps_required_function").val();
+            j = 0;
+            cur_problem_set.find(".ps_product_functions:checked").each(function(){
+               product_functions_id[j++] = $(this).val();
+            });
+            j = 0;
+            cur_problem_set.find(".ps_adapation_functions:checked").each(function(){
+               adapation_functions_id[j++] = $(this).val();
+            });
+
+            true_false_amount = cur_problem_set.find(".NewExamTrueFalseProbType").val();
+            single_selection_amount = cur_problem_set.find(".NewExamSingleSelProbType").val();
+            multi_selection_amount = cur_problem_set.find(".NewExamMutiSelProbType").val();
+            /*
+            if (true_false_amount == "");
+            {
+               true_false_amount = "0";
+            }
+            if (single_selection_amount == "");
+            {
+               single_selection_amount = "0";
+            }
+            if (multi_selection_amount == "");
+            {
+               multi_selection_amount = "0";
+            }*/
+
+
+            if (!is_valid_prob_type_amount(parseInt(true_false_amount,10), parseInt(single_selection_amount,10), parseInt(multi_selection_amount,10)))
+            {
+               $("#genProbsButton").removeAttr('disabled');
+               $("#err_no_problem").show();
+               $(".exam_info").hide();
+               $(".problem_info").hide();
+               $("#status_template").hide();
+               return;
+            }
+
+            easy_level_percent = cur_problem_set.find(".NewExamEasyLevel").val();
+            mid_level_percent = cur_problem_set.find(".NewExamMidLevel").val();
+            hard_level_percent = cur_problem_set.find(".NewExamHardLevel").val();
+
+            if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
+            {
+               $("#genProbsButton").removeAttr('disabled');
+               return;
+            }
+
+            cur_prob_json = {};
+            cur_prob_json["is_obu_require"] = is_obu_require;
+            cur_prob_json["require_function_id"] = require_function_id;
+            cur_prob_json["product_functions_id"] = product_functions_id;
+            cur_prob_json["adapation_functions_id"] = adapation_functions_id;
+            cur_prob_json["true_false_amount"] = true_false_amount;
+            cur_prob_json["single_selection_amount"] = single_selection_amount;
+            cur_prob_json["multi_selection_amount"] = multi_selection_amount;
+            cur_prob_json["easy_level_percent"] = easy_level_percent;
+            cur_prob_json["mid_level_percent"] = mid_level_percent;
+            cur_prob_json["hard_level_percent"] = hard_level_percent;
+
+
+            problem_sets.push(cur_prob_json);
          }
-         if (single_selection_amount == "");
-         {
-            single_selection_amount = "0";
-         }
-         if (multi_selection_amount == "");
-         {
-            multi_selection_amount = "0";
-         }*/
-
-
-         if (!is_valid_prob_type_amount(parseInt(true_false_amount,10), parseInt(single_selection_amount,10), parseInt(multi_selection_amount,10)))
-         {
-            $("#genProbsButton").removeAttr('disabled');
-            $("#err_no_problem").show();
-            $(".exam_info").hide();
-            $(".problem_info").hide();
-            $("#status_template").hide();
-            return;
-         }
-
-         easy_level_percent = cur_problem_set.find(".NewExamEasyLevel").val();
-         mid_level_percent = cur_problem_set.find(".NewExamMidLevel").val();
-         hard_level_percent = cur_problem_set.find(".NewExamHardLevel").val();
-
-         if (!is_valid_exam_level(parseInt(easy_level_percent, 10), parseInt(hard_level_percent, 10), parseInt(mid_level_percent, 10)))
-         {
-            $("#genProbsButton").removeAttr('disabled');
-            return;
-         }
-
-         cur_prob_json = {};
-         cur_prob_json["is_obu_require"] = is_obu_require;
-         cur_prob_json["require_function_id"] = require_function_id;
-         cur_prob_json["product_functions_id"] = product_functions_id;
-         cur_prob_json["adapation_functions_id"] = adapation_functions_id;
-         cur_prob_json["true_false_amount"] = true_false_amount;
-         cur_prob_json["single_selection_amount"] = single_selection_amount;
-         cur_prob_json["multi_selection_amount"] = multi_selection_amount;
-         cur_prob_json["easy_level_percent"] = easy_level_percent;
-         cur_prob_json["mid_level_percent"] = mid_level_percent;
-         cur_prob_json["hard_level_percent"] = hard_level_percent;
-
-
-         problem_sets.push(cur_prob_json);
-      }
+      });
 
       $.ajax({
          beforeSend: function(){
@@ -381,7 +419,6 @@ function loaded() {
          dataType: "json",
          success: function(res)
          {  
-            //alert(res);
             if (res.hasOwnProperty("code"))
             {
                if (res.code != <? echo SUCCESS; ?>) {
@@ -640,20 +677,76 @@ function loaded() {
          beforeSend: function()
          {
             $(".select_tmp_problem").remove();
+            $(".select_page").remove();
             select_problems = [];
          },
          success: function(res)
          {
             if (res.hasOwnProperty("problems"))
             {
+               problem_per_page = <? echo PROBLEMS_PER_PAGE?>;
+
                sequence = 1;
                $.each(res.problems, function(key, val){
                   type_str = get_type_str_from_id(val.type);
                   level_str = get_level_str_from_id(val.level);
-                  val_string = "<td class='select_problem_id'><input class='select_problems_checkbox' type='checkbox' value=" + val.id + "></td><td>" + sequence + "</td><td>" + type_str + "</td><td>" + level_str + "</td><td>" + val.desc + "</td>";
-                  $("#select_problem_template").clone().html(val_string).insertBefore("#select_problem_template").removeAttr("id").addClass("select_tmp_problem").show();
+                  val_string = "<td><input class='select_problems_checkbox' type='checkbox' value=" + val.id + "></td><td>" + sequence + "</td><td>" + type_str + "</td><td>" + level_str + "</td><td>" + val.desc + "</td><td>" + val.created_time + "</td>";
+                  $("#select_problem_template").clone().html(val_string).insertBefore("#select_problem_template").removeAttr("id").addClass("select_tmp_problem").attr("data-sequence", sequence).show();
                   sequence++;
                });
+
+               // list page, 10 problems per page
+               
+               problems_count = sequence;
+               page_count = (problems_count / problem_per_page) + 1;
+               $(".select_tmp_problem").each(function(){
+                     if (($(this).attr("data-sequence") >= 1) && ($(this).attr("data-sequence") <= problem_per_page))
+                     {
+                        $(this).show();
+                     }
+                     else
+                     {
+                        $(this).hide();
+                     }
+               });
+               if (page_count > 1)
+               {
+                  for (i=1; i<=page_count; i++)
+                  {
+                     if (i==1)
+                     {
+                        page_str = "<li class=active><a href='#' class='select_page'>" + i + "</a><li>";
+                     }
+                     else
+                     {
+                        page_str = "<li><a href='#' class='select_page'>" + i + "</a><li>";
+                     }
+                     $("#page_append").append(page_str);
+                  }
+               }
+
+               $(".select_page").on("click", function(){
+
+                  cur_page = parseInt($(this).html());
+                  show_low_bound = ((cur_page - 1) * problem_per_page) + 1;
+                  show_high_bound = cur_page * problem_per_page;
+
+                  $(".select_tmp_problem").each(function(){
+                     if (($(this).attr("data-sequence") >= show_low_bound) && ($(this).attr("data-sequence") <= show_high_bound))
+                     {
+                        $(this).show();
+                     }
+                     else
+                     {
+                        $(this).hide();
+                     }
+                  });
+
+                  $(".active").removeClass("active");
+                  $(this).parent().addClass("active");
+
+               });
+
                $(".select_problems_checkbox").on("click", function(){
                   select_problems = [];
                   i = 0;
@@ -684,22 +777,22 @@ function loaded() {
    });
 
 
-   cur_problem_set_index = 0
+   cur_problem_set_index = 1;
    $(".btn_submit_new.next_problem_set").click(function(){
 
       // hide cur_problem_set
       $(".cur_problem_set").removeClass("cur_problem_set").hide();
       // add one problem set button
-      new_problem_set_btn_val = "probem_set_btn_" + cur_problem_set_index;
-      $("#problem_set_btn_template").clone().insertBefore("#problem_set_btn_template").attr("id", new_problem_set_btn_val).show();
+      new_problem_set_btn_val = "problem_set_btn_" + cur_problem_set_index;
+      $("#problem_set_btn_template").clone().insertBefore("#problem_set_btn_template").attr("id", new_problem_set_btn_val).show().find("input").attr("data-problem_set", cur_problem_set_index).addClass("problem_set_btn1");
  
       ui_cur_problem_set_index = cur_problem_set_index + 1;
       $("#"+new_problem_set_btn_val).find("input").val("题目规则"+ui_cur_problem_set_index);
-      cur_problem_set_index++;
+
 
       // clone problem_set and 
       problem_set_id = "problem_set_" + cur_problem_set_index;
-      $("#problem_set_template").clone().insertBefore("#problem_set_template").attr("id", problem_set_id).addClass("cur_problem_set").show();
+      $("#problem_set_template").clone().insertBefore("#problem_set_template").attr("id", problem_set_id).addClass("cur_problem_set").attr("data-problem_set", cur_problem_set_index).show();
       cur_problem_set = $("#"+problem_set_id);
       easy_level_percent = cur_problem_set.find(".NewExamEasyLevel").attr("data-index", cur_problem_set_index);
       mid_level_percent = cur_problem_set.find(".NewExamMidLevel").attr("data-index", cur_problem_set_index);
@@ -723,6 +816,21 @@ function loaded() {
       $(".problem_type_count").change(function(){
          get_num_selected_problems();
       });
+
+      // bind change problem_set
+      $(".problem_set_btn1").click(function(){
+         display_set_id = $(this).attr("data-problem_set");
+         // hide all problem_set
+         $(".problem_set").each(function(){
+            $(this).removeClass("cur_problem_set").hide();
+         });
+
+         // display his problem_set_id
+         display_set = "problem_set_" + display_set_id
+         $("#"+display_set).addClass("cur_problem_set").show();
+      });
+
+      cur_problem_set_index++;
    });
    // click problem set button, show the problem setting
 }
@@ -734,7 +842,7 @@ function loaded() {
 
 .wizard > .content
 {
-   min-height: 1000px;
+   min-height: 1300px;
 	background: #fafafa;
 }
 </style>
@@ -798,18 +906,23 @@ function loaded() {
 
                 <!-- Basic Form Wizard -->
                 <div class="row">
+
                     <div class="col-md-12">
+
                         <div class="panel panel-default">
                             <div class="panel-body"> 
                                 <form id="basic-form" action="#">
                                     <div>
                                         <h3>考试类别-至少选一项</h3>
                                         <section>
+
                                  <div class="form-group"  style="height:420px;">
                                                 <div class="col-lg-12">
 									                        <? include("select_questions_by_yourself.php");?>
                                                 </div>
+
                                             </div>
+
                                         </section>
                                         <h3>题型选择</h3>
                                         <section>
@@ -1011,7 +1124,11 @@ function loaded() {
                </select>
 
                 <!-- Wizard with Validation -->
+                  <div id="select_problems_div">
+                     <ul class="pagination" id="page_append">
 
+                  </ul> 
+               </div>
                 <!-- Wizard with Validation -->
                 <div class="row">
                     <div class="col-md-12">
@@ -1020,7 +1137,9 @@ function loaded() {
                                 <h3 class="panel-title">题目结果预览</h3> 
                             </div> 
                             <div class="panel-body"> 
-							
+					
+   
+
    <div>
       欲选题数:<b id="num_selected_problems"></b>
    </div>

@@ -130,7 +130,6 @@
       {
          continue;
       }
-      //print_r($cur_problems);
 
       $SelectedTrueFalseProbs = array_merge($SelectedTrueFalseProbs, $cur_problems["true_false_problems"]);
       $SelectedSingleSelProbs = array_merge($SelectedSingleSelProbs, $cur_problems["single_problems"]);
@@ -247,7 +246,7 @@
       }   
 
       // get obu require id
-      $func_type = FUNCTION_OTHER;
+      $func_type = FUNCTION_PRODUCT;
       $str_query = "Select * from functions where FunctionType=$func_type AND FunctionName='OBL'";
       if($result = mysqli_query($link, $str_query))
       {
@@ -282,16 +281,19 @@
       }
       else
       {
-         $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,') AND (" ;
-         for ($i=0; $i<count($product_functions_id); $i++)   
+         if (count($product_functions_id) > 0)
          {
-            if ($i == (count($product_functions_id) - 1))
+            $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,') AND (" ;
+            for ($i=0; $i<count($product_functions_id); $i++)   
             {
-               $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,')";
-            }
-            else
-            {
-               $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,'"." OR ";
+               if ($i == (count($product_functions_id) - 1))
+               {
+                  $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,')";
+               }
+               else
+               {
+                  $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,'"." OR ";
+               }
             }
          }
 
@@ -311,7 +313,7 @@
             }
          }
       }
-     
+
       //***Step16 页面搜索SQl语句 结束
       /////////////////////
       // prepare the SQL command and query DB
@@ -339,15 +341,15 @@
             $row = mysqli_fetch_assoc($result);
             if ($row["ProblemType"] == TRUE_FALSE_PROB)
             {
-               array_push($TrueFalseProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]));
+               array_push($TrueFalseProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], $row["CreatedTime"]));
             }
             else if ($row["ProblemType"] == SINGLE_CHOICE_PROB)
             {
-               array_push($SingleSelProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]));
+               array_push($SingleSelProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], $row["CreatedTime"]));
             }
             else if ($row["ProblemType"] == MULTI_CHOICE_PROB)
             {
-               array_push($MultiSelProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]));
+               array_push($MultiSelProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], $row["CreatedTime"]));
             }
          }
       }
@@ -595,7 +597,7 @@
          }
 
          $row = mysqli_fetch_assoc($result);
-         return new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]);
+         return new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], $row["CreatedTime"]);
       }
 
    }

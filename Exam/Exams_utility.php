@@ -10,7 +10,9 @@
    define("EXAM_DELETED", -1);
    define("EXAM_INACTIVE", 0);
    define("EXAM_ACTIVE", 1);
-   
+ 
+   define("PROBLEMS_PER_PAGE", 20);
+
    define("ERR_NOT_ENOUGH_PROBLEM", -500);
    
    define("ERR_ADJUST_LEVEL", -1000);
@@ -50,18 +52,20 @@
 
    class Problem
    {
-      function __construct($id, $desc, $type, $level)
+      function __construct($id, $desc, $type, $level, $created_time)
       {
          $this->id = $id;
          $this->desc = $desc;
          $this->type = $type;
          $this->level = $level;
+         $this->created_time = $created_time;
       }
 
       public $id;
       public $desc;
       public $type;
       public $level;
+      public $created_time;
    }
 
    class ExamDetail
