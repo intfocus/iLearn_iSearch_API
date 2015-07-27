@@ -201,7 +201,7 @@ function occurTimeDatePicker()
                   <col class="Status" />
                   <col class="TrainingDate" />
                   <col class="Date" />
-                  <col class="action" />
+                  <col class="TrainingAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

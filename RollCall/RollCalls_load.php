@@ -270,17 +270,17 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
       $return_string = $return_string . "<div class=\"toolMenu\">"
                                       . "<span class=\"paging\">"
                                       . "<input type=\"hidden\" id=search_no value=$row_number>"
-                                      . "<input type=\"hidden\" name=search_page_no value=1>"
-                                      . "<input type=\"hidden\" name=search_page_size value=" . $page_size . ">";
+                                      . "<input type=\"hidden\" name=search_RollCall_page_no value=1>"
+                                      . "<input type=\"hidden\" name=search_RollCall_page_size value=" . $page_size . ">";
       if ($page_num > 1)
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_RollCall_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchRollCallsPage
-            $return_string = $return_string . "\" id=search_page_begin_no_" . ($i + 1) . " OnClick=clickSearchRollCallsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_RollCall_page_begin_no_" . ($i + 1) . " OnClick=clickSearchRollCallsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       //***Step7 function name ==> expandSearchRollCallsContentFunc
@@ -327,7 +327,7 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_RollCall_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -419,10 +419,10 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_RollCall_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
-            $return_string = $return_string . "\" id=search_page_end_no_" . ($i + 1) . " OnClick=clickSearchRollCallsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_RollCall_page_end_no_" . ($i + 1) . " OnClick=clickSearchRollCallsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       $return_string = $return_string . "</span>"

@@ -55,6 +55,13 @@ function actionSearchCoursePackets(CoursePacketId, Status)
    });
 }
 
+function uploadUserCoursePackets(CoursePacketId)
+{
+   str = "CoursePacketId=" + CoursePacketId;
+   url_str = "CoursePacket/CoursePackets_roll_list.php?";
+   window.open(url_str + str);
+}
+
 //***Step10 列表中动作删除Ajax呼叫
 function deleteSearchCoursePackets(CoursePacketId)
 {
@@ -109,23 +116,23 @@ function modifySearchCoursePackets(CoursePacketId)
 
 function clickSearchCoursePacketsPage(obj, n)  //搜尋換頁
 {
-   if (obj.className == "search_page active")
+   if (obj.className == "search_CoursePacket_page active")
       return;
-   nPage = document.getElementsByName("search_page_no")[0].value;
-   document.getElementsByName("search_page_no")[0].value = n;
-   str = "search_page_begin_no_" + nPage;
+   nPage = document.getElementsByName("search_CoursePacket_page_no")[0].value;
+   document.getElementsByName("search_CoursePacket_page_no")[0].value = n;
+   str = "search_CoursePacket_page_begin_no_" + nPage;
+   document.getElementById(str).className = "search_CoursePacket_page";
+   str = "search_CoursePacket_page_end_no_" + nPage;
    document.getElementById(str).className = "search_page";
-   str = "search_page_end_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_begin_no_" + n;
+   str = "search_CoursePacket_page_begin_no_" + n;
    document.getElementById(str).className = "search_page active";
-   str = "search_page_end_no_" + n;
-   document.getElementById(str).className = "search_page active";	
+   str = "search_CoursePacket_page_end_no_" + n;
+   document.getElementById(str).className = "search_CoursePacket_page active";	
    
    //clear current table
-   str = "search_page" + nPage;
+   str = "search_CoursePacket_page" + nPage;
    document.getElementById(str).style.display = "none";
-   str = "search_page" + n;
+   str = "search_CoursePacket_page" + n;
    document.getElementById(str).style.display = "block";
 }
 
@@ -194,7 +201,7 @@ function occurTimeDatePicker()
                   <col class="CoursePacketDesc" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="CoursePacketAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

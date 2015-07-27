@@ -262,6 +262,10 @@ function loaded()
                var parentNode = $(this).tree('getParent', node.target);
                if (parentNode != null) {
                    $(this).tree('check', parentNode.target);
+                   // var parentNode = $(this).tree('getChildren', node.target);
+                   // for (var i = 0; i < parentNode.length; i++) {
+                       // $(this).tree('check', parentNode[i].target);
+                   // }
                }
            } else {
                var childNode = $(this).tree('getChildren', node.target);

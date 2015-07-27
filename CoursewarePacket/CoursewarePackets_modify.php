@@ -120,7 +120,7 @@
       echo SYMBOL_ERROR_CMD;
       return;
    }
-   if(($NewId = check_number($_GET["NewId"])) == SYMBOL_ERROR)
+   if(($PPTId = check_number($_GET["pptId"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -140,48 +140,43 @@
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if ($cmd == "read") // Load
    {
-      $str_query1 = "Select * from news where NewId=$NewId";
+      $str_query1 = "Select * from ppts where PPTId=$PPTId";
       if($result = mysqli_query($link, $str_query1))
       {
          $row_number = mysqli_num_rows($result);
          if ($row_number > 0)
          {
             $row = mysqli_fetch_assoc($result);
-            $NewId = $row["NewId"];
-            $NewTitle = $row["NewTitle"];
-            $NewMsg = $row["NewMsg"];
+            $PPTId = $row["PPTId"];
+            $PPTName = $row["PPTName"];
+            $CoursewareList = $row["CoursewareList"];
+            $PPTDesc = $row["PPTDesc"];
             $Status = $row["Status"];
-            $DeptList = $row["DeptList"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
-            $EditTime = $row["EditTime"];
-            $CreatedTime = $row["CreatedTime"];
-            $OccurTime = $row["OccurTime"] == null ? '' : date("Y/m/d",strtotime($row["OccurTime"]));
-            $TitleStr = "公告修改";
+            $EditTime = $row["EditTime"] == null ? '' : date("Y/m/d",strtotime($row["EditTime"]));
+            $TitleStr = "课件包修改";
             if ($Status == 1)
-               $TitleStr = "公告查看 (上架状态无法修改)";
+               $TitleStr = "课件包查看 (上架状态无法修改)";
          }
          else
          {
-            $NewId = 0;
-            $NewTitle = "";
-            $NewMsg = "";
-            $DeptList = "All";
-            $OccurTime = "";
-            $TitleStr = "公告新增";
+            $PPTId = 0;
+            $PPTName = "";
+            $CoursewareList = "";
+            $PPTDesc = "";
+            $EditTime = "";
+            $TitleStr = "课件包新增";
             $Status = 0;
          }
       }
    }
-   else if ($NewId == 0) // Insert
+   else if ($PPTId == 0) // Insert
    {
-      $NewTitle = $_POST["NewTitle"];
-      $NewMsg = $_POST["NewMsg"];
-      $OccurTime = "'" . $_POST["OccurTime"] . "'";
-      $DeptList = $_POST["DeptList"];
-      if ($OccurTime == "''")
-         $OccurTime = "NULL";
-      $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),1)" ;
+      $PPTName = $_POST["PPTName"];
+      $CoursewareList = $_POST["CoursewareList"];
+      $PPTDesc = $_POST["PPTDesc"];
+      $str_query1 = "Insert into ppts (PPTName,CoursewareList,PPTDesc,Status,CreatedUser,CreatedTime,EditUser,EditTime)" 
+                  . " VALUES('$PPTName','$CoursewareList',$PPTDesc,1,$user_id,now(),$user_id,now())" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -195,14 +190,11 @@
    }
    else // Update
    {
-      $NewTitle = $_POST["NewTitle"];
-      $NewMsg = $_POST["NewMsg"];
-      $OccurTime = "'" . $_POST["OccurTime"] . "'";
-      $DeptList = $_POST["DeptList"];
-      if ($OccurTime == "''")
-         $OccurTime = "NULL";
-      //TODO EditUser=UserId
-      $str_query1 = "Update news set NewTitle='$NewTitle', NewMsg='$NewMsg', DeptList='$DeptList', OccurTime=$OccurTime, EditUser=$user_id, EditTime=now() where NewId=$NewId";
+      $PPTName = $_POST["PPTName"];
+      $CoursewareList = $_POST["CoursewareList"];
+      $PPTDesc = $_POST["PPTDesc"];
+      
+      $str_query1 = "Update ppts set PPTName='$PPTName', CoursewareList='$CoursewareList', PPTDesc='$PPTDesc', EditUser=$user_id, EditTime=now() where PPTId=$PPTId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -255,64 +247,26 @@ function click_logout()  //log out
 
 function loaded()
 {
-   $('#depttree').tree({cascadeCheck:$(this).is(':checked')})
-   $("#depttree").tree({
-       onCheck: function (node, checked) {
-           if (checked) {
-               var parentNode = $(this).tree('getParent', node.target);
-               if (parentNode != null) {
-                   $(this).tree('check', parentNode.target);
-               }
-           } else {
-               var childNode = $(this).tree('getChildren', node.target);
-               if (childNode.length > 0) {
-                   for (var i = 0; i < childNode.length; i++) {
-                       $(this).tree('uncheck', childNode[i].target);
-                   }
-               }
-           }
-       }
-   });
-   window.setTimeout("expandToDept()", 2000);
 }
 
 //***Step12 修改页面点击保存按钮出发Ajax动作
-function modifyNewsContent(NewId)
+function modifyPPTsContent(PPTId)
 {
-   NewTitle = document.getElementsByName("NewTitleModify")[0].value.trim();
-   NewMsg = document.getElementsByName("NewMsgModify")[0].value.trim();
-   OccurTime = document.getElementsByName("OccurTimeModify")[0].value.trim();
-   DeptList = getCheckedDept();
+   PPTName = document.getElementsByName("PPTTitleModify")[0].value.trim();
+   PPTDesc = document.getElementsByName("PPTDescModify")[0].value.trim();
    
-   if (NewTitle.length == 0 || NewMsg.length == 0)
+   if (PPTName.length == 0 || PPTDesc.length == 0)
    {
-      alert("公告主题及公告内容不可为空白");
+      alert("课件包名称及课件包备注不可为空白");
       return;
    }
    
-   if (NewTitle.length > 255 || NewMsg.length > 255){
-      alert("公告主题及公告内容长度过长！请缩短后重新保存。");
+   if (PPTName.length > 100 || PPTDesc.length > 255){
+      alert("课件包名称及课件包备注长度过长！请缩短后重新保存。");
       return;
    }
-   
-   if (OccurTime.length > 0)
-   {
-      if (OccurTime.length != 10)
-      {
-         alert("日期格式必须为 yyyy/mm/dd");
-         return;
-      }
-      var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
-      if (!reg.exec(OccurTime))
-      {
-         alert("日期格式必须为 yyyy/mm/dd " + OccurTime);
-         return;
-      }
-   }
-   
-   str = "cmd=write&NewId=" + NewId + "&NewTitle=" + encodeURIComponent(NewTitle) + 
-         "&NewMsg=" + encodeURIComponent(NewMsg) + "&OccurTime=" + encodeURIComponent(OccurTime) + "&DeptList=" + encodeURIComponent(DeptList);
-   url_str = "News_modify.php?cmd=write&NewId=" + NewId;
+      
+   url_str = "CoursewarePackets_modify.php?cmd=write&PPTId=" + PPTId;
 
    // alert(url_str);
    $.ajax
@@ -324,10 +278,8 @@ function modifyNewsContent(NewId)
       type: "POST",
       url: url_str,
       data:{
-         NewTitle:NewTitle,
-         NewMsg:NewMsg,
-         OccurTime:OccurTime,
-         DeptList:DeptList
+         PPTName:PPTName,
+         PPTDesc:PPTDesc
       },
       cache: false,
       dataType: 'json',
@@ -370,55 +322,12 @@ function modifyNewsContent(NewId)
 <div id="content">
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>标题</th>
-         <td><Input type=text name=NewTitleModify size=50 value="<?php echo $NewTitle;?>"></td>
+         <th>课件包名称：</th>
+         <td><Input type="text" name="PPTNameModify" size=50 value="<?php echo $PPTName;?>"></td>
       </tr>
       <tr>
-         <th>内文：</th>
-         <td><Textarea name=NewMsgModify rows=30 cols=100><?php echo $NewMsg;?></textarea></td>
-      </tr>
-      <tr>
-         <th>发生时间 ：</th>
-         <td>
-            <input id="from0" type="text" name="OccurTimeModify" class="from" readonly="true" value="<?php echo $OccurTime;?>"/>
-         </td>
-      </tr>
-      <tr>
-         <th>选择部门：</th>
-         <td>
-            <div style="margin:20px 0;">
-               <a id=displayExpandToDeptButton href="#" class="easyui-linkbutton" onclick="expandToDept()">显示当前所属部门</a>
-            </div>
-            <div class="easyui-panel" style="padding:5px">
-               <ul id="depttree" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true,checkbox:true"></ul>
-            </div>
-            <script type="text/javascript">
-               function expandToDept(){
-                  $('#depttree').tree('collapseAll');
-                  $('#displayExpandToDeptButton').hide();
-                  var dlstr = "<?php echo $DeptList; ?>";
-                  var dlstr1 = dlstr.substring(1,dlstr.length-1);
-                  var dlstr_array = dlstr1.split(",,");
-                  for(var m=0; m<dlstr_array.length;m++)
-                  {
-                     var node = $('#depttree').tree('find',Number(dlstr_array[m]));
-                     $('#depttree').tree('check', node.target);
-                  }
-                  $('#depttree').tree('expandToDept', node.target);
-                  
-               }
-               
-               function getCheckedDept(){
-                  var nodes = $('#depttree').tree('getChecked');
-                  var s = '';
-                  for(var i=0; i<nodes.length; i++){
-                     if (s != '') s += ',,';
-                     s += nodes[i].id;
-                  }
-                  return ',' + s + ',';
-               }
-            </script>         
-         </td>
+         <th>课件包备注：</th>
+         <td><Textarea name="PPTDescModify" rows=30 cols=100><?php echo $PPTDesc;?></textarea></td>
       </tr>
 <?php
    if ($Status != 1)
@@ -426,7 +335,7 @@ function modifyNewsContent(NewId)
 ?>       
       <tr>
          <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyNewsContent"><input name="modifyNewsButton" type="button" value="保存" OnClick="modifyNewsContent(<?php echo $NewId;?>)"></a>
+            <a class="btn_submit_new modifyPPTsContent"><input name="modifyPPTsButton" type="button" value="保存" OnClick="modifyPPTsContent(<?php echo $PPTId;?>)"></a>
          </th>
       </tr>      
 <?php

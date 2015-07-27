@@ -252,7 +252,7 @@ function delUsersBatch()
                   <col class="Status" />
                   <col class="CanApprove" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="UserAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

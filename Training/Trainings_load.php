@@ -41,7 +41,7 @@
    define("ILLEGAL_CHAR", "'-;<>");                          //illegal char
    define("STR_LENGTH", 50);
    define("SEARCH_SIZE", 1000);                             //上限1000笔数
-   define("PAGE_SIZE", 100);                                //设置列表显示笔数
+   define("PAGE_SIZE", 1);                                //设置列表显示笔数
 
    //return value
    define("SUCCESS", 0);
@@ -293,7 +293,7 @@
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_training_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchTrainingsPage
@@ -321,7 +321,7 @@
                                          . "<col class=\"Status\" />"
                                          . "<col class=\"TrainingDate\" />"
                                          . "<col class=\"Date\" />"
-                                         . "<col class=\"action\" />"
+                                         . "<col class=\"TrainingAction\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -347,7 +347,7 @@
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_training_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -362,7 +362,7 @@
                                          . "<col class=\"Status\" />"
                                          . "<col class=\"TrainingDate\" />"
                                          . "<col class=\"Date\" />"
-                                         . "<col class=\"action\"/>"
+                                         . "<col class=\"TrainingAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"

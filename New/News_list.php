@@ -200,7 +200,7 @@ function occurTimeDatePicker()
                   <col class="Status" />
                   <col class="OccurTime" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="NewsAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

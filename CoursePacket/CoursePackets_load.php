@@ -270,17 +270,17 @@
       $return_string = $return_string . "<div class=\"toolMenu\">"
                                       . "<span class=\"paging\">"
                                       . "<input type=\"hidden\" id=search_no value=$row_number>"
-                                      . "<input type=\"hidden\" name=search_page_no value=1>"
-                                      . "<input type=\"hidden\" name=search_page_size value=" . $page_size . ">";
+                                      . "<input type=\"hidden\" name=search_CoursePacket_page_no value=1>"
+                                      . "<input type=\"hidden\" name=search_CoursePacket_page_size value=" . $page_size . ">";
       if ($page_num > 1)
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_CoursePacket_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchCoursePacketsPage
-            $return_string = $return_string . "\" id=search_page_begin_no_" . ($i + 1) . " OnClick=clickSearchCoursePacketsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_CoursePacket_page_begin_no_" . ($i + 1) . " OnClick=clickSearchCoursePacketsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       //***Step7 function name ==> expandSearchCoursePacketsContentFunc
@@ -302,7 +302,7 @@
                                          . "<col class=\"CoursePacketDesc\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"action\"/>"
+                                         . "<col class=\"CoursePacketAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -326,7 +326,7 @@
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_CoursePacket_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -339,7 +339,7 @@
                                          . "<col class=\"CoursePacketDesc\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"action\"/>"
+                                         . "<col class=\"CoursePacketAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -367,11 +367,12 @@
                   . "<td>$page_count_display</td>"
                   . "<td><span class=\"CoursePacketName fixWidth\">$CoursePacketName</span></td>"
                   . "<td><span class=\"CoursePacketDesc fixWidth\">$CoursePacketDesc</span></td>"
-                  . "<td>$StatusStr</td>"
-                  . "<td>$EditTime</td>"
+                  . "<td><span class=\"StatusStr fixWidth\">$StatusStr</span></td>"
+                  . "<td><span class=\"StatusStr fixWidth\">$EditTime</span></td>"
                   . "<td><A OnClick=\"actionSearchCoursePackets($CoursePacketId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchCoursePackets($CoursePacketId);\">修改</A><br/>"
-                  . "<A OnClick=\"deleteSearchCoursePackets($CoursePacketId);\">删除</A></td>"
+                  . "<A OnClick=\"deleteSearchCoursePackets($CoursePacketId);\">删除</A><br/>"
+                  . "<A OnClick=\"uploadUserCoursePackets($CoursePacketId);\">上传课程人员名单</A></td>"
                   . "</tr>";
 
                $i++;
@@ -404,10 +405,10 @@
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_CoursePacket_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
-            $return_string = $return_string . "\" id=search_page_end_no_" . ($i + 1) . " OnClick=clickSearchCoursePacketsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_CoursePacket_page_end_no_" . ($i + 1) . " OnClick=clickSearchCoursePacketsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       $return_string = $return_string . "</span>"

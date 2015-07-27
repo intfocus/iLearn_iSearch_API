@@ -191,7 +191,7 @@ function occurTimeDatePicker()
                   <col class="CategoryName" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="FileAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

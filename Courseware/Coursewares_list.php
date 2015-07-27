@@ -187,7 +187,7 @@ function occurTimeDatePicker()
                   <col class="CoursewareDesc" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="CoursewareAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

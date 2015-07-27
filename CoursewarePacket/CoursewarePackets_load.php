@@ -270,17 +270,17 @@
       $return_string = $return_string . "<div class=\"toolMenu\">"
                                       . "<span class=\"paging\">"
                                       . "<input type=\"hidden\" id=search_no value=$row_number>"
-                                      . "<input type=\"hidden\" name=search_page_no value=1>"
-                                      . "<input type=\"hidden\" name=search_page_size value=" . $page_size . ">";
+                                      . "<input type=\"hidden\" name=search_ppt_page_no value=1>"
+                                      . "<input type=\"hidden\" name=search_ppt_page_size value=" . $page_size . ">";
       if ($page_num > 1)
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_ppt_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
             //***Step6 function name ==> clickSearchpptsPage
-            $return_string = $return_string . "\" id=search_page_begin_no_" . ($i + 1) . " OnClick=clickSearchpptsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_ppt_page_begin_no_" . ($i + 1) . " OnClick=clickSearchpptsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       //***Step7 function name ==> expandSearchpptsContentFunc
@@ -302,7 +302,7 @@
                                          . "<col class=\"PPTDesc\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"action\"/>"
+                                         . "<col class=\"pptAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -326,7 +326,7 @@
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_ppt_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else
@@ -339,7 +339,7 @@
                                          . "<col class=\"PPTDesc\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"action\"/>"
+                                         . "<col class=\"pptAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -404,10 +404,10 @@
       {
          for ($i = 0; $i < $page_num; $i++)
          {
-            $return_string = $return_string . "<span class=\"search_page";
+            $return_string = $return_string . "<span class=\"search_ppt_page";
             if ($i + 1 == $page_default_no)
                $return_string = $return_string . " active";
-            $return_string = $return_string . "\" id=search_page_end_no_" . ($i + 1) . " OnClick=clickSearchpptsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
+            $return_string = $return_string . "\" id=search_ppt_page_end_no_" . ($i + 1) . " OnClick=clickSearchpptsPage(this," . ($i + 1) . ");>" . ($i + 1) . "</span>";
          }
       }
       $return_string = $return_string . "</span>"

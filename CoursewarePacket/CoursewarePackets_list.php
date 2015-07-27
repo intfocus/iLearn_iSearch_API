@@ -21,7 +21,7 @@ function actionSearchppts(pptId, Status)
    str = "cmd=actionppts" + "&pptId=" + pptId + "&Status=" + Status;
    url_str = "CoursewarePacket/CoursewarePackets_action.php?";
    
-   // alert(url_str + str);
+   //alert(url_str + str);
    
    //$('#loadingWrap').show();
    $.ajax
@@ -104,29 +104,29 @@ function deleteSearchppts(pptId)
 function modifySearchppts(pptId)
 {
    str = "cmd=read&pptId=" + pptId;
-   url_str = "ppt/ppts_modify.php?";
+   url_str = "CoursewarePacket/CoursewarePackets_modify.php?";
    window.open(url_str + str);
 }
 
 function clickSearchpptsPage(obj, n)  //搜尋換頁
 {
-   if (obj.className == "search_page active")
+   if (obj.className == "search_ppt_page active")
       return;
-   nPage = document.getElementsByName("search_page_no")[0].value;
-   document.getElementsByName("search_page_no")[0].value = n;
-   str = "search_page_begin_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_end_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_begin_no_" + n;
-   document.getElementById(str).className = "search_page active";
-   str = "search_page_end_no_" + n;
-   document.getElementById(str).className = "search_page active";	
+   nPage = document.getElementsByName("search_ppt_page_no")[0].value;
+   document.getElementsByName("search_ppt_page_no")[0].value = n;
+   str = "search_ppt_page_begin_no_" + nPage;
+   document.getElementById(str).className = "search_ppt_page";
+   str = "search_ppt_page_end_no_" + nPage;
+   document.getElementById(str).className = "search_ppt_page";
+   str = "search_ppt_page_begin_no_" + n;
+   document.getElementById(str).className = "search_ppt_page active";
+   str = "search_ppt_page_end_no_" + n;
+   document.getElementById(str).className = "search_ppt_page active";	
    
    //clear current table
-   str = "search_page" + nPage;
+   str = "search_ppt_page" + nPage;
    document.getElementById(str).style.display = "none";
-   str = "search_page" + n;
+   str = "search_ppt_page" + n;
    document.getElementById(str).style.display = "block";
 }
 
@@ -134,7 +134,7 @@ function clickSearchpptsPage(obj, n)  //搜尋換頁
 function pptsearchpptsContentFunc()
 { 
    str = "cmd=read&pptId=0";
-   url_str = "ppt/ppts_modify.php?";
+   url_str = "CoursewarePacket/CoursewarePackets_modify.php?";
    window.open(url_str + str);
 }
 
@@ -195,7 +195,7 @@ function occurTimeDatePicker()
                   <col class="pptDesc" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="action" />
+                  <col class="pptAction" />
                </colgroup>
                <tr>
                   <th>编号</th>

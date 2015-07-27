@@ -41,7 +41,7 @@
    define("ILLEGAL_CHAR", "'-;<>");                          //illegal char
    define("STR_LENGTH", 50);
    define("SEARCH_SIZE", 1000);                             //上限1000笔数
-   define("PAGE_SIZE", 100);                                //设置列表显示笔数
+   define("PAGE_SIZE", 1);                                //设置列表显示笔数
 
    //return value
    define("SUCCESS", 0);
@@ -352,7 +352,7 @@ left join Users as u on te.UserId = u.UserId where ti.Status";
          {
             if ($page_count == 0)
             {
-               $return_string = $return_string . "<div id=\"search_page" . $page_no . "\" ";
+               $return_string = $return_string . "<div id=\"search_Trainee_page" . $page_no . "\" ";
                if ($page_no == 1)
                   $return_string = $return_string . "style=\"display:block;\"";
                else

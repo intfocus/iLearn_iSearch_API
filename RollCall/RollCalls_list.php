@@ -109,23 +109,23 @@ function modifySearchRollCalls(RollCallId)
 
 function clickSearchRollCallsPage(obj, n)  //搜尋換頁
 {
-   if (obj.className == "search_page active")
+   if (obj.className == "search_RollCall_page active")
       return;
-   nPage = document.getElementsByName("search_page_no")[0].value;
-   document.getElementsByName("search_page_no")[0].value = n;
-   str = "search_page_begin_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_end_no_" + nPage;
-   document.getElementById(str).className = "search_page";
-   str = "search_page_begin_no_" + n;
-   document.getElementById(str).className = "search_page active";
-   str = "search_page_end_no_" + n;
-   document.getElementById(str).className = "search_page active";	
+   nPage = document.getElementsByName("search_RollCall_page_no")[0].value;
+   document.getElementsByName("search_RollCall_page_no")[0].value = n;
+   str = "search_RollCall_page_begin_no_" + nPage;
+   document.getElementById(str).className = "search_RollCall_page";
+   str = "search_RollCall_page_end_no_" + nPage;
+   document.getElementById(str).className = "search_RollCall_page";
+   str = "search_RollCall_page_begin_no_" + n;
+   document.getElementById(str).className = "search_RollCall_page active";
+   str = "search_RollCall_page_end_no_" + n;
+   document.getElementById(str).className = "search_RollCall_page active";	
    
    //clear current table
-   str = "search_page" + nPage;
+   str = "search_RollCall_page" + nPage;
    document.getElementById(str).style.display = "none";
-   str = "search_page" + n;
+   str = "search_RollCall_page" + n;
    document.getElementById(str).style.display = "block";
 }
 
