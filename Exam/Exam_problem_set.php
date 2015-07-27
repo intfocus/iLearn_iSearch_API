@@ -89,7 +89,7 @@
 <!-- BEG_ORISBOT_NOINDEX -->
 </head>
 <body>
-   <div class="cur_problem_set problem_set" id="problem_set_0">
+   <div class="cur_problem_set problem_set" id="problem_set_0" data-problem_set="0">
          <form>
 
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
@@ -388,12 +388,25 @@
 
                                             </div>
          </div>
+                                      
+
+
+                                      <div class="col-md-12" id="problem_set_btn_0">
+                                          <a class="btn_submit_new problem_set_btn"><input class="problem_set_btn1" name="problem_set_button" data-problem_set="0" type="button" value="题目规则1"></a>
+                                      </div>
+
+
                                      <div class="col-md-12" id="problem_set_btn_template"  style="display: none;">
                                           <a class="btn_submit_new problem_set_btn"><input name="problem_set_button" type="button"></a>
-                                       </div> 
+                                       </div>
+                                       
+                                       <div class="col-md-12">
+                                        <a><input id="delete_cur_problem" data-problem_set="" type="button" value="删除此规则"></a>
+                                      </div>
 
                                      <div class="col-md-5">
                                           <a class="btn_submit_new next_problem_set"><input name="next_problem_set" type="button" value="新增产生题目规则"></a>
-                                       </div>  
+                                       </div>
+
     </body>
 </html>

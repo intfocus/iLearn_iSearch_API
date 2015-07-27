@@ -86,6 +86,7 @@
 <!-- BEG_ORISBOT_NOINDEX -->
 </head>
 <body>
+
          <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <? $func_type = FUNCTION_OTHER; ?>
@@ -198,11 +199,10 @@
 
          </table>
       </form>
-         <div class="select_problem_info">
-      <table class="table">
-         <th></th><th>编号</th><th>题型</th><th>难易</th><th>描述</th>
-         <tr id="select_problem_template" style="display: none"></tr>
-      </table>
-   </div>
-    </body>
+      <div class="select_problem_info">
+         <table class="table">
+            <th></th><th>编号</th><th>题型</th><th>难易</th><th>描述</th><th>上传日期</th>
+            <tr id="select_problem_template" style="display: none"></tr>
+         </table>
+      </div>
 </html>

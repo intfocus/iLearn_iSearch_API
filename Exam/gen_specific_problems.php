@@ -132,9 +132,9 @@
       echo DB_ERROR;       
       return;
    }   
- 
+
    // get obu require id
-   $func_type = FUNCTION_OTHER;
+   $func_type = FUNCTION_PRODUCT;
    $str_query = "Select * from functions where FunctionType=$func_type AND FunctionName='OBL'";
    if($result = mysqli_query($link, $str_query))
    {
@@ -200,6 +200,8 @@
       }
    }
 
+   $str_query1 = $str_query1." ORDER BY CreatedTime DESC";
+
    //***Step16 页面搜索SQl语句 结束
    /////////////////////
    // prepare the SQL command and query DB
@@ -216,7 +218,7 @@
       for ($i=0; $i<$row_number; $i++)
       {
          $row = mysqli_fetch_assoc($result);
-         array_push($SelectedProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]));
+         array_push($SelectedProbs, new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], timestamp_to_datetime_with_only_date(strtotime($row["CreatedTime"]))));
       }
    }
    else
