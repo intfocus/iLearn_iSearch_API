@@ -170,16 +170,20 @@
    }
    else
    {
-      $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,') AND (" ;
-      for ($i=0; $i<count($product_functions_id); $i++)   
+
+      if (count($product_functions_id) > 0)
       {
-         if ($i == (count($product_functions_id) - 1))
+         $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,') AND (" ;
+         for ($i=0; $i<count($product_functions_id); $i++)   
          {
-            $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,')";
-         }
-         else
-         {
-            $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,'"." OR ";
+            if ($i == (count($product_functions_id) - 1))
+            {
+               $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,')";
+            }
+            else
+            {
+               $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,'"." OR ";
+            }
          }
       }
 
@@ -188,6 +192,7 @@
          $str_query1 = $str_query1." AND (";
          for ($i=0; $i<count($adapation_functions_id); $i++)   
          {
+            
             if ($i == (count($adapation_functions_id) - 1))
             {
                $str_query1 = $str_query1."ProblemCategory like ',%$adapation_functions_id[$i]%,')";
