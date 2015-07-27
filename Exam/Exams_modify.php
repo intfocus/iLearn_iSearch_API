@@ -270,7 +270,7 @@ EOD;
       if($result=mysqli_query($link, $str_query))
       {
          $row = mysqli_fetch_assoc($result);
-         $problem = new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"]);
+         $problem = new Problem($row["ProblemId"], $row["ProblemDesc"], $row["ProblemType"], $row["ProblemLevel"], $row["CreatedTime"]);
          return $problem;
       }
       
