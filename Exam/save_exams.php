@@ -347,7 +347,7 @@ EOD;
       }
       
       $answers = parse_answer($row["ProblemAnswer"]);
-      $score = $type_scores[$row["ProblemLevel"]];
+      $score = $type_scores[$row["ProblemType"]];
       array_push($problems, array(
                               "id"=> (int)$row["ProblemId"],
                               "description"=> $row["ProblemDesc"],
