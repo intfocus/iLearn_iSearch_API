@@ -284,7 +284,7 @@
    // check first row, first row should be 类型, 标题, 难度, 产品, 适应症, 题库类别, 正确答案, 题目解析
    function is_valid_syntax_import_file($row)
    {
-      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "适应症" ||
+      if ($row[0] != "类型" || $row[1] != "标题" || $row[2] != "难度" || $row[3] != "产品" || $row[4] != "TA/适应症" ||
           $row[5] != "题库类别" || $row[6] != "正确答案" || $row[7] != "题目解析")
       {
          return false;

@@ -120,7 +120,7 @@
       echo SYMBOL_ERROR_CMD;
       return;
    }
-   if(($NewId = check_number($_GET["NewId"])) == SYMBOL_ERROR)
+   if(($CoursePacketId = check_number($_GET["CoursePacketId"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -140,48 +140,55 @@
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if ($cmd == "read") // Load
    {
-      $str_query1 = "Select * from news where NewId=$NewId";
+      $str_query1 = "Select * from coursepacket where CoursePacketId=$CoursePacketId";
       if($result = mysqli_query($link, $str_query1))
       {
          $row_number = mysqli_num_rows($result);
          if ($row_number > 0)
          {
             $row = mysqli_fetch_assoc($result);
-            $NewId = $row["NewId"];
-            $NewTitle = $row["NewTitle"];
-            $NewMsg = $row["NewMsg"];
+            $CoursePacketId = $row["CoursePacketId"];
+            $CoursePacketName = $row["CoursePacketName"];
+            $CoursePacketDesc = $row["CoursePacketDesc"];
+            $CoursewarePacketList = $row["CoursewarePacketList"];
+            $CoursewareList = $row["CoursewareList"];
             $Status = $row["Status"];
-            $DeptList = $row["DeptList"];
+            $ExamList = $row["ExamList"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
-            $EditTime = $row["EditTime"];
-            $CreatedTime = $row["CreatedTime"];
-            $OccurTime = $row["OccurTime"] == null ? '' : date("Y/m/d",strtotime($row["OccurTime"]));
-            $TitleStr = "公告修改";
+            $QuestionnaireList = $row["QuestionnaireList"];
+            $AvailableTime = $row["AvailableTime"]== null ? '' : date("Y/m/d",strtotime($row["AvailableTime"]));
+            $EditTime = $row["EditTime"] == null ? '' : date("Y/m/d",strtotime($row["EditTime"]));
+            $TitleStr = "课程包修改";
             if ($Status == 1)
-               $TitleStr = "公告查看 (上架状态无法修改)";
+               $TitleStr = "课程包查看 (上架状态无法修改)";
          }
          else
          {
-            $NewId = 0;
-            $NewTitle = "";
-            $NewMsg = "";
-            $DeptList = "All";
-            $OccurTime = "";
-            $TitleStr = "公告新增";
+            $CoursePacketId = 0;
+            $CoursePacketName = "";
+            $CoursePacketDesc = "";
+            $CoursewarePacketList = "";
+            $CoursewareList = "";
+            $TitleStr = "课程包新增";
             $Status = 0;
+            $ExamList = "";
+            $StatusStr = "";
+            $QuestionnaireList = "";
+            $AvailableTime = "";
          }
       }
    }
-   else if ($NewId == 0) // Insert
+   else if ($CoursePacketId == 0) // Insert
    {
-      $NewTitle = $_POST["NewTitle"];
-      $NewMsg = $_POST["NewMsg"];
-      $OccurTime = "'" . $_POST["OccurTime"] . "'";
-      $DeptList = $_POST["DeptList"];
-      if ($OccurTime == "''")
-         $OccurTime = "NULL";
-      $str_query1 = "Insert into news (NewTitle,NewMsg,OccurTime,DeptList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$NewTitle','$NewMsg',$OccurTime, '$DeptList',$user_id,now(),$user_id,now(),1)" ;
+      $CoursePacketName = $_POST["CoursePacketName"];
+      $CoursePacketDesc = $_POST["CoursePacketDesc"];
+      $CoursewarePacketList = $_POST["CoursewarePacketList"];
+      $CoursewareList = $_POST["CoursewareList"];
+      $ExamList = $_POST["ExamList"];
+      $QuestionnaireList = $_POST["QuestionnaireList"];
+      $AvailableTime = "'" . $_POST["AvailableTime"] . "'";
+      $str_query1 = "Insert into news (CoursePacketName,CoursePacketDesc,CoursewarePacketList,CoursewareList,ExamList,QuestionnaireList,AvailableTime,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$CoursePacketName','$CoursePacketDesc','$CoursewarePacketList','$CoursewareList','$ExamList','$QuestionnaireList',$AvailableTime,$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -195,14 +202,16 @@
    }
    else // Update
    {
-      $NewTitle = $_POST["NewTitle"];
-      $NewMsg = $_POST["NewMsg"];
-      $OccurTime = "'" . $_POST["OccurTime"] . "'";
-      $DeptList = $_POST["DeptList"];
-      if ($OccurTime == "''")
-         $OccurTime = "NULL";
-      //TODO EditUser=UserId
-      $str_query1 = "Update news set NewTitle='$NewTitle', NewMsg='$NewMsg', DeptList='$DeptList', OccurTime=$OccurTime, EditUser=$user_id, EditTime=now() where NewId=$NewId";
+      $CoursePacketName = $_POST["CoursePacketName"];
+      $CoursePacketDesc = $_POST["CoursePacketDesc"];
+      $CoursewarePacketList = $_POST["CoursewarePacketList"];
+      $CoursewareList = $_POST["CoursewareList"];
+      $ExamList = $_POST["ExamList"];
+      $QuestionnaireList = $_POST["QuestionnaireList"];
+      $AvailableTime = "'" . $_POST["AvailableTime"] . "'";
+      $str_query1 = "Update news set CoursePacketName='$CoursePacketName', CoursePacketDesc='$CoursePacketDesc', 
+         CoursewarePacketList='$CoursewarePacketList', CoursewareList='$CoursewareList', ExamList='$ExamList', 
+         QuestionnaireList='$QuestionnaireList', AvailableTime=$AvailableTime, EditUser=$user_id, EditTime=now() where NewId=$NewId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -279,33 +288,33 @@ function loaded()
 //***Step12 修改页面点击保存按钮出发Ajax动作
 function modifyNewsContent(NewId)
 {
-   NewTitle = document.getElementsByName("NewTitleModify")[0].value.trim();
-   NewMsg = document.getElementsByName("NewMsgModify")[0].value.trim();
-   OccurTime = document.getElementsByName("OccurTimeModify")[0].value.trim();
+   CoursePacketName = document.getElementsByName("CoursePacketNameModify")[0].value.trim();
+   CoursePacketDesc = document.getElementsByName("CoursePacketDescModify")[0].value.trim();
+   AvailableTime = document.getElementsByName("AvailableTimeModify")[0].value.trim();
    DeptList = getCheckedDept();
    
-   if (NewTitle.length == 0 || NewMsg.length == 0)
+   if (CoursePacketName.length == 0 || CoursePacketDesc.length == 0)
    {
-      alert("公告主题及公告内容不可为空白");
+      alert("课程包名称及课程包备注不可为空白");
       return;
    }
    
-   if (NewTitle.length > 255 || NewMsg.length > 255){
-      alert("公告主题及公告内容长度过长！请缩短后重新保存。");
+   if (CoursePacketName.length > 100 || CoursePacketDesc.length > 255){
+      alert("课程包名称及课程包备注长度过长！请缩短后重新保存。");
       return;
    }
    
-   if (OccurTime.length > 0)
+   if (AvailableTime.length > 0)
    {
-      if (OccurTime.length != 10)
+      if (AvailableTime.length != 10)
       {
          alert("日期格式必须为 yyyy/mm/dd");
          return;
       }
       var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
-      if (!reg.exec(OccurTime))
+      if (!reg.exec(AvailableTime))
       {
-         alert("日期格式必须为 yyyy/mm/dd " + OccurTime);
+         alert("日期格式必须为 yyyy/mm/dd " + AvailableTime);
          return;
       }
    }
@@ -370,54 +379,17 @@ function modifyNewsContent(NewId)
 <div id="content">
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>标题</th>
-         <td><Input type=text name=NewTitleModify size=50 value="<?php echo $NewTitle;?>"></td>
+         <th>课程包名称：</th>
+         <td><Input type="text" name="CoursePacketNameModify" size=50 value="<?php echo $CoursePacketName;?>"></td>
       </tr>
       <tr>
-         <th>内文：</th>
-         <td><Textarea name=NewMsgModify rows=30 cols=100><?php echo $NewMsg;?></textarea></td>
+         <th>课程包说明：</th>
+         <td><Textarea name="CoursePacketDescModify" rows=30 cols=100><?php echo $CoursePacketDesc;?></textarea></td>
       </tr>
       <tr>
-         <th>发生时间 ：</th>
+         <th>课程包有效时间 ：</th>
          <td>
-            <input id="from0" type="text" name="OccurTimeModify" class="from" readonly="true" value="<?php echo $OccurTime;?>"/>
-         </td>
-      </tr>
-      <tr>
-         <th>选择部门：</th>
-         <td>
-            <div style="margin:20px 0;">
-               <a id=displayExpandToDeptButton href="#" class="easyui-linkbutton" onclick="expandToDept()">显示当前所属部门</a>
-            </div>
-            <div class="easyui-panel" style="padding:5px">
-               <ul id="depttree" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true,checkbox:true"></ul>
-            </div>
-            <script type="text/javascript">
-               function expandToDept(){
-                  $('#depttree').tree('collapseAll');
-                  $('#displayExpandToDeptButton').hide();
-                  var dlstr = "<?php echo $DeptList; ?>";
-                  var dlstr1 = dlstr.substring(1,dlstr.length-1);
-                  var dlstr_array = dlstr1.split(",,");
-                  for(var m=0; m<dlstr_array.length;m++)
-                  {
-                     var node = $('#depttree').tree('find',Number(dlstr_array[m]));
-                     $('#depttree').tree('check', node.target);
-                  }
-                  $('#depttree').tree('expandToDept', node.target);
-                  
-               }
-               
-               function getCheckedDept(){
-                  var nodes = $('#depttree').tree('getChecked');
-                  var s = '';
-                  for(var i=0; i<nodes.length; i++){
-                     if (s != '') s += ',,';
-                     s += nodes[i].id;
-                  }
-                  return ',' + s + ',';
-               }
-            </script>         
+            <input id="from0" type="text" name="AvailableTimeModify" class="from" readonly="true" value="<?php echo $AvailableTime;?>"/>
          </td>
       </tr>
 <?php
