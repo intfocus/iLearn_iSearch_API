@@ -66,14 +66,14 @@
       $questioncount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sq = new StuQuestion();
-         $sq->Id = $row['QuestionId'];
-         $sq->TemplateId = $row['QuestionTemplateId'];
+         $sq->Id = (int)$row['QuestionId'];
+         $sq->TemplateId = (int)$row['QuestionTemplateId'];
          $sq->Name = $row['QuestionName'];
          $sq->Desc = $row['QuestionDesc'];
          $sq->StartTime = date("Y/m/d H:i:s",strtotime($row['StartTime']));
          $sq->EndTime = date("Y/m/d H:i:s",strtotime($row['EndTime']));
-         $sq->CreatedUser = $row['CreatedUser'];
-         $sq->Status = $row['Status'];
+         $sq->CreatedUser = (int)$row['CreatedUser'];
+         $sq->Status = (int)$row['Status'];
          array_push($dataQuestion,$sq);
       }
       // mysqli_close($link);

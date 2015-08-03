@@ -87,7 +87,7 @@
 
    if($rs = mysqli_query($link, $str_qt)){
       $row = mysqli_fetch_assoc($rs);
-      $Id = $row["QuestionTemplateId"];
+      $Id = (int)$row["QuestionTemplateId"];
       $Name = $row["QuestionTemplateName"];
       $Desc = $row["QuestionTemplateDesc"];
    }
@@ -109,19 +109,19 @@
       $qtcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $qd = new StuQuestionDetail();
-         $qd->ProblemId = $row["ProblemId"];
-         $qd->QestionTemplateId = $row["QestionTemplateId"];
-         $qd->ProblemType = $row["ProblemType"];
+         $qd->ProblemId = (int)$row["ProblemId"];
+         $qd->QestionTemplateId = (int)$row["QestionTemplateId"];
+         $qd->ProblemType = (int)$row["ProblemType"];
          $qd->ProblemDesc = $row["ProblemDesc"];
-         $qd->ProblemSelectA = $row["ProblemSelectA"];
-         $qd->ProblemSelectB = $row["ProblemSelectB"];
-         $qd->ProblemSelectC = $row["ProblemSelectC"];
-         $qd->ProblemSelectD = $row["ProblemSelectD"];
-         $qd->ProblemSelectE = $row["ProblemSelectE"];
-         $qd->ProblemSelectF = $row["ProblemSelectF"];
-         $qd->ProblemSelectG = $row["ProblemSelectG"];
-         $qd->ProblemSelectH = $row["ProblemSelectH"];
-         $qd->ProblemSelectI = $row["ProblemSelectI"];
+         $qd->ProblemSelectA = $row["ProblemSelectA"] == "" ? null : $row["ProblemSelectA"];
+         $qd->ProblemSelectB = $row["ProblemSelectB"] == "" ? null : $row["ProblemSelectB"];
+         $qd->ProblemSelectC = $row["ProblemSelectC"] == "" ? null : $row["ProblemSelectC"];
+         $qd->ProblemSelectD = $row["ProblemSelectD"] == "" ? null : $row["ProblemSelectD"];
+         $qd->ProblemSelectE = $row["ProblemSelectE"] == "" ? null : $row["ProblemSelectE"];
+         $qd->ProblemSelectF = $row["ProblemSelectF"] == "" ? null : $row["ProblemSelectF"];
+         $qd->ProblemSelectG = $row["ProblemSelectG"] == "" ? null : $row["ProblemSelectG"];
+         $qd->ProblemSelectH = $row["ProblemSelectH"] == "" ? null : $row["ProblemSelectH"];
+         $qd->ProblemSelectI = $row["ProblemSelectI"] == "" ? null : $row["ProblemSelectI"];
          $qd->GroupName = $row["GroupName"];
          array_push($dataqd,$qd);
       }

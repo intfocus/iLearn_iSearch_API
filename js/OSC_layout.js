@@ -302,6 +302,39 @@ $(function() {
       }
    });
    
+   var dates15 = $( "#from15, #to15" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from15" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date15 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates15.not( this ).datepicker( "option", option, date15 );
+      }
+   });
+   
+   var dates16 = $( "#from16, #to16" ).datepicker({
+      minDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from16" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date16 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates16.not( this ).datepicker( "option", option, date16 );
+      }
+   });
+   
 
    var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
        minDate: new Date(),

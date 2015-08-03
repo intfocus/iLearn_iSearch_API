@@ -66,17 +66,17 @@
       public $PPTDesc;
    }
    
+   $datacpstr = array();
    function CPList($CPstr)
    {
       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-      $datacpstr = array();
       $CPstr = substr($CPstr,1);
       $CPstr = substr($CPstr,0,-1);
       $CPstr = str_replace(",,",",",$CPstr);
       $str_ppt = "select PPTName, CoursewareList, CoursewareDesc from ppts where PPTId in ($CPstr)";
       if($rsppt = mysqli_query($strlink, $str_ppt)){
-         $scppt = new Stuppt();
-         while($row = mysqli_fetch_assoc($rsppt)){      
+         while($row = mysqli_fetch_assoc($rsppt)){
+            $scc = new StuC();      
             $scppt->PPTName = $row['PPTName'];
             $scppt->PPTList = CList($row['CoursewareList']);
             $scppt->PPTDesc = $row['CoursewareDesc'];
@@ -112,8 +112,8 @@
       $Cstr = str_replace(",,",",",$Cstr);
       $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile from Coursewares where Status = 1 and CoursewareId in ($Cstr)";
       if($rsc = mysqli_query($strlink, $str_c)){
-         $scc = new StuC();
-         while($row = mysqli_fetch_assoc($rsc)){      
+         while($row = mysqli_fetch_assoc($rsc)){
+            $scc = new StuC();      
             $scc->CoursewareId = $row['CoursewareId'];
             $scc->CoursewareName = $row['CoursewareName'];
             $scc->CoursewareDesc = $row['CoursewareDesc'];
@@ -160,8 +160,8 @@
       $str_e = "select ExamId, ExamName, ExamType, ExamLocation, ExamAnsType, ExamPassword, ExamDesc, ExamContent, Duration, AllowTime, QualifyPercent from exams
              where Status = 1 and ExamId in ($Estr)";
       if($rse = mysqli_query($strlink, $str_e)){
-         $sce = new StuE();
-         while($row = mysqli_fetch_assoc($rse)){      
+         while($row = mysqli_fetch_assoc($rse)){
+            $sce = new StuE();
             $sce->ExamId = $row['ExamId'];
             $sce->ExamName = $row['ExamName'];
             $sce->ExamType = $row['ExamType'];

@@ -287,6 +287,7 @@ function checkCoursewareTypeModify() {
    
    if(extension == "pdf"){
       document.getElementById("FilePath").disabled = false;
+      return;
    }
    else{
       document.getElementById("FilePath").disabled = true;
@@ -294,6 +295,7 @@ function checkCoursewareTypeModify() {
    
    if(extension == "mp4"){
       document.getElementById("FilePath").disabled = false;
+      return;
    }
    else{
       document.getElementById("FilePath").disabled = true;
@@ -301,6 +303,7 @@ function checkCoursewareTypeModify() {
    
    if(extension == "zip"){
       document.getElementById("FilePath").disabled = false;
+      return;
    }
    else{
       document.getElementById("FilePath").disabled = true;

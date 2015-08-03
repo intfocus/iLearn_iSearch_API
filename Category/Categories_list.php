@@ -63,7 +63,7 @@ function deleteSearchCategories(CategoryId)
       cache: false,
       success: function(res)
       {
-         alert(res);
+         // alert(res);
          $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
          {
             if (!res.match(/^-\d+$/))  //success

@@ -1167,6 +1167,62 @@ $(function()
    });
    //***Step4 searchCoursewares end
    
+   //***Step4 searchQuestionTemplates begin
+   $('.btn_submit_new.searchQTs').click(function()
+   {
+      var searchQTsDescName = document.getElementById("searchQTsDescName").value;
+   
+      var statusCheckbox = 0;
+      if (document.getElementById("searchQTsCheckBox1").checked == true)
+      {
+         statusCheckbox += 1; 
+      }
+      if (document.getElementById("searchQTsCheckBox2").checked == true)
+      {
+         statusCheckbox += 2; 
+      }
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchQTs" + 
+      "&searchQTsDescName=" + encodeURIComponent(searchQTsDescName) + 
+      "&statusCheckbox=" + statusCheckbox;
+      url_str = "QuestionTemplate/QuestionTemplates_load.php?";
+      
+      //alert(url_str + str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchQTsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchQuestionTemplates end
+   
    //***Step4 searchCoursewarePackets begin
    $('.btn_submit_new.searchppts').click(function()
    {
@@ -1490,7 +1546,7 @@ $(function()
             + "searchNewsto1=" + searchNewsto1 + "&" + "searchNewsfrom2=" + searchNewsfrom2 + "&" + "searchNewsto2=" + searchNewsto2 + "&" + "statusCheckbox=" + statusCheckbox;
       url_str = "New/News_load.php?";
       
-      alert(str);
+      // alert(str);
       $('#loadingWrap').show();
       $.ajax
       ({
@@ -1838,6 +1894,65 @@ $(function()
       });
    });
    //***Step24 searchCategories end
+   
+   //***Step23 searchQuestions begin
+   $('.btn_submit_new.searchQuestions').click(function()
+   {
+      var searchQuestionsNameDesc = document.getElementById("searchQuestionsNameDesc").value;
+      var searchQuestionsfrom15 = document.getElementsByName("searchQuestionsfrom15")[0].value;
+      var searchQuestionsto15 = document.getElementsByName("searchQuestionsto15")[0].value;
+   
+      var QuestionstatusCheckbox = 0;
+      if (document.getElementById("searchQuestionsCheckBox1").checked == true)
+      {
+         QuestionstatusCheckbox += 1; 
+      }
+      if (document.getElementById("searchQuestionsCheckBox2").checked == true)
+      {
+         QuestionstatusCheckbox += 2; 
+      }
+      
+      var str;                            //送出内文字串  
+      
+      //ajax
+      str = "cmd=searchQuestions" + "&searchQuestionsNameDesc=" + encodeURIComponent(searchQuestionsNameDesc) + "&searchQuestionsfrom15=" + searchQuestionsfrom15 
+           + "&searchQuestionsto15=" + searchQuestionsto15 + "&QuestionstatusCheckbox=" + QuestionstatusCheckbox;
+      url_str = "Question/Questions_load.php?";
+      
+      // alert(str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            // alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchQuestionsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step24 searchQuestionss end
    
    //computerList search, added by Phantom, 20120613
    $('.btn_submit_new.userMgmt_confirm').click(function()

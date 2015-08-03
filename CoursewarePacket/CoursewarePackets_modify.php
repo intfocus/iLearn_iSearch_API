@@ -1000,7 +1000,7 @@ function modifyPPTsContent(PPTId)
         </section>
         <!-- Main Content Ends -->
 <!-- js placed at the end of the document so the pages load faster -->
-        <script src="js/jquery.js"></script>
+        <!-- <script src="js/jquery.js"></script> -->
         <script src="js/bootstrap.min.js"></script>
         <script src="js/pace.min.js"></script>
         <script src="js/wow.min.js"></script>
