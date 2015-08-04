@@ -1028,6 +1028,7 @@ function loaded() {
 										   <select id="exam_location" class="form-control">
 											  <option value=0 selected>线上</option>
 											  <option value=1>落地考</option>
+											  <option value=2>练习考</option>
 										   </select>
                                     </div>
                                     <div class="form-group" id="exam_password_sections" style="display:none">

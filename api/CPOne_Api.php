@@ -66,30 +66,33 @@
       public $PPTDesc;
    }
    
-   $datacpstr = array();
    function CPList($CPstr)
    {
       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
       $CPstr = substr($CPstr,1);
       $CPstr = substr($CPstr,0,-1);
-      $CPstr = str_replace(",,",",",$CPstr);
-      $str_ppt = "select PPTName, CoursewareList, CoursewareDesc from ppts where PPTId in ($CPstr)";
-      if($rsppt = mysqli_query($strlink, $str_ppt)){
-         while($row = mysqli_fetch_assoc($rsppt)){
-            $scc = new StuC();      
-            $scppt->PPTName = $row['PPTName'];
-            $scppt->PPTList = CList($row['CoursewareList']);
-            $scppt->PPTDesc = $row['CoursewareDesc'];
-            array_push($datacpstr, $scppt);
+      $datacpstr = array();
+      // $CPstr = str_replace(",,",",",$CPstr);
+      $CPstrs = explode(',,',$CPstr);
+      foreach ($CPstrs as $cp) {
+         $str_ppt = "select PPTName, CoursewareList, PPTDesc from ppts where PPTId = $cp";
+         if($rsppt = mysqli_query($strlink, $str_ppt)){
+            while($row = mysqli_fetch_assoc($rsppt)){
+               $scppt = new Stuppt();      
+               $scppt->PPTName = $row['PPTName'];
+               $scppt->PPTList = CList($row['CoursewareList']);
+               $scppt->PPTDesc = $row['PPTDesc'];
+               array_push($datacpstr, $scppt);
+            }
          }
-      }
-      else
-      {
-         if($strlink){
-            mysqli_close($strlink);
+         else
+         {
+            if($strlink){
+               mysqli_close($strlink);
+            }
+            sleep(DELAY_SEC);
+            return;
          }
-         sleep(DELAY_SEC);
-         return;
       }
       mysqli_close($strlink);
       return $datacpstr;
@@ -109,28 +112,31 @@
       $datacstr = array();
       $Cstr = substr($Cstr,1);
       $Cstr = substr($Cstr,0,-1);
-      $Cstr = str_replace(",,",",",$Cstr);
-      $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile from Coursewares where Status = 1 and CoursewareId in ($Cstr)";
-      if($rsc = mysqli_query($strlink, $str_c)){
-         while($row = mysqli_fetch_assoc($rsc)){
-            $scc = new StuC();      
-            $scc->CoursewareId = $row['CoursewareId'];
-            $scc->CoursewareName = $row['CoursewareName'];
-            $scc->CoursewareDesc = $row['CoursewareDesc'];
-            $scc->CoursewareFile = $row['CoursewareFile'];
-            $extensions = explode('.',$row['CoursewareFile']);
-            $escount = count($extensions)-1;
-            $scc->Extension = $extensions[$escount];
-            array_push($datacstr, $scc);
+      // $Cstr = str_replace(",,",",",$Cstr);
+      $Cstrs = explode(',,', $Cstr);
+      foreach ($Cstrs as $Cs) {
+         $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile from Coursewares where Status = 1 and CoursewareId = $Cs;";
+         if($rsc = mysqli_query($strlink, $str_c)){
+            while($row = mysqli_fetch_assoc($rsc)){
+               $scc = new StuC();      
+               $scc->CoursewareId = $row['CoursewareId'];
+               $scc->CoursewareName = $row['CoursewareName'];
+               $scc->CoursewareDesc = $row['CoursewareDesc'];
+               $scc->CoursewareFile = $row['CoursewareFile'];
+               $extensions = explode('.',$row['CoursewareFile']);
+               $escount = count($extensions)-1;
+               $scc->Extension = $extensions[$escount];
+               array_push($datacstr, $scc);
+            }
          }
-      }
-      else
-      {
-         if($strlink){
-            mysqli_close($strlink);
+         else
+         {
+            if($strlink){
+               mysqli_close($strlink);
+            }
+            sleep(DELAY_SEC);
+            return;
          }
-         sleep(DELAY_SEC);
-         return;
       }
       mysqli_close($strlink);
       return $datacstr;
@@ -156,32 +162,35 @@
       $dataestr = array();
       $Estr = substr($Estr,1);
       $Estr = substr($Estr,0,-1);
-      $Estr = str_replace(",,",",",$Estr);
-      $str_e = "select ExamId, ExamName, ExamType, ExamLocation, ExamAnsType, ExamPassword, ExamDesc, ExamContent, Duration, AllowTime, QualifyPercent from exams
-             where Status = 1 and ExamId in ($Estr)";
-      if($rse = mysqli_query($strlink, $str_e)){
-         while($row = mysqli_fetch_assoc($rse)){
-            $sce = new StuE();
-            $sce->ExamId = $row['ExamId'];
-            $sce->ExamName = $row['ExamName'];
-            $sce->ExamType = $row['ExamType'];
-            $sce->ExamLocation = $row['ExamLocation'];
-            $sce->ExamAnsType = $row['ExamAnsType'];
-            $sce->ExamPassword = $row['ExamPassword'];
-            $sce->ExamDesc = $row['ExamDesc'];
-            $sce->ExamContent = $row['ExamContent'];
-            $sce->AllowTime = $row['AllowTime'];
-            $sce->QualifyPercent = $row['QualifyPercent'];
-            array_push($dataestr, $sce);
+      // $Estr = str_replace(",,",",",$Estr);
+      $Estrs = explode(',,', $Estr);
+      foreach ($Estrs as $es) {
+         $str_e = "select ExamId, ExamName, ExamType, ExamLocation, ExamAnsType, ExamPassword, ExamDesc, ExamContent, Duration, AllowTime, QualifyPercent from exams
+             where Status = 1 and ExamId = $es";
+         if($rse = mysqli_query($strlink, $str_e)){
+            while($row = mysqli_fetch_assoc($rse)){
+               $sce = new StuE();
+               $sce->ExamId = $row['ExamId'];
+               $sce->ExamName = $row['ExamName'];
+               $sce->ExamType = $row['ExamType'];
+               $sce->ExamLocation = $row['ExamLocation'];
+               $sce->ExamAnsType = $row['ExamAnsType'];
+               $sce->ExamPassword = $row['ExamPassword'];
+               $sce->ExamDesc = $row['ExamDesc'];
+               $sce->ExamContent = $row['ExamContent'];
+               $sce->AllowTime = $row['AllowTime'];
+               $sce->QualifyPercent = $row['QualifyPercent'];
+               array_push($dataestr, $sce);
+            }
          }
-      }
-      else
-      {
-         if($strlink){
-            mysqli_close($strlink);
+         else
+         {
+            if($strlink){
+               mysqli_close($strlink);
+            }
+            sleep(DELAY_SEC);
+            return;
          }
-         sleep(DELAY_SEC);
-         return;
       }
       mysqli_close($strlink);
       return $dataestr;

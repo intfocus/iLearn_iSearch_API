@@ -1,7 +1,7 @@
 <?php
    if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
-      if(isset($_GET["tid"])){
-         $tid = $_GET["tid"];
+      if(isset($_GET["qid"])){
+         $qid = $_GET["qid"];
       }
       else {
          echo json_encode(array("status"=>-2, "result"=>"问卷不存在！")); //-2没有传部门ID
@@ -67,7 +67,7 @@
    $dataqd = array();
    class StuQuestionDetail{
       public $ProblemId;
-      public $QestionTemplateId;
+      public $QuestionTemplateId;
       public $ProblemType;
       public $ProblemDesc;
       public $ProblemSelectA;
@@ -83,13 +83,22 @@
    }
    
    //----- query -----
-   $str_qt = "select QuestionTemplateId, QuestionTemplateName, QuestionTemplateDesc, Status from QuestionTemplate where Status = 1;";
-
+   $str_qt = "select q.QuestionId, q.QuestionName, q.QuestionDesc, q.StartTime, q.EndTime, qt.QuestionTemplateId, qt.QuestionTemplateName, 
+               qt.QuestionTemplateDesc, q.Status 
+               from Question q left join QuestionTemplate qt 
+               on q.QuestionTemplateId = qt.QuestionTemplateId 
+               where q.Status = 1 and q.QuestionId = $qid;";
+   
    if($rs = mysqli_query($link, $str_qt)){
       $row = mysqli_fetch_assoc($rs);
-      $Id = (int)$row["QuestionTemplateId"];
-      $Name = $row["QuestionTemplateName"];
-      $Desc = $row["QuestionTemplateDesc"];
+      $Id = (int)$row["QuestionId"];
+      $Name = $row["QuestionName"];
+      $Desc = $row["QuestionDesc"];
+      $STime = $row["StartTime"];
+      $ETime = $row["EndTime"];
+      $TId = (int)$row["QuestionTemplateId"];
+      $TName = $row["QuestionTemplateName"];
+      $TDesc = $row["QuestionTemplateDesc"];
    }
    else
    {
@@ -102,15 +111,15 @@
       return;
    }
    
-   $str_qt = "select ProblemId, QestionTemplateId, ProblemType, ProblemDesc, ProblemSelectA, ProblemSelectB, ProblemSelectC, ProblemSelectD, 
-      ProblemSelectE, ProblemSelectF, ProblemSelectG, ProblemSelectH, ProblemSelectI, GroupName from QuestionDetail where QestionTemplateId = $Id;";
-
+   $str_qt = "select ProblemId, QuestionTemplateId, ProblemType, ProblemDesc, ProblemSelectA, ProblemSelectB, ProblemSelectC, ProblemSelectD, 
+      ProblemSelectE, ProblemSelectF, ProblemSelectG, ProblemSelectH, ProblemSelectI, GroupName from QuestionDetail where QuestionTemplateId = $TId;";
+   
    if($rs = mysqli_query($link, $str_qt)){
       $qtcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $qd = new StuQuestionDetail();
          $qd->ProblemId = (int)$row["ProblemId"];
-         $qd->QestionTemplateId = (int)$row["QestionTemplateId"];
+         $qd->QuestionTemplateId = (int)$row["QuestionTemplateId"];
          $qd->ProblemType = (int)$row["ProblemType"];
          $qd->ProblemDesc = $row["ProblemDesc"];
          $qd->ProblemSelectA = $row["ProblemSelectA"] == "" ? null : $row["ProblemSelectA"];
@@ -138,6 +147,6 @@
    }
    
    mysqli_close($link);
-   echo json_encode(array("Id"=> $Id, "Name" => $Name, "Desc" => $Desc, "status"=> 1, "data"=> $dataqd, "result"=>""));      
+   echo json_encode(array("Id"=> $Id, "Name" => $Name, "Desc" => $Desc, "StartTime" => $STime, "EndTime" => $ETime, "status"=> 1, "data"=> $dataqd, "result"=>""));      
    return;
 ?>
