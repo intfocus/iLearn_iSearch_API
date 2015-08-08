@@ -4,7 +4,7 @@
          $enddate = $_GET["edate"];
       }
       else {
-         echo json_encode(array("status"=>-2, "result"=>"课程信息不存在！")); //-2没有传部门ID
+         echo json_encode(array("status"=>-2, "result"=>"课程信息不存在！")); //-2没有传截止时间
          return;
       }
       

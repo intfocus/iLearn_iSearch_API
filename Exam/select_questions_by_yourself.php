@@ -96,6 +96,7 @@
             <tr>
                <td>
                <select id="select_specific_problem_set">
+                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             

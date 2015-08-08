@@ -100,6 +100,7 @@
             <tr>
                <td>
                <select class="ps_required_function">
+                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             
@@ -249,6 +250,7 @@
             <tr>
                <td>
                <select class="ps_required_function">
+                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             

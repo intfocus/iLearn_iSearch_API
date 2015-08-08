@@ -304,7 +304,7 @@ function loaded() {
    });
    
    $("#exam_type").change(function(){
-      if ($(this).val() == 0) 
+      if ($(this).val() == 0 || $(this).val() == 2) 
       {    
          $("#exam_ans_type").hide();
          //$("#exam_time_selections").hide();
@@ -988,6 +988,7 @@ function loaded() {
 										   <select id="exam_type" class="form-control">
 											  <option selected value=0>模拟考试</option>
 											  <option value=1>正式考试</option>
+											  <option value=2>练习考</option>
 										   </select>
                                     </div>
                                     <div class="form-group">
@@ -1028,7 +1029,6 @@ function loaded() {
 										   <select id="exam_location" class="form-control">
 											  <option value=0 selected>线上</option>
 											  <option value=1>落地考</option>
-											  <option value=2>练习考</option>
 										   </select>
                                     </div>
                                     <div class="form-group" id="exam_password_sections" style="display:none">

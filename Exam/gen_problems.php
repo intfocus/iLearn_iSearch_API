@@ -277,13 +277,20 @@
       //----- query -----
       if (count($product_functions_id) == 0 && count($adapation_functions_id) == 0)
       {
-         $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+         if($require_function_id != 0)
+         {
+            $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+         }
       }
       else
       {
          if (count($product_functions_id) > 0)
          {
-            $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,') AND (" ;
+            if($require_function_id != 0)
+            {
+               $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+            }
+            $str_query1 = $str_query1." AND (" ;
             for ($i=0; $i<count($product_functions_id); $i++)   
             {
                if ($i == (count($product_functions_id) - 1))

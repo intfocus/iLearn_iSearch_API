@@ -136,6 +136,7 @@
       return;
    }   
    
+   
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if ($cmd == "read") // Load
@@ -205,6 +206,78 @@
          echo -__LINE__ . $str_query1;
          return;
       }
+   }
+   
+   
+   $err = "";
+   
+   
+   function get_courseware_to_display($condition)
+   {
+	
+	$courseware_table_name = "coursewarepacket`";  
+	$str_query1 = "Select * from ".$courseware_table_name." where ".$condition;  
+      if($result = mysqli_query($link, $str_query1))
+      {
+         $row_number = mysqli_num_rows($result);
+         if ($row_number > 0)
+         {
+			   $res = array();
+            while ($row = mysqli_fetch_assoc($result))  
+			   {
+				  $row[] = $res;  
+			   }
+         }
+		 else
+		 {
+			
+			$err = '條件有誤，無法找到資料';
+		 }
+      }
+	  return $res;
+   }
+   
+   
+   $checkbox_prefix = "__chk";
+   $checkbox_prefix_len = strlen($checkbox_prefix);
+   
+   function get_formatted_courseware_list_string()
+   {
+	  $res = array();
+	  
+	  foreach ($_POST as $key => $val)  
+	  {
+		 if (!strncmp($key, $checkbox_prefix, $checkbox_prefix_len))
+		 {
+			$res[] = (int)substr($key, $checkbox_prefix_len);
+		 }
+	  }
+	  return ','.implode(',,', $res).',';
+   }
+   
+  
+   
+  
+   if ($_SERVER['REQUEST_METHOD'] === 'POST')  
+   {
+	  $result_string = get_formatted_courseware_list_string();
+	  $ppts_condition = "CouseswareList";  
+	  $ppts_table_name = "ppts";
+	  $query = "UPDATE `".$ppts_table_name."` SET `coursewarepacket`='".$result_string."' WHERE ".$ppts_condition;
+	  if(mysqli_query($link, $query))
+	  {
+		 $err = "成功.";
+	  }
+	  else
+	  {
+	     $err = "失敗";
+	  }
+	  echo $err;
+	  return;
+   }
+   else
+   {
+      $display_list = get_courseware_to_display();
    }
 ?>
 
@@ -277,6 +350,7 @@ function loaded()
 //***Step12 修改页面点击保存按钮出发Ajax动作
 function modifyPPTsContent(PPTId)
 {
+   
    PPTName = document.getElementsByName("PPTTitleModify")[0].value.trim();
    PPTDesc = document.getElementsByName("PPTDescModify")[0].value.trim();
    
@@ -290,8 +364,22 @@ function modifyPPTsContent(PPTId)
       alert("课件包名称及课件包备注长度过长！请缩短后重新保存。");
       return;
    }
+ 
+   
+  
+   var ids = document.getElementsByClassName("checkbox");
+   var data = {};
+   for (var i=0; i<ids.length; i++)
+   {
+	  if (ids[i].checked)
+	  {
+	     data[ids.name] = true;
+	  }
+   }
       
-   url_str = "CoursewarePackets_modify.php?cmd=write&PPTId=" + PPTId;
+   
+   var ppt_id_to_update = 0;
+   url_str = "a.php?cmd=write&PPTId=" + ppt_id_to_update;
 
    // alert(url_str);
    $.ajax
@@ -302,14 +390,16 @@ function modifyPPTsContent(PPTId)
       },
       type: "POST",
       url: url_str,
-      data:{
+      data: data, /*{
          PPTName:PPTName,
          PPTDesc:PPTDesc
-      },
+      },*/
       cache: false,
       dataType: 'json',
       success: function(res)
       {
+	     alert(res);
+	    
          //alert("Data Saved: " + res);
          res = String(res);
          if (res.match(/^-\d+$/))  //failed
@@ -321,6 +411,7 @@ function modifyPPTsContent(PPTId)
             alert("公告新增/修改成功，页面关闭后请自行刷新");
             window.close();
          }
+		 
       },
       error: function(xhr)
       {
@@ -355,6 +446,7 @@ function modifyPPTsContent(PPTId)
          <td><Textarea name="PPTDescModify" rows=30 cols=100><?php echo $PPTDesc;?></textarea></td>
       </tr>
 <?php
+   
    if ($Status != 1)
    {
 ?>       
@@ -453,7 +545,8 @@ function modifyPPTsContent(PPTId)
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <table id="datatable" class="table table-striped table-bordered">
-                                            <thead>
+										
+                                           <thead>
                                                 <tr>
                                                     <th></th>
                                                     <th>Name</th>
@@ -465,8 +558,10 @@ function modifyPPTsContent(PPTId)
                                                 </tr>
                                             </thead>
 
-                                     
+					
                                             <tbody>
+											
+												
                                                 <tr>
                                                     <td><input type="checkbox" /></td>
                                                     <td>Tiger Nixon</td>
@@ -687,7 +782,7 @@ function modifyPPTsContent(PPTId)
                                                     <td><input type="checkbox" /></td>
                                                     <td>Angelica Ramos</td>
                                                     <td>Chief Executive Officer (CEO)</td>
-                                                    <td>London</td>
+														<td>London</td>
                                                     <td>47</td>
                                                     <td>2009/10/09</td>
                                                     <td>$1,200,000</td>
@@ -980,6 +1075,7 @@ function modifyPPTsContent(PPTId)
                                                     <td>2011/01/25</td>
                                                     <td>$112,000</td>
                                                 </tr>
+												-->
                                             </tbody>
                                         </table>
 
@@ -1000,7 +1096,7 @@ function modifyPPTsContent(PPTId)
         </section>
         <!-- Main Content Ends -->
 <!-- js placed at the end of the document so the pages load faster -->
-        <!-- <script src="js/jquery.js"></script> -->
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/pace.min.js"></script>
         <script src="js/wow.min.js"></script>

@@ -28,9 +28,11 @@
    
    define("MOCK_EXAM", 0);
    define("OFFICIAL_EXAM", 1);
+   define("EXERCISE_EXAM", 2);
    
    define("MSG_MOCK_EXAM", "模拟考");
    define("MSG_OFFICIAL_EXAM", "正式考");
+   define("MSG_EXERCISE_EXAM", "练习考");
    
    define("GIVE_ANSWER_AFTER_SUBMIT", 1);
    define("GIVE_ANSWER_AFTER_EXAM_FINISHED", 2);
@@ -96,6 +98,10 @@
       else if ($type == OFFICIAL_EXAM)
       {
          return MSG_OFFICIAL_EXAM;
+      }
+      else if ($type == EXERCISE_EXAM)
+      {
+         return MSG_EXERCISE_EXAM;
       }
    }
    
