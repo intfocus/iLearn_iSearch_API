@@ -1116,11 +1116,11 @@ $(function()
       var searchCoursewaresNameDesc = document.getElementById("searchCoursewaresNameDesc").value;
    
       var statusCheckbox = 0;
-      if (document.getElementById("searchTraineesCheckBox1").checked == true)
+      if (document.getElementById("searchCoursewaresCheckBox1").checked == true)
       {
          statusCheckbox += 1; 
       }
-      if (document.getElementById("searchTraineesCheckBox2").checked == true)
+      if (document.getElementById("searchCoursewaresCheckBox2").checked == true)
       {
          statusCheckbox += 2; 
       }
