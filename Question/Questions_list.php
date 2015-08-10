@@ -203,7 +203,7 @@
                <th>动作</th>
             </tr>
             <tr>
-               <td colspan="5" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+               <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
             </tr>
          </table>
          <div class="toolMenu">

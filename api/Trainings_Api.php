@@ -12,7 +12,7 @@
          $userid = $_GET["uid"];
       }
       else {
-          echo json_encode(array("status"=>-3, "result"=>"课程信息不存在！")); //-3没有传用户ID
+         echo json_encode(array("status"=>-3, "result"=>"课程信息不存在！")); //-3没有传用户ID
          return;
       }
    }
