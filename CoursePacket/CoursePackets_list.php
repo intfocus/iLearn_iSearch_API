@@ -2,14 +2,14 @@
 //***Step5 expand search Result table
 function expandSearchCoursePacketsContentFunc()
 {
-   if ($('span.CoursePacketName, span.CoursePacketDesc').hasClass('fixWidth'))
+   if ($('span.CoursePacketName, span.CoursePacketDesc, span.EditTime, span.AvailableTime').hasClass('fixWidth'))
    {
-      $('span.CoursePacketName, span.CoursePacketDesc').removeClass('fixWidth');
+      $('span.CoursePacketName, span.CoursePacketDesc, span.EditTime, span.AvailableTime').removeClass('fixWidth');
       $('.CoursePacketsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.CoursePacketName, span.CoursePacketDesc').addClass('fixWidth');
+      $('span.CoursePacketName, span.CoursePacketDesc, span.EditTime, span.AvailableTime').addClass('fixWidth');
       $('.CoursePacketsexpandSR').text('显示过长内容');
    }
 }
@@ -59,6 +59,13 @@ function uploadUserCoursePackets(CoursePacketId)
 {
    str = "CoursePacketId=" + CoursePacketId;
    url_str = "CoursePacket/CoursePackets_roll_list.php?";
+   window.open(url_str + str);
+}
+
+function uploadDeptCoursePackets(CoursePacketId)
+{
+   str = "CoursePacketId=" + CoursePacketId;
+   url_str = "CoursePacket/CoursePackets_dept.php?cmd=read&";
    window.open(url_str + str);
 }
 
@@ -208,11 +215,12 @@ function occurTimeDatePicker()
                   <th>课程包名称</th>
                   <th>课程包备注</th>
                   <th>状态</th>
+                  <th>有效时间</th>
                   <th>最后修改时间</th>
                   <th>动作</th>
                </tr>
                <tr>
-                  <td colspan="6" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
             <div class="toolMenu">

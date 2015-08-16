@@ -3,23 +3,23 @@
   $(function() {
     var brick;
     brick = "<div class='brick small'><div class='delete'>&times;</div></div>";
-    $(document).on("click", ".gridly .brick", function(event) {
-      var $this, size;
-      event.preventDefault();
-      event.stopPropagation();
-      $this = $(this);
-      $this.toggleClass('small');
-      $this.toggleClass('large');
-      if ($this.hasClass('small')) {
-        size = 140;
-      }
-      if ($this.hasClass('large')) {
-        size = 300;
-      }
-      $this.data('width', size);
-      $this.data('height', size);
-      return $('.gridly').gridly('layout');
-    });
+    // $(document).on("click", ".gridly .brick", function(event) {
+      // var $this, size;
+      // event.preventDefault();
+      // event.stopPropagation();
+      // $this = $(this);
+      // $this.toggleClass('small');
+      // $this.toggleClass('large');
+      // if ($this.hasClass('small')) {
+        // size = 140;
+      // }
+      // if ($this.hasClass('large')) {
+        // size = 300;
+      // }
+      // $this.data('width', size);
+      // $this.data('height', size);
+      // return $('.gridly').gridly('layout');
+    // });
     $(document).on("click", ".gridly .delete", function(event) {
       var $this;
       event.preventDefault();
@@ -28,14 +28,31 @@
       $this.closest('.brick').remove();
       return $('.gridly').gridly('layout');
     });
+    
     $(document).on("click", ".add", function(event) {
-      alert("---1---");
-      alert($('#div1').val());
-      event.preventDefault();
-      event.stopPropagation();
-      alert(brick);
-      $('.gridly').append(brick);
-      return $('.gridly').gridly();
+       var strname = "";
+       var strid = "";
+       var cplist = $("input[name=CoursewareNameModify]").val();
+       $("input[name='cbcw']:checkbox").each(function () { 
+          if ($(this).is(":checked")) {
+             var stridname=$(this).val();
+             if(stridname.indexOf('&&')>0){
+                var arrayidname = stridname.split('&&');
+                strid = arrayidname[0];
+                strname = arrayidname[1];
+                var tempid = ","+strid+",";
+                if(cplist.indexOf(tempid)<0){
+                  event.preventDefault();
+                  event.stopPropagation();
+                  brick = "<div class='brick small' name='" + strid + "'>" + strname + "<div class='delete'>&times;</div></div>";
+                  $('.gridly').append(brick);
+                  cplist = cplist + "," + strid + ",";
+                }
+             }
+          }
+       }); 
+       $("input[name=CoursewareNameModify]").val(cplist);        
+       return $('.gridly').gridly();
     });
     return $('.gridly').gridly();
   });

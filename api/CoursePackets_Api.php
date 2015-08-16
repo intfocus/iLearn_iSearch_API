@@ -68,8 +68,9 @@
    }
    
    //----- query -----
-   $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTime from CoursePacket 
-      where status = 1 and TIMESTAMPDIFF(DAY, now(),date(AvailableTime)) >= 0 
+   $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTimeEnd from CoursePacket 
+      where status = 1 and TIMESTAMPDIFF(DAY, now(),date(AvailableTimeEnd)) >= 0 
+      and TIMESTAMPDIFF(DAY, date(AvailableTimeBegin),now()) >=0 
       and UserList like '%," . $userid .",%'";
    if($rs = mysqli_query($link, $str_cp)){
       $cpcount = mysqli_num_rows($rs);
@@ -77,7 +78,7 @@
          $sc = new Stucps();
          $sc->Name = $row['CoursePacketName'];
          $sc->Desc = $row['CoursePacketDesc'];
-         $sc->AvailableTime = date("Y/m/d",strtotime($row['AvailableTime']));
+         $sc->AvailableTime = date("Y/m/d",strtotime($row['AvailableTimeEnd']));
          array_push($datacp,$sc);
       }
    }

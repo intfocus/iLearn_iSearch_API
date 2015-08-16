@@ -373,7 +373,8 @@
                   . "<td>$EndTime</td>"
                   . "<td><A OnClick=\"actionSearchQuestions($QuestionId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchQuestions($QuestionId);\">修改</A><br/>"
-                  . "<A OnClick=\"deleteSearchQuestions($QuestionId);\">删除</A></td>"
+                  . "<A OnClick=\"deleteSearchQuestions($QuestionId);\">删除</A><br/>"
+                  . "<A OnClick=\"uploadUserQuestions($QuestionId);\">上传问卷人员名单</A></td>"
                   . "</tr>";
 
                $i++;

@@ -1,13 +1,5 @@
 <?php
    if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
-      if(isset($_GET["edate"])){
-         $enddate = $_GET["edate"];
-      }
-      else {
-         echo json_encode(array("status"=>-2, "result"=>"课程信息不存在！")); //-2没有传截止时间
-         return;
-      }
-      
       if(isset($_GET["uid"])){
          $userid = $_GET["uid"];
       }
@@ -68,7 +60,43 @@
       return;
    }
    
+   function get_employ_id_from_usernames($userids)
+   {
+      if(strlen($userids)>0){
+         $userids = substr($userids,1);
+         $userids = substr($userids,0,-1);
+         $userids = str_replace(",,",",",$userids);
+      }
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;
+         die("连接DB失败");
+      }
+      
+      $strusernames = "";
+      $str_query = "select * from users where UserId in ($userids)";
+      if($result = mysqli_query($link, $str_query)){
+         while($row = mysqli_fetch_assoc($result)){
+            $strusernames = $strusernames . $row["UserName"] . ",";
+         }
+         if(strlen($strusernames)>0)
+         {
+            $strusernames = substr($strusernames, 0,-1);
+         }
+         return $strusernames;
+      }
+      else
+      {
+         //echo DB_ERROR;
+         //die("操作资料库失败");
+         echo "";
+      }
+   }
+   
    $dataTrainings = array();
+   $dataTManagers = array();
    class StuTrainings{
       public $Id;
       public $Name;
@@ -89,8 +117,9 @@
    $str_training = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
       ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel, te.Status as TraineesStatus from trainings ti 
       left join trainees te on ti.TrainingId = te.TrainingId
-      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),date('$enddate')) >= 0 
-      and TIMESTAMPDIFF(DAY,date(ti.EndDate),date('$enddate')) <= 0 and (te.UserId = $userid or te.UserId is null or te.UserId = '') order by ti.TrainingId";
+      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),now()) >= 0 
+      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 and (te.UserId = $userid or te.UserId is null or te.UserId = '') 
+      and ti.UserList like '%,$userid,%' order by ti.TrainingId";
 
    if($rs = mysqli_query($link, $str_training)){
       $trainingcount = mysqli_num_rows($rs);
@@ -105,7 +134,7 @@
          $sn->EndDate = date("Y/m/d",strtotime($row['EndDate']));
          $sn->Location = $row['TrainingLocation'];
          $sn->Memo = $row['TrainingMemo'];
-         $sn->Manager = $row['TrainingManager'];
+         $sn->Manager = get_employ_id_from_usernames($row['TrainingManager']);
          $sn->ApproreLevel = $row['ApproreLevel'];
          $sn->Status = $row['Status'];
          $sn->TraineesStatus = $row['TraineesStatus'];
@@ -121,7 +150,44 @@
       echo json_encode(array("status"=> 0, "count"=>$trainingcount, "trainingsdata"=>$dataTrainings, "result"=>"课程信息获取失败！")); 
       return;
    }
+   
+   $str_tmanager = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
+      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel, te.Status as TraineesStatus from trainings ti 
+      left join trainees te on ti.TrainingId = te.TrainingId
+      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),now()) >= 0 
+      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 and (te.UserId = $userid or te.UserId is null or te.UserId = '') 
+      and ti.TrainingManager like '%,$userid,%' order by ti.TrainingId";
+
+   if($rs = mysqli_query($link, $str_tmanager)){
+      $tmanagercount = mysqli_num_rows($rs);
+      while($row = mysqli_fetch_assoc($rs)){      
+         $sm = new StuTrainings();
+         $sm->Id = $row['TrainingId'];
+         $sm->Name = $row['TrainingName'];
+         $sm->SpeakerName = $row['SpeakerName'];
+         $sm->Begin = date("Y/m/d",strtotime($row['TrainingBegin']));
+         $sm->End = date("Y/m/d",strtotime($row['TrainingEnd']));
+         $sm->StartDate = date("Y/m/d",strtotime($row['StartDate']));
+         $sm->EndDate = date("Y/m/d",strtotime($row['EndDate']));
+         $sm->Location = $row['TrainingLocation'];
+         $sm->Memo = $row['TrainingMemo'];
+         $sm->Manager = get_employ_id_from_usernames($row['TrainingManager']);
+         $sm->ApproreLevel = $row['ApproreLevel'];
+         $sm->Status = $row['Status'];
+         $sm->TraineesStatus = $row['TraineesStatus'];
+         array_push($dataTManagers,$sn);
+      }
+   }
+   else
+   {
+      if($link){
+         mysqli_close($link);
+      }
+      sleep(DELAY_SEC);
+      echo json_encode(array("status"=> 0, "count"=>$trainingcount, "tmanagerdata"=>$dataTManagers, "result"=>"课程信息获取失败！")); 
+      return;
+   }
    mysqli_close($link);
-   echo json_encode(array("status"=> 1, "count"=>$trainingcount, "trainingsdata"=>$dataTrainings, "result"=>""));      
+   echo json_encode(array("status"=> 1, "count"=>$trainingcount, "trainingsdata"=>$dataTrainings, "tmanagerdata"=>$dataTManagers, "result"=>""));      
    return;
 ?>

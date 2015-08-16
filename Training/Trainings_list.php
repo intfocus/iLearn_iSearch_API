@@ -55,6 +55,21 @@ function actionSearchTrainings(TrainingId, Status)
    });
 }
 
+
+function uploadUserTrainings(TrainingId)
+{
+   str = "TrainingId=" + TrainingId;
+   url_str = "Training/Trainings_roll_list.php?";
+   window.open(url_str + str);
+}
+
+function uploadUserTrainingManagers(TrainingId)
+{
+   str = "TrainingId=" + TrainingId;
+   url_str = "Training/TrainingManagers_roll_list.php?";
+   window.open(url_str + str);
+}
+
 //***Step10 列表中动作删除Ajax呼叫
 function deleteSearchTrainings(TrainingId)
 {

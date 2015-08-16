@@ -170,7 +170,7 @@
       goto errexit;
    }else{
       $resultStr = "文档上传成功";
-      $str_query2 = "update coursewares set Status = 1 where CoursewareId = $FileId";
+      $str_query2 = "update coursewares set Status = 1, FileSize = '" . filesize("$total_file_path/$FileId." . $extension) . "' where CoursewareId = $FileId";
       mysqli_query($link,$str_query2);
       goto errexit;
    }

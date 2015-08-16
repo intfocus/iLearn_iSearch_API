@@ -217,6 +217,37 @@
       echo SYMBOL_ERROR;
       return;
    }
+   
+   function get_employ_id_from_usernames($userids)
+   {
+      if(strlen($userids)>0){
+         $userids = substr($userids,1);
+         $userids = substr($userids,0,-1);
+         $userids = str_replace(",,",",",$userids);
+      }
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;
+         die("连接DB失败");
+      }
+      
+      $strusernames = "";
+      $str_query = "select * from users where UserId in ($userids)";
+      if($result = mysqli_query($link, $str_query)){
+         while($row = mysqli_fetch_assoc($result)){
+            $strusernames = $strusernames . $row["UserName"] . "<br />";
+         }
+         return $strusernames;
+      }
+      else
+      {
+         //echo DB_ERROR;
+         //die("操作资料库失败");
+         echo "";
+      }
+   }
 
    //link    
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
@@ -394,13 +425,15 @@
                   . "<td>$page_count_display</td>"
                   . "<td><span class=\"TrainingName fixWidth\">$TrainingName</span></td>"
                   . "<td><span class=\"SpeakerName fixWidth\">$SpeakerName</span></td>"
-                  . "<td>$TrainingManager</td>"
+                  . "<td>" . get_employ_id_from_usernames($TrainingManager) . "</td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$TrainingDate</td>"
                   . "<td>$EnrollDate</td>"
                   . "<td><A OnClick=\"actionSearchTrainings($TrainingId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchTrainings($TrainingId);\">修改</A><br/>"
-                  . "<A OnClick=\"deleteSearchTrainings($TrainingId);\">删除</A></td>"
+                  . "<A OnClick=\"deleteSearchTrainings($TrainingId);\">删除</A><br/>"
+                  . "<A OnClick=\"uploadUserTrainings($TrainingId);\">上传课程人员名单</A><br/>"
+                  . "<A OnClick=\"uploadUserTrainingManagers($TrainingId);\">上传课程负责人员名单</A></td>"
                   . "</tr>";
 
                $i++;

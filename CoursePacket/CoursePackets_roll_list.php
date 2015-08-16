@@ -224,6 +224,12 @@ function modifyUsersContent(coursepacket_id)
    }
    else
    {
+      if(users_id == null || users_id.length == 0)
+      {
+         alert("没有输入员工号!");
+         window.close();
+         return;
+      }
       confirm("没有输入员工号时，会刪除此考卷的已有名单。确定刪除？");
    }
 
@@ -241,8 +247,10 @@ function modifyUsersContent(coursepacket_id)
                "users_id[]": users_id,
             },
       cache: false,
+      dataType: 'json',
       success: function(res)
       {
+         res = String(res);
          if (res.match(/^-\d+$/))
          {
             alert("新增 / 删除课程包用户名单失败");
@@ -340,7 +348,9 @@ function modifyUsersContent(coursepacket_id)
             $row_number = mysqli_num_rows($result);
             $row = mysqli_fetch_assoc($result);
             $userids = $row["UserList"];
-            get_employ_id_from_user_id($userids);
+            if(strlen($userids)>0){
+               get_employ_id_from_user_id($userids);
+            }
          }?></Textarea></td>        
       </tr>   
       <tr>

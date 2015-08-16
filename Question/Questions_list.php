@@ -55,6 +55,13 @@
       });
    }
    
+   function uploadUserQuestions(QuestionId)
+   {
+      str = "QuestionId=" + QuestionId;
+      url_str = "Question/Questions_roll_list.php?";
+      window.open(url_str + str);
+   }
+   
    //***Step10 列表中动作删除Ajax呼叫
    function deleteSearchQuestions(QuestionId)
    {

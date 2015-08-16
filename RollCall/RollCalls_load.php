@@ -358,7 +358,7 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
                $row = mysqli_fetch_assoc($result);
                $TrainingName = $row["TrainingName"];
                $UserName = $row["UserName"];
-               $IssueDate = substr($row["IssueDate"],0,10);
+               $IssueDate = date("Y-m-d H:i:s", strtotime($row["IssueDate"]));
                $Status = $row["Status"];
                $StatusStr = "";
                switch ($Status) {

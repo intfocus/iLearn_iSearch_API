@@ -137,8 +137,8 @@
    }
    else if ($cmd == "write") // Batch Insert
    {
-      $newUsersBatchInput = $_GET["newUsersBatchInput"];
-      $DeptId = $_GET["DeptId"];
+      $newUsersBatchInput = $_POST["newUsersBatchInput"];
+      $DeptId = $_POST["DeptId"];
       // 1. 按照 \n 切开
       $tmp = explode("\n", $newUsersBatchInput);
       $tmp_count = count($tmp);
@@ -147,7 +147,7 @@
       for ($i=0;$i<$tmp_count;$i++)
       {
          $ret = explode(',',$tmp[$i]);
-         if (count($ret) != 3 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0)
+         if (count($ret) != 4 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0 || strlen($ret[3])==0)
          {
             echo "-- 第" . ($i+1) . "笔数据格式错误 -- " . $tmp[$i];
             return;
@@ -168,8 +168,9 @@
          $EmployeeId = $result[$i][0];
          $UserName = $result[$i][1];
          $UserEmail = $result[$i][2];
-         $sql_str = "Insert into Users (UserName,Email,EmployeeId,DeptId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime)" .
-            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,$user_id,now(),$user_id,now());";
+         $UserWId = $result[$i][3];
+         $sql_str = "Insert into Users (UserName,Email,EmployeeId,DeptId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,UserWId)" .
+            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,$user_id,now(),$user_id,now(),'$UserWId');";
          if (!mysqli_query($link, $sql_str))
          {
             mysqli_rollback($link);
@@ -178,7 +179,7 @@
                mysqli_close($link);
                $link = 0;
             }
-            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail";
+            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail,$UserWId";
             echo "-- " . $ErrMsg;
             return;
          }
@@ -247,21 +248,27 @@ function modifyUsersContent()
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
    DeptId = getSelectedId();
    
-   str = "cmd=write&newUsersBatchInput=" + encodeURIComponent(newUsersBatchInput) + "&DeptId=" + DeptId;
-   url_str = "../User/Users_batch_add.php?";
+   //str = "cmd=write&newUsersBatchInput=" + encodeURIComponent(newUsersBatchInput) + "&DeptId=" + DeptId;
+   url_str = "../User/Users_batch_add.php?cmd=write";
 
-   //alert(url_str + str);
+   //alert(url_str);
    $.ajax
    ({
       beforeSend: function()
       {
          //alert(str);
       },
-      type: "GET",
-      url: url_str + str,
+      type: "POST",
+      url: url_str,
+      data:{
+         newUsersBatchInput:newUsersBatchInput,
+         DeptId:DeptId,
+      },
       cache: false,
+      dataType: 'json',
       success: function(res)
       {
+         res = String(res);
          //alert("Data Saved: " + res);
          if (res.match(/^-/))  //failed
          {
@@ -298,12 +305,12 @@ function modifyUsersContent()
 <div id="content">
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email)</th>
+         <th>批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email,WId)</th>
       </tr>
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100>
-工号1,姓名1,Email1
-工号2,姓名2,Email2
+工号1,姓名1,Email1,WId
+工号2,姓名2,Email2,WId
          </Textarea></td>        
       </tr>
       <tr>
@@ -319,6 +326,7 @@ function modifyUsersContent()
 			var node = $('#tt').tree('find',1);
 			$('#tt').tree('expandTo', node.target).tree('select', node.target);
          $('#displayExpandToButton').hide();
+         $('#tt').tree('collapseAll');
 		}
       function getSelectedId(){
 			var node = $('#tt').tree('getSelected');
@@ -333,7 +341,7 @@ function modifyUsersContent()
       </tr>       
       <tr>
          <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent()"></a>
+            <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent();"></a>
          </th>
       </tr>        
    </table>

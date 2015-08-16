@@ -545,7 +545,15 @@ function modifyProbsContent(ProbId)
             $selector = "ProbSel".chr($i);
 
             echo "<tr><th>题目".chr($i)."</th>";
-            echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"</td></tr>";
+            echo "<td><Input class=ProbSel id=ProbSel".chr($i)." type=text size=100 value=\"".$$selector."\"/></td></tr>";
+         }
+         if ($ProbType == TRUE_FALSE_PROB)
+         {
+            for ($i=ord("C"); $i<= ord("H"); $i++)
+            {
+               $selector = "ProbSel".chr($i);
+               echo "<Input class=ProbSel id=ProbSel".chr($i)." type=hidden size=100 value=\"".$$selector."\"/>";
+            }
          }
       ?>
          <tr>

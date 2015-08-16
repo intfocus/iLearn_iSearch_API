@@ -309,6 +309,7 @@
                                          . "<th>课程包名称</th>"
                                          . "<th>课程包备注</th>"
                                          . "<th>状态</th>"
+                                         . "<th>有效时间</th>"
                                          . "<th>最后修改时间</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
@@ -346,6 +347,7 @@
                                          . "<th>课程包名称</th>"
                                          . "<th>课程包备注</th>"
                                          . "<th>状态</th>"
+                                         . "<th>有效时间</th>"
                                          . "<th>最后修改时间</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
@@ -360,6 +362,7 @@
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
                $EditTime = $row["EditTime"];
+               $AvailableTime = date("Y-m-d H:i:s", strtotime($row["AvailableTimeBegin"])) . "~" . date("Y-m-d H:i:s", strtotime($row["AvailableTimeEnd"]));
                $page_count_display = $page_count + 1;
                
                $return_string = $return_string 
@@ -368,11 +371,13 @@
                   . "<td><span class=\"CoursePacketName fixWidth\">$CoursePacketName</span></td>"
                   . "<td><span class=\"CoursePacketDesc fixWidth\">$CoursePacketDesc</span></td>"
                   . "<td><span class=\"StatusStr fixWidth\">$StatusStr</span></td>"
-                  . "<td><span class=\"StatusStr fixWidth\">$EditTime</span></td>"
+                  . "<td><span class=\"AvailableTime fixWidth\">$AvailableTime</span></td>"
+                  . "<td><span class=\"EditTime fixWidth\">$EditTime</span></td>"
                   . "<td><A OnClick=\"actionSearchCoursePackets($CoursePacketId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchCoursePackets($CoursePacketId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchCoursePackets($CoursePacketId);\">删除</A><br/>"
-                  . "<A OnClick=\"uploadUserCoursePackets($CoursePacketId);\">上传课程人员名单</A></td>"
+                  . "<A OnClick=\"uploadUserCoursePackets($CoursePacketId);\">上传课程人员名单</A><br/>"
+                  . "<A OnClick=\"uploadDeptCoursePackets($CoursePacketId);\">上传课程部门名单</A></td>"
                   . "</tr>";
 
                $i++;

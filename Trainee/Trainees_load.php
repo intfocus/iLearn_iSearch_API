@@ -373,8 +373,8 @@ left join Users as u on te.UserId = u.UserId where ti.Status";
                                          . "<th>编号</th>"
                                          . "<th>课程名称</th>"
                                          . "<th>讲师名称</th>"
-                                         . "<th>课程负责人</th>"
-                                         . "<th>课程状态</th>"
+                                         . "<th>学员名称</th>"
+                                         . "<th>学员编号</th>"
                                          . "<th>课程时间</th>"
                                          . "<th>报名时间</th>"
                                          . "<th>用戶报名状态</th>"
@@ -388,7 +388,7 @@ left join Users as u on te.UserId = u.UserId where ti.Status";
                $UserName = $row["UserName"];
                $EmployeeId = $row["EmployeeId"];
                $TraineeDate = substr($row["TrainingBegin"],0,10) . "~" . substr($row["TrainingEnd"],0,10);
-               $RegisterDate = substr($row["RegisterDate"],0,10);
+               $RegisterDate = date("Y-m-d H:i:s", strtotime($row["RegisterDate"]));
                $Status = $row["Status"];
                $page_count_display = $page_count + 1;
                

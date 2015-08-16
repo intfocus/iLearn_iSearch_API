@@ -85,6 +85,10 @@
             return;
          }
          
+         $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
+               . " VALUES('$user_id','获取考试列表','考试',now(),'获取考试列表','获取考试列表')" ;
+         mysqli_query($link, $str_log);
+         
          // get active exam list related to this user
          // for each exam, get exam info, and added IsSubmit info
          //$str_query = "select * from examroll where UserId=$user_id AND Status=".ACTIVE;
