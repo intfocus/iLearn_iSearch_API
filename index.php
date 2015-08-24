@@ -114,6 +114,13 @@
    }
    //print_r($dataexams);
    //eric-edit -end
+   $canApprove = 0;
+   $str_users = "select CanApprove from wutian.users where UserId=$user_id";
+   if($result = mysqli_query($link, $str_users)){
+      while($row = mysqli_fetch_assoc($result)){
+         $canApprove = $row["CanApprove"];
+      }
+   }
 ?>
 
 <!DOCTYPE html>
@@ -220,11 +227,8 @@ function loaded()
       
             <!-- Navbar Start -->
             <nav class="navigation">
-                <ul class="list-unstyled mainTabW">
-                	
-                	
-                	
-                	<?php
+                <ul class="list-unstyled mainTabW">                	
+<?php
    for($i=0; $i<count($func_array); $i++){
       $func = $func_array[$i];
       if($i == 0){
@@ -236,8 +240,12 @@ function loaded()
       
    }
 ?>     
-
-
+<?php
+   if($canApprove==1)
+   {
+      echo "<li><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>报名审批</span></a></li>";
+   }
+?>
                 </ul>
             </nav>
         </aside>
@@ -310,6 +318,14 @@ function loaded()
          include($codepath);
          echo "</div>";
       }
+   }
+?>
+<?php
+   if($canApprove==1)
+   {
+      echo "<div class='container2 searchNewsC' style='display:none;'>";
+         include("TraineeExamine/TraineeExamines_list.php");
+      echo "</div>";
    }
 ?> 
   

@@ -195,10 +195,54 @@
       mysqli_close($strlink);
       return $dataestr;
    }
+
+   class StuQ{
+     public $QuestionId;
+     public $QuestionTemplateId;
+     public $QuestionName;
+     public $QuestionDesc;
+     public $StartTime;
+     public $EndTime;
+     public $CreatedUser;
+     public $Statust;
+   }
    
    function QList($Qstr)
    {
-      return array();
+      $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      $dataqstr = array();
+      $Qstr = substr($Qstr,1);
+      $Qstr = substr($Qstr,0,-1);
+      // $Qstr = str_replace(",,",",",$Qstr);
+      $Qstrs = explode(',,', $Qstr);
+      foreach ($Qstrs as $qs) {
+         $str_q = "select QuestionId,QuestionTemplateId,QuestionName,QuestionDesc,StartTime,EndTime,CreatedUser,Status from Question
+             where Status = 1 and QuestionId = $qs";
+         if($rsq = mysqli_query($strlink, $str_q)){
+            while($row = mysqli_fetch_assoc($rsq)){
+               $scq = new StuQ();
+               $scq->QuestionId = $row['QuestionId'];
+               $scq->QuestionTemplateId = $row['QuestionTemplateId'];
+               $scq->QuestionName = $row['QuestionName'];
+               $scq->QuestionDesc = $row['QuestionDesc'];
+               $scq->StartTime = $row['StartTime'];
+               $scq->EndTime = $row['EndTime'];
+               $scq->CreatedUser = $row['CreatedUser'];
+               $scq->Status = $row['Status'];
+               array_push($dataqstr, $scq);
+            }
+         }
+         else
+         {
+            if($strlink){
+               mysqli_close($strlink);
+            }
+            sleep(DELAY_SEC);
+            return;
+         }
+      }
+      mysqli_close($strlink);
+      return $dataqstr;
    }
    
    $datacp = array();

@@ -92,6 +92,13 @@ function modifySearchCategories(CategoryId)
    window.open(url_str + str);
 }
 
+function updateSearchCategorieDepts(CategoryId)
+{
+   str = "cmd=read&CategoryId=" + CategoryId;
+   url_str = "Category/Categories_dept.php?";
+   window.open(url_str + str);
+}
+
 function clickSearchCategoriesPage(obj, n)  //搜尋換頁
 {
    if (obj.className == "search_category_page active")

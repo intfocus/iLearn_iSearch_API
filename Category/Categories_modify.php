@@ -196,7 +196,6 @@
             $ProductList = $row["ProductList"];
             $Status = $row["Status"];
             $FilePath = $row["FilePath"];
-            $DeptList = $row["DeptList"];
             $ParentId = $row["ParentId"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
             $EditTime = $row["EditTime"];
@@ -210,7 +209,6 @@
             $CategoryId = 0;
             $CategoryName = "";
             $FilePath = "";
-            $DeptList = "All";
             $ParentId = 1;
             $PAList = "";
             $ProductList = "";
@@ -223,12 +221,11 @@
    {
       $CategoryName = $_GET["CategoryName"];
       $FilePath = $_GET["FilePath"];
-      $DeptList = $_GET["DeptList"];
       $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       $ParentId = $_GET["ParentId"];
-      $str_query1 = "Insert into Categories (CategoryName,FilePath,DeptList,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$CategoryName','$FilePath','$DeptList',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
+      $str_query1 = "Insert into Categories (CategoryName,FilePath,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$CategoryName','$FilePath',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
 		 $str_id = (string)mysqli_insert_id($link);
@@ -248,12 +245,11 @@
    {
       $CategoryName = $_GET["CategoryName"];
       $FilePath = $_GET["FilePath"] . "/" . $CategoryId;
-      $DeptList = $_GET["DeptList"];
       $ParentId = $_GET["ParentId"];
       $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
       $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Categories set CategoryName='$CategoryName', DeptList='$DeptList', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where CategoryId=$CategoryId";
+      $str_query1 = "Update Categories set CategoryName='$CategoryName', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where CategoryId=$CategoryId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -393,7 +389,6 @@ function modifyCategoriesContent(CategoryId)
    CategoryName = document.getElementsByName("CategoryNameModify")[0].value.trim();
    ParentId = getSelectedId();
    FilePath = getSelectedFilePath();
-   DeptList = getCheckedDept();
    //alert(DeptList);
    
    if (CategoryName.length == 0)
@@ -410,7 +405,7 @@ function modifyCategoriesContent(CategoryId)
    
    str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
          "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
-         "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath) + "&DeptList=" + encodeURIComponent(DeptList);
+         "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath);
    url_str = "../Category/Categories_modify.php?";
 
    //alert(url_str + str);
@@ -555,42 +550,6 @@ for($i=0; $i<count($datacpmc); $i++)
                   }
                   else
                      return 0;
-               }
-            </script>         
-         </td>
-      </tr>
-      <tr>
-         <th>选择部门：</th>
-         <td>
-            <div style="margin:20px 0;">
-               <a id=displayExpandToDeptButton href="#" class="easyui-linkbutton" onclick="expandToDept()">显示当前所属部门</a>
-            </div>
-            <div class="easyui-panel" style="padding:5px">
-               <ul id="depttree" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true,checkbox:true"></ul>
-            </div>
-            <script type="text/javascript">
-               function expandToDept(){
-                  $('#depttree').tree('collapseAll');
-                  $('#displayExpandToDeptButton').hide();
-                  var dlstr = "<?php echo $DeptList; ?>";
-                  var dlstr1 = dlstr.substring(1,dlstr.length-1);
-                  var dlstr_array = dlstr1.split(",,");
-                  for(var m=0; m<dlstr_array.length;m++)
-                  {
-                     var node = $('#depttree').tree('find',Number(dlstr_array[m]));
-                     $('#depttree').tree('check', node.target);
-                  }
-                  $('#depttree').tree('expandToDept', node.target);
-               }
-               
-               function getCheckedDept(){
-                  var nodes = $('#depttree').tree('getChecked');
-                  var s = '';
-                  for(var i=0; i<nodes.length; i++){
-                     if (s != '') s += ',,';
-                     s += nodes[i].id;
-                  }
-                  return ',' + s + ',';
                }
             </script>         
          </td>

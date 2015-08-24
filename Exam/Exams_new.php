@@ -319,6 +319,18 @@ function loaded() {
          $("#exam_location_selections").show();
       }
    });
+   
+   $("#exam_location").change(function(){
+      alert($(this).val());
+      if ($(this).val() == 0) 
+      {    
+         $("#exam_password_sections").hide();
+      }
+      else if ($(this).val() == 1) 
+      {
+         $("#exam_password_sections").show();
+      }
+   });
 
    $("#genProbsButton").click(function(){
       $("#genProbsButton").attr("disabled", true);
@@ -480,6 +492,7 @@ function loaded() {
       exam_true_false_score = $("#NewExamTrueFalseScore").val();
       exam_name = $("#exam_name").val();
       exam_type = $("#exam_type").val();
+      exam_pwd = $("#exam_password").val();
       exam_answer_type = $("#exam_answer_type").val();
       exam_from_date = $("#exam_begin_time").val();
       exam_from_hour = $("#exam_from_hour").val();
@@ -556,6 +569,15 @@ function loaded() {
          alert("及格百分比不能为空");
          return;
       }
+      
+      if (exam_location == 1)
+      {
+         if(exam_pwd.length == 0)
+         {
+            alert("密码不能为空");
+            return;
+         }
+      }
 
       //calculate from time stamp, and end time stamp
       date_timestamp = new Date(exam_from_date).getTime();
@@ -602,7 +624,8 @@ function loaded() {
                   "exam_qualify_percent": exam_qualify_percent,
                   "select_problems":select_problems,
                   "problem_sets": JSON.stringify(problem_sets),
-                  "user_id": user_id
+                  "user_id": user_id,
+                  "exam_pwd": exam_pwd
                 },
          success: function(res) {
             //if (!res.match(/^-\d+$/))
@@ -1032,7 +1055,7 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group" id="exam_password_sections" style="display:none">
-										<input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
+										         <input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
                                     </div>
 									
 									<div  id="exam_time_selections">

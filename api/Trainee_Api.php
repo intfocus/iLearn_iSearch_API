@@ -105,6 +105,7 @@
          }
       }
       else{
+         echo json_encode(array("status"=> 0, "count"=>0, "result"=>"重复报名！")); 
          mysqli_close($link);
          return;
       }

@@ -333,6 +333,23 @@ $(function() {
       }
    });
    
+   var dates17 = $( "#from17, #to17" ).datepicker({
+      maxDate: new Date(),
+      defaultDate: "+1w",
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from17" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date17 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates17.not( this ).datepicker( "option", option, date17 );
+      }
+   });
+   
 
    var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
        minDate: new Date(),

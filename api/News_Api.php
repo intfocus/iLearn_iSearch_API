@@ -80,8 +80,11 @@
    //----- query -----
    $str_newgg = "select NewTitle, NewMsg, EditTime, OccurTime from news 
       where status = 1 and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) <= 30 
-      and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) >= 0 and OccurTime is null 
-      and DeptList like '%," . $deptid .",%'";
+      and TIMESTAMPDIFF(DAY,date(EditTime),date('$strdate')) >= 0 and OccurTime is null ";
+   if($deptid != 0)
+   {
+      $str_newgg = $str_newgg . "and DeptList like '%," . $deptid .",%'";
+   }
    if($rs = mysqli_query($link, $str_newgg)){
       $newcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
@@ -105,7 +108,11 @@
    
    $str_newhd = "select NewTitle, NewMsg, EditTime, OccurTime from news 
       where status = 1 and TIMESTAMPDIFF(DAY,date(OccurTime),date('$strdate')) <= 0 
-      and OccurTime is not null and DeptList like '%," . $deptid . ",%'";
+      and OccurTime is not null ";
+   if($deptid != 0)
+   {
+      $str_newhd = $str_newhd . "and DeptList like '%," . $deptid .",%'";
+   }
    if($rs = mysqli_query($link, $str_newhd)){
       $newcount = $newcount + mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      

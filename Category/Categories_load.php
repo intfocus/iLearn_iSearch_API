@@ -241,6 +241,8 @@
    if ($searchCategoriesto1 != '')
       $str_query1 = $str_query1 . "AND EditTime <= '$searchCategoriesto1' ";
    
+   $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
+   
    //***Step16 页面搜索SQl语句 结束
    
    // echo $str_query1;
@@ -360,7 +362,8 @@
                   . "<td>$EditTime</td>"
                   . "<td><A OnClick=\"actionSearchCategories($CategoryId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchCategories($CategoryId);\">修改</A><br/>"
-                  . "<A OnClick=\"deleteSearchCategories($CategoryId);\">删除</A></td>"
+                  . "<A OnClick=\"deleteSearchCategories($CategoryId);\">删除</A><br/>"
+                  . "<A OnClick=\"updateSearchCategorieDepts($CategoryId);\">分类权限</A></td>"
                   . "</tr>";
 
                $i++;

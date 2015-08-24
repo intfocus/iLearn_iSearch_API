@@ -62,13 +62,14 @@
    
    $datacp = array();
    class Stucps{
+      public $Id;
       public $Name;
       public $Desc;
       public $AvailableTime;
    }
    
    //----- query -----
-   $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTimeEnd from CoursePacket 
+   $str_cp = "select CoursePacketId,CoursePacketName, CoursePacketDesc, AvailableTimeEnd from CoursePacket 
       where status = 1 and TIMESTAMPDIFF(DAY, now(),date(AvailableTimeEnd)) >= 0 
       and TIMESTAMPDIFF(DAY, date(AvailableTimeBegin),now()) >=0 
       and UserList like '%," . $userid .",%'";
@@ -76,6 +77,7 @@
       $cpcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sc = new Stucps();
+         $sc->Id = $row['CoursePacketId'];
          $sc->Name = $row['CoursePacketName'];
          $sc->Desc = $row['CoursePacketDesc'];
          $sc->AvailableTime = date("Y/m/d",strtotime($row['AvailableTimeEnd']));

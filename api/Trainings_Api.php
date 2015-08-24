@@ -110,15 +110,13 @@
       public $Manager;
       public $Status;
       public $ApproreLevel;
-      public $TraineesStatus;
    }
    
    //----- query -----
    $str_training = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
-      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel, te.Status as TraineesStatus from trainings ti 
-      left join trainees te on ti.TrainingId = te.TrainingId
-      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),now()) >= 0 
-      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 and (te.UserId = $userid or te.UserId is null or te.UserId = '') 
+      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel from trainings ti 
+      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.TrainingBegin),now()) >= 0 
+      and TIMESTAMPDIFF(DAY,date(ti.TrainingEnd),now()) <= 0
       and ti.UserList like '%,$userid,%' order by ti.TrainingId";
 
    if($rs = mysqli_query($link, $str_training)){
@@ -137,7 +135,6 @@
          $sn->Manager = get_employ_id_from_usernames($row['TrainingManager']);
          $sn->ApproreLevel = $row['ApproreLevel'];
          $sn->Status = $row['Status'];
-         $sn->TraineesStatus = $row['TraineesStatus'];
          array_push($dataTrainings,$sn);
       }
    }
@@ -152,10 +149,9 @@
    }
    
    $str_tmanager = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
-      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel, te.Status as TraineesStatus from trainings ti 
-      left join trainees te on ti.TrainingId = te.TrainingId
+      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel from trainings ti 
       where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),now()) >= 0 
-      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 and (te.UserId = $userid or te.UserId is null or te.UserId = '') 
+      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 
       and ti.TrainingManager like '%,$userid,%' order by ti.TrainingId";
 
    if($rs = mysqli_query($link, $str_tmanager)){
@@ -174,8 +170,7 @@
          $sm->Manager = get_employ_id_from_usernames($row['TrainingManager']);
          $sm->ApproreLevel = $row['ApproreLevel'];
          $sm->Status = $row['Status'];
-         $sm->TraineesStatus = $row['TraineesStatus'];
-         array_push($dataTManagers,$sn);
+         array_push($dataTManagers,$sm);
       }
    }
    else

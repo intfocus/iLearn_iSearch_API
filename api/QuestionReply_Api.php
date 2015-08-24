@@ -7,7 +7,7 @@
    $userId = $qr->UserId;
    $questionId= $qr->QuestionId;
    $submitDate = $qr->SubmitDate;
-   $results = $log->Results;
+   $results = $qr->Results;
    
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -58,22 +58,19 @@
       echo DB_ERROR;                
       return;
    }
-   
    foreach ($results as $result)
    {
       $str_log = "Insert into QuestionReply (QuestionId,UserId,ProblemId,SubmitDate,SubmitAnswer)" 
                . " VALUES($questionId,$userId,'$result->ProblemId','$submitDate','$result->SubmitAnswer')" ;
       // echo $str_log;
       // return;
-      if(mysqli_query($link, $str_log))
-      {
-         echo "0";
-         return;
-      }
-      else
-      {
+      if(!mysqli_query($link, $str_log)){
          echo -__LINE__ . $str_query1;
+         mysqli_close($link);
          return;
       }
    }
+   echo 0;
+   mysqli_close($link);
+   return;
 ?>

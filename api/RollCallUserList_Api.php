@@ -113,9 +113,10 @@
       public $UserName;
       public $TrainingId;
       public $RegisterDate;
+      public $EmployeeId;
    }
    
-   $str_trainee = "select te.UserId, u.UserName, te.RegisterDate, te.TrainingId from Trainees te left join Users u on te.UserId = u.UserId where te.TrainingId = ". $sn->Id;
+   $str_trainee = "select te.UserId, u.UserName, u.EmployeeId, te.RegisterDate, te.TrainingId from Trainees te left join Users u on te.UserId = u.UserId where te.TrainingId = ". $sn->Id;
 
    if($rs = mysqli_query($link, $str_trainee)){
       $traineecount = mysqli_num_rows($rs);
@@ -123,6 +124,7 @@
          $st = new StuTrainees();
          $st->UserId = $row['UserId'];
          $st->UserName = $row['UserName'];
+         $st->EmployeeId = $row['EmployeeId'];
          $st->RegisterDate = date("Y/m/d",strtotime($row['RegisterDate']));
          $st->TrainingId = $row['TrainingId'];
          array_push($dataTraninees, $st);

@@ -134,7 +134,122 @@
       sleep(DELAY_SEC);
       echo DB_ERROR;       
       return;
-   }   
+   }
+   
+   function CWList($coursewareList)
+   {
+      if(strlen($coursewareList)>0){
+         $coursewareList = substr($coursewareList,1);
+         $coursewareList = substr($coursewareList,0,-1);
+         $coursewareLists = explode(",,",$coursewareList);
+      }
+      else{
+            sleep(DELAY_SEC);
+            echo SYMBOL_ERROR;
+            return;
+         }
+   
+      //link    
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }   
+      
+      $return_string = ""; 
+      //----- query -----
+      //***Step16 页面搜索SQl语句 起始
+      $i = 0;
+      foreach ($coursewareLists as $cl) {
+         $top = $i * 60;
+         $str_query1 = "select * from coursewares where CoursewareId=$cl";
+         if($result = mysqli_query($link, $str_query1)){
+            $row = mysqli_fetch_assoc($result);
+            $return_string = $return_string . "<div class='brick small' name='" . $cl . "'  style='position: absolute; left: 0px; top: " . $top . "px;'>" . $row["CoursewareName"] . "<div class='delete'>&times;</div></div>";
+         }
+         else
+         {
+            if($link){
+               mysqli_close($link);
+            }
+            sleep(DELAY_SEC);
+            echo -__LINE__;
+            return;
+         }
+         $i = $i + 1;
+      }
+      return $return_string;
+   }
+   
+   $dataPPTs = array();
+   $dataExam = array();
+   $dataQuestion = array();
+   
+   class StuPPT{
+      public $PPTId;
+      public $PPTName;
+   }
+   
+   class StuExam{
+      public $ExamId;
+      public $ExamName;
+   }
+   
+   class StuQuestion{
+      public $QuestionId;
+      public $QuestionName;
+   }
+   
+   $str_ppts = "select PPTId, PPTName from ppts where Status=1";
+   if($result = mysqli_query($link, $str_ppts))
+   {
+      $row_number = mysqli_num_rows($result);
+      if($row_number > 0)
+      {
+         while($row = mysqli_fetch_assoc($result))
+         {
+            $ps = new StuPPT();
+            $ps->PPTId = $row["PPTId"];
+            $ps->PPTName = $row["PPTName"];
+            array_push($dataPPTs, $ps);
+         }
+      }
+   }
+   
+   
+   $str_exams = "select ExamId, ExamName from exams where ExamType=2";
+   if($result = mysqli_query($link, $str_exams))
+   {
+      $row_number = mysqli_num_rows($result);
+      if($row_number > 0)
+      {
+         while($row = mysqli_fetch_assoc($result))
+         {
+            $es = new StuExam();
+            $es->ExamId = $row["ExamId"];
+            $es->ExamName = $row["ExamName"];
+            array_push($dataExam, $es);
+         }
+      }
+   }
+   
+   $str_questions = "select QuestionId, QuestionName from question where Status=1";
+   if($result = mysqli_query($link, $str_questions))
+   {
+      $row_number = mysqli_num_rows($result);
+      if($row_number > 0)
+      {
+         while($row = mysqli_fetch_assoc($result))
+         {
+            $qs = new StuQuestion();
+            $qs->QuestionId = $row["QuestionId"];
+            $qs->QuestionName = $row["QuestionName"];
+            array_push($dataQuestion, $qs);
+         }
+      }
+   }
    
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
@@ -156,11 +271,13 @@
             $ExamList = $row["ExamList"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
             $QuestionnaireList = $row["QuestionnaireList"];
-            $AvailableTime = $row["AvailableTime"]== null ? '' : date("Y/m/d",strtotime($row["AvailableTime"]));
+            $AvailableTimeBegin = $row["AvailableTimeBegin"]== null ? '' : date("Y/m/d",strtotime($row["AvailableTimeBegin"]));
+            $AvailableTimeEnd = $row["AvailableTimeEnd"]== null ? '' : date("Y/m/d",strtotime($row["AvailableTimeEnd"]));
             $EditTime = $row["EditTime"] == null ? '' : date("Y/m/d",strtotime($row["EditTime"]));
             $TitleStr = "课程包修改";
             if ($Status == 1)
                $TitleStr = "课程包查看 (上架状态无法修改)";
+            $cplist = CWList($CoursewareList);
          }
          else
          {
@@ -174,7 +291,9 @@
             $ExamList = "";
             $StatusStr = "";
             $QuestionnaireList = "";
-            $AvailableTime = "";
+            $AvailableTimeBegin = "";
+            $AvailableTimeEnd = "";
+            $cplist = "";
          }
       }
    }
@@ -186,9 +305,10 @@
       $CoursewareList = $_POST["CoursewareList"];
       $ExamList = $_POST["ExamList"];
       $QuestionnaireList = $_POST["QuestionnaireList"];
-      $AvailableTime = "'" . $_POST["AvailableTime"] . "'";
-      $str_query1 = "Insert into news (CoursePacketName,CoursePacketDesc,CoursewarePacketList,CoursewareList,ExamList,QuestionnaireList,AvailableTime,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$CoursePacketName','$CoursePacketDesc','$CoursewarePacketList','$CoursewareList','$ExamList','$QuestionnaireList',$AvailableTime,$user_id,now(),$user_id,now(),1)" ;
+      $AvailableTimeBegin = "'" . $_POST["AvailableTimeBegin"] . "'";
+      $AvailableTimeEnd = "'" . $_POST["AvailableTimeEnd"] . "'";
+      $str_query1 = "Insert into CoursePacket (CoursePacketName,CoursePacketDesc,CoursewarePacketList,CoursewareList,ExamList,QuestionnaireList,AvailableTimeBegin,AvailableTimeEnd,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$CoursePacketName','$CoursePacketDesc','$CoursewarePacketList','$CoursewareList','$ExamList','$QuestionnaireList',$AvailableTimeBegin,$AvailableTimeEnd,$user_id,now(),$user_id,now(),0)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -202,16 +322,19 @@
    }
    else // Update
    {
+      
       $CoursePacketName = $_POST["CoursePacketName"];
       $CoursePacketDesc = $_POST["CoursePacketDesc"];
       $CoursewarePacketList = $_POST["CoursewarePacketList"];
       $CoursewareList = $_POST["CoursewareList"];
       $ExamList = $_POST["ExamList"];
       $QuestionnaireList = $_POST["QuestionnaireList"];
-      $AvailableTime = "'" . $_POST["AvailableTime"] . "'";
-      $str_query1 = "Update news set CoursePacketName='$CoursePacketName', CoursePacketDesc='$CoursePacketDesc', 
+      $AvailableTimeBegin = "'" . $_POST["AvailableTimeBegin"] . "'";
+      $AvailableTimeEnd = "'" . $_POST["AvailableTimeEnd"] . "'";
+      $str_query1 = "Update CoursePacket set CoursePacketName='$CoursePacketName', CoursePacketDesc='$CoursePacketDesc', 
          CoursewarePacketList='$CoursewarePacketList', CoursewareList='$CoursewareList', ExamList='$ExamList', 
-         QuestionnaireList='$QuestionnaireList', AvailableTime=$AvailableTime, EditUser=$user_id, EditTime=now() where NewId=$NewId";
+         QuestionnaireList='$QuestionnaireList', AvailableTimeBegin=$AvailableTimeBegin, AvailableTimeEnd=$AvailableTimeEnd, 
+         EditUser=$user_id, EditTime=now() where CoursePacketId=$CoursePacketId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -227,185 +350,491 @@
 
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
-<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
-<link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
-<link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
-<link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
-<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
-<!-- for tree view -->
-<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="../css/demo.css">
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-<!-- End of tree view -->
-<!--[if lt IE 10]>
-<script type="text/javascript" src="lib/PIE.js"></script>
-<![endif]-->
-<title>武田 - 公告页面</title>
-<Script Language=JavaScript>
-function lockFunction(obj, n)
-{
-   if (g_defaultExtremeType[n] == 1)
-      obj.checked = true;
-} 
-
-function click_logout()  //log out
-{
-   document.getElementsByName("logoutform")[0].submit();
-}
-
-function loaded()
-{
-   $('#depttree').tree({cascadeCheck:$(this).is(':checked')})
-   $("#depttree").tree({
-       onCheck: function (node, checked) {
-           if (checked) {
-               var parentNode = $(this).tree('getParent', node.target);
-               if (parentNode != null) {
-                   $(this).tree('check', parentNode.target);
-               }
-           } else {
-               var childNode = $(this).tree('getChildren', node.target);
-               if (childNode.length > 0) {
-                   for (var i = 0; i < childNode.length; i++) {
-                       $(this).tree('uncheck', childNode[i].target);
-                   }
-               }
-           }
-       }
-   });
-   window.setTimeout("expandToDept()", 2000);
-}
-
-//***Step12 修改页面点击保存按钮出发Ajax动作
-function modifyNewsContent(NewId)
-{
-   CoursePacketName = document.getElementsByName("CoursePacketNameModify")[0].value.trim();
-   CoursePacketDesc = document.getElementsByName("CoursePacketDescModify")[0].value.trim();
-   AvailableTime = document.getElementsByName("AvailableTimeModify")[0].value.trim();
-   DeptList = getCheckedDept();
-   
-   if (CoursePacketName.length == 0 || CoursePacketDesc.length == 0)
-   {
-      alert("课程包名称及课程包备注不可为空白");
-      return;
-   }
-   
-   if (CoursePacketName.length > 100 || CoursePacketDesc.length > 255){
-      alert("课程包名称及课程包备注长度过长！请缩短后重新保存。");
-      return;
-   }
-   
-   if (AvailableTime.length > 0)
-   {
-      if (AvailableTime.length != 10)
-      {
-         alert("日期格式必须为 yyyy/mm/dd");
-         return;
-      }
-      var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
-      if (!reg.exec(AvailableTime))
-      {
-         alert("日期格式必须为 yyyy/mm/dd " + AvailableTime);
-         return;
-      }
-   }
-   
-   str = "cmd=write&NewId=" + NewId + "&NewTitle=" + encodeURIComponent(NewTitle) + 
-         "&NewMsg=" + encodeURIComponent(NewMsg) + "&OccurTime=" + encodeURIComponent(OccurTime) + "&DeptList=" + encodeURIComponent(DeptList);
-   url_str = "News_modify.php?cmd=write&NewId=" + NewId;
-
-   // alert(url_str);
-   $.ajax
-   ({
-      beforeSend: function()
-      {
-         //alert(str);
-      },
-      type: "POST",
-      url: url_str,
-      data:{
-         NewTitle:NewTitle,
-         NewMsg:NewMsg,
-         OccurTime:OccurTime,
-         DeptList:DeptList
-      },
-      cache: false,
-      dataType: 'json',
-      success: function(res)
-      {
-         //alert("Data Saved: " + res);
-         res = String(res);
-         if (res.match(/^-\d+$/))  //failed
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+      <meta http-equiv="Pragma" content="no-cache">
+      <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+      <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
+      <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
+      <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
+      
+      <!-- Bootstrap core CSS -->
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/bootstrap-reset.css" rel="stylesheet">
+      <!--Animation css-->
+      <link href="css/animate.css" rel="stylesheet">
+      <!--Icon-fonts css-->
+      <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+      <link href="assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
+      <!-- DataTables -->
+      <link href="assets/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+      <!--Form Wizard-->
+      <link rel="stylesheet" type="text/css" href="assets/form-wizard/jquery.steps.css" />
+      <!-- Plugins css-->
+      <link href="assets/timepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+      <link rel="stylesheet" type="text/css" href="assets/select2/select2.css" />
+      <!-- Custom styles for this template -->
+      <link href="css/style.css" rel="stylesheet">
+      <link href="css/helper.css" rel="stylesheet">
+      <link href="css/style-responsive.css" rel="stylesheet" />
+      <link href='css/jquery.gridly.css' rel='stylesheet' type='text/css'>
+      <link href='css/sample.css' rel='stylesheet' type='text/css'>
+      <script src='js/jquery.js' type='text/javascript'></script>
+      <script src='js/jquery.gridly.js' type='text/javascript'></script>
+      <script src='js/sample.js' type='text/javascript'></script>
+      <script src='js/rainbow.js' type='text/javascript'></script>
+      <!-- End of tree view -->
+      <!--[if lt IE 10]>
+      <script type="text/javascript" src="lib/PIE.js"></script>
+      <![endif]-->
+      <title>武田 - 课程包页面</title>
+      <Script Language=JavaScript>
+         function lockFunction(obj, n)
          {
-            alert(MSG_OPEN_CONTENT_ERROR);
-         }
-         else  //success
+            if (g_defaultExtremeType[n] == 1)
+               obj.checked = true;
+         } 
+
+         function click_logout()  //log out
          {
-            alert("公告新增/修改成功，页面关闭后请自行刷新");
-            window.close();
+            document.getElementsByName("logoutform")[0].submit();
          }
-      },
-      error: function(xhr)
-      {
-         alert("ajax error: " + xhr.status + " " + xhr.statusText);
-      }
-   });
-}
-</Script>
-<!--Step15 新增修改页面    起始 -->
-</head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
-<div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>课程包名称：</th>
-         <td><Input type="text" name="CoursePacketNameModify" size=50 value="<?php echo $CoursePacketName;?>"></td>
-      </tr>
-      <tr>
-         <th>课程包说明：</th>
-         <td><Textarea name="CoursePacketDescModify" rows=30 cols=100><?php echo $CoursePacketDesc;?></textarea></td>
-      </tr>
-      <tr>
-         <th>课程包有效时间 ：</th>
-         <td>
-            <input id="from0" type="text" name="AvailableTimeModify" class="from" readonly="true" value="<?php echo $AvailableTime;?>"/>
-         </td>
-      </tr>
-<?php
-   if ($Status != 1)
-   {
-?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyNewsContent"><input name="modifyNewsButton" type="button" value="保存" OnClick="modifyNewsContent(<?php echo $NewId;?>)"></a>
-         </th>
-      </tr>      
-<?php
-   }
-?>   
-   </table>
-</div>
-</body>
+
+         function loaded()
+         {
+            $('.gridly').append("<?php echo $cplist;?>");
+            var num = $("div [class='brick small']").length;
+            num = num * 60;
+            var s = "height: " + num + "px;";
+            $("div[class='gridly']").attr("style",s);
+         }
+         
+         function test()
+         {
+            alert("OK");
+            cpName = document.getElementsByName("cpModify")
+            alert(cpName.length);
+         }
+
+         //***Step12 修改页面点击保存按钮出发Ajax动作
+         function modifyCoursePacketsContent(CoursePacketId)
+         {
+            CoursePacketName = document.getElementsByName("CoursePacketNameModify")[0].value.trim();
+            CoursePacketDesc = document.getElementsByName("CoursePacketDescModify")[0].value.trim();
+            AvailableTimeBegin = document.getElementsByName("AvailableTimeBegin")[0].value.trim();
+            AvailableTimeEnd = document.getElementsByName("AvailableTimeEnd")[0].value.trim();
+            CPListModify = document.getElementsByName("cpListModify")[0].value.trim();
+            EListModify = document.getElementsByName("eListModify")[0].value.trim();
+            QListModify = document.getElementsByName("qListModify")[0].value.trim();
+            CoursewareListModify = document.getElementsByName("CoursewareListModify")[0].value.trim();
+            
+            if (CoursePacketName.length == 0 || CoursePacketDesc.length == 0)
+            {
+               alert("课程包名称及课程包备注不可为空白");
+               return;
+            }
+            
+            if (CoursePacketName.length > 255 || CoursePacketDesc.length > 255){
+               alert("课程包名称及课程包备注长度过长！请缩短后重新保存。");
+               return;
+            }
+            
+            if (AvailableTimeBegin.length > 0)
+            {
+               if (AvailableTimeBegin.length != 10)
+               {
+                  alert("日期格式必须为 yyyy/mm/dd");
+                  return;
+               }
+               var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
+               if (!reg.exec(AvailableTimeBegin))
+               {
+                  alert("日期格式必须为 yyyy/mm/dd " + AvailableTimeBegin);
+                  return;
+               }
+            }
+            
+            if (AvailableTimeEnd.length > 0)
+            {
+               if (AvailableTimeEnd.length != 10)
+               {
+                  alert("日期格式必须为 yyyy/mm/dd");
+                  return;
+               }
+               var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
+               if (!reg.exec(AvailableTimeEnd))
+               {
+                  alert("日期格式必须为 yyyy/mm/dd " + AvailableTimeEnd);
+                  return;
+               }
+            }
+            
+            url_str = "CoursePackets_modify.php?cmd=write&CoursePacketId=" + CoursePacketId;
+         
+            // alert(url_str);
+            $.ajax
+            ({
+               beforeSend: function()
+               {
+                  //alert(str);
+               },
+               type: "POST",
+               url: url_str,
+               data:{
+                  CoursePacketName:CoursePacketName,
+                  CoursePacketDesc:CoursePacketDesc,
+                  CoursewarePacketList:CPListModify,
+                  CoursewareList:CoursewareListModify,
+                  ExamList:EListModify,
+                  QuestionnaireList:QListModify,
+                  AvailableTimeBegin:AvailableTimeBegin,
+                  AvailableTimeEnd:AvailableTimeEnd
+               },
+               cache: false,
+               dataType: 'json',
+               success: function(res)
+               {
+                  //alert("Data Saved: " + res);
+                  res = String(res);
+                  if (res.match(/^-\d+$/))  //failed
+                  {
+                     alert(MSG_OPEN_CONTENT_ERROR);
+                  }
+                  else  //success
+                  {
+                     alert("课程包新增/修改成功，页面关闭后请自行刷新");
+                     window.close();
+                  }
+               },
+               error: function(xhr)
+               {
+                  alert("ajax error: " + xhr.status + " " + xhr.statusText);
+               }
+            });
+         }
+      </Script>
+      <!--Step15 新增修改页面    起始 -->
+   </head>
+   <body Onload="loaded();">
+      <!--Main Content Start -->
+       <section class="content">
+          <!-- Header -->
+            <header class="top-head container-fluid">
+                <button type="button" class="navbar-toggle pull-left">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                
+                <!-- Left navbar -->
+                <nav class=" navbar-default hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+
+                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Right navbar -->
+                <ul class="list-inline navbar-right top-menu top-right-menu">  
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown text-center">
+               
+                     <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
+                     <form name=logoutform action=logout.php>
+                     </form>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="fa fa-user"></i>
+                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
+                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->       
+                </ul>
+                <!-- End right navbar -->
+
+            </header>
+            <!-- Header Ends -->
+          <!-- Page Content Start -->
+          <!-- ================== -->
+          <div class="wraper container-fluid">
+             <!-- Basic Form Wizard -->
+             <div class="row">
+                <div class="col-md-12">
+                   <div class="panel panel-default">
+                      <div class="panel-heading"> 
+                         <h3 class="panel-title">课程包页面</h3>
+                      </div> 
+                      <div class="panel-body"> 
+                         <form id="basic-form" action="#">
+                            <div>
+                               <h3>课程包、练习考卷、问卷管理</h3>
+                                  <section>
+                                     <div class="form-group clearfix">
+                                        <input type="hidden" id="cpListModify" name="cpListModify" value="<?php echo $CoursewarePacketList; ?>" />
+                                        <label class="col-lg-2 control-label " for="userName">课程包 *</label>
+                                        <div class="col-lg-10">
+                                           <select id="cpList" class="select1" multiple data-placeholder="Choose a Country...">
+                                              <option value="#">&nbsp;</option>
+                                              <?php
+                                                foreach ($dataPPTs as $ppt) {
+                                                   $pptidtmp = "," . $ppt->PPTId . ",";
+                                                   $tmp = strpos($CoursewarePacketList, $pptidtmp);
+                                                   if($tmp !== false)
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $ppt->PPTId; ?>" selected="selected"><?php echo $ppt->PPTName; ?></option>
+                                              <?php
+                                                   }
+                                                   else 
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $ppt->PPTId; ?>"><?php echo $ppt->PPTName; ?></option>
+                                              <?php
+                                                   }
+                                                }
+                                              ?>
+                                            </select>
+                                        </div>
+                                     </div>
+                                     <div class="form-group clearfix">
+                                        <input type="hidden" id="eListModify" name="eListModify" value="<?php echo $ExamList; ?>" />
+                                        <label class="col-lg-2 control-label " for="password">练习考试 *</label>
+                                        <div class="col-lg-10">
+                                            <select id="eList" class="select2" multiple data-placeholder="Choose a Country...">
+                                              <option value="#">&nbsp;</option>
+                                              <?php
+                                                foreach ($dataExam as $exam) {
+                                                   $examidtmp = "," . $exam->ExamId . ",";
+                                                   $tmp = strpos($ExamList, $examidtmp);
+                                                   if($tmp !== false)
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $exam->ExamId; ?>" selected="selected"><?php echo $exam->ExamName; ?></option>
+                                              <?php
+                                                   }
+                                                   else 
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $exam->ExamId; ?>"><?php echo $exam->ExamName; ?></option>
+                                              <?php
+                                                   }
+                                                }
+                                              ?>
+                                            </select>
+                                        </div>
+                                     </div>
+                      
+                                     <div class="form-group clearfix">
+                                        <input type="hidden" id="qListModify" name="qListModify" value="<?php echo $QuestionnaireList; ?>" />
+                                        <label class="col-lg-2 control-label " for="confirm">问卷管理 *</label>
+                                        <div class="col-lg-10">
+                                           <select id="qList" class="select2" multiple data-placeholder="Choose a Country...">
+                                              <option value="#">&nbsp;</option>
+                                              <?php
+                                                foreach ($dataQuestion as $question) {
+                                                   $questionidtmp = "," . $question->QuestionId . ",";
+                                                   $tmp = strpos($QuestionnaireList, $questionidtmp);
+                                                   if($tmp !== false)
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $question->QuestionId; ?>" selected="selected"><?php echo $question->QuestionName; ?></option>
+                                              <?php
+                                                   }
+                                                   else 
+                                                   {
+                                              ?>
+                                              <option value="<?php echo $question->QuestionId; ?>"><?php echo $question->QuestionName; ?></option>
+                                              <?php
+                                                   }
+                                                }
+                                              ?>
+                                            </select>
+                                        </div>
+                                     </div>
+                                     <div class="form-group clearfix">
+                                        <label class="col-lg-12 control-label ">(*) Mandatory</label>
+                                     </div>
+                                  </section>
+                                  <h3>课件管理</h3>
+                                  <INPUT type="hidden" name="CoursewareListModify" value="<?php echo $CoursewareList;?>">
+                                  <section class="content">
+                                     <div class="form-group clearfix">
+                                        <section class='example'>
+                                           <div class='gridly'>
+                                           </div>
+                                           <p class='actions'>
+                                              <!-- <input type="button" id="addshow" class='button' value="Show" /> -->
+                                           </p>
+                                        </section>
+                                     </div>
+                                     <div class="wraper container-fluid">
+                                        <div class="page-title"> 
+                                            <h3 class="title">Datatable</h3> 
+                                        </div>
+                                        <div class="row">
+                                           <div class="col-md-12">
+                                              <div class="panel panel-default">
+                                                 <div class="panel-heading">
+                                                    <h3 class="panel-title">Datatable</h3>
+                                                    <a class='add button' href='#'>Add</a>
+                                                 </div>
+                                                 <div class="panel-body">
+                                                    <div class="row">
+                                                       <div class="col-md-12 col-sm-12 col-xs-12">
+                                                          <table id="datatable" class="table table-striped table-bordered">
+                                                             <thead>
+                                                                <tr>
+                                                                   <th>动作</th>
+                                                                   <th>课件名称</th>
+                                                                   <th>课件备注</th>
+                                                                </tr>
+                                                             </thead>
+                                                             <tbody>
+                                                                <?php
+                                                                   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+                                                                   if (!$link)  //connect to server failure    
+                                                                   {
+                                                                      sleep(DELAY_SEC);
+                                                                      echo DB_ERROR;       
+                                                                      return;
+                                                                   }  
+                                                                   $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares";
+                                                                   $result = mysqli_query($link, $str_query1);
+                                                                   $rownum = mysqli_num_rows($result);
+                                                                   while($row = mysqli_fetch_assoc($result))
+                                                                   {
+                                                                      $CoursewareDesc = $row["CoursewareDesc"];
+                                                                      $CoursewareName = $row["CoursewareName"];
+                                                                      $CoursewareId = $row["CoursewareId"];
+                                                                      
+                                                                      echo "<tr>";
+                                                                      echo "<td><input type='checkbox' name='cbcw' value='". $CoursewareId . "&&" . $CoursewareName ."' class='checkbox'></td>";
+                                                                      echo "<td>$CoursewareName</td>";
+                                                                      echo "<td>$CoursewareDesc</td>";
+                                                                      echo "</tr>";
+                                                                   }
+                                                                ?>
+                                                             </tbody>
+                                                          </table>
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                              </div>
+                                           </div>
+                                        </div> <!-- End Row -->
+                                     </div>
+                                  </section>
+                                  <h3>课程包信息</h3>
+                                  <section>
+                                     <div class="form-group clearfix">
+                                        <div class="col-lg-12">
+                                           <div class="form-group clearfix">
+                                              <label class="col-lg-2 control-label " for="userName">课程包名称 *</label>
+                                              <div class="col-lg-10">
+                                                 <input class="form-control required" id="userName" name="CoursePacketNameModify" type="text" value="<?php echo $CoursePacketName; ?>">
+                                              </div>
+                                           </div>
+                                           <div class="form-group clearfix">
+                                              <label class="col-lg-2 control-label " for="userName">课程包说明 *</label>
+                                              <div class="col-lg-10">
+                                                 <input class="form-control required" id="userName" name="CoursePacketDescModify" type="text" value="<?php echo $CoursePacketDesc; ?>">
+                                              </div>
+                                           </div>
+                                           <div class="form-group clearfix">
+                                              <label class="col-lg-2 control-label " for="userName">课程包有效起始时间 *</label>
+                                              <div class="input-group">
+                                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd" id="datepicker1" name="AvailableTimeBegin" value="<?php echo $AvailableTimeBegin; ?>">
+                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                              </div>
+                                           </div>
+                                           <div class="form-group clearfix">
+                                              <label class="col-lg-2 control-label " for="userName">课程包有效截止时间 *</label>
+                                              <div class="input-group">
+                                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd" id="datepicker2" name="AvailableTimeEnd" value="<?php echo $AvailableTimeBegin; ?>">
+                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                              </div>
+                                           </div>
+                                           <div class="form-group clearfix">
+                                              <a class="btn_submit_new modifyQuestionsContent"><input name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyCoursePacketsContent(<?php echo $CoursePacketId;?>)"></a>
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </section>
+                              </div>
+                          </form> 
+                      </div>  <!-- End panel-body -->
+                   </div> <!-- End panel -->
+                </div> <!-- end col -->
+             </div> <!-- End row -->
+          </div>
+          <!-- Page Content Ends -->
+          <!-- ================== -->
+          <!-- Footer Start -->
+          <footer class="footer">
+             2015 © Velonic.
+          </footer>
+          <!-- Footer Ends -->
+       </section>
+       <!-- Main Content Ends -->
+       <!-- js placed at the end of the document so the pages load faster -->
+       <script type="text/javascript" src="assets/jquery-multi-select/jquery.multi-select.js"></script>
+       <script src="assets/select2/select2.min.js" type="text/javascript"></script>
+       <!--Form Wizard-->
+       <script src="assets/form-wizard/jquery.steps.min.js" type="text/javascript"></script>
+       <script type="text/javascript" src="assets/jquery.validate/jquery.validate.min.js"></script>
+       <!--wizard initialization-->
+       <script src="assets/timepicker/bootstrap-datepicker.js"></script>
+       <script src="assets/form-wizard/wizard-init.js" type="text/javascript"></script>
+       <script src="js/bootstrap.min.js"></script>
+       <script src="js/pace.min.js"></script>
+       <script src="js/wow.min.js"></script>
+       <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+       <script src="js/jquery.app.js"></script>
+       <script src="assets/datatables/jquery.dataTables.min.js"></script>
+       <script src="assets/datatables/dataTables.bootstrap.js"></script>
+       <script>
+          $("#cpList").change(function(){
+             var cplm = "";
+             $(this).find("option:selected").each(function(){
+                cplm = cplm + "," + $(this).val() + ",";
+             });
+             $("#cpListModify").val(cplm);
+          });
+          
+          $("#eList").change(function(){
+             var elm = "";
+             $(this).find("option:selected").each(function(){
+                elm = elm + "," + $(this).val() + ",";
+             });
+             $("#eListModify").val(elm);
+          });
+          
+          $("#qList").change(function(){
+             var qlm = "";
+             $(this).find("option:selected").each(function(){
+                qlm = qlm + "," + $(this).val() + ",";
+             });
+             $("#qListModify").val(qlm);
+          });
+          
+          jQuery('#datepicker1').datepicker();
+          jQuery('#datepicker2').datepicker();
+          jQuery(document).ready(function() {
+             // Select2
+             jQuery(".select1").select2({
+                width: '100%'
+             });
+             jQuery(".select2").select2({
+                width: '100%'
+             });
+          });
+        </script>
+   </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

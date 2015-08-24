@@ -217,7 +217,7 @@
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
-   $str_query1 = "select ti.TrainingName as TrainingName, us.UserName as UserName, rc.IssueDate as IssueDate, rc.Status as Status, rc.Reason as Reason, u.UserName as CreatedUser 
+   $str_query1 = "select ti.TrainingName as TrainingName, us.UserName as UserName, rc.IssueDate as IssueDate, rc.Status as Status, rc.Reason as Reason, u.UserName as CreatedUser, ti.ApproreLevel  
 from rollcall rc left join trainings ti on rc.TrainingId = ti.TrainingId 
 left join users us on rc.UserId = us.UserId left join wutian.users u on rc.CreatedUser = u.UserId where rc.status";
 

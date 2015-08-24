@@ -165,11 +165,13 @@
             $UserEmail = $row["Email"];
             $DeptId = $row["DeptId"];
             $CanApprove = $row["CanApprove"];
+            $UserSuper = $row["UserSuper"];
             $JobGrade = $row["JobGrade"];
             $Status = $row["Status"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
+            $CheckInTime = $row["CheckInTime"] == null ? '' : date("Y/m/d",strtotime($row["CheckInTime"]));
             $TitleStr = "用户修改";
             if ($Status == 1)
                $TitleStr = "用户查看 (上架状态无法修改)";
@@ -184,8 +186,10 @@
             $DeptId = 1;
             $CanApprove = 0;
             $JobGrade = "";
+            $UserSuper = ""; 
             $TitleStr = "用户新增";
             $Status = 0;
+            $CheckInTime = "";
          }
       }
    }
@@ -197,14 +201,16 @@
       $UserEmail = $_GET["UserEmail"];
       $CanApprove = $_GET["CanApprove"];
       $DeptId = $_GET["DeptId"];
+      $UserSuper = $_GET["UserSuper"];
+      $CheckInTime = $_GET["CheckInTime"];
       $JobGrade = 1;
       if (check_email($UserEmail) != SUCCESS)
       {
          echo "-- Email 格式错误 -- $UserEmail";
          return;
       }
-      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,UserWId,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,'$WinId',$user_id,now(),$user_id,now(),1)" ;
+      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,UserWId,CreatedUser,CreatedTime,EditUser,EditTime,Status,UserSuper,CheckInTime)" 
+                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,'$WinId',$user_id,now(),$user_id,now(),1,$UserSuper,'$CheckInTime')" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -222,8 +228,10 @@
       $EmployeeId = $_GET["EmployeeId"];
       $WinId = $_GET["WinId"];
       $UserEmail = $_GET["UserEmail"];
+      $UserSuper = $_GET["UserSuper"];
       $CanApprove = $_GET["CanApprove"];
       $DeptId = $_GET["DeptId"];
+      $CheckInTime = $_GET["CheckInTime"];
       $JobGrade = 1;
       if (check_email($UserEmail) != SUCCESS)
       {
@@ -231,7 +239,9 @@
          return;
       }
       //TODO EditUser=UserId
-      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', UserWId='$WinId', Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now() where UserId=$UserId";
+      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', UserWId='$WinId', CheckInTime = '$CheckInTime'
+         Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now(), UserSuper=$UserSuper 
+         where UserId=$UserId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -293,12 +303,19 @@ function modifyUsersContent(UserId)
    EmployeeId = document.getElementsByName("EmployeeId")[0].value.trim();
    WinId = document.getElementsByName("WinId")[0].value.trim();
    UserEmail = document.getElementsByName("UserEmailModify")[0].value.trim();
+   CheckInTime = document.getElementsByName("CheckInTimeModify")[0].value.trim();
    DeptId = getSelectedId();
    
    var searchUsersRadio = 0;
    if (document.getElementById("searchUsersRadio1").checked == true)
    {
       searchUsersRadio = 1; 
+   }
+   
+   var searchUserSupersRadio = 0;
+   if (document.getElementById("searchUserSupersRadio1").checked == true)
+   {
+      searchUserSupersRadio = 1; 
    }
    
    if (UserName.length == 0 || EmployeeId.length == 0 || UserEmail.length == 0 || WinId.length == 0)
@@ -313,9 +330,25 @@ function modifyUsersContent(UserId)
       return;
    }
    
+   if (CheckInTime.length > 0)
+   {
+      if (CheckInTime.length != 10)
+      {
+         alert("日期格式必须为 yyyy/mm/dd");
+         return;
+      }
+      var reg=/2[0-9]{3}\/(01|02|03|04|05|06|07|08|09|10|11|12)\/(([0-2][1-9])|([1-3][0-1]))/;
+      if (!reg.exec(CheckInTime))
+      {
+         alert("日期格式必须为 yyyy/mm/dd " + CheckInTime);
+         return;
+      }
+   }
+   
    str = "cmd=write&UserId=" + UserId + "&UserName=" + encodeURIComponent(UserName) + 
          "&EmployeeId=" + encodeURIComponent(EmployeeId) +
          "&WinId=" + encodeURIComponent(WinId) +
+         "&UserSuper=" + searchUserSupersRadio + "&CheckInTime=" + encodeURIComponent(CheckInTime) + 
          "&UserEmail=" + encodeURIComponent(UserEmail) + "&CanApprove=" + searchUsersRadio + "&DeptId=" + DeptId;
    url_str = "../User/Users_modify.php?";
 
@@ -389,7 +422,19 @@ function modifyUsersContent(UserId)
             <input id="searchUsersRadio2" name="CanA" type="radio" value="" <?php if ($CanApprove==0) echo "checked"; ?> />否               
          </td>
       </tr>
-      
+      <tr>
+         <th>是否为超级管理者 ：</th>
+         <td>
+            <input id="searchUserSupersRadio1" name="USuper" type="radio" value="" <?php if ($UserSuper==1) echo "checked"; ?> />是&nbsp;
+            <input id="searchUserSupersRadio2" name="USuper" type="radio" value="" <?php if ($UserSuper==0) echo "checked"; ?> />否               
+         </td>
+      </tr>
+      <tr>
+         <th>员工入职日期：</th>
+         <td>
+            <input id="from0" type="text" name="CheckInTimeModify" class="from" readonly="true" value="<?php echo $CheckInTime;?>"/>
+         </td>
+      </tr>
       <tr>
          <th>选择部门：</th>
          <td>

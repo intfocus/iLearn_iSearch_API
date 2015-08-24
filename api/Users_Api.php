@@ -63,14 +63,21 @@
       return;
    }
    
-   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId from users where (EmployeeId = '$eid' or UserWId = '$eid') and Status = 1";
+   $str_user = "select UserId,UserName, Email, DeptId, EmployeeId, UserSuper from users where (EmployeeId = '$eid' or UserWId = '$eid') and Status = 1";
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)
       {
          $userrow = mysqli_fetch_assoc($result);
          $id = $userrow["UserId"];
-         $DeptId = $userrow["DeptId"];
+         if($userrow["UserSuper"] == 1)
+         {
+            $DeptId = 0;
+         }
+         else
+         {
+            $DeptId = $userrow["DeptId"];
+         }
          $Name = $userrow["UserName"];
          $Email = $userrow["Email"];
          $EmployeeId = $userrow["EmployeeId"];

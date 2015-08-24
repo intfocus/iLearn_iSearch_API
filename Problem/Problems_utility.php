@@ -61,7 +61,7 @@
    define("FUNCTION_ADAPTATION", 2);
    define("FUNCTION_OTHER", 3);
 
-   define("FUNCTION_ADAPTATION_NAME", "适应症");
+   define("FUNCTION_ADAPTATION_NAME", "TA/适应症");
    define("FUNCTION_PRODUCT_NAME", "产品名称");
    define("FUNCTION_OTHER_NAME", "题库类别");
 

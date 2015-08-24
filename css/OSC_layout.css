@@ -292,6 +292,9 @@ body, html {
 .mainTabW li span.tabIcon.report {
 	background-image:url(../images/icon_report.png);
 }
+.mainTabW li span.tabIcon.examine {
+	background-image:url(../images/icon_examine.png);
+}
 .mainTabW li span.tabIcon.qt {
 	background-image:url(../images/icon_qt.png);
 }
@@ -354,6 +357,9 @@ body, html {
 }
 .mainTabW li span.tabIcon.problem {
 	background-image:url(../images/icon_problem.png);
+}
+.mainTabW li span.tabIcon.function {
+	background-image:url(../images/icon_function.png);
 }
 #enterpiceReport .mainContent {
 	background-color:#fff;
@@ -646,6 +652,25 @@ body, html {
 	color:#b6b6b6;
 	cursor:pointer;
 }
+#enterpiceReport .mainContent .toolMenu .paging .search_Function_page:hover,
+#enterpiceReport .mainContent .toolMenu .paging .page:hover {
+	background-color:#5B5857;
+	color:#f4f4f4;
+}
+#enterpiceReport .mainContent .toolMenu .paging .search_Function_page.active,
+#enterpiceReport .mainContent .toolMenu .paging .page.active {
+	background-color:#3b991a;
+	border-color:#60b343;
+	color:#f4f4f4;
+}
+#enterpiceReport .mainContent .toolMenu .paging .search_Function_page,
+#enterpiceReport .mainContent .toolMenu .paging .page {
+	display:inline-block;
+	padding:1px 5px;
+	border:1px solid #b6b6b6;
+	color:#b6b6b6;
+	cursor:pointer;
+}
 #enterpiceReport .mainContent .toolMenu .paging .search_Trainee_page:hover,
 #enterpiceReport .mainContent .toolMenu .paging .page:hover {
 	background-color:#5B5857;
@@ -658,6 +683,25 @@ body, html {
 	color:#f4f4f4;
 }
 #enterpiceReport .mainContent .toolMenu .paging .search_Trainee_page,
+#enterpiceReport .mainContent .toolMenu .paging .page {
+	display:inline-block;
+	padding:1px 5px;
+	border:1px solid #b6b6b6;
+	color:#b6b6b6;
+	cursor:pointer;
+}
+#enterpiceReport .mainContent .toolMenu .paging .search_TraineeExamine_page:hover,
+#enterpiceReport .mainContent .toolMenu .paging .page:hover {
+	background-color:#5B5857;
+	color:#f4f4f4;
+}
+#enterpiceReport .mainContent .toolMenu .paging .search_TraineeExamine_page.active,
+#enterpiceReport .mainContent .toolMenu .paging .page.active {
+	background-color:#3b991a;
+	border-color:#60b343;
+	color:#f4f4f4;
+}
+#enterpiceReport .mainContent .toolMenu .paging .search_TraineeExamine_page,
 #enterpiceReport .mainContent .toolMenu .paging .page {
 	display:inline-block;
 	padding:1px 5px;

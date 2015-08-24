@@ -207,6 +207,7 @@
       $Duration = $_GET["Duration"];
       $ExamBeginTime = $_GET["ExamBeginTime"];
       $ExamEndTime = $_GET["ExamEndTime"];
+      $ExamPassword = $_GET["ExamPassword"];
 
       $from_datetime = timestamp_to_datetime($ExamBeginTime);
       $end_datetime = timestamp_to_datetime($ExamEndTime);
@@ -225,10 +226,9 @@
 
       $str_query1 = <<<EOD
                       Update exams set ExamName='$ExamName', ExamDesc='$ExamDesc',
-                      Duration=$Duration, ExamBegin='$from_datetime',
+                      Duration=$Duration, ExamBegin='$from_datetime', ExamPassword = '$ExamPassword', 
                       ExamEnd='$end_datetime', EditUser=$user_id, EditTime=now() where ExamId=$ExamId
 EOD;
-
 
       if(mysqli_query($link, $str_query1))
       {
@@ -417,6 +417,7 @@ function modifyExamsContent(ExamId)
 {
    ExamName = document.getElementsByName("ExamNameModify")[0].value.trim();
    ExamDesc = document.getElementsByName("ExamDescModify")[0].value.trim();
+   ExamPassword = document.getElementsByName("ExamPasswordModify")[0].value.trim();
 
    ExamFromDate = document.getElementById("exam_begin_time").value;
    ExamFromHour = document.getElementById("exam_from_hour").value;
@@ -486,11 +487,11 @@ function modifyExamsContent(ExamId)
       return;
    }
 
-   str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + 
+   str = "cmd=update&ExamId=" + ExamId + "&ExamName=" + encodeURIComponent(ExamName) + "&ExamPassword=" + encodeURIComponent(ExamPassword) + 
          "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&Duration=" + encodeURIComponent(Duration) +         
          "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
-
+   
    $.ajax
    ({
       beforeSend: function()
@@ -632,7 +633,7 @@ function modifyExamsContent(ExamId)
       </tr>
       <tr <? if ($ExamLocation == OLINE_TEST){ echo "style='display:none'";}?>>
          <th>考卷密码：</th>
-         <td><Input style="width:100%" type=text name=ExamPasswordModify size=50 disabled="disabled" value="<?php echo $ExamPassword;?>"></td>
+         <td><Input style="width:100%" type=text name=ExamPasswordModify size=50 value="<?php echo $ExamPassword;?>"></td>
       </tr>
       <tr>
          <th>考试地点: </th>

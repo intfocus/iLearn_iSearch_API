@@ -25,6 +25,10 @@
       event.preventDefault();
       event.stopPropagation();
       $this = $(this);
+      var cwid = "," + $this.closest('.brick').attr("name") + ",";
+      var tmp = $("input[name=CoursewareNameModify]").val();
+      tmp = tmp.replace(cwid,'');
+      $("input[name=CoursewareNameModify]").val(tmp);
       $this.closest('.brick').remove();
       return $('.gridly').gridly('layout');
     });

@@ -10,6 +10,7 @@
    $createdUser = $rollcall->CreatedUser;
    $status = $rollcall->Status;
    $reason = $rollcall->Reason;
+   $checkinId = $rollcall->CheckInId;
    
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -60,8 +61,8 @@
       return;
    }
    
-   $str_log = "Insert into RollCall (TrainingId, UserId, IssueDate, Status, Reason, CreatedUser)" 
-               . " VALUES('$trainingId', $userId, '$issueDate', $status, '$reason', $createdUser)" ;
+   $str_log = "Insert into RollCall (TrainingId, UserId, IssueDate, Status, Reason, CreatedUser, CheckInId)" 
+               . " VALUES('$trainingId', $userId, '$issueDate', $status, '$reason', $createdUser, $checkinId)" ;
    // echo $str_log;
    // return;
    if(mysqli_query($link, $str_log))

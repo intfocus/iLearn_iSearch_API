@@ -232,7 +232,7 @@
    $str_query1 = "select te.TrainingId, te.UserId, te.RegisterDate, te.Status, 
 ti.TrainingName, ti.SpeakerName, ti.TrainingBegin, ti.TrainingEnd, ti.StartDate, 
 ti.EndDate, ti.TrainingLocation, ti.TrainingMemo, ti.TrainingManager, ti.ApproreLevel, 
-u.UserName, u.EmployeeId 
+u.UserName, u.EmployeeId, ti.ApproreLevel 
 from trainees as te left join trainings as ti on te.TrainingId = ti.TrainingId 
 left join Users as u on te.UserId = u.UserId where ti.Status";
 
@@ -390,6 +390,18 @@ left join Users as u on te.UserId = u.UserId where ti.Status";
                $TraineeDate = substr($row["TrainingBegin"],0,10) . "~" . substr($row["TrainingEnd"],0,10);
                $RegisterDate = date("Y-m-d H:i:s", strtotime($row["RegisterDate"]));
                $Status = $row["Status"];
+               $ApproreLevel = $row["ApproreLevel"];
+               $strStatus = "";
+               if ($ApproreLevel == $Status)
+               {
+                  $strStatus = "通过审核";
+               }
+               elseif ($ApproreLevel > $Status) {
+                   $strStatus = "审核中...";
+               }
+               elseif ($Status == -1) {
+                   $strStatus = "审核失败";
+               }
                $page_count_display = $page_count + 1;
                
                $return_string = $return_string 
@@ -401,7 +413,7 @@ left join Users as u on te.UserId = u.UserId where ti.Status";
                   . "<td>$EmployeeId</td>"
                   . "<td>$TraineeDate</td>"
                   . "<td>$RegisterDate</td>"
-                  . "<td>$Status</td>"
+                  . "<td>$strStatus</td>"
                   . "</tr>";
 
                $i++;
