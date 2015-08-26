@@ -304,7 +304,7 @@ function loaded() {
    });
    
    $("#exam_type").change(function(){
-      if ($(this).val() == 0 || $(this).val() == 2) 
+      if ($(this).val() == 0) 
       {    
          $("#exam_ans_type").hide();
          //$("#exam_time_selections").hide();
@@ -321,7 +321,7 @@ function loaded() {
    });
    
    $("#exam_location").change(function(){
-      alert($(this).val());
+      //alert($(this).val());
       if ($(this).val() == 0) 
       {    
          $("#exam_password_sections").hide();
@@ -492,7 +492,7 @@ function loaded() {
       exam_true_false_score = $("#NewExamTrueFalseScore").val();
       exam_name = $("#exam_name").val();
       exam_type = $("#exam_type").val();
-      exam_pwd = $("#exam_password").val();
+	  exam_pwd = $("#exam_password").val();
       exam_answer_type = $("#exam_answer_type").val();
       exam_from_date = $("#exam_begin_time").val();
       exam_from_hour = $("#exam_from_hour").val();
@@ -569,8 +569,8 @@ function loaded() {
          alert("及格百分比不能为空");
          return;
       }
-      
-      if (exam_location == 1)
+	  
+	  if (exam_location == 1)
       {
          if(exam_pwd.length == 0)
          {
@@ -625,7 +625,7 @@ function loaded() {
                   "select_problems":select_problems,
                   "problem_sets": JSON.stringify(problem_sets),
                   "user_id": user_id,
-                  "exam_pwd": exam_pwd
+				  "exam_pwd": exam_pwd
                 },
          success: function(res) {
             //if (!res.match(/^-\d+$/))
@@ -1055,7 +1055,7 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group" id="exam_password_sections" style="display:none">
-										         <input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
+										<input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
                                     </div>
 									
 									<div  id="exam_time_selections">

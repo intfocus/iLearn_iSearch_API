@@ -102,5 +102,10 @@
    echo "---DeptId--- " . $deptid . " ---Status--- " . $status . " ---UserId--- " . $userid . " ---TrainingId--- " . $trainingid . "<br />";
    $cau = new CanApproveUser($trainingid,$userid,$status,$deptid);
    $eus = $cau->clist();
+   $ExamineUser = "";
    print_r($eus);
+   // foreach ($eus as $es) {
+       // $ExamineUser = $ExamineUser . "," . $es->UserId . ",";
+   // }
+   // print_r($ExamineUser);
 ?>

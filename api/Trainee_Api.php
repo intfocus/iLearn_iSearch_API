@@ -1,40 +1,9 @@
 <?php
-   include '../lib/CanApprove_Users.php';
-   // if(is_array($_POST)&&count($_POST)>0){   //判断是否有Get参数
-      // if(isset($_POST["TrainingId"])){
-         // $trainingId = $_POST["TrainingId"];
-      // }
-      // else {
-         // echo json_encode(array("status"=>-2, "result"=>"报名失败！")); //-2没有传课程ID
-         // return;
-      // }
-//       
-      // if(isset($_POST["UserId"])){
-         // $userId = $_POST["UserId"];
-      // }
-      // else {
-         // echo json_encode(array("status"=>-3, "result"=>"报名失败！")); //-3没有传用户ID
-         // return;
-      // }
-//       
-       // $registerDate = date('Y-m-d H:i:s',time());
-   // }
-   // else {
-      // echo json_encode(array("status"=>-1, "result"=>"报名失败！")); //-1没有传任何参数
-      // return;
-   // }
    $traineeContent = file_get_contents("php://input");
    $trainee = json_decode($traineeContent);
    $trainingId = $trainee->TrainingId;
    $userId = $trainee->UserId;
-   try{
-      error_reporting(1);
-      $registerDate = $trainee->RegisterDate;
-      throw new Exception("abcd", 1);
-   }catch(Exception $ex){   
-      //echo "---1--- " . $ex->getMessage();
-      $registerDate = date('Y-m-d H:i:s',time());
-   }
+   $registerDate = date('Y-m-d H:i:s',time());
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -83,6 +52,47 @@
       return;
    }
    
+   $str_users = "select DeptId, CanApprove from users where UserId=$userId";
+   if($us = mysqli_query($link, $str_users))
+   {
+      $row = mysqli_fetch_assoc($us);
+      $deptid = $row["DeptId"];
+      if($row["CanApprove"] == 1)
+      {
+         $str_depts = "select ParentId from Depts where DeptId=$deptid";
+         if($us = mysqli_query($link, $str_depts))
+         {
+            $row = mysqli_fetch_assoc($us);
+            $deptid = $row["ParentId"];
+         }
+         else {
+            sleep(DELAY_SEC);
+            echo json_encode(array("status"=> 0, "count"=>0, "result"=>"报名失败！")); 
+            return;
+         }
+      }
+   }
+   else {
+      sleep(DELAY_SEC);
+      echo json_encode(array("status"=> 0, "count"=>0, "result"=>"报名失败！")); 
+      return;
+   }
+   
+   $ExamineUser = "";
+   $str_userids = "select UserId from users where DeptId=$deptid and CanApprove=1";
+   if($uids = mysqli_query($link, $str_userids))
+   {
+      while($row = mysqli_fetch_assoc($uids))
+      {
+         $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
+      }
+   }
+   else {
+      sleep(DELAY_SEC);
+      echo json_encode(array("status"=> 0, "count"=>0, "result"=>"报名失败！")); 
+      return;
+   }
+   
    class Stutrainees{
       public $TrainingId;
       public $UserId;
@@ -94,7 +104,7 @@
    if($rs = mysqli_query($link, $str_trainees)){
       $traineecount = mysqli_num_rows($rs);
       if($traineecount<=0){
-         $str_trainees = "insert trainees(TrainingId, UserId, RegisterDate, Status) values($trainingId, $userId, '$registerDate', 0)";
+         $str_trainees = "insert trainees(TrainingId, UserId, RegisterDate, Status, ExamineUser) values($trainingId, $userId, '$registerDate', 0, '$ExamineUser')";
          if(!mysqli_query($link, $str_trainees)){
             if($link){
                mysqli_close($link);
@@ -113,8 +123,6 @@
    
    mysqli_close($link);
    
-   $cau = new CanApproveUser($trainingId,$userId,0);
-   $eus = $cau->clist();
-   echo json_encode(array("status"=> 1, "count"=>1, "UserId"=>$userId, "TrainingId"=>$trainingId, "RegisterDate"=>$registerDate, "EmailUsers"=>$eus, "result"=>""));
+   echo json_encode(array("status"=> 1, "count"=>1, "UserId"=>$userId, "TrainingId"=>$trainingId, "RegisterDate"=>$registerDate, "result"=>""));
    return;
 ?>

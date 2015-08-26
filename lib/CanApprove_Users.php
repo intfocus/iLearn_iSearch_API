@@ -1,6 +1,6 @@
 <?php
    class CanApproveUser{
-      function __construct($tid,$uid,$sid,$did=0){
+      function __construct($tid,$uid,$sid,$did){
          //define("FILE_NAME", "../DB.conf");
          //define("DELAY_SEC", 3);
          //define("FILE_ERROR", -2);
@@ -15,21 +15,6 @@
             echo FILE_ERROR;
             return;
          }
-         
-         //define
-         // define("DB_HOST", $db_host);
-         // define("ADMIN_ACCOUNT", $admin_account);
-         // define("ADMIN_PASSWORD", $admin_password);
-         // define("CONNECT_DB", $connect_db);
-         // define("TIME_ZONE", "Asia/Shanghai");
-         // define("ILLEGAL_CHAR", "'-;<>");                         //illegal char
-//       
-         // //return value
-         // define("SUCCESS", 0);
-         // define("DB_ERROR", -1);
-//          
-         // //timezone
-         // date_default_timezone_set(TIME_ZONE);
       
          $this->TrainingId = $tid;
          $this->UserId = $uid;
@@ -64,20 +49,20 @@
          
          $eus = array();
          //判断当前用户所在部门是否已经审批过
-         if($approreLevel >= $this->Status && $status < $this->Status){
-            $str_trainees = "update trainees set Status=$this->Status where TrainingId=$this->TrainingId and UserId=$this->UserId";
-            if(!mysqli_query($link, $str_trainees)){
-               if($link){
-                  mysqli_close($link);
-               }
-               sleep(DELAY_SEC);
-               echo json_encode(array("status"=> 0, "count"=>0, "result"=>"审批失败！")); //写入数据失败
-               return;
-            }
-         }
-         else {
-             return $eus;
-         }
+         // if($approreLevel >= $this->Status && $status < $this->Status){
+            // $str_trainees = "update trainees set Status=$this->Status where TrainingId=$this->TrainingId and UserId=$this->UserId";
+            // if(!mysqli_query($link, $str_trainees)){
+               // if($link){
+                  // mysqli_close($link);
+               // }
+               // sleep(DELAY_SEC);
+               // echo json_encode(array("status"=> 0, "count"=>0, "result"=>"审批失败！")); //写入数据失败
+               // return;
+            // }
+         // }
+         // else {
+             // return $eus;
+         // }
          
          //判断是新报名还是审批,0:为新报名 ；大于0:审批
          if($this->Status == 0){

@@ -134,7 +134,7 @@
    }   
 
    // get obu require id
-   $func_type = FUNCTION_PRODUCT;
+   $func_type = FUNCTION_OTHER;
    $str_query = "Select * from functions where FunctionType=$func_type AND FunctionName='OBL'";
    if($result = mysqli_query($link, $str_query))
    {
@@ -166,21 +166,21 @@
    //***Step16 页面搜索SQl语句 起始
    if (count($product_functions_id) == 0 && count($adapation_functions_id) == 0)
    {
-      if($require_function_id != 0)
-      {
-         $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
-      }
+	   if($require_function_id != 0)
+       {
+	      $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+	   }
    }
    else
    {
 
       if (count($product_functions_id) > 0)
       {
-         if($require_function_id != 0)
+		 if($require_function_id != 0)
          {
-            $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
-         }
-         $str_query1 = $str_query1." AND (" ;
+			$str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+		 }
+		 $str_query1 = $str_query1." AND (" ;
          for ($i=0; $i<count($product_functions_id); $i++)   
          {
             if ($i == (count($product_functions_id) - 1))
