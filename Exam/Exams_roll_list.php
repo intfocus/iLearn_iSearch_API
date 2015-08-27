@@ -112,6 +112,25 @@
       return;
    }
    
+   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB); 
+   if (!$link)  //connect to server failure    
+   {
+      sleep(DELAY_SEC);
+      echo DB_ERROR;
+      die("连接DB失败");
+   }
+   $examname = "";
+   $str_query = "select ExamName from uat.exams where ExamId = $exam_id";
+   if($result = mysqli_query($link, $str_query)){
+      $row = mysqli_fetch_assoc($result);
+      $examname = $row["ExamName"];
+   }
+   else
+   {
+      echo DB_ERROR;
+      die("操作资料库失败");
+   }
+   
    function get_employ_id_from_user_id($user_id)
    {
       $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
@@ -309,7 +328,7 @@ function modifyUsersContent(exam_id)
 
             <div class="wraper container-fluid">
                 <div class="page-title"> 
-                    <h3 class="title">批次上传考试用户</h3> 
+                    <h3 class="title">批次上传考试用户(<?php echo $examname ?>)</h3> 
                 </div>
 
                 <!-- Basic Form Wizard -->

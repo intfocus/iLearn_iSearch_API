@@ -123,13 +123,28 @@
 function is_valid_prob_type_amount(true_false_amount, single_selection_amount, multi_selection_amount)
 {
    
-   if (isNaN(true_false_amount) || isNaN(single_selection_amount) || isNaN(multi_selection_amount))
+   //if (isNaN(true_false_amount) || isNaN(single_selection_amount) || isNaN(multi_selection_amount))
+   //{
+   //   alert("题数必须为数字");
+   //   alert(true_false_amount);
+   //   alert(single_selection_amount);
+   //   alert(multi_selection_amount);
+   //   return;
+   //}
+   if (isNaN(true_false_amount))
    {
-      alert("题数必须为数字");
-      alert(true_false_amount);
-      alert(single_selection_amount);
-      alert(multi_selection_amount);
-      return;
+	   true_false_amount = 0;
+	   cur_problem_set.find(".NewExamTrueFalseProbType").val(0);
+   }
+   if(isNaN(single_selection_amount))
+   {
+      single_selection_amount = 0;
+	  cur_problem_set.find(".NewExamSingleSelProbType").val(0);
+   }
+   if(isNaN(multi_selection_amount))
+   {
+	  multi_selection_amount = 0;
+	  cur_problem_set.find(".NewExamMutiSelProbType").val(0);
    }
 
    if (true_false_amount < 0 || single_selection_amount < 0 || multi_selection_amount < 0)
@@ -137,7 +152,6 @@ function is_valid_prob_type_amount(true_false_amount, single_selection_amount, m
       alert("题目数不能为负数");
       return false;
    }
-   
    total_amount = true_false_amount + single_selection_amount + multi_selection_amount;
    if (total_amount == 0)
    {
@@ -364,7 +378,8 @@ function loaded() {
             true_false_amount = cur_problem_set.find(".NewExamTrueFalseProbType").val();
             single_selection_amount = cur_problem_set.find(".NewExamSingleSelProbType").val();
             multi_selection_amount = cur_problem_set.find(".NewExamMutiSelProbType").val();
-            /*
+			
+			/*
             if (true_false_amount == "");
             {
                true_false_amount = "0";
@@ -377,7 +392,6 @@ function loaded() {
             {
                multi_selection_amount = "0";
             }*/
-
 
             if (!is_valid_prob_type_amount(parseInt(true_false_amount,10), parseInt(single_selection_amount,10), parseInt(multi_selection_amount,10)))
             {

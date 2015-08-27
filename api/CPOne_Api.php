@@ -104,6 +104,7 @@
       public $CoursewareDesc;
       public $CoursewareFile;
       public $Extension;
+	  public $FileSize;
    }
    
    function CList($Cstr)
@@ -115,7 +116,7 @@
       // $Cstr = str_replace(",,",",",$Cstr);
       $Cstrs = explode(',,', $Cstr);
       foreach ($Cstrs as $Cs) {
-         $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile from Coursewares where Status = 1 and CoursewareId = $Cs;";
+         $str_c = "select CoursewareId, CoursewareName, CoursewareDesc, CoursewareFile, FileSize from Coursewares where Status = 1 and CoursewareId = $Cs;";
          if($rsc = mysqli_query($strlink, $str_c)){
             while($row = mysqli_fetch_assoc($rsc)){
                $scc = new StuC();      
@@ -126,6 +127,7 @@
                $extensions = explode('.',$row['CoursewareFile']);
                $escount = count($extensions)-1;
                $scc->Extension = $extensions[$escount];
+			   $scc->FileSize = $row['FileSize'];
                array_push($datacstr, $scc);
             }
          }
@@ -195,16 +197,16 @@
       mysqli_close($strlink);
       return $dataestr;
    }
-
+   
    class StuQ{
-     public $QuestionId;
-     public $QuestionTemplateId;
-     public $QuestionName;
-     public $QuestionDesc;
-     public $StartTime;
-     public $EndTime;
-     public $CreatedUser;
-     public $Statust;
+      public $QuestionId;
+	  public $QuestionTemplateId;
+	  public $QuestionName;
+	  public $QuestionDesc;
+	  public $StartTime;
+	  public $EndTime;
+	  public $CreatedUser;
+	  public $Statust;
    }
    
    function QList($Qstr)
@@ -249,7 +251,8 @@
    class Stucp{
       public $Name;
       public $Desc;
-      public $AvailableTime;
+      public $AvailableTimeBegin;
+	  public $AvailableTimeEnd;
       public $CoursewarePacketList;
       public $CoursewareList;
       public $QuestionnaireList;
@@ -260,21 +263,54 @@
    
    //----- query -----
    $sc = new Stucp();
-   $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTime, Status, CoursewarePacketList, CoursewareList, QuestionnaireList, ExamList, EditTime from CoursePacket 
+   $str_cp = "select CoursePacketName, CoursePacketDesc, AvailableTimeBegin, AvailableTimeEnd, Status, CoursewarePacketList, CoursewareList, QuestionnaireList, ExamList, EditTime from CoursePacket 
       where Status = 1 and CoursePacketId = " . $cpid;
+   //echo $str_cp;
+   //return;
    if($rs = mysqli_query($link, $str_cp)){
       $cpcount = mysqli_num_rows($rs);
-      while($row = mysqli_fetch_assoc($rs)){      
+	  if($cpcount > 0)
+	  {
+		 $row = mysqli_fetch_assoc($rs);
          $sc->Name = $row['CoursePacketName'];
          $sc->Desc = $row['CoursePacketDesc'];
-         $sc->AvailableTime = date("Y/m/d",strtotime($row['AvailableTime']));
-         $sc->CoursewarePacketList = CPList($row['CoursewarePacketList']);
-         $sc->CoursewareList = CList($row['CoursewareList']);
-         $sc->QuestionnaireList = QList($row['QuestionnaireList']);
-         $sc->ExamList = EList($row['ExamList']);
+         $sc->AvailableTimeBegin = date("Y/m/d",strtotime($row['AvailableTimeBegin']));
+		 $sc->AvailableTimeEnd = date("Y/m/d",strtotime($row['AvailableTimeEnd']));
+		 if(strlen($row['CoursewarePacketList']) > 0)
+		 {
+			$sc->CoursewarePacketList = $row['CoursewarePacketList']== null?[]:CPList($row['CoursewarePacketList']);
+		 }
+		 else
+		 {
+			 $sc->CoursewarePacketList = [];
+		 }
+		 if(strlen($row['CoursewareList']) > 0)
+		 {
+			$sc->CoursewareList = $row['CoursewareList'] == null?[]:CList($row['CoursewareList']);
+		 }
+		 else
+		 {
+			$sc->CoursewareList = [];
+		 }
+		 if(strlen($row['QuestionnaireList']) > 0)
+		 {
+			$sc->QuestionnaireList = $row['QuestionnaireList'] == null?[]:QList($row['QuestionnaireList']);
+		 }
+		 else
+		 {
+			$sc->QuestionnaireList = [];
+		 }
+		 if(strlen($row['ExamList']) > 0)
+		 {
+			$sc->ExamList = $row['ExamList'] == null? []:EList($row['ExamList']);
+		 }
+		 else
+		 {
+			$sc->ExamList = [];
+		 }
          $sc->Status = $row['Status'];
          $sc->EditTime = $row['EditTime'];
-      }
+	  }
    }
    else
    {

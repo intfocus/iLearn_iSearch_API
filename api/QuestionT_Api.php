@@ -94,8 +94,8 @@
       $Id = (int)$row["QuestionId"];
       $Name = $row["QuestionName"];
       $Desc = $row["QuestionDesc"];
-      $STime = $row["StartTime"];
-      $ETime = $row["EndTime"];
+      $STime = date("Y/m/d H:i:s",strtotime($row["StartTime"]));
+      $ETime = date("Y/m/d H:i:s",strtotime($row["EndTime"]));
       $TId = (int)$row["QuestionTemplateId"];
       $TName = $row["QuestionTemplateName"];
       $TDesc = $row["QuestionTemplateDesc"];
@@ -131,7 +131,7 @@
          $qd->ProblemSelectG = $row["ProblemSelectG"] == "" ? null : $row["ProblemSelectG"];
          $qd->ProblemSelectH = $row["ProblemSelectH"] == "" ? null : $row["ProblemSelectH"];
          $qd->ProblemSelectI = $row["ProblemSelectI"] == "" ? null : $row["ProblemSelectI"];
-         $qd->GroupName = $row["GroupName"];
+         $qd->GroupName = $row["GroupName"] == "" ? null : $row["GroupName"];
          array_push($dataqd,$qd);
       }
    }
