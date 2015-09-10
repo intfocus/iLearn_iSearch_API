@@ -1,5 +1,5 @@
 <?php
-
+   require("../lib/testemail.php");
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -135,6 +135,7 @@
       echo -__LINE__;
       return;
    }
+   $emaillist = array();
    $approreLevel = 0;
    $str_query3 = "select ApproreLevel from trainings where TrainingId=$TrainingId";
    if($rs = mysqli_query($link, $str_query3))
@@ -176,7 +177,7 @@
       if($approreLevel > $Status)
       {
          $ExamineUser = "";
-         $str_userids = "select UserId from users where DeptId=$parentId and CanApprove=1";
+         $str_userids = "select UserId,Email from users where DeptId=$parentId and CanApprove=1";
          if($uids = mysqli_query($link, $str_userids))
          {
             while($row = mysqli_fetch_assoc($uids))

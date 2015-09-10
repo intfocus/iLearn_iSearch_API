@@ -1089,7 +1089,7 @@ function loaded() {
 										   <select id="exam_from_hour" class="form-control m-b-5" placeholder="小时"></select>
 										</div>
 										<div class="form-group m-l-10">
-										   <select id="exam_from_min" class="form-control m-b-5" placeholder="分钟"></select>
+										   <select id="exam_from_min" class="form-control m-b-5" style="margin-top: 10px" placeholder="分钟"></select>
 										</div>
                                     </form>
 									</div>

@@ -2350,7 +2350,11 @@ $(function()
    $('.btn_submit_new.searchProbs').click(function()
    {
       var searchProbsDescMemo = document.getElementById("searchProbsDescMemo").value;
-      var searchProbsLevel = document.getElementById("searchProbsLevel").value;
+      var searchPA = document.getElementById("searchPA").value;
+      var searchDC = document.getElementById("searchDC").value;
+      var searchProduct = document.getElementById("searchProduct").value;
+      var searchProblemsfrom18 = document.getElementsByName("searchProblemsfrom18")[0].value;
+      var searchProblemsto18 = document.getElementsByName("searchProblemsto18")[0].value;
    
       var statusCheckbox = 0;
       if (document.getElementById("searchProbsCheckBox1").checked == true)
@@ -2366,8 +2370,8 @@ $(function()
       
       //ajax
       str = "cmd=searchProbs" + "&searchProbsDescMemo=" + encodeURIComponent(searchProbsDescMemo) +
-            "&searchProbsLevel=" + encodeURIComponent(searchProbsLevel) +
-            "&statusCheckbox=" + statusCheckbox;
+            "&searchPA=" + searchPA + "&searchDC=" + searchDC + "&searchProduct=" + searchProduct + 
+            "&statusCheckbox=" + statusCheckbox + "&searchProblemsfrom18=" + searchProblemsfrom18 + "&searchProblemsto18=" + searchProblemsto18;
       url_str = "Problem/Problems_load.php?";
 
       $('#loadingWrap').show();

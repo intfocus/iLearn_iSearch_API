@@ -77,6 +77,55 @@
 
       return $check_str;
    }
+   //----- Check time range begin -----
+   function check_range_begin($check_str)
+   {
+      //----- check illegal char -----
+      if(strpbrk($check_str, ILLEGAL_CHAR) == true)
+      {
+         return SYMBOL_ERROR;
+      }
+      //----- check empty string -----
+      if(trim($check_str) == "")
+      {
+         return $check_str;
+      }
+      //----- format begin range mm/dd/yy to yyyy-mm-dd 00:00:00 -----
+      date_default_timezone_set(TIME_ZONE);
+      $check_str = $check_str . " 00:00:00";
+      if(($check_str = strtotime($check_str)) == "")
+      {
+         //----- str to time failure -----
+         return SYMBOL_ERROR;
+      }
+      $check_str = date("Y-m-d H:i:s", $check_str);
+      return $check_str; 
+   }
+   //----- Check report range end -----
+   function check_range_end($check_str)
+   {
+      //----- check illegal char -----
+      if(strpbrk($check_str, ILLEGAL_CHAR) == true)
+      {
+         return SYMBOL_ERROR;
+      }
+      //----- check empty string -----
+      if(trim($check_str) == "")
+      {
+         return $check_str;
+      }
+      //----- format end range mm/dd/yy to yyyy-mm-dd 23:59:59 -----
+      date_default_timezone_set(TIME_ZONE);
+      $check_str = $check_str . " 23:59:59";
+
+      if(($check_str = strtotime($check_str)) == "")
+      {
+         //----- str to time failure -----
+         return SYMBOL_ERROR;
+      }
+      $check_str = date("Y-m-d H:i:s", $check_str);
+      return $check_str;
+   }
    //----- Check encrypt setting -----
    function check_encrypt($check_str)
    {
@@ -118,13 +167,37 @@
       echo SYMBOL_ERROR;
       return;
    }
-   if(($searchProbsLevel = check_number($_GET["searchProbsLevel"])) == SYMBOL_ERROR)
+   if(($searchPA = check_number($_GET["searchPA"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if(($searchDC = check_number($_GET["searchDC"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if(($searchProduct = check_number($_GET["searchProduct"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
       return;
    }
    if(($statusCheckbox = check_number($_GET["statusCheckbox"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if(($searchProblemsfrom18 = check_range_begin($_GET["searchProblemsfrom18"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
+   if(($searchProblemsto18 = check_range_end($_GET["searchProblemsto18"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -167,10 +240,26 @@
       $str_query1 = $str_query1 . "AND (ProblemDesc like '%$searchProbsDescMemo%' OR ProblemMemo like '%$searchProbsDescMemo%') ";
    }
    
-   if ($searchProbsLevel > NO_LEVEL)
+   if ($searchPA > 0)
    {
-      $str_query1 = $str_query1 . "AND (ProblemLevel=$searchProbsLevel) ";
+      $str_query1 = $str_query1 . "AND ProblemCategory like '%,$searchPA,%' ";
    }
+   
+   if ($searchDC > 0)
+   {
+      $str_query1 = $str_query1 . "AND ProblemCategory like '%,$searchDC,%' ";
+   }
+   
+   if ($searchProduct > 0)
+   {
+      $str_query1 = $str_query1 . "AND ProblemCategory like '%,$searchProduct,%' ";
+   }
+   
+   if ($searchProblemsfrom18 != '')
+      $str_query1 = $str_query1 . "AND CreatedTime >= '$searchProblemsfrom18' ";
+   if ($searchProblemsto18 != '')
+      $str_query1 = $str_query1 . "AND CreatedTime <= '$searchProblemsto18' ";
+   $str_query1 = $str_query1 . "ORDER BY CreatedTime DESC";
  
    //***Step16 页面搜索SQl语句 结束
    
@@ -228,8 +317,7 @@
                                          . "<col class=\"ProbType\"/>"
                                          . "<col class=\"ProbDesc\"/>"
                                          . "<col class=\"ProbCategory\"/>"
-                                         . "<col class=\"ProblLevel\"/>"
-                                         . "<col class=\"ProbMemo\"/>"
+                                         . "<col class=\"CreatedTime\"/>"
                                          . "<col class=\"ProbStatus\"/>"
                                          . "<col class=\"ProbAction\"/>"
                                          . "</colgroup>"
@@ -238,13 +326,12 @@
                                          . "<th>类型</th>"
                                          . "<th>描述</th>"
                                          . "<th>分类</th>"
-                                         . "<th>难易</th>"
-                                         . "<th>备注</th>"
+                                         . "<th>创建时间</th>"
                                          . "<th>状态</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"7\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -269,8 +356,7 @@
                                          . "<col class=\"ProbType\"/>"
                                          . "<col class=\"ProbDesc\"/>"
                                          . "<col class=\"ProbCategory\"/>"
-                                         . "<col class=\"ProbLevel\"/>"
-                                         . "<col class=\"ProbMemo\"/>"
+                                         . "<col class=\"CreatedTime\"/>"
                                          . "<col class=\"ProbStatus\"/>"
                                          . "<col class=\"ProbAction\"/>"
                                          . "</colgroup>"
@@ -279,8 +365,7 @@
                                          . "<th>类型</th>"
                                          . "<th>描述</th>"
                                          . "<th>分类</th>"
-                                         . "<th>难易</th>"
-                                         . "<th>备注</th>"
+                                         . "<th>创建时间</th>"
                                          . "<th>状态</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
@@ -297,9 +382,7 @@
                $funcs_id = get_function_id($ProbCategory);               
                $funcs_name = get_funcs_name($funcs_id, $funcs_id_name_mapping);
                $funcs_name_str = get_funcs_name_str($funcs_name);
-               $ProbLevel = $row["ProblemLevel"];
-               $ProbLevelStr = get_level_name($ProbLevel);
-               $ProbMemo = $row["ProblemMemo"];
+               $CreatedTime = $row["CreatedTime"];
                $ProbStatus = $row["Status"];
                $StatusStr = $ProbStatus == 0 ? "下架" : "上架";
                $StatusAction = $ProbStatus == 1 ? "下架" : "上架";
@@ -310,8 +393,7 @@
                   . "<td><span class=\"ProbType fixWidth\">$ProbTypeStr</span></td>"
                   . "<td><span class=\"ProbDesc fixWidth\">$ProbDesc</span></td>"
                   . "<td><span class=\"ProbCategory fixWidth\">$funcs_name_str</span></td>"
-                  . "<td><span class=\"ProbLevel fixWidth\">$ProbLevelStr</span></td>"
-                  . "<td><span class=\"ProbMemo fixWidth\">$ProbMemo</span></td>"
+                  . "<td><span class=\"ProbCategory fixWidth\">$CreatedTime</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td><A OnClick=\"actionSearchProbs($ProbId,$ProbStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchProbs($ProbId);\">修改</A><br/>"

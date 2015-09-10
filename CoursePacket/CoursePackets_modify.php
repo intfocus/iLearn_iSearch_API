@@ -358,6 +358,7 @@
       <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
+      <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
       
       <!-- Bootstrap core CSS -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -518,323 +519,275 @@
    </head>
    <body Onload="loaded();">
       <!--Main Content Start -->
-       <section class="content">
-          <!-- Header -->
-            <header class="top-head container-fluid">
-                <button type="button" class="navbar-toggle pull-left">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                
-                
-                <!-- Left navbar -->
-                <nav class=" navbar-default hidden-xs" role="navigation">
-                    <ul class="nav navbar-nav">
-
-                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
-                    </ul>
-                </nav>
-                
-                <!-- Right navbar -->
-                <ul class="list-inline navbar-right top-menu top-right-menu">  
-
-                    <!-- user login dropdown start-->
-                    <li class="dropdown text-center">
-               
-                     <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
-                     <form name=logoutform action=logout.php>
-                     </form>
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <i class="fa fa-user"></i>
-                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
-                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
-                        </ul>
-                    </li>
-                    <!-- user login dropdown end -->       
-                </ul>
-                <!-- End right navbar -->
-
-            </header>
-            <!-- Header Ends -->
-          <!-- Page Content Start -->
-          <!-- ================== -->
-          <div class="wraper container-fluid">
-             <!-- Basic Form Wizard -->
-             <div class="row">
-                <div class="col-md-12">
-                   <div class="panel panel-default">
-                      <div class="panel-heading"> 
-                         <h3 class="panel-title">课程包页面</h3>
-                      </div> 
-                      <div class="panel-body"> 
-                         <form id="basic-form" action="#">
-                            <div>
-                               <h3>课程包、练习考卷、问卷管理</h3>
-                                  <section>
-                                     <div class="form-group clearfix">
-                                        <input type="hidden" id="cpListModify" name="cpListModify" value="<?php echo $CoursewarePacketList; ?>" />
-                                        <label class="col-lg-2 control-label " for="userName">课程包 *</label>
-                                        <div class="col-lg-10">
-                                           <select id="cpList" class="select1" multiple data-placeholder="Choose a Country...">
-                                              <option value="#">&nbsp;</option>
-                                              <?php
-                                                foreach ($dataPPTs as $ppt) {
-                                                   $pptidtmp = "," . $ppt->PPTId . ",";
-                                                   $tmp = strpos($CoursewarePacketList, $pptidtmp);
-                                                   if($tmp !== false)
+      <div id="header">
+         <form name=logoutform action=logout.php>
+         </form>
+         <span class="global">使用者 : <?php echo $login_name ?>
+            <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
+         </span>
+         <span class="logo"></span>
+      </div>
+      <div id="banner">
+         <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
+         <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
+      </div>
+      <!-- Page Content Start -->
+      <!-- ================== -->
+      <div id="content">
+         <input type="hidden" id="cpListModify" name="cpListModify" value="<?php echo $CoursewarePacketList; ?>" />
+         <input type="hidden" id="eListModify" name="eListModify" value="<?php echo $ExamList; ?>" />
+         <input type="hidden" id="qListModify" name="qListModify" value="<?php echo $QuestionnaireList; ?>" />
+         <INPUT type="hidden" name="CoursewareListModify" value="<?php echo $CoursewareList;?>">
+         <h3>课程包、练习考卷、问卷管理</h3>
+         <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+               <th><label  style="width: 100px;">课程包名称 *</label></th>
+               <td><input style="width: 200px;" name="CoursePacketNameModify" type="text" value="<?php echo $CoursePacketName; ?>"></td>
+            </tr>
+            <tr>
+               <th><label style="width: 100px;">课程包说明 *</label></th>
+               <td>
+                  <input style="width: 200px;" name="CoursePacketDescModify" type="text" value="<?php echo $CoursePacketDesc; ?>">
+               </td>
+            </tr>
+            <tr>
+               <th><label style="width: 200px;">课程包有效起始时间 *</label></th>
+               <td style="width: 100px;">
+                  <input type="text" style="width: 200px;" placeholder="yyyy/mm/dd" id="datepicker1" name="AvailableTimeBegin" value="<?php echo $AvailableTimeBegin; ?>">
+               </td>
+               <td>
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+               </td>
+            </tr>
+            <tr>
+               <th><label style="width: 200px;">课程包有效截止时间 *</label></th>
+               <td style="width: 100px;">
+                  <input type="text"  style="width: 200px;" placeholder="yyyy/mm/dd" id="datepicker2" name="AvailableTimeEnd" value="<?php echo $AvailableTimeBegin; ?>">
+               </td>
+               <td>
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+               </td>
+            </tr>
+            <tr>
+               <th><label style="width: 100px;">课程包 *</label></th>
+               <td>
+                  <select id="cpList" class="select1" multiple data-placeholder="Choose a Country..." style="width: 100px;">
+                     <option value="#">&nbsp;</option>
+                     <?php
+                       foreach ($dataPPTs as $ppt) {
+                          $pptidtmp = "," . $ppt->PPTId . ",";
+                          $tmp = strpos($CoursewarePacketList, $pptidtmp);
+                          if($tmp !== false)
+                          {
+                     ?>
+                     <option value="<?php echo $ppt->PPTId; ?>" selected="selected"><?php echo $ppt->PPTName; ?></option>
+                     <?php
+                          }
+                          else 
+                          {
+                     ?>
+                     <option value="<?php echo $ppt->PPTId; ?>"><?php echo $ppt->PPTName; ?></option>
+                     <?php
+                          }
+                       }
+                     ?>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <th><label style="width: 100px;">练习考试 *</label></th>
+               <td>
+                  <select id="eList" class="select2" multiple data-placeholder="Choose a Country..." style="width: 100px;">
+                     <option value="#">&nbsp;</option>
+                     <?php
+                       foreach ($dataExam as $exam) {
+                          $examidtmp = "," . $exam->ExamId . ",";
+                          $tmp = strpos($ExamList, $examidtmp);
+                          if($tmp !== false)
+                          {
+                     ?>
+                     <option value="<?php echo $exam->ExamId; ?>" selected="selected"><?php echo $exam->ExamName; ?></option>
+                     <?php
+                          }
+                          else 
+                          {
+                     ?>
+                     <option value="<?php echo $exam->ExamId; ?>"><?php echo $exam->ExamName; ?></option>
+                     <?php
+                          }
+                       }
+                     ?>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <th><label style="width: 100px;">问卷管理 *</label></th>
+               <td>
+                  <select id="qList" class="select2" multiple data-placeholder="Choose a Country..." style="width: 100px;">
+                     <option value="#">&nbsp;</option>
+                     <?php
+                       foreach ($dataQuestion as $question) {
+                          $questionidtmp = "," . $question->QuestionId . ",";
+                          $tmp = strpos($QuestionnaireList, $questionidtmp);
+                          if($tmp !== false)
+                          {
+                     ?>
+                     <option value="<?php echo $question->QuestionId; ?>" selected="selected"><?php echo $question->QuestionName; ?></option>
+                     <?php
+                          }
+                          else 
+                          {
+                     ?>
+                     <option value="<?php echo $question->QuestionId; ?>"><?php echo $question->QuestionName; ?></option>
+                     <?php
+                          }
+                       }
+                     ?>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="3" style="width: 100%">
+                  <div class="form-group clearfix">
+                     <section class='example'>
+                        <div class='gridly'></div>
+                        <p class='actions'>
+                           <!-- <input type="button" id="addshow" class='button' value="Show" /> -->
+                        </p>
+                     </section>
+                  </div>
+                  <section class="content">
+                     <!-- Page Content Start -->
+                     <!-- ================== -->
+                     <div class="wraper container-fluid">
+                        <div class="page-title"> 
+                           <h3 class="title">Datatable</h3> 
+                        </div>
+                        <div class="row">
+                           <div class="col-md-12">
+                              <div class="panel panel-default">
+                                 <div class="panel-heading">
+                                    <h3 class="panel-title">Datatable</h3>
+                                    <a class='add button' href='#'>Add</a>
+                                 </div>
+                                 <div class="panel-body">
+                                    <div class="row">
+                                       <div class="col-md-12 col-sm-12 col-xs-12">
+                                          <table id="datatable" class="table table-striped table-bordered">
+                                             <thead>
+                                                <tr>
+                                                   <th>动作</th>
+                                                   <th>课件名称</th>
+                                                   <th>课件备注</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody>
+                                                <?php
+                                                   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+                                                   if (!$link)  //connect to server failure    
                                                    {
-                                              ?>
-                                              <option value="<?php echo $ppt->PPTId; ?>" selected="selected"><?php echo $ppt->PPTName; ?></option>
-                                              <?php
-                                                   }
-                                                   else 
+                                                      sleep(DELAY_SEC);
+                                                      echo DB_ERROR;       
+                                                      return;
+                                                   }  
+                                                   $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares";
+                                                   $result = mysqli_query($link, $str_query1);
+                                                   $rownum = mysqli_num_rows($result);
+                                                   while($row = mysqli_fetch_assoc($result))
                                                    {
-                                              ?>
-                                              <option value="<?php echo $ppt->PPTId; ?>"><?php echo $ppt->PPTName; ?></option>
-                                              <?php
-                                                   }
-                                                }
-                                              ?>
-                                            </select>
-                                        </div>
-                                     </div>
-                                     <div class="form-group clearfix">
-                                        <input type="hidden" id="eListModify" name="eListModify" value="<?php echo $ExamList; ?>" />
-                                        <label class="col-lg-2 control-label " for="password">练习考试 *</label>
-                                        <div class="col-lg-10">
-                                            <select id="eList" class="select2" multiple data-placeholder="Choose a Country...">
-                                              <option value="#">&nbsp;</option>
-                                              <?php
-                                                foreach ($dataExam as $exam) {
-                                                   $examidtmp = "," . $exam->ExamId . ",";
-                                                   $tmp = strpos($ExamList, $examidtmp);
-                                                   if($tmp !== false)
-                                                   {
-                                              ?>
-                                              <option value="<?php echo $exam->ExamId; ?>" selected="selected"><?php echo $exam->ExamName; ?></option>
-                                              <?php
-                                                   }
-                                                   else 
-                                                   {
-                                              ?>
-                                              <option value="<?php echo $exam->ExamId; ?>"><?php echo $exam->ExamName; ?></option>
-                                              <?php
-                                                   }
-                                                }
-                                              ?>
-                                            </select>
-                                        </div>
-                                     </div>
-                      
-                                     <div class="form-group clearfix">
-                                        <input type="hidden" id="qListModify" name="qListModify" value="<?php echo $QuestionnaireList; ?>" />
-                                        <label class="col-lg-2 control-label " for="confirm">问卷管理 *</label>
-                                        <div class="col-lg-10">
-                                           <select id="qList" class="select2" multiple data-placeholder="Choose a Country...">
-                                              <option value="#">&nbsp;</option>
-                                              <?php
-                                                foreach ($dataQuestion as $question) {
-                                                   $questionidtmp = "," . $question->QuestionId . ",";
-                                                   $tmp = strpos($QuestionnaireList, $questionidtmp);
-                                                   if($tmp !== false)
-                                                   {
-                                              ?>
-                                              <option value="<?php echo $question->QuestionId; ?>" selected="selected"><?php echo $question->QuestionName; ?></option>
-                                              <?php
-                                                   }
-                                                   else 
-                                                   {
-                                              ?>
-                                              <option value="<?php echo $question->QuestionId; ?>"><?php echo $question->QuestionName; ?></option>
-                                              <?php
-                                                   }
-                                                }
-                                              ?>
-                                            </select>
-                                        </div>
-                                     </div>
-                                     <div class="form-group clearfix">
-                                        <label class="col-lg-12 control-label ">(*) Mandatory</label>
-                                     </div>
-                                  </section>
-                                  <h3>课件管理</h3>
-                                  <INPUT type="hidden" name="CoursewareListModify" value="<?php echo $CoursewareList;?>">
-                                  <section class="content">
-                                     <div class="form-group clearfix">
-                                        <section class='example'>
-                                           <div class='gridly'>
-                                           </div>
-                                           <p class='actions'>
-                                              <!-- <input type="button" id="addshow" class='button' value="Show" /> -->
-                                           </p>
-                                        </section>
-                                     </div>
-                                     <div class="wraper container-fluid">
-                                        <div class="page-title"> 
-                                            <h3 class="title">Datatable</h3> 
-                                        </div>
-                                        <div class="row">
-                                           <div class="col-md-12">
-                                              <div class="panel panel-default">
-                                                 <div class="panel-heading">
-                                                    <h3 class="panel-title">Datatable</h3>
-                                                    <a class='add button' href='#'>Add</a>
-                                                 </div>
-                                                 <div class="panel-body">
-                                                    <div class="row">
-                                                       <div class="col-md-12 col-sm-12 col-xs-12">
-                                                          <table id="datatable" class="table table-striped table-bordered">
-                                                             <thead>
-                                                                <tr>
-                                                                   <th>动作</th>
-                                                                   <th>课件名称</th>
-                                                                   <th>课件备注</th>
-                                                                </tr>
-                                                             </thead>
-                                                             <tbody>
-                                                                <?php
-                                                                   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
-                                                                   if (!$link)  //connect to server failure    
-                                                                   {
-                                                                      sleep(DELAY_SEC);
-                                                                      echo DB_ERROR;       
-                                                                      return;
-                                                                   }  
-                                                                   $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares";
-                                                                   $result = mysqli_query($link, $str_query1);
-                                                                   $rownum = mysqli_num_rows($result);
-                                                                   while($row = mysqli_fetch_assoc($result))
-                                                                   {
-                                                                      $CoursewareDesc = $row["CoursewareDesc"];
-                                                                      $CoursewareName = $row["CoursewareName"];
-                                                                      $CoursewareId = $row["CoursewareId"];
-                                                                      
-                                                                      echo "<tr>";
-                                                                      echo "<td><input type='checkbox' name='cbcw' value='". $CoursewareId . "&&" . $CoursewareName ."' class='checkbox'></td>";
-                                                                      echo "<td>$CoursewareName</td>";
-                                                                      echo "<td>$CoursewareDesc</td>";
-                                                                      echo "</tr>";
-                                                                   }
-                                                                ?>
-                                                             </tbody>
-                                                          </table>
-                                                       </div>
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                           </div>
-                                        </div> <!-- End Row -->
-                                     </div>
-                                  </section>
-                                  <h3>课程包信息</h3>
-                                  <section>
-                                     <div class="form-group clearfix">
-                                        <div class="col-lg-12">
-                                           <div class="form-group clearfix">
-                                              <label class="col-lg-2 control-label " for="userName">课程包名称 *</label>
-                                              <div class="col-lg-10">
-                                                 <input class="form-control required" id="userName" name="CoursePacketNameModify" type="text" value="<?php echo $CoursePacketName; ?>">
-                                              </div>
-                                           </div>
-                                           <div class="form-group clearfix">
-                                              <label class="col-lg-2 control-label " for="userName">课程包说明 *</label>
-                                              <div class="col-lg-10">
-                                                 <input class="form-control required" id="userName" name="CoursePacketDescModify" type="text" value="<?php echo $CoursePacketDesc; ?>">
-                                              </div>
-                                           </div>
-                                           <div class="form-group clearfix">
-                                              <label class="col-lg-2 control-label " for="userName">课程包有效起始时间 *</label>
-                                              <div class="input-group">
-                                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd" id="datepicker1" name="AvailableTimeBegin" value="<?php echo $AvailableTimeBegin; ?>">
-                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                              </div>
-                                           </div>
-                                           <div class="form-group clearfix">
-                                              <label class="col-lg-2 control-label " for="userName">课程包有效截止时间 *</label>
-                                              <div class="input-group">
-                                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd" id="datepicker2" name="AvailableTimeEnd" value="<?php echo $AvailableTimeBegin; ?>">
-                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                              </div>
-                                           </div>
-                                           <div class="form-group clearfix">
-                                              <a class="btn_submit_new modifyQuestionsContent"><input name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyCoursePacketsContent(<?php echo $CoursePacketId;?>)"></a>
-                                           </div>
-                                        </div>
-                                     </div>
-                                  </section>
-                              </div>
-                          </form> 
-                      </div>  <!-- End panel-body -->
-                   </div> <!-- End panel -->
-                </div> <!-- end col -->
-             </div> <!-- End row -->
-          </div>
-          <!-- Page Content Ends -->
-          <!-- ================== -->
-          <!-- Footer Start -->
-          <footer class="footer">
-             2015 © Velonic.
-          </footer>
-          <!-- Footer Ends -->
-       </section>
-       <!-- Main Content Ends -->
-       <!-- js placed at the end of the document so the pages load faster -->
-       <script type="text/javascript" src="assets/jquery-multi-select/jquery.multi-select.js"></script>
-       <script src="assets/select2/select2.min.js" type="text/javascript"></script>
-       <!--Form Wizard-->
-       <script src="assets/form-wizard/jquery.steps.min.js" type="text/javascript"></script>
-       <script type="text/javascript" src="assets/jquery.validate/jquery.validate.min.js"></script>
-       <!--wizard initialization-->
-       <script src="assets/timepicker/bootstrap-datepicker.js"></script>
-       <script src="assets/form-wizard/wizard-init.js" type="text/javascript"></script>
-       <script src="js/bootstrap.min.js"></script>
-       <script src="js/pace.min.js"></script>
-       <script src="js/wow.min.js"></script>
-       <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
-       <script src="js/jquery.app.js"></script>
-       <script src="assets/datatables/jquery.dataTables.min.js"></script>
-       <script src="assets/datatables/dataTables.bootstrap.js"></script>
-       <script>
-          $("#cpList").change(function(){
-             var cplm = "";
-             $(this).find("option:selected").each(function(){
-                cplm = cplm + "," + $(this).val() + ",";
-             });
-             $("#cpListModify").val(cplm);
-          });
-          
-          $("#eList").change(function(){
-             var elm = "";
-             $(this).find("option:selected").each(function(){
-                elm = elm + "," + $(this).val() + ",";
-             });
-             $("#eListModify").val(elm);
-          });
-          
-          $("#qList").change(function(){
-             var qlm = "";
-             $(this).find("option:selected").each(function(){
-                qlm = qlm + "," + $(this).val() + ",";
-             });
-             $("#qListModify").val(qlm);
-          });
-          
-          jQuery('#datepicker1').datepicker();
-          jQuery('#datepicker2').datepicker();
-          jQuery(document).ready(function() {
-             // Select2
-             jQuery(".select1").select2({
-                width: '100%'
-             });
-             jQuery(".select2").select2({
-                width: '100%'
-             });
-          });
-        </script>
+                                                      $CoursewareDesc = $row["CoursewareDesc"];
+                                          $CoursewareName = $row["CoursewareName"];
+                                          $CoursewareId = $row["CoursewareId"];
+                                          
+                                          echo "<tr>";
+                                          echo "<td><input type='checkbox' name='cbcw' value='". $CoursewareId . "&&" . $CoursewareName ."' class='checkbox'></td>";
+                                          echo "<td>$CoursewareName</td>";
+                                          echo "<td>$CoursewareDesc</td>";
+                                          echo "</tr>";
+                                       }
+                                    ?>
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div> <!-- End Row -->
+         </div>
+         <!-- Page Content Ends -->
+         <!-- ================== -->
+      </section>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="3"><label style="width: 100px;">(*) Mandatory</label></td>
+            </tr>
+            <tr>
+               <td><a class="btn_submit_new modifyQuestionsContent"><input name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyCoursePacketsContent(<?php echo $CoursePacketId;?>)"></a></td>
+            </tr>
+         </table>
+      </div>
+      <!-- Footer Start -->
+      <footer class="footer">
+         2015 © Velonic.
+      </footer>
+      <!-- Footer Ends -->
+      <!-- Main Content Ends -->
+      <!-- js placed at the end of the document so the pages load faster -->
+      <script type="text/javascript" src="assets/jquery-multi-select/jquery.multi-select.js"></script>
+      <script src="assets/select2/select2.min.js" type="text/javascript"></script>
+      <!--Form Wizard-->
+      <script src="assets/form-wizard/jquery.steps.min.js" type="text/javascript"></script>
+      <script type="text/javascript" src="assets/jquery.validate/jquery.validate.min.js"></script>
+      <!--wizard initialization-->
+      <script src="assets/timepicker/bootstrap-datepicker.js"></script>
+      <script src="assets/form-wizard/wizard-init.js" type="text/javascript"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/pace.min.js"></script>
+      <script src="js/wow.min.js"></script>
+      <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+      <script src="js/jquery.app.js"></script>
+      <script src="assets/datatables/jquery.dataTables.min.js"></script>
+      <script src="assets/datatables/dataTables.bootstrap.js"></script>
+      <script>
+         $("#cpList").change(function(){
+            var cplm = "";
+            $(this).find("option:selected").each(function(){
+               cplm = cplm + "," + $(this).val() + ",";
+            });
+            $("#cpListModify").val(cplm);
+         });
+         
+         $("#eList").change(function(){
+            var elm = "";
+            $(this).find("option:selected").each(function(){
+               elm = elm + "," + $(this).val() + ",";
+            });
+            $("#eListModify").val(elm);
+         });
+         
+         $("#qList").change(function(){
+            var qlm = "";
+            $(this).find("option:selected").each(function(){
+               qlm = qlm + "," + $(this).val() + ",";
+            });
+            $("#qListModify").val(qlm);
+         });
+         
+         jQuery('#datepicker1').datepicker();
+         jQuery('#datepicker2').datepicker();
+         jQuery(document).ready(function() {
+            $('#datatable').dataTable();
+            // Select2
+            jQuery(".select1").select2({
+               width: '100%'
+            });
+            jQuery(".select2").select2({
+               width: '100%'
+            });
+         });
+      </script>
    </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

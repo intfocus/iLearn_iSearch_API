@@ -98,6 +98,24 @@
       return $check_str;
    }
    
+   function detp_id($deptname)
+   {
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      $str_deptId = "select DeptId from depts where deptname = '$deptname'";
+      if($result = mysqli_query($link, $str_deptId))
+      {
+         $row_number = mysqli_num_rows($result);
+         if($row_number==1)
+         {
+            $row = mysqli_fetch_assoc($result); 
+            return $row["DeptId"];
+         }
+         else {
+             return 0;
+         }
+      }
+   }
+   
    function check_email($check_str)
    {
       $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
@@ -138,7 +156,7 @@
    else if ($cmd == "write") // Batch Insert
    {
       $newUsersBatchInput = $_POST["newUsersBatchInput"];
-      $DeptId = $_POST["DeptId"];
+      // $DeptId = $_POST["DeptId"];
       // 1. 按照 \n 切开
       $tmp = explode("\n", $newUsersBatchInput);
       $tmp_count = count($tmp);
@@ -147,7 +165,7 @@
       for ($i=0;$i<$tmp_count;$i++)
       {
          $ret = explode(',',$tmp[$i]);
-         if (count($ret) != 4 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0 || strlen($ret[3])==0)
+         if (count($ret) != 6 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0 || strlen($ret[3])==0 || strlen($ret[4])==0 || strlen($ret[5])==0)
          {
             echo "-- 第" . ($i+1) . "笔数据格式错误 -- " . $tmp[$i];
             return;
@@ -169,8 +187,10 @@
          $UserName = $result[$i][1];
          $UserEmail = $result[$i][2];
          $UserWId = $result[$i][3];
-         $sql_str = "Insert into Users (UserName,Email,EmployeeId,DeptId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,UserWId)" .
-            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,$user_id,now(),$user_id,now(),'$UserWId');";
+         $UserDeptId = detp_id($result[$i][4]);
+         $UserCheckInTime = date("Y/m/d",strtotime($result[$i][5]));
+         $sql_str = "Insert into Users (UserName,Email,EmployeeId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,UserWId,DeptId,CheckInTime)" .
+            " VALUES('$UserName','$UserEmail','$EmployeeId',1,0,1,$user_id,now(),$user_id,now(),'$UserWId',$UserDeptId,'$UserCheckInTime');";
          if (!mysqli_query($link, $sql_str))
          {
             mysqli_rollback($link);
@@ -179,7 +199,7 @@
                mysqli_close($link);
                $link = 0;
             }
-            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail,$UserWId";
+            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail,$UserWId,$UserDeptId";
             echo "-- " . $ErrMsg;
             return;
          }
@@ -240,13 +260,13 @@ function click_logout()  //log out
 
 function loaded()
 {
-   window.setTimeout("expandTo()",2000);
+   //window.setTimeout("expandTo()",2000);
 }
 //***Step12 修改页面点击保存按钮出发Ajax动作
 function modifyUsersContent()
 {
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
-   DeptId = getSelectedId();
+   //DeptId = getSelectedId();
    
    //str = "cmd=write&newUsersBatchInput=" + encodeURIComponent(newUsersBatchInput) + "&DeptId=" + DeptId;
    url_str = "../User/Users_batch_add.php?cmd=write";
@@ -261,11 +281,9 @@ function modifyUsersContent()
       type: "POST",
       url: url_str,
       data:{
-         newUsersBatchInput:newUsersBatchInput,
-         DeptId:DeptId,
+         newUsersBatchInput:newUsersBatchInput
       },
       cache: false,
-      dataType: 'json',
       success: function(res)
       {
          res = String(res);
@@ -305,40 +323,14 @@ function modifyUsersContent()
 <div id="content">
    <table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email,WId)</th>
+         <th>批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email,WId,部门,入职日期)</th>
       </tr>
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100>
-工号1,姓名1,Email1,WId
-工号2,姓名2,Email2,WId
+工号1,姓名1,Email1,WId,部门,入职日期（yyyy-mm-dd）
+工号2,姓名2,Email2,WId,部门,入职日期（yyyy-mm-dd）
          </Textarea></td>        
-      </tr>
-      <tr>
-         <th>选择部门：</th>
-      </tr>
-      <tr>
-         <td>
-	<div class="easyui-panel" style="padding:5px">
-		<ul id="tt" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true"></ul>
-	</div>
-	<script type="text/javascript">
-      function expandTo(){
-			var node = $('#tt').tree('find',1);
-			$('#tt').tree('expandTo', node.target).tree('select', node.target);
-         $('#displayExpandToButton').hide();
-         $('#tt').tree('collapseAll');
-		}
-      function getSelectedId(){
-			var node = $('#tt').tree('getSelected');
-			if (node){
-            return node.id;
-			}
-         else
-            return 0;
-		}
-	</script>         
-         </td>
-      </tr>       
+      </tr>    
       <tr>
          <th colspan="4" class="submitBtns">
             <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent();"></a>

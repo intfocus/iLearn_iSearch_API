@@ -1,5 +1,6 @@
 <?php 
    require_once("Problems_utility.php");
+   
 ?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
@@ -183,14 +184,58 @@ function occurTimeDatePicker()
                </td>
             </tr>
             <tr>
-               <th>难易：</th>
+               <th>产品：</th>
                <td>
-               <select id="searchProbsLevel">
-                  <option value=<?php echo NO_LEVEL?>>全部
-                  <option value=<?php echo EASY_LEVEL?>>易
-                  <option value=<?php echo MID_LEVEL?>>中
-                  <option value=<?php echo HIGH_LEVEL?>>难
-               <select>
+                  <select id="searchProduct" style="width: 200px;">
+                     <option value="0">全部</option>
+                     <?php
+                        foreach ($funPPA_array as $ppa) {
+                           if($ppa->FunctionType == 1){
+                     ?>
+                     <option value="<?php echo $ppa->FunctionId ?>"><?php echo $ppa->FunctionName ?></option>
+                     <?php
+                           }
+                        }
+                     ?>
+                  </select>
+               </td>
+               <th>适应症：</th>
+               <td>
+                  <select id="searchPA" style="width: 200px;">
+                     <option value="0">全部</option>
+                     <?php
+                        foreach ($funPPA_array as $ppa) {
+                           if($ppa->FunctionType == 2){
+                     ?>
+                     <option value="<?php echo $ppa->FunctionId ?>"><?php echo $ppa->FunctionName ?></option>
+                     <?php
+                           }
+                        }
+                     ?>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <th>题库类别：</th>
+               <td>
+                  <select id="searchDC" style="width: 200px;">
+                     <option value="0">全部</option>
+                     <?php
+                        foreach ($funPPA_array as $ppa) {
+                           if($ppa->FunctionType == 3){
+                     ?>
+                     <option value="<?php echo $ppa->FunctionId ?>"><?php echo $ppa->FunctionName ?></option>
+                     <?php
+                           }
+                        }
+                     ?>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <th>题目上传时间 ：</th>
+               <td colspan="3">
+                  <input id="from18" type="text" name="searchProblemsfrom18" class="from" readonly="true"/> ~ <input id="to18" type="text" class="to" name="searchProblemsto18" readonly="true"/>
                </td>
             </tr>
             <tr>
@@ -214,8 +259,8 @@ function occurTimeDatePicker()
                   <col class="num">
                   <col class="ProbType" />
                   <col class="ProbDesc" />
-                  <col class="ProblLevel" />
-                  <col class="ProbMemo" />
+                  <col class="ProbCategory"/>
+                  <col class="CreatedTime" />
                   <col class="ProbStatus" />
                   <col class="ProbAction" />
                </colgroup>
@@ -223,8 +268,8 @@ function occurTimeDatePicker()
                   <th>编号</th>
                   <th>类型</th>
                   <th>描述</th>
-                  <th>难易</th>
-                  <th>备注</th>
+                  <th>分类</th>
+                  <th>创建时间</th>
                   <th>状态</th>
                   <th>动作</th>
                </tr>

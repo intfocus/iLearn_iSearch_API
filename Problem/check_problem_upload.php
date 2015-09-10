@@ -8,7 +8,11 @@ define("SUCCESS", 0);
 define("DELAY_SEC", 3);
 define("FILE_ERROR", -2);
 
-$login_name = "Phantom";
+// $login_name = "Phantom";
+session_start();
+$user_id = $_SESSION["GUID"];
+$login_name = $_SESSION["username"];
+session_write_close();
 
 if (file_exists(FILE_NAME))
 {
@@ -157,7 +161,7 @@ function read_excel_and_insert_into_database($target_file)
    {
       $sheet = $excel->getSheet($cur_sheet);
       $sheet_title = $sheet->getTitle();
-      print_r($sheet_title);
+      //print_r($sheet_title);
       if ($sheet_title == "上传题库说明")
       {
          continue;
@@ -380,7 +384,8 @@ function update_old_problem($problem)
                 ProblemSelectB='$selB', ProblemSelectC='$selC',ProblemSelectD='$selD',
                 ProblemSelectE='$selE',ProblemSelectF='$selF', ProblemSelectG='$selG',
                 ProblemSelectH='$selH', ProblemAnswer='$problem->answer',
-                ProblemCategory='$problem->functions_str', ProblemLevel=$problem->level
+                ProblemCategory='$problem->functions_str', ProblemLevel=$problem->level,
+                EditTime = now() 
                 where ProblemDesc='$problem->desc' AND ProblemMemo='$problem->memo'
 EOD;
 
@@ -414,10 +419,10 @@ function  insert_new_problem($problem)
       $str_query = <<<EOD
                 INSERT INTO problems (ProblemType,ProblemDesc,ProblemSelectA,ProblemSelectB,ProblemSelectC,
                  ProblemSelectD,ProblemSelectE,ProblemSelectF,ProblemSelectG,ProblemSelectH,
-                 ProblemAnswer,ProblemCategory,ProblemLevel,ProblemMemo,Status) VALUES
+                 ProblemAnswer,ProblemCategory,ProblemLevel,ProblemMemo,Status,CreatedTime,EditTime) VALUES
                 ($problem->type, '$problem->desc',
                  '$selA','$selB','$selC','$selD','$selE','$selF','$selG','$selH',
-                 '$problem->answer','$problem->functions_str',$problem->level,'$problem->memo',1)
+                 '$problem->answer','$problem->functions_str',$problem->level,'$problem->memo', 1, now(), now())
 EOD;
       if(mysqli_query($link, $str_query))
       {

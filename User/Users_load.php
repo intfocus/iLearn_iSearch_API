@@ -251,6 +251,7 @@
       $str_query1 = $str_query1 . "AND U.EditTime <= '$searchUsersto1' ";
    if ($searchUsersRadio != '2')
       $str_query1 = $str_query1. "AND U.CanApprove = $searchUsersRadio ";
+   $str_query1 = $str_query1 . " ORDER BY U.EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    

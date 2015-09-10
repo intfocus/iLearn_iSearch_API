@@ -1,4 +1,6 @@
 <?php
+   //引入发送邮件类
+   require("../lib/testemail.php");
    $traineeContent = file_get_contents("php://input");
    $trainee = json_decode($traineeContent);
    $trainingId = $trainee->TrainingId;
@@ -52,6 +54,7 @@
       return;
    }
    
+   $emaillist = array();
    $str_users = "select DeptId, CanApprove from users where UserId=$userId";
    if($us = mysqli_query($link, $str_users))
    {
@@ -79,12 +82,13 @@
    }
    
    $ExamineUser = "";
-   $str_userids = "select UserId from users where DeptId=$deptid and CanApprove=1";
+   $str_userids = "select UserId,Email from users where DeptId=$deptid and CanApprove=1";
    if($uids = mysqli_query($link, $str_userids))
    {
       while($row = mysqli_fetch_assoc($uids))
       {
          $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
+         array_push($emaillist, $row["Email"]);
       }
    }
    else {
@@ -122,6 +126,11 @@
    }
    
    mysqli_close($link);
+   
+   $emailsmtp = new EmailSmtp();
+   foreach ($emaillist as $el) {
+      $emailsmtp->eSmtp($el);
+   }
    
    echo json_encode(array("status"=> 1, "count"=>1, "UserId"=>$userId, "TrainingId"=>$trainingId, "RegisterDate"=>$registerDate, "result"=>""));
    return;

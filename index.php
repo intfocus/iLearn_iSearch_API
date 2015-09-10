@@ -98,6 +98,27 @@
       }
    }
    
+   $str_query2 = "Select FunctionId, FunctionName, FunctionType 
+      from Functions
+      where FunctionType <> 0 and Status = 1";
+   $funPPA_array = array();
+   class StuPPA{
+      public $FunctionId;
+      public $FunctionName;
+      public $FunctionType;
+   }
+   if ($result = mysqli_query($link, $str_query2))
+   {
+      while ($row = mysqli_fetch_assoc($result))
+      {
+         $sppa = new StuPPA();
+         $sppa->FunctionId = $row["FunctionId"];
+         $sppa->FunctionName = $row["FunctionName"];
+         $sppa->FunctionType = $row["FunctionType"];
+         array_push($funPPA_array,$sppa);
+      }
+   }
+   
    class StuExams{
       public $ExamId;
       public $ExamName;

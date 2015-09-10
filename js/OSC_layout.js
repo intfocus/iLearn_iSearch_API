@@ -350,6 +350,20 @@ $(function() {
       }
    });
    
+   var dates18 = $( "#from18, #to18" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      numberOfMonths: 1,
+      onSelect: function( selectedDate ) {
+         var option = this.id == "from18" ? "minDate" : "maxDate",
+            instance = $( this ).data( "datepicker" ),
+            date18 = $.datepicker.parseDate(
+               instance.settings.dateFormat ||
+               $.datepicker._defaults.dateFormat,
+               selectedDate, instance.settings );
+         dates18.not( this ).datepicker( "option", option, date18 );
+      }
+   });
 
    var dates100 = $("#exam_begin_time, #exam_end_time" ).datepicker({
        minDate: new Date(),

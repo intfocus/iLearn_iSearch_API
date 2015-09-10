@@ -242,6 +242,7 @@
       $str_query1 = $str_query1 . "AND F.EditTime >= '$searchFilesfrom1' ";
    if ($searchFilesto1 != '')
       $str_query1 = $str_query1 . "AND F.EditTime <= '$searchFilesto1' ";
+   $str_query1 = $str_query1 . " ORDER BY F.EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    

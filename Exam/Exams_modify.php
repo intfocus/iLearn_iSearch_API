@@ -241,6 +241,7 @@ EOD;
          $exam_json->duration = (int)$Duration;
          $exam_json->begin = (int)$ExamBeginTime;
          $exam_json->end = (int)$ExamEndTime;
+         $exam_json->password = $ExamPassword;
          
          $tmp_file = EXAM_FILES_DIR."/".$ExamId.time();
          file_put_contents($tmp_file, json_encode($exam_json));

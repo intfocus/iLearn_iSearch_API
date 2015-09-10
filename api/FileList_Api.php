@@ -60,6 +60,38 @@
       return;
    }
    
+   function CategoryNameList($CategoryId)
+   {
+      $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+      if (!$strlink)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }
+      if($rs = mysqli_query($strlink, $str_categorie)){
+         $row = mysqli_fetch_assoc($rs);
+         //return $row["CategoryName"];
+         if($row["ParentId"] == 1 || $CategoryId == 1){
+            mysqli_close($strlink);
+            return $row["CategoryName"];
+         }
+         else{
+            mysqli_close($strlink);
+            return CategoryNameList($row["ParentId"]) . "\\" . $row["CategoryName"];
+         }
+      }
+      else{
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return "";
+      }
+   }
+   
+   // print_r(CategoryNameList(6));
+   // return;
+   
    $datafile = array();
    class Stucategory{
       public $Id;
@@ -102,7 +134,7 @@ where f.Status = 1 and c.DeptList like '%,$deptid,%';";
          $sc->EditTime = date("Y/m/d H:i:s",strtotime($row['FileEditTime']));
          $sc->CategoryId = $row['CategoryId'];
          $sc->ZipSize = $row['ZipSize'];
-         $sc->CategoryName = $row['CategoryName'];
+         $sc->CategoryName = CategoryNameList($row['CategoryId']);//$row['CategoryName'];
          $sc->DeptList = $row['DeptList'];
          $sc->PAList = $row['PAList'];
          $sc->CategoryStatus = $row['CategoryStatus'];

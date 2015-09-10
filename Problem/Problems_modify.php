@@ -262,7 +262,7 @@
                       ProblemSelectF='$ProbSelF', ProblemSelectG='$ProbSelG',
                       ProblemSelectH='$ProbSelH', ProblemAnswer='$ProbAnswer',
                       ProblemCategory='$ProbCategory',
-                      ProblemLevel='$ProbLevel', ProblemMemo='$ProbMemo' where ProblemId=$ProbId
+                      ProblemLevel='$ProbLevel', ProblemMemo='$ProbMemo', CreatedTime = now() where ProblemId=$ProbId
 EOD;
 
 
