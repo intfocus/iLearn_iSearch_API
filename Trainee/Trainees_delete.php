@@ -55,7 +55,7 @@
    //----- Check command -----
    function check_command($check_str)
    {
-      if(strcmp($check_str, "deleteTrainings"))
+      if(strcmp($check_str, "deleteTrainees"))
       {
          return SYMBOL_ERROR;
       }
@@ -95,6 +95,12 @@
       echo SYMBOL_ERROR;
       return;
    }
+   if(($UserId = check_number($_GET["UserId"])) == SYMBOL_ERROR)
+   {
+      sleep(DELAY_SEC);
+      echo SYMBOL_ERROR;
+      return;
+   }
 
    //link    
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
@@ -105,14 +111,23 @@
       return;
    }   
    
+   $str_user = "," . $user_id . ",";
    //----- query -----
    //***Step19 删除动作SQL语句
-   $str_query1 = "Update Trainings set Status=-1 where TrainingId=$TrainingId";
+   $str_query1 = "Update trainees set Status=-1, ExamineUser='$str_user' where TrainingId=$TrainingId and UserId=$UserId";
    
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+      $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
+               . " VALUES('$UserId','报名审核','审核驳回',now(),'$user_id','$TrainingId')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

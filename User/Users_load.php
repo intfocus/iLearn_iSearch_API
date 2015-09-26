@@ -79,7 +79,7 @@
       {
          $check_str = str_replace(">", "&gt;", $check_str);
       }
-      return $check_str;
+      return trim($check_str);
    }
    //----- Check time range begin -----
    function check_range_begin($check_str)

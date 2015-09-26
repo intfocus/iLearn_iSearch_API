@@ -182,7 +182,7 @@ function newSearchUsersContentFunc()
 
 function newUsersBatch()
 {
-   window.open("User/Users_batch_add.php?cmd=read");
+   window.open("User/Users_upload.php");
 }
 
 function delUsersBatch()

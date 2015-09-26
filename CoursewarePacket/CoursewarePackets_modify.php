@@ -360,6 +360,25 @@
             }
             $("input[name='CoursewareNameModify']").val(cnm);
          });
+         function cnm()
+         {
+            alert("OK");
+            var num = $("div[class='brick small']").length;
+            var cnm = "";
+            for(var i = 0; i<num; i++)
+            {
+               var n = i * 60;
+               $("div[class='brick small']").each(function () {
+                  var m = $(this).attr("style").replace('position: absolute; left: 0px; top: ','').replace('px;','');
+                  if(n == m)
+                  {
+                     cnm = cnm + "," + $(this).attr("name") + ",";
+                  }
+               });
+            }
+            alert(cnm);
+            $("input[name='CoursewareNameModify']").val(cnm);
+         }
          function lockFunction(obj, n)
          {
             if (g_defaultExtremeType[n] == 1)
@@ -383,7 +402,7 @@
          //***Step12 修改页面点击保存按钮出发Ajax动作
          function modifyPPTsContent(PPTId)
          {
-           
+            cnm();
             PPTName = document.getElementsByName("PPTNameModify")[0].value.trim();
             PPTDesc = document.getElementsByName("PPTDescModify")[0].value.trim();
             CoursewareList = document.getElementsByName("CoursewareNameModify")[0].value.trim();

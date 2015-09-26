@@ -4,12 +4,12 @@ function expandSearchFilesContentFunc()
    if ($('span.FileName, span.FileDesc').hasClass('fixWidth'))
    {
       $('span.FileName, span.FileDesc').removeClass('fixWidth');
-      $('.NewsexpandSR').text('隐藏过长内容');
+      $('.FilesexpandSR').text('隐藏过长内容');
    }
    else
    {
       $('span.FileName, span.FileDesc').addClass('fixWidth');
-      $('.NewsexpandSR').text('显示过长内容');
+      $('.FilesexpandSR').text('显示过长内容');
    }
 }
 //***Step9 列表中的动作上架/下架Ajax呼叫

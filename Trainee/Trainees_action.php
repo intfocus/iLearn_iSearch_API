@@ -55,7 +55,7 @@
    //----- Check command -----
    function check_command($check_str)
    {
-      if(strcmp($check_str, "actionTrainings"))
+      if(strcmp($check_str, "actionTrainees"))
       {
          return SYMBOL_ERROR;
       }
@@ -95,17 +95,13 @@
       echo SYMBOL_ERROR;
       return;
    }
-   if(($Status = check_number($_GET["Status"])) == SYMBOL_ERROR)
+   if(($UserId = check_number($_GET["UserId"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
       return;
    }
-   if ($Status == 0)
-      $Trainingstatus = 1;
-   else if ($Status == 1)
-      $Trainingstatus = 0;
-   else
+   if(($Status = check_number($_GET["Status"])) == SYMBOL_ERROR)
    {
       sleep(DELAY_SEC);
       echo SYMBOL_ERROR;
@@ -119,16 +115,38 @@
       sleep(DELAY_SEC);
       echo DB_ERROR;       
       return;
-   }   
+   }
    
    //----- query -----
    //***Step18 上下架动作修改SQL语句
-   $str_query1 = "Update Trainings set Status=$Trainingstatus where TrainingId=$TrainingId";
-   
-   /////////////////////
-   // prepare the SQL command and query DB
-   /////////////////////
-   if(mysqli_query($link, $str_query1)){
+   $approreLevel = 0;
+   $str_query3 = "select ApproreLevel from trainings where TrainingId=$TrainingId";
+   if($rs = mysqli_query($link, $str_query3))
+   {
+      $row = mysqli_fetch_assoc($rs);
+      $approreLevel = $row["ApproreLevel"];
+   }
+   else
+   {
+      if($link){
+         mysqli_close($link);
+      }
+      sleep(DELAY_SEC);
+      echo -__LINE__;
+      return;
+   }
+   $str_user = "," . $user_id . ",";
+   $str_query2 = "update trainees set Status = $approreLevel, ExamineUser = '$str_user' where  TrainingId = $TrainingId and UserId = $UserId";
+
+   if(mysqli_query($link, $str_query2)){
+      $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
+               . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

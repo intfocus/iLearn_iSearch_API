@@ -21,7 +21,8 @@ function actionSearchTraineeExamines(TrainingId, Status, UserId)
    str = "cmd=actionTraineeExamines&TrainingId=" + TrainingId + "&Status=" + Status + "&UserId=" + UserId;
    url_str = "TraineeExamine/TraineeExamines_action.php?";
    
-   //alert(str);
+   // alert(url_str + str);
+   // return;
    //$('#loadingWrap').show();
    $.ajax
    ({

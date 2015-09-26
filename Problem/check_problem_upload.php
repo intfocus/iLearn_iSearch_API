@@ -284,7 +284,13 @@ function read_excel_and_insert_into_database($target_file)
          }
          
          $cur_problem->functions_str = output_category_str_from_func_array($functions);
-         array_push($problems, $cur_problem);
+         if (is_problem_exist($cur_problem))
+         {
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "ProblemDesc"=>$cur_problem->desc, "message"=> "此考题系统中已存在！"));
+         }
+         else {
+            array_push($problems, $cur_problem);
+         }
       }
    }
 
@@ -323,14 +329,15 @@ function write_into_database($problems)
 {
    foreach ($problems as $problem)
    {
-       if (is_problem_exist($problem))
-       {
-          $ret = update_old_problem($problem);
-       }
-       else
-       {
-          $ret = insert_new_problem($problem);
-       }
+      $ret = insert_new_problem($problem);
+       // if (is_problem_exist($problem))
+       // {
+          // $ret = update_old_problem($problem);
+       // }
+       // else
+       // {
+          // $ret = insert_new_problem($problem);
+       // }
        if ($ret != SUCCESS)
        {
          return $ret;
@@ -489,7 +496,14 @@ function loaded() {
 <?
    if ($file_status->status == SUCCESS)
    {
-      echo "<script>alert('题目新增/修改成功，页面关闭后请自行刷新');window.close();</script>";
+      if(count($file_status->errors) > 0)
+      {
+         echo "<script>alert('题目新增成功，有部门题目需要修改。请记录行号手动修改！');</script>";
+      }
+      else
+      {
+         echo "<script>alert('题目新增成功，页面关闭后请自行刷新');window.close();</script>";
+      }
    }
 ?>
 <?if ($file_status->status != SUCCESS)
@@ -513,7 +527,7 @@ function loaded() {
    <div class="problem_info, error_info">
       <h1>题目</h1>
       <table class="problems_table">
-         <th style="width:5%">页签</th><th style="width:5%">列</th><th>錯誤</th>
+         <th style="width:5%">页签</th><th style="width:5%">行</th><th>錯誤</th>
       <? foreach ($file_status->errors as $error)
             {?>
                <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["message"];?></td></tr>
@@ -521,6 +535,21 @@ function loaded() {
       </table>
    </div>
 <? }?>
+<?if ($file_status->status == SUCCESS)
+   {
+      if(count($file_status->errors) > 0)
+      {?>
+      <div class="problem_info, error_info">
+         <h1>题目</h1>
+         <table class="problems_table">
+            <th style="width:5%">页签</th><th style="width:5%">列</th><th>标题</th><th>错误</th>
+            <? foreach ($file_status->errors as $error)
+               {?>
+                  <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["ProblemDesc"];?></td><td><?echo $error["message"];?></td></tr>
+            <? }?>
+         </table>
+      </div>
+<? }}?>
 </div>
 </body>
 </html>

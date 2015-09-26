@@ -2,26 +2,30 @@
 //***Step5 expand search Result table
 function expandSearchTraineesContentFunc()
 {
-   if ($('span.TraineeName, span.Speaker, span.TraineeManager').hasClass('fixWidth'))
+   if ($('span.TraineeName, span.SpeakerName, span.TraineeDate, span.RegisterDate').hasClass('fixWidth'))
    {
-      $('span.TraineeName, span.Speaker, span.TraineeManager').removeClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TraineeDate, span.RegisterDate').removeClass('fixWidth');
       $('.TraineesexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.TraineeName, span.Speaker, span.TraineeManager').addClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TraineeDate, span.RegisterDate').addClass('fixWidth');
       $('.TraineesexpandSR').text('显示过长内容');
    }
 }
 
 //***Step9 列表中的动作上架/下架Ajax呼叫
-function actionSearchTrainees(TraineeId, Status)
+function actionSearchTrainee(TrainingId, Status, UserId)
 {
+   ret = confirm("确定要通过审核吗?\n\r无法撤销本操作!");
+   if (!ret) // user cancels
+      return;
    //ajax
-   str = "cmd=actionTrainees" + "&TraineeId=" + TraineeId + "&Status=" + Status;
+   str = "cmd=actionTrainees&TrainingId=" + TrainingId + "&Status=" + Status + "&UserId=" + UserId;
    url_str = "Trainee/Trainees_action.php?";
    
-   //alert(str);
+   // alert(url_str + str);
+   // return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -56,16 +60,17 @@ function actionSearchTrainees(TraineeId, Status)
 }
 
 //***Step10 列表中动作删除Ajax呼叫
-function deleteSearchTrainees(TraineeId)
+function deleteSearchTrainee(TrainingId,UserId)
 {
-   ret = confirm("确定要删除此公告吗?");
+   ret = confirm("确定要审核驳回吗?\n\r无法撤销本操作!");
    if (!ret) // user cancels
       return;
    //ajax
-   str = "cmd=deleteTrainees" + "&" + "TraineeId=" + TraineeId;
+   str = "cmd=deleteTrainees&TrainingId=" + TrainingId + "&UserId=" + UserId;
    url_str = "Trainee/Trainees_delete.php?";
    
-   //alert(str);
+   // alert(url_str + str);
+   // return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -159,8 +164,13 @@ function occurTimeDatePicker()
                <td><input id="searchTraineesNameSpeaker" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
-                  <label><input id="searchTraineesCheckBox1" type="checkbox" checked> 上架</label>
-                  <label><input id="searchTraineesCheckBox2" type="checkbox" checked> 下架</label>
+                  <select id="searchTraineesStatus">
+                     <option value="1">审核中...</option>
+                     <option value="2">通过审核</option>
+                     <option value="3">流程中断</option>
+                     <option value="4">审核驳回</option>
+                     <option value="5" selected>全部</option>
+                  </select>
                </td>
             </tr>
             <tr>
@@ -200,7 +210,9 @@ function occurTimeDatePicker()
                   <col class="Status" />
                   <col class="TraineeDate" />
                   <col class="Date" />
+                  <col class="ExamineUser" />
                   <col class="Status" />
+                  <col class="TraineeStatus" />
                </colgroup>
                <tr>
                   <th>编号</th>
@@ -210,10 +222,12 @@ function occurTimeDatePicker()
                   <th>学员编号</th>
                   <th>课程时间</th>
                   <th>报名时间</th>
+                  <th>审核人</th>
                   <th>用戶报名状态</th>
+                  <th>动作</th>
                </tr>
                <tr>
-                  <td colspan="8" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="10" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
             <div class="toolMenu">

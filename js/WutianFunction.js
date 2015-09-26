@@ -1351,24 +1351,17 @@ $(function()
       var searchTraineesto1 = document.getElementsByName("searchTraineesto1")[0].value;
       var searchTraineesfrom2 = document.getElementsByName("searchTraineesfrom2")[0].value;
       var searchTraineesto2 = document.getElementsByName("searchTraineesto2")[0].value;
-   
-      var statusCheckbox = 0;
-      if (document.getElementById("searchTraineesCheckBox1").checked == true)
-      {
-         statusCheckbox += 1; 
-      }
-      if (document.getElementById("searchTraineesCheckBox2").checked == true)
-      {
-         statusCheckbox += 2; 
-      }
+      var searchTraineesStatus = document.getElementById("searchTraineesStatus").value;
+      
       var str;                            //送出資料字串  
       
       //ajax
       str = "cmd=searchTrainees" + "&" + "searchTraineesNameSpeaker=" + encodeURIComponent(searchTraineesNameSpeaker) + "&" + "searchTraineesfrom1=" + searchTraineesfrom1 + "&"
-            + "searchTraineesto1=" + searchTraineesto1 + "&" + "searchTraineesfrom2=" + searchTraineesfrom2 + "&" + "searchTraineesto2=" + searchTraineesto2 + "&" + "statusCheckbox=" + statusCheckbox;
+            + "searchTraineesto1=" + searchTraineesto1 + "&" + "searchTraineesfrom2=" + searchTraineesfrom2 + "&" + "searchTraineesto2=" + searchTraineesto2 + "&" + "searchTraineesStatus=" + searchTraineesStatus;
       url_str = "Trainee/Trainees_load.php?";
       
       // alert(url_str+str);
+      // return;
       $('#loadingWrap').show();
       $.ajax
       ({

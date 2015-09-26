@@ -1,5 +1,5 @@
 <?php
-   require("../lib/testemail.php");
+   //require("../lib/testemail.php");
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -157,6 +157,14 @@
    {
       $str_query2 = "update trainees set Status = $approreLevel, ExamineUser = '' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
       if(mysqli_query($link, $str_query2)){
+         $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
+            . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
+         if(!mysqli_query($link, $str_log))
+         {
+            echo -__LINE__ . $str_log;
+            mysqli_close($link);
+            return;
+         }
          echo "0";
          mysqli_close($link);
          return;
@@ -183,6 +191,7 @@
             while($row = mysqli_fetch_assoc($uids))
             {
                $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
+               array_push($emaillist, $row["Email"]);
             }
          }
          else {
@@ -192,8 +201,20 @@
          }
          $str_query4 = "update trainees set Status = $newStatus, ExamineUser = '$ExamineUser' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
          if(mysqli_query($link, $str_query4)){
+            $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
+               . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
+            if(!mysqli_query($link, $str_log))
+            {
+               echo -__LINE__ . $str_log;
+               mysqli_close($link);
+               return;
+            }
             echo "0";
             mysqli_close($link);
+            $emailsmtp = new EmailSmtp();
+            foreach ($emaillist as $el) {
+               $emailsmtp->eSmtp($el);
+            }
             return;
          }
          else

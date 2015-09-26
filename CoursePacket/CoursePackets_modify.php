@@ -391,6 +391,23 @@
       <![endif]-->
       <title>武田 - 课程包页面</title>
       <Script Language=JavaScript>
+         function cnm()
+         {
+            var num = $("div[class='brick small']").length;
+            var cnm = "";
+            for(var i = 0; i<num; i++)
+            {
+               var n = i * 60;
+               $("div[class='brick small']").each(function () {
+                  var m = $(this).attr("style").replace('position: absolute; left: 0px; top: ','').replace('px;','');
+                  if(n == m)
+                  {
+                     cnm = cnm + "," + $(this).attr("name") + ",";
+                  }
+               });
+            }
+            $("input[name='CoursewareListModify']").val(cnm);
+         }
          function lockFunction(obj, n)
          {
             if (g_defaultExtremeType[n] == 1)
@@ -421,6 +438,7 @@
          //***Step12 修改页面点击保存按钮出发Ajax动作
          function modifyCoursePacketsContent(CoursePacketId)
          {
+            cnm();
             CoursePacketName = document.getElementsByName("CoursePacketNameModify")[0].value.trim();
             CoursePacketDesc = document.getElementsByName("CoursePacketDescModify")[0].value.trim();
             AvailableTimeBegin = document.getElementsByName("AvailableTimeBegin")[0].value.trim();

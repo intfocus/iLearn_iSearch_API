@@ -210,12 +210,41 @@
       sleep(DELAY_SEC);
       echo DB_ERROR;       
       return;
-   }   
+   }
+   
+   function CategoryNameList($CategoryId)
+   {
+      $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+      $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+      if (!$strlink)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return;
+      }
+      if($rs = mysqli_query($strlink, $str_categorie)){
+         $row = mysqli_fetch_assoc($rs);
+         //return $row["CategoryName"];
+         if($row["ParentId"] == 1 || $CategoryId == 1){
+            mysqli_close($strlink);
+            return $row["CategoryName"];
+         }
+         else{
+            mysqli_close($strlink);
+            return CategoryNameList($row["ParentId"]) . "\\" . $row["CategoryName"];
+         }
+      }
+      else{
+         sleep(DELAY_SEC);
+         echo DB_ERROR;       
+         return "";
+      }
+   }
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始               
    $str_query1 = "
-      select F.FileId as FileId, F.FileTitle as FileTitle, F.FileDesc as FileDesc, 
+      select F.FileId as FileId, F.FileTitle as FileTitle, F.FileDesc as FileDesc, C.CategoryId as CategoryId, 
              C.CategoryName as CategoryName, F.Status as Status, F.EditTime as EditTime
       from Files F, Categories C where C.CategoryId=F.CategoryId AND F.status";
 
@@ -360,7 +389,7 @@
                $FileId = $row["FileId"];
                $FileTitle = $row["FileTitle"];
                $FileDesc = $row["FileDesc"];
-               $CategoryName = $row["CategoryName"];
+               $CategoryName = CategoryNameList($row["CategoryId"]);//$row["CategoryName"];
                $Status = $row["Status"];
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
