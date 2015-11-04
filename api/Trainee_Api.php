@@ -1,5 +1,4 @@
 <?php
-   //引入发送邮件类
    require("../lib/testemail.php");
    $traineeContent = file_get_contents("php://input");
    $trainee = json_decode($traineeContent);
@@ -44,6 +43,7 @@
    $str_update;
    $result;                 //query result
    $newcount = 0;
+   $username = "";
    
    //link    
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
@@ -55,11 +55,12 @@
    }
    
    $emaillist = array();
-   $str_users = "select DeptId, CanApprove from users where UserId=$userId";
+   $str_users = "select DeptId, CanApprove, UserName from users where UserId=$userId";
    if($us = mysqli_query($link, $str_users))
    {
       $row = mysqli_fetch_assoc($us);
       $deptid = $row["DeptId"];
+	  $username = $row["UserName"];
       if($row["CanApprove"] == 1)
       {
          $str_depts = "select ParentId from Depts where DeptId=$deptid";
@@ -82,13 +83,13 @@
    }
    
    $ExamineUser = "";
-   $str_userids = "select UserId,Email from users where DeptId=$deptid and CanApprove=1";
+   $str_userids = "select UserId, Email from users where DeptId=$deptid and CanApprove=1";
    if($uids = mysqli_query($link, $str_userids))
    {
       while($row = mysqli_fetch_assoc($uids))
       {
          $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
-         array_push($emaillist, $row["Email"]);
+		 array_push($emaillist, $row["Email"]);
       }
    }
    else {
@@ -125,11 +126,41 @@
       }
    }
    
+   $TrainingName = "";
+   $str_trainings = "select TrainingName,ApproreLevel from trainings where TrainingId=$trainingId";
+   if($rs = mysqli_query($link, $str_trainings)){
+	  $row = mysqli_fetch_assoc($rs);
+      $TrainingName = $row["TrainingName"];
+	  $ApproreLevel = $row["ApproreLevel"];
+   }
+   
+   
    mysqli_close($link);
    
-   $emailsmtp = new EmailSmtp();
-   foreach ($emaillist as $el) {
-      $emailsmtp->eSmtp($el);
+   if($ApproreLevel > 0)
+   {
+	  $emailsmtp = new EmailSmtp();
+      foreach ($emaillist as $el) {
+         //$emailsmtp->eSmtp($el,$username,$TrainingName);
+	     $soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
+	     $result2 = $soap->TsaSendEmail(array(  
+		   'email'=>$el,  
+		   'username'=>$username,
+		   'trainingname'=>$TrainingName
+	     ));  
+	     //echo $el;
+      }
+   
+      if(count($emaillist) == 0)
+      {
+         //$emailsmtp->eSmtp("eric_yue@intfocus.com,albert_li@intfocus.com,dh5270@takeda.com,Shally.Wang@takeda.com",$username,$TrainingName);
+	     $soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
+	     $result2 = $soap->TsaSendEmail(array(  
+		   'email'=>'eric_yue@intfocus.com,albert_li@intfocus.com,dh5270@takeda.com,Shally.Wang@takeda.com',  
+		   'username'=>$username,
+		   'trainingname'=>$TrainingName
+	     ));  
+      }
    }
    
    echo json_encode(array("status"=> 1, "count"=>1, "UserId"=>$userId, "TrainingId"=>$trainingId, "RegisterDate"=>$registerDate, "result"=>""));

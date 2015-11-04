@@ -17,12 +17,15 @@ function expandSearchTraineeExaminesContentFunc()
 //***Step9 列表中的动作上架/下架Ajax呼叫
 function actionSearchTraineeExamines(TrainingId, Status, UserId)
 {
+   ret = confirm("确定要通过审核吗?\n\r无法撤销本操作!");
+   if (!ret) // user cancels
+      return;
    //ajax
    str = "cmd=actionTraineeExamines&TrainingId=" + TrainingId + "&Status=" + Status + "&UserId=" + UserId;
    url_str = "TraineeExamine/TraineeExamines_action.php?";
    
-   // alert(url_str + str);
-   // return;
+   //alert(url_str + str);
+   //return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -59,7 +62,7 @@ function actionSearchTraineeExamines(TrainingId, Status, UserId)
 //***Step10 列表中动作删除Ajax呼叫
 function deleteSearchTraineeExamines(TrainingId,UserId)
 {
-   ret = confirm("确定要审核驳回吗?");
+   ret = confirm("确定要审核驳回吗?\n\r无法撤销本操作!");
    if (!ret) // user cancels
       return;
    //ajax
@@ -156,11 +159,11 @@ function occurTimeDatePicker()
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
                <th>课程名称/讲师名称/学员（名称/编号)搜索 ：</th>
-               <td><input id="searchTraineesNameSpeaker" type="text" maxlength="50"></td>
+               <td><input id="searchTraineeExaminesNameSpeaker" type="text" maxlength="50"></td>
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchTraineeExamines"><input name="searchTraineesExamineButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchTraineeExamines"><input name="searchTraineesExamineButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>
@@ -172,7 +175,6 @@ function occurTimeDatePicker()
          <div id="searchTraineeExaminesPages">
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
             <div class="toolMenu">
-               <span class="btn TraineesexpandSR" OnClick="expandSearchTraineeExaminesContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -198,7 +200,6 @@ function occurTimeDatePicker()
                </tr>
             </table>
             <div class="toolMenu">
-               <span class="btn TraineesexpandSR" OnClick="expandSearchTraineeExaminesContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

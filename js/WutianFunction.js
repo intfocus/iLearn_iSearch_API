@@ -1441,6 +1441,96 @@ $(function()
    });
    //***Step4 searchTraineeExamines end
    
+   //***Step4 searchTraineeCancels begin
+   $('.btn_submit_new.searchTraineeCancels').click(function()
+   {
+      var searchTraineeCancelsNameSpeaker = document.getElementById("searchTraineeCancelsNameSpeaker").value;
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchTraineeCancels" + "&" + "searchTraineeCancelsNameSpeaker=" + encodeURIComponent(searchTraineeCancelsNameSpeaker);
+      url_str = "TraineeCancel/TraineeCancels_load.php?";
+      
+      //alert(url_str+str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchTraineeCancelsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchTraineeCancelExamines end
+   
+   //***Step4 searchTrainingLogs begin
+   $('.btn_submit_new.searchTrainingLogs').click(function()
+   {
+      var searchTrainingLogsNameSpeaker = document.getElementById("searchTrainingLogsNameSpeaker").value;
+      var str;                            //送出資料字串  
+      
+      //ajax
+      str = "cmd=searchTrainingLogs" + "&" + "searchTrainingLogsNameSpeaker=" + encodeURIComponent(searchTrainingLogsNameSpeaker);
+      url_str = "TrainingLog/TrainingLogs_load.php?";
+      
+      //alert(url_str+str);
+      $('#loadingWrap').show();
+      $.ajax
+      ({
+         beforeSend: function()
+         {
+            //alert(url_str + str);
+         },
+         type: 'GET',
+         url: url_str + str,
+         cache: false,
+         success: function(res)
+         {
+            //alert(res);
+            $('#loadingWrap').delay(D_LOADING).fadeOut('slow', function()
+            {
+               if (!res.match(/^-\d+$/))  //success
+               {
+                  document.getElementById("searchTrainingLogsPages").innerHTML = res;
+               }
+               else  //failed
+               {  
+                  //echo "1.0";
+                  alert(MSG_SEARCH_ERROR);
+               }
+            });
+         },
+         error: function(xhr)
+         {
+            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+         }
+      });
+   });
+   //***Step4 searchTrainingLogExamines end
+   
    //***Step4 searchTrainings begin
    $('.btn_submit_new.searchTrainings').click(function()
    {
@@ -2069,7 +2159,7 @@ $(function()
       for (i=0;i<len;i++) 
       {
          if (document.getElementsByName("userMgmt_type")[i].checked)
-            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";"
+            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";";
       }
 
       len = document.getElementsByName("userMgmt_targetCom").length;
@@ -2171,7 +2261,7 @@ $(function()
       for (i=0;i<len;i++) 
       {
          if (document.getElementsByName("userMgmt_type")[i].checked)
-            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";"
+            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";";
       }
 
       len = document.getElementsByName("userMgmt_targetCom").length;

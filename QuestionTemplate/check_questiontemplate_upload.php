@@ -476,16 +476,54 @@ err_exit:
          {   
             die(MSG_ERR_CONNECT_TO_DATABASE);
          }
-   
-         $selA = $qt->selections[0];
-         $selB = $qt->selections[1];
-         $selC = $qt->selections[2];
-         $selD = $qt->selections[3];
-         $selE = $qt->selections[4];
-         $selF = $qt->selections[5];
-         $selG = $qt->selections[6];
-         $selH = $qt->selections[7];
-         $selI = $qt->selections[8];
+         
+         if(strlen($qt->groupName) > 0)
+         {
+            $str_group = "select ProblemType, ProblemDesc, ProblemSelectA, 
+                     ProblemSelectB, ProblemSelectC, ProblemSelectD, ProblemSelectE, ProblemSelectF, ProblemSelectG, 
+                     ProblemSelectH, ProblemSelectI, GroupName from questiondetail 
+                     where QuestionTemplateId = $qt->id and GroupName = '$qt->groupName' limit 1";
+            if ($result = mysqli_query($link, $str_group))
+            {
+               $row_number = mysqli_num_rows($result);
+               if ($row_number > 0)
+               {
+                  $row = mysqli_fetch_assoc($result);
+                  $qt->type = $row["ProblemType"];
+                  $selA = $row["ProblemSelectA"];
+                  $selB = $row["ProblemSelectB"];
+                  $selC = $row["ProblemSelectC"];
+                  $selD = $row["ProblemSelectD"];
+                  $selE = $row["ProblemSelectE"];
+                  $selF = $row["ProblemSelectF"];
+                  $selG = $row["ProblemSelectG"];
+                  $selH = $row["ProblemSelectH"];
+                  $selI = $row["ProblemSelectI"];
+               }
+               else {
+                  $selA = $qt->selections[0];
+                  $selB = $qt->selections[1];
+                  $selC = $qt->selections[2];
+                  $selD = $qt->selections[3];
+                  $selE = $qt->selections[4];
+                  $selF = $qt->selections[5];
+                  $selG = $qt->selections[6];
+                  $selH = $qt->selections[7];
+                  $selI = $qt->selections[8];
+               }
+            }
+         }
+         else {
+            $selA = $qt->selections[0];
+            $selB = $qt->selections[1];
+            $selC = $qt->selections[2];
+            $selD = $qt->selections[3];
+            $selE = $qt->selections[4];
+            $selF = $qt->selections[5];
+            $selG = $qt->selections[6];
+            $selH = $qt->selections[7];
+            $selI = $qt->selections[8];
+         }
          
          $str_query = "INSERT INTO questiondetail (QuestionTemplateId, ProblemType, ProblemDesc, ProblemSelectA, 
                      ProblemSelectB, ProblemSelectC, ProblemSelectD, ProblemSelectE, ProblemSelectF, ProblemSelectG, 

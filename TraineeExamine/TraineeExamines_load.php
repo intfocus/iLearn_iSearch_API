@@ -201,12 +201,12 @@
    //***Step16 页面搜索SQl语句 起始
    $str_query1 = "select te.TrainingId, te.UserId, te.RegisterDate, te.Status, ti.TrainingName, ti.ApproreLevel, u.UserName, u.EmployeeId, ti.SpeakerName 
 from trainees as te left join trainings as ti on te.TrainingId = ti.TrainingId
-left join wutian.users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser like '%,$user_id,%'";
+left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser like '%,$user_id,%' and te.Status <> ti.ApproreLevel";
    
    //TODO: trim space
    if (strlen($searchTraineesNameSpeaker) > 0)
    {
-      $str_query1 = $str_query1 . "AND (ti.TrainingName like '%$searchTraineesNameSpeaker%' 
+      $str_query1 = $str_query1 . " AND (ti.TrainingName like '%$searchTraineesNameSpeaker%' 
       OR ti.SpeakerName like '%$searchTraineesNameSpeaker%' 
       OR u.UserName like '%$searchTraineesNameSpeaker%' 
       OR u.EmployeeId like '%$searchTraineesNameSpeaker%') ";
@@ -252,7 +252,6 @@ left join wutian.users as u on te.UserId = u.UserId where te.Status >=0 and Exam
       }
       //***Step7 function name ==> expandSearchTraineesContentFunc
       $return_string = $return_string . "</span>"
-                       . "<span class=\"btn TraineeExaminesexpandSR\" OnClick=\"expandSearchTraineeExaminesContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -336,11 +335,11 @@ left join wutian.users as u on te.UserId = u.UserId where te.Status >=0 and Exam
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"TraineeName fixWidth\">$TrainingName</span></td>"
-                  . "<td><span class=\"SpeakerName fixWidth\">$SpeakerName</span></td>"
-                  . "<td>$UserName</td>"
-                  . "<td>$EmployeeId</td>"
-                  . "<td>$RegisterDate</td>"
+                  . "<td><span class=\"TraineeName breakAll\">$TrainingName</span></td>"
+                  . "<td><span class=\"SpeakerName breakAll\">$SpeakerName</span></td>"
+                  . "<td><span class=\"UserName breakAll\">$UserName</span></td>"
+                  . "<td><span class=\"EmployeeId breakAll\">$EmployeeId</span></td>"
+                  . "<td><span class=\"RegisterDate breakAll\">$RegisterDate</span></td>"
                   . "<td><A OnClick=\"actionSearchTraineeExamines($TrainingId,$Status,$UserId);\">审核 同意</A><br/>"
                   . "<A OnClick=\"deleteSearchTraineeExamines($TrainingId,$UserId);\">审核 驳回</A></td>"
                   . "</tr>";
@@ -366,7 +365,6 @@ left join wutian.users as u on te.UserId = u.UserId where te.Status >=0 and Exam
 
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
-                        . "<span class=\"btn TraineesExamineexpandSR\" OnClick=\"expandSearchTraineeExaminesContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----

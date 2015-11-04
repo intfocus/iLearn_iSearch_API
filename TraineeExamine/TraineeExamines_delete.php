@@ -119,8 +119,8 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
-      $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-         . " VALUES('$UserId','报名审核','审核驳回',now(),'$user_id','$TrainingId')";
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$UserId','报名审核','审核驳回',now(),'$user_id','$TrainingId','pc')";
       if(!mysqli_query($link, $str_log))
       {
          echo -__LINE__ . $str_log;

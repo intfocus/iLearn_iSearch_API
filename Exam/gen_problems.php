@@ -175,9 +175,10 @@
    $SelectedSingleSelProbs = unqiue_problem($SelectedSingleSelProbs);
    $SelectedMultiSelProbs = unqiue_problem($SelectedMultiSelProbs);
 
-   if (count($SelectedTrueFalseProbs) == 0 && count($SelectedSingleSelProbs) == 0 && count($SelectedMultiSelProbs) == 0)
+   //if (count($SelectedTrueFalseProbs) == 0 && count($SelectedSingleSelProbs) == 0 && count($SelectedMultiSelProbs) == 0)
+   if (!(count($SelectedTrueFalseProbs) == 0 || count($SelectedSingleSelProbs) == 0 || count($SelectedMultiSelProbs) == 0))
    {
-      echo json_encode(array("code"=>ERR_NOT_ENOUGH_PROBLEM, "message"=>"问题数量不够"));
+      echo json_encode(array("code"=>ERR_NOT_ENOUGH_PROBLEM, "message"=>"问题数量不够2"));
       return;
    }
 
@@ -267,11 +268,11 @@
 
       if ($is_obu_require == 1)
       {
-         $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory like ',%$obu_id%,')";
+         $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory like '%,$obu_id,%')";
       }
       else
       {
-         $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory NOT like ',%$obu_id%,')";
+         $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory NOT like '%,$obu_id,%')";
        }
 
       //----- query -----
@@ -279,7 +280,7 @@
       {
 		 if($require_function_id != 0)
          {
-			$str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+			$str_query1 = $str_query1." AND (ProblemCategory like '%,$require_function_id,%')";
 		 }
       }
       else
@@ -288,18 +289,18 @@
          {
 			if($require_function_id != 0)
             {
-               $str_query1 = $str_query1." AND (ProblemCategory like ',%$require_function_id%,')";
+               $str_query1 = $str_query1." AND (ProblemCategory like '%,$require_function_id,%')";
 			}
 			$str_query1 = $str_query1." AND (" ;
             for ($i=0; $i<count($product_functions_id); $i++)   
             {
                if ($i == (count($product_functions_id) - 1))
                {
-                  $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,')";
+                  $str_query1 = $str_query1."ProblemCategory like '%,$product_functions_id[$i],%')";
                }
                else
                {
-                  $str_query1 = $str_query1."ProblemCategory like ',%$product_functions_id[$i]%,'"." OR ";
+                  $str_query1 = $str_query1."ProblemCategory like '%,$product_functions_id[$i],%'"." OR ";
                }
             }
          }
@@ -311,15 +312,16 @@
             {
                if ($i == (count($adapation_functions_id) - 1))
                {
-                  $str_query1 = $str_query1."ProblemCategory like ',%$adapation_functions_id[$i]%,')";
+                  $str_query1 = $str_query1."ProblemCategory like '%,$adapation_functions_id[$i],%')";
                }
                else
                {
-                  $str_query1 = $str_query1."ProblemCategory like ',%$adapation_functions_id[$i]%,'"." OR ";
+                  $str_query1 = $str_query1."ProblemCategory like '%,$adapation_functions_id[$i],%'"." OR ";
                }
             }
          }
       }
+      echo $str_query1 . "<br />";
 
       //***Step16 页面搜索SQl语句 结束
       /////////////////////

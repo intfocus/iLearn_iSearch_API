@@ -164,7 +164,7 @@
       $i = 0;
       foreach ($coursewareLists as $cl) {
          $top = $i * 60;
-         $str_query1 = "select * from coursewares where CoursewareId=$cl";
+         $str_query1 = "select * from coursewares where Status=1 and CoursewareId=$cl";
          if($result = mysqli_query($link, $str_query1)){
             $row = mysqli_fetch_assoc($result);
             $return_string = $return_string . "<div class='brick small' name='" . $cl . "'  style='position: absolute; left: 0px; top: " . $top . "px;'>" . $row["CoursewareName"] . "<div class='delete'>&times;</div></div>";

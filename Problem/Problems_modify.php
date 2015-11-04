@@ -242,11 +242,11 @@
       }
       
       // Category check
-      if (!is_correct_prob_category_format($ProbCategory))
-      {
-         echo ERR_PROB_CATEGORY_FORMAT;
-         return;
-      }
+      // if (!is_correct_prob_category_format($ProbCategory))
+      // {
+         // echo ERR_PROB_CATEGORY_FORMAT;
+         // return;
+      // }
 
       // Level check
       if (!is_correct_prob_level_format($ProbLevel))

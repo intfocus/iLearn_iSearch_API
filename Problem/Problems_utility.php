@@ -91,7 +91,7 @@
          $this->selections = array_slice($problem_details, 8);
       }
       
-      /*
+      
       function _parse_level($level_name)
       {
          if (strlen($level_name) == 0)
@@ -103,7 +103,8 @@
             return get_level_id($level_name);
          }
       }
-      */
+      
+      /*
       function _parse_level($level_id)
       {
          $level_id = trim($level_id);
@@ -116,6 +117,7 @@
             return $level_id;
          }
       }
+      */
       
       function _parse_product($input)
       {

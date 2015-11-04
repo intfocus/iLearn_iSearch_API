@@ -354,7 +354,7 @@ function is_problem_exist($problem)
       die(MSG_ERR_CONNECT_TO_DATABASE);
    }
    
-   $str_query = "Select * from problems where ProblemDesc='$problem->desc' AND ProblemMemo='$problem->memo'";
+   $str_query = "Select * from problems where Status <> -1 and ProblemDesc='$problem->desc' AND ProblemMemo='$problem->memo'";
    if ($result = mysqli_query($link, $str_query))
    {
       $row_number = mysqli_num_rows($result);

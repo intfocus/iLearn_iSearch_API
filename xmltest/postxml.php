@@ -38,7 +38,8 @@ $jsonData = array(
 
 $jsonData = array(
    'UserId' => '4',
-   'TrainingId' => '1'
+   'TrainingId' => '1',
+   'CancelMsg' => 'abcd'
 );
 // $jsonData = array(
    // 'UserId' => '1427',
@@ -58,7 +59,7 @@ $curl = curl_init();
 
 //设置url
 //curl_setopt($curl, CURLOPT_URL,"http://192.168.186.134/phptest/xmltest/dealxml.php");
-curl_setopt($curl, CURLOPT_URL,"http://192.168.186.134/phptest/api/Trainee_Api.php");
+curl_setopt($curl, CURLOPT_URL,"http://192.168.186.134/phptest/api/TraineeCancel_Api.php");
 
 //设置发送方式：post
 curl_setopt($curl, CURLOPT_POST, true);

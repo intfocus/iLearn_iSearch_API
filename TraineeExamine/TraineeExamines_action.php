@@ -1,5 +1,5 @@
 <?php
-   //require("../lib/testemail.php");
+   require("../lib/testemail.php");
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -119,7 +119,8 @@
    
    //----- query -----
    //***Step18 上下架动作修改SQL语句
-   $str_query1 = "select ParentId from depts as d left join users as u on d.DeptId = u.DeptId where u.UserId=1";
+   $str_query1 = "select ParentId from depts as d left join users as u on d.DeptId = u.DeptId where u.UserId=$user_id";
+   
    $parentId = 0;
    if($rs = mysqli_query($link, $str_query1))
    {
@@ -153,12 +154,26 @@
       return;
    }
    
+   $UserName = "";
+   $str_users = "select UserName from users where UserId=$UserId";
+   if($rs = mysqli_query($link, $str_users)){
+	  $row = mysqli_fetch_assoc($rs);
+      $UserName = $row["UserName"];
+   }
+   
+   $TrainingName = "";
+   $str_trainings = "select TrainingName from trainings where TrainingId=$TrainingId";
+   if($rs = mysqli_query($link, $str_trainings)){
+	  $row = mysqli_fetch_assoc($rs);
+      $TrainingName = $row["TrainingName"];
+   }
+   
    if($parentId == 0)
    {
-      $str_query2 = "update trainees set Status = $approreLevel, ExamineUser = '' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
+      $str_query2 = "update trainees set Status = $approreLevel, ExamineUser = '$user_id' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
       if(mysqli_query($link, $str_query2)){
-         $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-            . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
+		 $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+            . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId','pc')";
          if(!mysqli_query($link, $str_log))
          {
             echo -__LINE__ . $str_log;
@@ -188,11 +203,19 @@
          $str_userids = "select UserId,Email from users where DeptId=$parentId and CanApprove=1";
          if($uids = mysqli_query($link, $str_userids))
          {
-            while($row = mysqli_fetch_assoc($uids))
-            {
-               $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
-               array_push($emaillist, $row["Email"]);
-            }
+			$ucount = mysqli_num_rows($uids);
+			if($ucount)
+			{
+               while($row = mysqli_fetch_assoc($uids))
+               {
+                  $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
+			      array_push($emaillist, $row["Email"]);
+               }
+			}
+			else
+			{
+			   $ExamineUser = "";
+			}
          }
          else {
             sleep(DELAY_SEC);
@@ -200,9 +223,10 @@
             return;
          }
          $str_query4 = "update trainees set Status = $newStatus, ExamineUser = '$ExamineUser' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
+
          if(mysqli_query($link, $str_query4)){
-            $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-               . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
+			$str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+               . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId','pc')";
             if(!mysqli_query($link, $str_log))
             {
                echo -__LINE__ . $str_log;
@@ -211,10 +235,29 @@
             }
             echo "0";
             mysqli_close($link);
-            $emailsmtp = new EmailSmtp();
-            foreach ($emaillist as $el) {
-               $emailsmtp->eSmtp($el);
-            }
+			if($approreLevel > $newStatus)
+			{
+			   $emailsmtp = new EmailSmtp();
+               foreach ($emaillist as $el) {
+                  //$emailsmtp->eSmtp($el,$UserName,$TrainingName);
+			      $soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
+			      $result2 = $soap->TsaSendEmail(array(  
+				    'email'=>$el,  
+				    'username'=>$UserName,
+				    'trainingname'=>$TrainingName
+			      ));  
+               }
+			   if(count($emaillist) == 0)
+			   {
+		          //$emailsmtp->eSmtp("eric_yue@intfocus.com,albert_li@intfocus.com,dh5270@takeda.com,Shally.Wang@takeda.com",$username,$TrainingName);
+			      $soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
+			      $result2 = $soap->TsaSendEmail(array(  
+				    'email'=>'eric_yue@intfocus.com,albert_li@intfocus.com,dh5270@takeda.com,Shally.Wang@takeda.com',  
+				    'username'=>$UserName,
+				    'trainingname'=>$TrainingName
+			      ));
+			   }
+			}
             return;
          }
          else
