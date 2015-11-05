@@ -351,7 +351,37 @@ err_exit:
             // }
             
             // $cur_problem->functions_str = output_category_str_from_func_array($functions);
-            array_push($qts, $cur_qt);
+            if(count($qts) == 0)
+            {
+               array_push($qts, $cur_qt);
+            }
+            else
+            {
+               if(strlen($cur_qt->groupName) > 0)
+               {
+                  foreach ($qts as $qt) {
+                     if($qt->groupName == $cur_qt->groupName)
+                     {
+                        if($qt->type == $cur_qt->type && $qt->selections[0] == $cur_qt->selections[0] && $qt->selections[1] == $cur_qt->selections[1] 
+                        && $qt->selections[2] == $cur_qt->selections[2] && $qt->selections[3] == $cur_qt->selections[3] && $qt->selections[4] == $cur_qt->selections[4] 
+                        && $qt->selections[5] == $cur_qt->selections[5] && $qt->selections[6] == $cur_qt->selections[6] && $qt->selections[7] == $cur_qt->selections[7] 
+                        && $qt->selections[8] == $cur_qt->selections[8])
+                        {
+                           array_push($qts, $cur_qt);
+                        }
+                        else
+                        {
+                            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=> "$cur_qt->desc 和其它同组不符合！"));
+                        }
+                     }
+                  }
+               }
+               else
+               {
+                  array_push($qts, $cur_qt);
+               }
+            }
+            
          }
       }
    
@@ -609,16 +639,16 @@ function loaded() {
          <td><?php echo "[" . $FileName . "] " . $resultStr;?></td>
       </tr>
    </table>
-   <!-- <div class="problem_info, error_info">
+   <div class="problem_info, error_info">
       <h1>题目</h1>
       <table class="problems_table">
-         <th style="width:5%">页签</th><th style="width:5%">列</th><th>錯誤</th>
+         <th style="width:5%">页签</th><th style="width:5%">列</th><th>错误</th>
       <? foreach ($file_status->errors as $error)
             {?>
                <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["message"];?></td></tr>
          <? }?>
       </table>
-   </div> -->
+   </div>
 <? }?>
 </div>
 </body>

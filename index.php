@@ -265,8 +265,8 @@ function loaded()
    if($canApprove==1)
    {
       echo "<li><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>报名审批</span></a></li>";
-      echo "<li><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>报名撤销审批</span></a></li>";
-      echo "<li><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>审批查询</span></a></li>";
+      echo "<li><a href='javascript:void(0)'><span class='tabIcon examinecancel'></span><span class='nav-label'>报名撤销审批</span></a></li>";
+      echo "<li><a href='javascript:void(0)'><span class='tabIcon examinelog'></span><span class='nav-label'>审批查询</span></a></li>";
    }
 ?>
                 </ul>

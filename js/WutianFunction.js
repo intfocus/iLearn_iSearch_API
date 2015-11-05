@@ -1529,7 +1529,7 @@ $(function()
          }
       });
    });
-   //***Step4 searchTrainingLogExamines end
+   //***Step4 searchTrainingLogs end
    
    //***Step4 searchTrainings begin
    $('.btn_submit_new.searchTrainings').click(function()
