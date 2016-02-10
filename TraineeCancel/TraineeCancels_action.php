@@ -277,13 +277,13 @@
             }
             else
             {
-            if($link){
-               mysqli_close($link);
+               if($link){
+                  mysqli_close($link);
+               }
+               sleep(DELAY_SEC);
+               echo -__LINE__;
+               return;
             }
-            sleep(DELAY_SEC);
-            echo -__LINE__;
-            return;
-         }
          }
       }
    }

@@ -327,6 +327,7 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"CategoryAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -334,6 +335,7 @@
                                          . "<th>分类名称</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
+                                         . "<th>分类夹路径</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
@@ -362,6 +364,7 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"CategoryAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -369,6 +372,7 @@
                                          . "<th>分类名称</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
+                                         . "<th>分类夹路径</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -377,11 +381,12 @@
             {
                $row = mysqli_fetch_assoc($result);
                $CategoryId = $row["CategoryId"];
-               $CategoryName = CategoryNameList($CategoryId);//$row["CategoryName"];
+               $CategoryName = $row["CategoryName"];
                $Status = $row["Status"];
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
                $EditTime = $row["EditTime"];
+               $CategoryPath = $row["CategoryPath"] . "/" . $CategoryName;
                $page_count_display = $page_count + 1;
                $return_string = $return_string 
                   . "<tr>"
@@ -389,6 +394,7 @@
                   . "<td><span class=\"CategoryName fixWidth\">$CategoryName</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$EditTime</td>"
+                  . "<td><span =\"CategoryPath fixWidth\">$CategoryPath</span></td>"
                   . "<td><A OnClick=\"actionSearchCategories($CategoryId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchCategories($CategoryId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchCategories($CategoryId);\">删除</A><br/>"

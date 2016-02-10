@@ -140,14 +140,15 @@
    $FileDescModify = $_POST["FileDescModify"];
    $FileTypeModify = $_POST["FileTypeModify"];
    $FileName = $_POST["FileName"];
+   $CategoryPath = $_POST["CategoryParent"];
    
    ///////////////////////////////////
    // 2. 取得 FileId
    //       先 insert 再取得 FileId
    ///////////////////////////////////
    $str_query1 = "Insert into Files (FileName, FileTitle, FileDesc, CategoryId, FilePath, SmallGifPath, PageNo, FileType, 
-      Status, CreatedUser, CreatedTime, EditUser, EditTime) VALUES('$FileName','$FileTitleModify','$FileDescModify',$CategoryId,'$CategoryFilePath','',0,
-      $FileTypeModify,0,$user_id,now(),$user_id,now());";
+      Status, CreatedUser, CreatedTime, EditUser, EditTime,CategoryPath) VALUES('$FileName','$FileTitleModify','$FileDescModify',$CategoryId,'$CategoryFilePath','',0,
+      $FileTypeModify,0,$user_id,now(),$user_id,now(),'$CategoryPath');";
    mysqli_query($link,$str_query1);
    //echo $str_query1;
    //return;

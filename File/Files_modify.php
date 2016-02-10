@@ -161,6 +161,7 @@
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
             $TitleStr = "文档修改 (只允许修改文档标题及文档说明)";
+            $CategoryParent = $row["CategoryPath"];
             if ($Status == 1)
                $TitleStr = "文档查看 (上架状态无法修改)";
          }
@@ -175,18 +176,20 @@
             $FileType = 1;
             $TitleStr = "文档新增";
             $Status = 0;
+            $CategoryParent = "";
          }
       }
    }
    else if ($FileId == 0) // Insert
    {
-      $FileName = $_GET["FileName"];
-      $FileCode = $_GET["FileCode"];
-      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
-      $ParentId = $_GET["ParentId"];
-      $str_query1 = "Insert into Files (FileName,FileCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
+      $FileName = $_POST["FileName"];
+      $FileCode = $_POST["FileCode"];
+      $PAList = $_POST["PAList"] == "" ? "All":$_POST["PAList"];
+      $ProductList = $_POST["ProductList"] == ""?"All":$_POST["ProductList"];
+      $ParentId = $_POST["ParentId"];
+      $CategoryPath = $_POST["CategoryParent"];
+      $str_query1 = "Insert into Files (FileName,FileCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status,CategoryPath)" 
+                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1,$CategoryPath)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -200,8 +203,8 @@
    }
    else // Update
    {
-      $FileTitle = $_GET["FileTitle"];
-      $FileDesc = $_GET["FileDesc"];
+      $FileTitle = $_POST["FileTitle"];
+      $FileDesc = $_POST["FileDesc"];
       //TODO EditUser=UserId
       $str_query1 = "Update Files set FileTitle='$FileTitle', FileDesc='$FileDesc', EditUser=$user_id, EditTime=now() where FileId=$FileId";
       
@@ -244,6 +247,35 @@
 <title>武田 - 文档页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
+$(function(){
+   $("#tt").tree({
+      onClick: function(node){
+         //alert(node.text);
+         var categoryparent = categoryPath(node);
+         document.getElementsByName("CategoryParent")[0].value = categoryparent;
+      }
+   });
+});
+function categoryPath(node){
+   var parent = node;
+   // alert(parent.text);
+   var tree = $('#tt');
+   var path = new Array();
+   do{
+      path.unshift(parent.text);
+      var parent = tree.tree('getParent', parent.target);
+   }while(parent);
+
+   var pathStr = '';
+   for(var i = 0; i < path.length; i++){
+      pathStr += path[i];
+      if(i < path.length -1){
+         pathStr += "/";
+      }
+   }
+
+   return pathStr;
+}
 function checkFileTypeModify() {
    FileName = document.getElementsByName("FilePathModify")[0].value;
    var pos1 = FileName.lastIndexOf('/');
@@ -290,6 +322,7 @@ function modifyFilesContent(FileId)
    FileDesc = document.getElementsByName("FileDescModify")[0].value.trim();
    CategoryId = getSelectedId();
    CategoryFilePath = getSelectedFilePath();
+   CategoryParent = document.getElementsByName("CategoryParent")[0].value;
    
    if (FileTitle.length == 0 || FileDesc.length == 0)
    {
@@ -331,12 +364,20 @@ function modifyFilesContent(FileId)
       {
          //alert(str);
       },
-      type: "GET",
+      type: "POST",
       url: url_str + str,
+      data:{
+         FileTitle:FileTitle, 
+         FileDesc:FileDesc,
+         CategoryId:CategoryId,
+         
+      },
       cache: false,
+      data: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
+         res=String(res);
          if (res.match(/^-/))  //failed
          {
             alert(MSG_OPEN_CONTENT_ERROR + res);
@@ -376,6 +417,7 @@ function modifyFilesContent(FileId)
          <Input type=hidden name="cmd" value="uploadFile">
          <Input type=hidden name="CategoryId" value="1">
          <Input type=hidden name="CategoryFilePath" value="">
+         <input type="hidden" name="CategoryParent" value="" />
 <?php
    if ($FileId > 0)
    {

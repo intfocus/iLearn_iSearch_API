@@ -201,6 +201,7 @@
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
             $TitleStr = "分类修改";
+            $CategoryParent = $row["CategoryPath"];
             if ($Status == 1)
                $TitleStr = "分类查看 (上架状态无法修改)";
          }
@@ -214,18 +215,20 @@
             $ProductList = "";
             $TitleStr = "分类新增";
             $Status = 0;
+            $CategoryParent = "";
          }
       }
    }
    else if ($CategoryId == 0) // Insert
    {
-      $CategoryName = $_GET["CategoryName"];
-      $FilePath = $_GET["FilePath"];
-      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
-      $ParentId = $_GET["ParentId"];
-      $str_query1 = "Insert into Categories (CategoryName,FilePath,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
-                  . " VALUES('$CategoryName','$FilePath',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
+      $CategoryName = $_POST["CategoryName"];
+      $FilePath = $_POST["FilePath"];
+      $PAList = $_POST["PAList"] == "" ? "All":$_POST["PAList"];
+      $ProductList = $_POST["ProductList"] == ""?"All":$_POST["ProductList"];
+      $ParentId = $_POST["ParentId"];
+      $CategoryPath = $_POST["CategoryParent"];
+      $str_query1 = "Insert into Categories (CategoryName,FilePath,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status,CategoryPath)" 
+                  . " VALUES('$CategoryName','$FilePath',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1,$CategoryPath)" ;
       if(mysqli_query($link, $str_query1))
       {
 		 $str_id = (string)mysqli_insert_id($link);
@@ -243,13 +246,15 @@
    }
    else // Update
    {
-      $CategoryName = $_GET["CategoryName"];
-      $FilePath = $_GET["FilePath"] . "/" . $CategoryId;
-      $ParentId = $_GET["ParentId"];
-      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
+      $CategoryName = $_POST["CategoryName"];
+      $FilePath = $_POST["FilePath"] . "/" . $CategoryId;
+      $ParentId = $_POST["ParentId"];
+      $PAList = $_POST["PAList"] == "" ? "All":$_GET["PAList"];
+      $ProductList = $_POST["ProductList"] == ""?"All":$_GET["ProductList"];
+      $CategoryPath = $_POST["CategoryParent"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Categories set CategoryName='$CategoryName', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where CategoryId=$CategoryId";
+      $str_query1 = "Update Categories set CategoryName='$CategoryName', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, ";
+      $str_query1 = $str_query1 . "EditTime=now(), CategoryPath='$CategoryPath' where CategoryId=$CategoryId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -290,6 +295,35 @@
 <!-- BEG_ORISBOT_NOINDEX -->
 <!-- Billy 2012/2/3 -->
 <Script Language=JavaScript>
+$(function(){
+   $("#tt").tree({
+      onClick: function(node){
+         //alert(node.text);
+         var categoryparent = categoryPath(node);
+         document.getElementsByName("CategoryParent")[0].value = categoryparent;
+      }
+   });
+});
+function categoryPath(node){
+   var parent = node;
+   // alert(parent.text);
+   var tree = $('#tt');
+   var path = new Array();
+   do{
+      path.unshift(parent.text);
+      var parent = tree.tree('getParent', parent.target);
+   }while(parent);
+
+   var pathStr = '';
+   for(var i = 0; i < path.length; i++){
+      pathStr += path[i];
+      if(i < path.length -1){
+         pathStr += "/";
+      }
+   }
+
+   return pathStr;
+}
 function lockFunction(obj, n)
 {
    if (g_defaultExtremeType[n] == 1)
@@ -351,7 +385,7 @@ function loaded()
       }
    }
    window.setTimeout("expandTo()",2000);
-   window.setTimeout("expandToDept()", 2000);
+   // window.setTimeout("expandToDept()", 2000);
 }
 //***Step23 PAList and ProductList begin
 function PAListStr(){
@@ -389,6 +423,7 @@ function modifyCategoriesContent(CategoryId)
    CategoryName = document.getElementsByName("CategoryNameModify")[0].value.trim();
    ParentId = getSelectedId();
    FilePath = getSelectedFilePath();
+   CategoryParent = document.getElementsByName("CategoryParent")[0].value;
    //alert(DeptList);
    
    if (CategoryName.length == 0)
@@ -403,9 +438,10 @@ function modifyCategoriesContent(CategoryId)
       return;
    }
    
-   str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
-         "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
-         "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath);
+   // str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
+         // "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
+         // "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath);
+   str = "cmd=write&CategoryId=" + CategoryId;
    url_str = "../Category/Categories_modify.php?";
 
    //alert(url_str + str);
@@ -416,12 +452,22 @@ function modifyCategoriesContent(CategoryId)
       {
          //alert(str);
       },
-      type: "GET",
+      type: "POST",
       url: url_str + str,
+      data:{
+         CategoryName:CategoryName,
+         ProductList:ProductList,
+         PAList:PAList,
+         ParentId:ParentId,
+         FilePath:FilePath,
+         CategoryParent:CategoryParent,
+      },
       cache: false,
+      dataType: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
+         res = String(res);
          if (res.match(/^-\d+$/))  //failed
          {
             alert(MSG_OPEN_CONTENT_ERROR);
@@ -445,6 +491,7 @@ function modifyCategoriesContent(CategoryId)
 <div id="header">
    <form name=logoutform action=logout.php>
    </form>
+   <input type="hidden" name="CategoryParent" value="<?php echo $CategoryParent;?>" />
    <span class="global">使用者 : <?php echo $login_name ?>
       <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
    </span>

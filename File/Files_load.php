@@ -245,7 +245,7 @@
    //***Step16 页面搜索SQl语句 起始               
    $str_query1 = "
       select F.FileId as FileId, F.FileTitle as FileTitle, F.FileDesc as FileDesc, C.CategoryId as CategoryId, 
-             C.CategoryName as CategoryName, F.Status as Status, F.EditTime as EditTime
+             C.CategoryName as CategoryName, F.Status as Status, F.EditTime as EditTime, F.CategoryPath as CategoryPath
       from Files F, Categories C where C.CategoryId=F.CategoryId AND F.status";
 
    if ($statusCheckbox == 1)
@@ -331,6 +331,7 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"FileAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -340,10 +341,11 @@
                                          . "<th>所属分类</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
+                                         . "<th>文件所属分类</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"7\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -370,6 +372,7 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
+                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"FileAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -379,6 +382,7 @@
                                          . "<th>所属分类</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
+                                         . "<th>文件所属分类</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -395,6 +399,7 @@
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
                $EditTime = $row["EditTime"];
                $page_count_display = $page_count + 1;
+               $CategoryPath = $row["CategoryPath"];
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
@@ -403,6 +408,7 @@
                   . "<td>$CategoryName</td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$EditTime</td>"
+                  . "<td>$CategoryPath</td>"
                   . "<td><A OnClick=\"actionSearchFiles($FileId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchFiles($FileId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchFiles($FileId);\">删除</A></td>"

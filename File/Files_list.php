@@ -191,6 +191,7 @@ function occurTimeDatePicker()
                   <col class="CategoryName" />
                   <col class="Status" />
                   <col class="EditTime" />
+                  <col class="CategoryPath" />
                   <col class="FileAction" />
                </colgroup>
                <tr>
@@ -200,10 +201,11 @@ function occurTimeDatePicker()
                   <th>所属分类</th>
                   <th>状态</th>
                   <th>最后修改时间</th>
+                  <th>文件所属分类</th>
                   <th>动作</th>
                </tr>
                <tr>
-                  <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="8" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
             <div class="toolMenu">
