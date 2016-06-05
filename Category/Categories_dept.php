@@ -304,7 +304,7 @@ function modifyCategoriesContent(CategoryId)
                <a id=displayExpandToDeptButton href="#" class="easyui-linkbutton" onclick="expandToDept()">显示当前所属部门</a>
             </div>
             <div class="easyui-panel" style="padding:5px">
-               <ul id="depttree" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true,checkbox:true"></ul>
+               <ul id="depttree" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true,checkbox:false"></ul>
             </div>
             <script type="text/javascript">
                function expandToDept(){

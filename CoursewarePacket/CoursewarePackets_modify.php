@@ -362,7 +362,7 @@
          });
          function cnm()
          {
-            alert("OK");
+            //alert("OK");
             var num = $("div[class='brick small']").length;
             var cnm = "";
             for(var i = 0; i<num; i++)
@@ -376,7 +376,7 @@
                   }
                });
             }
-            alert(cnm);
+            //alert(cnm);
             $("input[name='CoursewareNameModify']").val(cnm);
          }
          function lockFunction(obj, n)
