@@ -31,5 +31,6 @@ curl_setopt($ch, CURLOPT_URL, 'http://192.168.186.134/phptest/api/FileUpload_Api
 $info = curl_exec($ch);
 curl_close($ch);
 print_r($info);
-
+sleep(30)
+unlink($filename)
 ?>

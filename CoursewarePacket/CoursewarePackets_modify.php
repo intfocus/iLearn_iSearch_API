@@ -1,4 +1,3 @@
-
 <?php
 
    define("FILE_NAME", "../DB.conf");
