@@ -199,7 +199,7 @@
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
-   $str_query1 = "select te.TrainingId, te.UserId, te.RegisterDate, te.Status, ti.TrainingName, ti.ApproreLevel, u.UserName, u.EmployeeId, ti.SpeakerName 
+   $str_query1 = "select te.TrainingId, te.UserId, te.RegisterDate, te.Status, ti.TrainingName, ti.TrainingMemo, ti.ApproreLevel, u.UserName, u.EmployeeId, ti.SpeakerName 
 from trainees as te left join trainings as ti on te.TrainingId = ti.TrainingId
 left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser like '%,$user_id,%' and te.Status <> ti.ApproreLevel";
    
@@ -214,8 +214,8 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
    
    //***Step16 页面搜索SQl语句 结束
    
-   // echo $str_query1;
-   // return;
+   //echo $str_query1;
+   //return;
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
@@ -252,6 +252,7 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
       }
       //***Step7 function name ==> expandSearchTraineesContentFunc
       $return_string = $return_string . "</span>"
+                       . "<span class=\"btn TrainingLogsexpandSR\" OnClick=\"expandSearchTraineeExaminesContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -264,6 +265,7 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
                                          . "<col class=\"TraineeName\" />"
+                                         . "<col class=\"TrainingMemo\" />"
                                          . "<col class=\"SpeakerName\" />"
                                          . "<col class=\"UserName\" />"
                                          . "<col class=\"EmployeeId\" />"
@@ -273,14 +275,15 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
                                          . "<tr>"
                                          . "<th>编号</th>"
                                          . "<th>课程名称</th>"
-                                         . "<th>讲师名称</th>"
-                                         . "<th>学员名称</th>"
+                                         . "<th>课程简介</th>"
+                                         . "<th>讲师</th>"
+                                         . "<th>学员姓名</th>"
                                          . "<th>学员编号</th>"
                                          . "<th>报名时间</th>"
-                                         . "<th>动作</th>"
+                                         . "<th>操作</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"7\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -303,20 +306,22 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
                                          . "<col class=\"TraineeName\" />"
+                                         . "<col class=\"TrainingMemo\" />"
                                          . "<col class=\"SpeakerName\" />"
                                          . "<col class=\"UserName\" />"
                                          . "<col class=\"EmployeeId\" />"
                                          . "<col class=\"RegisterDate\" />"
-                                         . "<col class=\"Status\"/>"
+                                         . "<col class=\"Status\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
                                          . "<th>课程名称</th>"
-                                         . "<th>讲师名称</th>"
-                                         . "<th>学员名称</th>"
+                                         . "<th>课程简介</th>"
+                                         . "<th>讲师</th>"
+                                         . "<th>学员姓名</th>"
                                          . "<th>学员编号</th>"
                                          . "<th>报名时间</th>"
-                                         . "<th>动作</th>"
+                                         . "<th>操作</th>"
                                          . "</tr>";
             }
             if ($page_count < $page_size)
@@ -324,6 +329,7 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
                $row = mysqli_fetch_assoc($result);
                $TrainingId = $row["TrainingId"];
                $TrainingName = $row["TrainingName"];
+               $TrainingMemo = $row["TrainingMemo"];
                $SpeakerName = $row["SpeakerName"];
                $UserName = $row["UserName"];
                $UserId = $row["UserId"];
@@ -335,8 +341,9 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"TraineeName breakAll\">$TrainingName</span></td>"
-                  . "<td><span class=\"SpeakerName breakAll\">$SpeakerName</span></td>"
+                  . "<td><span class=\"TraineeName fixWidth\">$TrainingName</span></td>"
+                  . "<td><span class=\"TrainingMemo fixWidth\">$TrainingMemo</span></td>"
+                  . "<td><span class=\"SpeakerName fixWidth\">$SpeakerName</span></td>"
                   . "<td><span class=\"UserName breakAll\">$UserName</span></td>"
                   . "<td><span class=\"EmployeeId breakAll\">$EmployeeId</span></td>"
                   . "<td><span class=\"RegisterDate breakAll\">$RegisterDate</span></td>"
@@ -379,7 +386,8 @@ left join users as u on te.UserId = u.UserId where te.Status >=0 and ExamineUser
          }
       }
       $return_string = $return_string . "</span>"
-                                      . "</div>";
+                       . "<span class=\"btn TrainingLogsexpandSR\" OnClick=\"expandSearchTraineeExaminesContentFunc();\">显示过长内容</span>"
+                       . "</div>";
       echo $return_string;
       mysqli_free_result($result);
       mysqli_close($link);

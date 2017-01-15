@@ -95,7 +95,7 @@
       $Name = $row["QuestionName"];
       $Desc = $row["QuestionDesc"];
       $STime = date("Y/m/d H:i:s",strtotime($row["StartTime"]));
-      $ETime = date("Y/m/d H:i:s",strtotime($row["EndTime"]));
+      $ETime = date("Y/m/d H:i:s",strtotime($row["EndTime"]) + "86399");
       $TId = (int)$row["QuestionTemplateId"];
       $TName = $row["QuestionTemplateName"];
       $TDesc = $row["QuestionTemplateDesc"];

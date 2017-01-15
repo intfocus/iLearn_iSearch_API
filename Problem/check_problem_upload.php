@@ -354,7 +354,7 @@ function is_problem_exist($problem)
       die(MSG_ERR_CONNECT_TO_DATABASE);
    }
    
-   $str_query = "Select * from problems where Status <> -1 and ProblemDesc='$problem->desc' AND ProblemMemo='$problem->memo'";
+   $str_query = "Select * from problems where Status <> -1 and ProblemDesc='$problem->desc' and ProblemType='$problem->type' AND ProblemMemo='$problem->memo'";
    if ($result = mysqli_query($link, $str_query))
    {
       $row_number = mysqli_num_rows($result);
@@ -452,6 +452,7 @@ EOD;
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
@@ -465,6 +466,15 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -480,17 +490,35 @@ function loaded() {
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+    </div>
+    <div class="navbar-collapse collapse" role="navigation">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown text-center">
+                	
+							   <form name="logoutform" action="logout.php">
+							   </form>
+			<a class="dropdown-toggle" href="#" aria-expanded="false">
+				<i class="fa fa-user"></i>
+				<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+			</a>
+			<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+				<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+			</ul>-->
+		</li>
+		</ul>
+    </div>
+  </div>
 </div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>上传题目</span><span class="bArrow"></span></span>
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active">上传题目</li>
+</ol>
 </div>
 <div id="content">
 <?
@@ -498,7 +526,7 @@ function loaded() {
    {
       if(count($file_status->errors) > 0)
       {
-         echo "<script>alert('题目新增成功，有部门题目需要修改。请记录行号手动修改！');</script>";
+         echo "<script>alert('题目新增成功，有部分题目需要修改。请记录行号手动修改！');</script>";
       }
       else
       {
@@ -508,22 +536,6 @@ function loaded() {
 ?>
 <?if ($file_status->status != SUCCESS)
    {?>
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <form enctype="multipart/form-data" action="check_problem_upload.php" method="POST" enctype="multipart/form-data">
-      
-      <tr>
-         <th>选取上传文档：</th>
-         <td>
-            <Input type=file size=50 name="fileToUpload" />
-         </td>
-      </tr>
-      <tr>
-         <th colspan="2" class="submitBtns">
-               <input type="submit" value="上传文档" name="submit">
-         </th>
-      </tr>      
-      </Form>
-   </table>
    <div class="problem_info, error_info">
       <h1>题目</h1>
       <table class="problems_table">

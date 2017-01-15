@@ -148,7 +148,7 @@
    
    //----- query -----
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
-   if ($cmd == "read") // Load
+   if ($cmd == "read") // Load,
    {
       $str_query1 = "Select * from Users where UserId=$UserId";
       if($result = mysqli_query($link, $str_query1))
@@ -161,17 +161,22 @@
             $UserId = $row["UserId"];
             $UserName = $row["UserName"];
             $EmployeeId = $row["EmployeeId"];
-            $WinId = $row["UserWId"];
+			$WinId = $row["UserWId"];
             $UserEmail = $row["Email"];
             $DeptId = $row["DeptId"];
             $CanApprove = $row["CanApprove"];
-            $UserSuper = $row["UserSuper"];
             $JobGrade = $row["JobGrade"];
+			$UserSuper = $row["UserSuper"];
             $Status = $row["Status"];
             $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
-            $CheckInTime = $row["CheckInTime"] == null ? '' : date("Y/m/d",strtotime($row["CheckInTime"]));
+			$CheckInTime =  $row["CheckInTime"] == null ? '' : date("Y/m/d",strtotime($row["CheckInTime"]));
+            $UserArea = $row["UserArea"];
+            $UserPosition = $row["UserPosition"];
+            $UserParent = $row["UserParent"];
+			$UserParentId = $row["UserParentId"];
+			$UserProduct = $row["UserProduct"];
             $TitleStr = "用户修改";
             if ($Status == 1)
                $TitleStr = "用户查看 (上架状态无法修改)";
@@ -181,36 +186,48 @@
             $UserId = 0;
             $UserName = "";
             $EmployeeId = "";
-            $WinId = "";
+			$WinId = "";
             $UserEmail = "";
             $DeptId = 1;
             $CanApprove = 0;
+			$UserSuper = "";
             $JobGrade = "";
-            $UserSuper = ""; 
             $TitleStr = "用户新增";
             $Status = 0;
-            $CheckInTime = "";
+			$CheckInTime = "";
+            $UserArea = "";
+            $UserPosition = "";
+            $UserParent = "";
+			$UserParentId = "";
+			$UserProduct = "";
          }
       }
    }
    else if ($UserId == 0) // Insert
    {
-      $UserName = $_GET["UserName"];
-      $EmployeeId = $_GET["EmployeeId"];
-      $WinId = $_GET["WinId"];
-      $UserEmail = $_GET["UserEmail"];
-      $CanApprove = $_GET["CanApprove"];
-      $DeptId = $_GET["DeptId"];
-      $UserSuper = $_GET["UserSuper"];
-      $CheckInTime = $_GET["CheckInTime"];
+      $UserName = $_POST["UserName"];
+      $EmployeeId = $_POST["EmployeeId"];
+	  $WinId = $_POST["WinId"];
+      $UserEmail = $_POST["UserEmail"];
+      $CanApprove = $_POST["CanApprove"];
+	  $UserSuper = $_POST["UserSuper"];
+      $DeptId = $_POST["DeptId"];
+	  $CheckInTime = "'" . $_POST["CheckInTime"] . "'";
+	  if($CheckInTime == "''")
+		 $CheckInTime = "NULL";
+      $UserArea = $_POST["UserArea"];
+      $UserPosition = $_POST["UserPosition"];
+      $UserParent = $_POST["UserParent"];
+	  $UserParentId = $_POST["UserParentId"];
+	  $UserProduct = $_POST["UserProduct"];
       $JobGrade = 1;
       if (check_email($UserEmail) != SUCCESS)
       {
          echo "-- Email 格式错误 -- $UserEmail";
          return;
       }
-      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,UserWId,CreatedUser,CreatedTime,EditUser,EditTime,Status,UserSuper,CheckInTime)" 
-                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,'$WinId',$user_id,now(),$user_id,now(),1,$UserSuper,'$CheckInTime')" ;
+      $str_query1 = "Insert into Users (UserName,EmployeeId,Email,DeptId,CanApprove,JobGrade,UserWId,CreatedUser,CreatedTime,EditUser,EditTime,Status,UserSuper,CheckInTime,UserArea,UserPosition,UserParent,UserParentId,UserProduct)" 
+                  . " VALUES('$UserName','$EmployeeId','$UserEmail',$DeptId,$CanApprove,$JobGrade,'$WinId',$user_id,now(),$user_id,now(),1,$UserSuper,$CheckInTime,'$UserArea','$UserPosition','$UserParent','$UserParentId','$UserProduct')" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -224,14 +241,22 @@
    }
    else // Update
    {
-      $UserName = $_GET["UserName"];
-      $EmployeeId = $_GET["EmployeeId"];
-      $WinId = $_GET["WinId"];
-      $UserEmail = $_GET["UserEmail"];
-      $UserSuper = $_GET["UserSuper"];
-      $CanApprove = $_GET["CanApprove"];
-      $DeptId = $_GET["DeptId"];
-      $CheckInTime = $_GET["CheckInTime"];
+      $UserName = $_POST["UserName"];
+      $EmployeeId = $_POST["EmployeeId"];
+	  $WinId = $_POST["WinId"];
+      $UserEmail = $_POST["UserEmail"];
+      $CanApprove = $_POST["CanApprove"];
+	  $UserSuper = $_POST["UserSuper"];
+      $DeptId = $_POST["DeptId"];
+	  //$CheckInTime = $_GET["CheckInTime"];
+	  $CheckInTime = "'" . $_POST["CheckInTime"] . "'";
+	  if($CheckInTime == "''")
+		 $CheckInTime = "NULL";
+      $UserArea = $_POST["UserArea"];
+      $UserPosition = $_POST["UserPosition"];
+      $UserParent = $_POST["UserParent"];
+	  $UserParentId = $_POST["UserParentId"];
+	  $UserProduct = $_POST["UserProduct"];
       $JobGrade = 1;
       if (check_email($UserEmail) != SUCCESS)
       {
@@ -239,9 +264,7 @@
          return;
       }
       //TODO EditUser=UserId
-      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', UserWId='$WinId', CheckInTime = '$CheckInTime'
-         Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now(), UserSuper=$UserSuper 
-         where UserId=$UserId";
+      $str_query1 = "Update Users set UserName='$UserName', EmployeeId='$EmployeeId', UserWId='$WinId', CheckInTime = $CheckInTime,  Email='$UserEmail', DeptId=$DeptId, CanApprove=$CanApprove, JobGrade=$JobGrade, EditTime=now(), UserSuper = $UserSuper,UserArea='$UserArea',UserPosition='$UserPosition',UserParent='$UserParent',UserParentId='$UserParentId',UserProduct='$UserProduct' where UserId=$UserId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -270,10 +293,19 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+
+
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
@@ -294,6 +326,7 @@ function click_logout()  //log out
 
 function loaded()
 {
+   $('#tt').tree('collapseAll');
    window.setTimeout("expandTo()",1000);
 }
 //***Step12 修改页面点击保存按钮出发Ajax动作
@@ -304,6 +337,11 @@ function modifyUsersContent(UserId)
    WinId = document.getElementsByName("WinId")[0].value.trim();
    UserEmail = document.getElementsByName("UserEmailModify")[0].value.trim();
    CheckInTime = document.getElementsByName("CheckInTimeModify")[0].value.trim();
+   UserArea = document.getElementsByName("UserArea")[0].value.trim();
+   UserPosition = document.getElementsByName("UserPosition")[0].value.trim();
+   UserParent = document.getElementsByName("UserParent")[0].value.trim();
+   UserParentId = document.getElementsByName("UserParentId")[0].value.trim();
+   UserProduct = document.getElementsByName("UserProduct")[0].value.trim();
    DeptId = getSelectedId();
    
    var searchUsersRadio = 0;
@@ -318,15 +356,9 @@ function modifyUsersContent(UserId)
       searchUserSupersRadio = 1; 
    }
    
-   if (UserName.length == 0 || EmployeeId.length == 0 || UserEmail.length == 0 || WinId.length == 0)
+   if (UserName.length == 0 || EmployeeId.length == 0 || UserEmail.length == 0)
    {
-      alert("用户名称，工号，用户WinId，及用户邮箱不可为空白");
-      return;
-   }
-   
-   if (UserName.length > 100 || EmployeeId.length > 100 || UserEmail.length > 100 || WinId.length > 100)
-   {
-      alert("用户名称，工号，用户WinId，及用户邮箱长度过长！请缩短后重新保存。");
+      alert("用户名称，工号，及用户邮箱不可为空白");
       return;
    }
    
@@ -344,12 +376,8 @@ function modifyUsersContent(UserId)
          return;
       }
    }
-   
-   str = "cmd=write&UserId=" + UserId + "&UserName=" + encodeURIComponent(UserName) + 
-         "&EmployeeId=" + encodeURIComponent(EmployeeId) +
-         "&WinId=" + encodeURIComponent(WinId) +
-         "&UserSuper=" + searchUserSupersRadio + "&CheckInTime=" + encodeURIComponent(CheckInTime) + 
-         "&UserEmail=" + encodeURIComponent(UserEmail) + "&CanApprove=" + searchUsersRadio + "&DeptId=" + DeptId;
+  
+   str = "cmd=write&UserId=" + UserId;
    url_str = "../User/Users_modify.php?";
 
    //alert(url_str + str);
@@ -359,12 +387,29 @@ function modifyUsersContent(UserId)
       {
          //alert(str);
       },
-      type: "GET",
+      type: "POST",
       url: url_str + str,
+	  data:{
+         UserName:UserName,
+         EmployeeId:EmployeeId,
+         WinId:WinId,
+         UserSuper:searchUserSupersRadio,
+		 CheckInTime:CheckInTime,
+		 UserArea:UserArea,
+		 UserPosition:UserPosition,
+		 UserParent:UserParent,
+		 UserEmail:UserEmail,
+		 CanApprove:searchUsersRadio,
+		 DeptId:DeptId,
+		 UserParentId:UserParentId,
+		 UserProduct:UserProduct
+      },
       cache: false,
+	  dataType: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
+		 res = String(res);
          if (res.match(/^-/))  //failed
          {
             alert("用户新增/修改失败 " + res);
@@ -384,61 +429,142 @@ function modifyUsersContent(UserId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+<body Onload="loaded();" style="padding-top: 62px !important; background: rgb(255, 255, 255);">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>用户名称：</th>
-         <td><Input type=text name=UserNameModify size=50 value="<?php echo $UserName;?>"></td>
-      </tr>
-      <tr>
-         <th>工号：</th>
-         <td><Input type=text name=EmployeeId size=50 value="<?php echo $EmployeeId;?>"></td>
-      </tr>
-      <tr>
-         <th>用户WinID：</th>
-         <td><Input type=text name=WinId size=50 value="<?php echo $WinId;?>"></td>
-      </tr>
-      <tr>
-         <th>用户邮箱：</th>
-         <td><Input type=text name=UserEmailModify size=50 value="<?php echo $UserEmail;?>"></td>
-      </tr>
-      <tr>
-         <th>是否为审批者 ：</th>
-         <td>
-            <input id="searchUsersRadio1" name="CanA" type="radio" value="" <?php if ($CanApprove==1) echo "checked"; ?> />是&nbsp;
-            <input id="searchUsersRadio2" name="CanA" type="radio" value="" <?php if ($CanApprove==0) echo "checked"; ?> />否               
-         </td>
-      </tr>
-      <tr>
-         <th>是否为超级管理者 ：</th>
-         <td>
-            <input id="searchUserSupersRadio1" name="USuper" type="radio" value="" <?php if ($UserSuper==1) echo "checked"; ?> />是&nbsp;
-            <input id="searchUserSupersRadio2" name="USuper" type="radio" value="" <?php if ($UserSuper==0) echo "checked"; ?> />否               
-         </td>
-      </tr>
-      <tr>
-         <th>员工入职日期：</th>
-         <td>
-            <input id="from0" type="text" name="CheckInTimeModify" class="from" readonly="true" value="<?php echo $CheckInTime;?>"/>
-         </td>
-      </tr>
-      <tr>
-         <th>选择部门：</th>
-         <td>
-	<div style="margin:20px 0;">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">用户名称：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  name="UserNameModify" size=50 value="<?php echo $UserName;?>" type="text">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">工号：</label>
+		<div class="col-lg-7">
+			<Input class=" form-control" type=text name=EmployeeId size=50 value="<?php echo $EmployeeId;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">用户WinID：</label>
+		<div class="col-lg-7">
+			<Input class=" form-control" type=text name=WinId size=50 value="<?php echo $WinId;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">用户邮箱：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserEmailModify size=50 value="<?php echo $UserEmail;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">区域：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserArea size=50 value="<?php echo $UserArea;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">岗位：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserPosition size=50 value="<?php echo $UserPosition;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">产品：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserProduct size=50 value="<?php echo $UserProduct;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">上级主管：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserParent size=50 value="<?php echo $UserParent;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">上级工号：</label>
+		<div class="col-lg-7">
+			<Input class="form-control" type=text name=UserParentId size=50 value="<?php echo $UserParentId;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">员工入职日期：</label>
+		<div class="col-lg-7">
+			<input class="form-control date form_datetime" id="from0" type="text" name="CheckInTimeModify" value="<?php echo $CheckInTime;?>"/>
+			
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">是否为审批者 ：</label>
+		<div class="col-lg-7">
+			<div class="radio-inline">
+				<label class="cr-styled" for="searchUsersRadio1">
+					<input type="radio" id="searchUsersRadio1" name="CanA" value="option1" <?php if ($CanApprove==1) echo "checked"; ?>> 
+					<i class="fa"></i>
+					是
+				</label>
+			</div>
+			<div class="radio-inline">
+				<label class="cr-styled" for="searchUsersRadio2">
+					<input type="radio" id="searchUsersRadio2" name="CanA" value="option1" <?php if ($CanApprove==0) echo "checked"; ?>> 
+					<i class="fa"></i>
+					否
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">是否为超级管理者 ：</label>
+		<div class="col-lg-7">
+			<div class="radio-inline">
+				<label class="cr-styled" for="searchUserSupersRadio1">
+					<input type="radio" id="searchUserSupersRadio1" name="USuper" value="option1" <?php if ($UserSuper==1) echo "checked"; ?>> 
+					<i class="fa"></i>
+					是
+				</label>
+			</div>
+			<div class="radio-inline">
+				<label class="cr-styled" for="searchUserSupersRadio2">
+					<input type="radio" id="searchUserSupersRadio2" name="USuper" value="option1" <?php if ($UserSuper==0) echo "checked"; ?>> 
+					<i class="fa"></i>
+					否
+				</label>
+			</div>
+		
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">选择部门：</label>
+		<div class="col-lg-7">
+			
+	<div>
 		<a id=displayExpandToButton href="#" class="easyui-linkbutton" onclick="expandTo()">显示当前所属部门</a>
 	</div>
 	<div class="easyui-panel" style="padding:5px">
@@ -454,8 +580,8 @@ function modifyUsersContent(UserId)
 		function expandTo(){
 			var node = $('#tt').tree('find',<?php echo $DeptId; ?>);
 			$('#tt').tree('expandTo', node.target).tree('select', node.target);
-         $('#displayExpandToButton').hide();
-         $('#tt').tree('collapseAll');
+			$('#displayExpandToButton').hide();
+			$('#tt').tree('collapseAll');
 		}
 		function getSelected(){
 			var node = $('#tt').tree('getSelected');
@@ -477,21 +603,27 @@ function modifyUsersContent(UserId)
             return 0;
 		}
 	</script>         
-         </td>
-      </tr>
-<?php
+ 
+		</div>
+	</div>
+	<?php
    if ($Status != 1)
    {
-?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent(<?php echo $UserId;?>)"></a>
-         </th>
-      </tr>      
+?>         
+	  <div class="form-group">
+		<label class="control-label col-lg-2">　</label>
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent(<?php echo $UserId;?>)">
+		</div>
+	</div>
 <?php
    }
-?>   
-   </table>
+?>  
+	
+</form>
+
+</div>
+
 </div>
 </body>
 </html>

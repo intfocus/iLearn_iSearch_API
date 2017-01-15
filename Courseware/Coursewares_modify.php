@@ -92,7 +92,7 @@
       public $createdTime;
    }
    
-   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1";
+   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1 and Status=1";
    if($rs = mysqli_query($link, $str_functionsyz)){
       while($row = mysqli_fetch_assoc($rs)){
          $syz = new StuFunction();
@@ -103,7 +103,7 @@
       }
    }
    
-   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2";
+   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2 and Status=1";
    if($rs = mysqli_query($link, $str_functioncpmc)){
       while($row = mysqli_fetch_assoc($rs)){
          $cpmc = new StuFunction();
@@ -264,9 +264,16 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -464,22 +471,42 @@ function modifyCoursewaresContent(CoursewareId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+<!--<div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+</div>-->
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <form enctype="multipart/form-data" name="uploadCoursewareForm" action="../Courseware/Coursewares_upload.php" method="POST">
+      <form class="cmxform form-horizontal tasi-form searchField" enctype="multipart/form-data" name="uploadCoursewareForm" action="../Courseware/Coursewares_upload.php" method="POST">
          <Input type="hidden" name="CoursewareId" value="0" />
          <Input type="hidden" name="cmd" value="uploadCourseware" />
          <Input type="hidden" name="PAListValue" value="" />
@@ -488,10 +515,13 @@ function modifyCoursewaresContent(CoursewareId)
    if ($CoursewareId > 0)
    {
 ?>   
-      <tr>
-         <th>上传文件名称：</th>
-         <td><Input type=text size=50 readonly="true" value="<?php echo $CoursewareFile;?>"></td>
-      </tr>
+      
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">上传文件名称：</label>
+		<div class="col-lg-7">
+			<Input type=text size=50 readonly="true" value="<?php echo $CoursewareFile;?>">
+		</div>
+	</div>
 <?php
    }
    else
@@ -499,52 +529,69 @@ function modifyCoursewaresContent(CoursewareId)
       echo "<Input type=hidden name=CoursewareFile>";
    }
 ?>
-      <tr>
-         <th>课件名称：</th>
-         <td><Input type=text name="CoursewareNameModify" size=50 value="<?php echo $CoursewareName;?>"></td>
-      </tr>
-      <tr>
-         <th>适应症：</th>
-         <td>
+      
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">课件名称：</label>
+		<div class="col-lg-7">
+			<Input type=text class=" form-control" name="CoursewareNameModify" size=50 value="<?php echo $CoursewareName;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">适应症：</label>
+		<div class="col-lg-7">
+			
 <?php
 for($i=0; $i<count($datasyz); $i++)
 {
    $syz = $datasyz[$i];
 ?>
-           <input type="checkbox" value="<?php echo $syz->functionId ?>" name="palist"/><?php echo $syz->functionName ?>
+			<label class="cr-styled">
+				<input  value="<?php echo $syz->functionId ?>" type="checkbox"  name="palist">
+				<i class="fa"></i> 
+				<?php echo $syz->functionName ?>
+			</label>
 <?php
 }
 ?>
-         </td>
-      </tr>
-      <tr>
-         <th>产品名称：</th>
-         <td>
+
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">产品名称：</label>
+		<div class="col-lg-7">
+			
 <?php
 for($i=0; $i<count($datacpmc); $i++)
 {
    $cpmc = $datacpmc[$i];
 ?>
-           <input type="checkbox" value="<?php echo $cpmc->functionId ?>" name="productlist"/><?php echo $cpmc->functionName ?>
+           
+			<label class="cr-styled">
+				<input  value="<?php echo $cpmc->functionId ?>" type="checkbox"  name="productlist">
+				<i class="fa"></i> 
+				<?php echo $cpmc->functionName ?>
+			</label>
 <?php
 }
 ?>
-         </td>
-      </tr>
-      <tr>
-         <th>课件备注：</th>
-         <td><Textarea name="CoursewareDescModify" rows=30 cols=100><?php echo $CoursewareDesc;?></Textarea></td>
-      </tr>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">课件备注：</label>
+		<div class="col-lg-7">
+			<Textarea name="CoursewareDescModify" class=" form-control" rows=30 cols=100><?php echo $CoursewareDesc;?></Textarea>
+		</div>
+	</div>
 <?php
    if ($CoursewareId == 0)
    {
 ?>
-      <tr>
-         <th>选取上传课件：</th>
-         <td>
-            <Input type="File" size=50 name="CoursewarePathModify" onchange="checkCoursewareTypeModify();"/>
-         </td>
-      </tr>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">选取上传课件：</label>
+		<div class="col-lg-7">
+			<Input type="File" class=" form-control" size=50 name="CoursewarePathModify" onchange="checkCoursewareTypeModify();"/>
+		</div>
+	</div>
 <?php
    }
 ?>      
@@ -552,18 +599,18 @@ for($i=0; $i<count($datacpmc); $i++)
    if ($Status != 1)
    {
 ?>       
-      <tr>
-         <th colspan="2" class="submitBtns">
-            <a class="btn_submit_new modifyCoursewaresContent">
-               <input id="FilePath" name="modifyCoursewaresButton" type="button" value="保存 <?php if ($CoursewareId > 0) echo "(只允许修改文档标题及文档说明)"; ?>" OnClick="modifyCoursewaresContent(<?php echo $CoursewareId;?>)">
-            </a>
-         </th>
-      </tr>      
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2"></label>
+		<div class="col-lg-7">
+			
+               <input id="FilePath" name="modifyCoursewaresButton" class="btn btn-success" type="button" value="保存 <?php if ($CoursewareId > 0) echo "(只允许修改文档标题及文档说明)"; ?>" OnClick="modifyCoursewaresContent(<?php echo $CoursewareId;?>)">  
+		</div>
+	</div>     
 <?php
    }
 ?>
       </Form>
-   </table>
+   </div>
 </div>
 </body>
 </html>

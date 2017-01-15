@@ -186,13 +186,20 @@
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -255,8 +262,8 @@ function modifyUsersContent()
 </Script>
 
 </head>
-<body Onload="loaded();">
-<div id="header">
+<body Onload="loaded();" style="padding-top: 62px !important; background: rgb(255, 255, 255);">
+<!--<div id="header">
    <form name=logoutform action=logout.php>
    </form>
    <span class="global">使用者 : <?php echo $login_name ?>
@@ -267,9 +274,52 @@ function modifyUsersContent()
 <div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span>批次删除用户</span><span class="bArrow"></span></span>
-</div>
+</div>-->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active">批次删除用户</li>
+</ol>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-10" style="text-align:left; margin-bottom:5px;">批次删除内容：(一行一笔数据，数据格式为 工号)：</label>
+		<div class="col-lg-7">
+			<textarea style="height:250px;" class="form-control " id="ccomment" name="delUsersBatchInput">工号1
+工号2</textarea>
+		</div>
+	</div>
+	 <div class="form-group">
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent()">
+		</div>
+	</div>
+</form>
+   <!--<table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
          <th>批次删除内容：(一行一笔数据，数据格式为 工号)</th>
       </tr>
@@ -284,7 +334,8 @@ function modifyUsersContent()
             <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent()"></a>
          </th>
       </tr>        
-   </table>
+   </table>-->
+</div>
 </div>
 </body>
 </html>

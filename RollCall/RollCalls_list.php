@@ -2,14 +2,14 @@
 //***Step5 expand search Result table
 function expandSearchRollCallsContentFunc()
 {
-   if ($('span.RollCallName, span.RollCallReason').hasClass('fixWidth'))
+   if ($('span.RollCallName, span.RollCallReason, span.CheckInName').hasClass('fixWidth'))
    {
-      $('span.RollCallName, span.RollCallReason').removeClass('fixWidth');
+      $('span.RollCallName, span.RollCallReason, span.CheckInName').removeClass('fixWidth');
       $('.RollCallsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.RollCallName, span.RollCallReason').addClass('fixWidth');
+      $('span.RollCallName, span.RollCallReason, span.CheckInName').addClass('fixWidth');
       $('.RollCallsexpandSR').text('显示过长内容');
    }
 }
@@ -172,7 +172,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchRollCalls"><input name="searchRollCallsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchRollCalls"><input name="searchRollCallsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>
@@ -189,24 +189,30 @@ function occurTimeDatePicker()
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
                   <col class="num" />
+				  <col class="CheckInName" />
                   <col class="TrainingName" />
                   <col class="UserName" />
                   <col class="IssueDate" />
-                  <col class="Status" />
+                  <col class="Statua" />
+				  <col class="Statub"/>
+				  <col class="Statuc"/>
                   <col class="CreatedUser" />
                   <col class="Reason" />
                </colgroup>
                <tr>
                   <th>编号</th>
+				  <th>签到名称</th>
                   <th>课程名称</th>
                   <th>用户名称</th>
                   <th>点名时间</th>
                   <th>到场状态</th>
+				  <th>是否迟到</th>
+				  <th>是否早退</th>
                   <th>发起点名用户</th>
                   <th>原因说明</th>
                </tr>
                <tr>
-                  <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="10" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
             <div class="toolMenu">

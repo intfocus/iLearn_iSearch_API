@@ -84,15 +84,15 @@
             echo DB_ERROR;
             return;
          }
-         
-         $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-               . " VALUES('$user_id','获取考试列表','考试',now(),'获取考试列表','获取考试列表')" ;
+		 
+		 $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+               . " VALUES('$user_id','获取考试列表','考试',now(),'获取考试列表','获取考试列表','iLearn')" ;
          mysqli_query($link, $str_log);
          
          // get active exam list related to this user
          // for each exam, get exam info, and added IsSubmit info
          //$str_query = "select * from examroll where UserId=$user_id AND Status=".ACTIVE;
-         $str_query = "select er.ExamId, er.UserId, er.IsSubmit, er.Status from examroll er left join examscore es on er.ExamId = es.ExamId and er.UserId = es.UserId where er.UserId=$user_id and es.ExamId is null AND er.Status=".ACTIVE;
+		 $str_query = "select er.ExamId, er.UserId, er.IsSubmit, er.Status from examroll er left join examscore es on er.ExamId = es.ExamId and er.UserId = es.UserId where er.UserId=$user_id and es.ExamId is null AND er.Status=".ACTIVE;
          if($result = mysqli_query($link, $str_query)){
             $row_number = mysqli_num_rows($result);
             for ($i=0; $i<$row_number; $i++)
@@ -507,7 +507,7 @@ EOD;
          die(MSG_ERR_CONNECT_TO_DATABASE);
       }
       
-      $str_query = "select * from exams where ExamId=$exam_id";
+      $str_query = "select * from exams where ExamId=$exam_id and ExamType <> 0";
       if($result=mysqli_query($link, $str_query))
       {
          $row = mysqli_fetch_assoc($result);

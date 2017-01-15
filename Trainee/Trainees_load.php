@@ -263,9 +263,9 @@
    $str_query1 = "select te.TrainingId, te.UserId, te.RegisterDate, te.Status, 
 ti.TrainingName, ti.SpeakerName, ti.TrainingBegin, ti.TrainingEnd, ti.StartDate, 
 ti.EndDate, ti.TrainingLocation, ti.TrainingMemo, ti.TrainingManager, ti.ApproreLevel, 
-u.UserName, u.EmployeeId, ti.ApproreLevel, te.ExamineUser 
+u.UserName, u.EmployeeId, te.ExamineUser 
 from trainees as te left join trainings as ti on te.TrainingId = ti.TrainingId 
-left join Users as u on te.UserId = u.UserId where 1=1";
+left join Users as u on te.UserId = u.UserId where 1=1 ";
 
    if ($searchTraineesStatus == 1)
    {
@@ -302,11 +302,12 @@ left join Users as u on te.UserId = u.UserId where 1=1";
       $str_query1 = $str_query1 . "AND te.RegisterDate >= '$searchTraineesfrom2' ";
    if ($searchTraineesto2 != '')
       $str_query1 = $str_query1 . "AND te.RegisterDate <= '$searchTraineesto2' ";
+   $str_query1 = $str_query1 . "ORDER BY RegisterDate DESC";
    
    //***Step16 页面搜索SQl语句 结束
    
-   // echo $str_query1;
-   // return;
+   //echo $str_query1;
+   //return;
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
@@ -361,9 +362,9 @@ left join Users as u on te.UserId = u.UserId where 1=1";
                                          . "<col class=\"EmployeeId\" />"
                                          . "<col class=\"TraineeDate\" />"
                                          . "<col class=\"RegisterDate\" />"
-                                         . "<col class=\"ExamineUser\" />"
+										 . "<col class=\"ExamineUser\" />"
                                          . "<col class=\"Status\" />"
-                                         . "<col class=\"TraineeStatus\" />"
+										 . "<col class=\"TraineeStatus\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -373,9 +374,9 @@ left join Users as u on te.UserId = u.UserId where 1=1";
                                          . "<th>学员编号</th>"
                                          . "<th>课程时间</th>"
                                          . "<th>报名时间</th>"
-                                         . "<th>审核人</th>"
+										 . "<th>审核人</th>"
                                          . "<th>用戶报名状态</th>"
-                                         . "<th>动作</th>"
+										 . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
                                          . "<td colspan=\"10\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
@@ -406,9 +407,9 @@ left join Users as u on te.UserId = u.UserId where 1=1";
                                          . "<col class=\"EmployeeId\" />"
                                          . "<col class=\"TraineeDate\" />"
                                          . "<col class=\"RegisterDate\" />"
-                                         . "<col class=\"ExamineUser\" />"
+										 . "<col class=\"ExamineUser\" />"
                                          . "<col class=\"Status\"/>"
-                                         . "<col class=\"TraineeStatus\" />"
+										 . "<col class=\"TraineeStatus\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -418,26 +419,26 @@ left join Users as u on te.UserId = u.UserId where 1=1";
                                          . "<th>学员编号</th>"
                                          . "<th>课程时间</th>"
                                          . "<th>报名时间</th>"
-                                         . "<th>审核人</th>"
+										 . "<th>审核人</th>"
                                          . "<th>用戶报名状态</th>"
-                                         . "<th>动作</th>"
+										 . "<th>动作</th>"
                                          . "</tr>";
             }
             if ($page_count < $page_size)
             {
                $row = mysqli_fetch_assoc($result);
-               $TrainingId = $row["TrainingId"];
-               $UserId = $row["UserId"];
+			   $TrainingId = $row["TrainingId"];
+			   $UserId = $row["UserId"];
                $TrainingName = $row["TrainingName"];
                $SpeakerName = $row["SpeakerName"];
                $UserName = $row["UserName"];
                $EmployeeId = $row["EmployeeId"];
                $TraineeDate = substr($row["TrainingBegin"],0,10) . " ~ " . substr($row["TrainingEnd"],0,10);
                $RegisterDate = date("Y-m-d H:i:s", strtotime($row["RegisterDate"]));
-               $ExamineUser = $row["ExamineUser"];
+			   $ExamineUser = $row["ExamineUser"];
                $Status = $row["Status"];
-               $ApproreLevel = $row["ApproreLevel"];
-               $strStatus = "";
+			   $ApproreLevel = $row["ApproreLevel"];
+			   $strStatus = "";
                if ($ApproreLevel == $Status)
                {
                   $strStatus = "通过审核";
@@ -453,15 +454,15 @@ left join Users as u on te.UserId = u.UserId where 1=1";
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"TraineeName\">$TrainingName</span></td>"
-                  . "<td><span class=\"SpeakerName\">$SpeakerName</span></td>"
+                  . "<td><span class=\"TraineeName fixWidth\">$TrainingName</span></td>"
+                  . "<td><span class=\"SpeakerName fixWidth\">$SpeakerName</span></td>"
                   . "<td>$UserName</td>"
                   . "<td>$EmployeeId</td>"
-                  . "<td><span class=\"ExamineUser\">$TraineeDate</span></td>"
-                  . "<td>$RegisterDate</td>"
-                  . "<td><span class=\"ExamineUser\">" . get_employ_id_from_usernames($ExamineUser) . "</span></td>"
+                  . "<td><span class=\"TraineeDate fixWidth\">$TraineeDate</span></td>"
+                  . "<td><span class=\"RegisterDate fixWidth\">$RegisterDate</span></td>"
+				  . "<td>" . get_employ_id_from_usernames($ExamineUser) . "</td>"
                   . "<td>$strStatus</td>"
-                  . "<td><A OnClick=\"actionSearchTrainee($TrainingId,$ApproreLevel,$UserId);\">审核 同意</A><br/>"
+				  . "<td><A OnClick=\"actionSearchTrainee($TrainingId,$ApproreLevel,$UserId);\">审核 同意</A><br/>"
                   . "<A OnClick=\"deleteSearchTrainee($TrainingId,$UserId);\">审核 驳回</A></td>"
                   . "</tr>";
 

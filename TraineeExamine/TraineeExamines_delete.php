@@ -127,6 +127,14 @@
          mysqli_close($link);
          return;
       }
+	  $str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
+        . " VALUES($UserId,'报名审核','审核驳回',now(),$user_id,$TrainingId)";
+      if(!mysqli_query($link, $str_traineelog))
+      {
+	     echo -__LINE__ . $str_traineelog;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

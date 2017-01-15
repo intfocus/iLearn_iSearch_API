@@ -1,15 +1,22 @@
 <?php
    //接收传送的数据
+   header('Content-Type:application/json;charset=utf-8');
    $logContent = file_get_contents("php://input");
    //$jsonResult = htmlspecialchars_decode($fileContent);
    $log = json_decode($logContent);
-   //echo var_dump($user->username);
    $userId = $log->UserId;
    $functionname = $log->FunctionName;
    $actionname = $log->ActionName;
    $actiontime = $log->ActionTime;
    $actionreturn = $log->ActionReturn;
    $actionobject = $log->ActionObject;
+   $appname = $log->AppName;
+   //$userId = $_POST["UserId"];
+   //$functionname = $_POST["FunctionName"];
+   //$actionname = $_POST["ActionName"];
+   //$actiontime = $_POST["ActionTime"];
+   //$actionreturn = $_POST["ActionReturn"];
+   //$actionobject = $_POST["ActionObject"];
    
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
@@ -25,7 +32,6 @@
       echo FILE_ERROR;
       return;
    }
-   $login_name = "Phantom";
 
    //query          
    $link;
@@ -61,18 +67,17 @@
       return;
    }
    
-   $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-               . " VALUES('$userId','$functionname','$actionname','$actiontime','$actionreturn','$actionobject')" ;
-   // echo $str_log;
-   // return;
+   $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+               . " VALUES('$userId','$functionname','$actionname','$actiontime','$actionreturn','$actionobject', '$appname')" ;
    if(mysqli_query($link, $str_log))
    {
-      echo "0";
+      echo json_encode(array("status"=> 0, "result"=>"")); 
       return;
    }
    else
    {
-      echo -__LINE__ . $str_query1;
+      echo json_encode(array("status"=> -1, "result"=>"" . -__LINE__ . $str_log)); 
+      //echo -__LINE__ . $str_query1;
       return;
    }
 ?>

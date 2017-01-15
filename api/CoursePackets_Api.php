@@ -62,7 +62,7 @@
    
    $datacp = array();
    class Stucps{
-      public $Id;
+	  public $Id;
       public $Name;
       public $Desc;
       public $AvailableTime;
@@ -77,7 +77,7 @@
       $cpcount = mysqli_num_rows($rs);
       while($row = mysqli_fetch_assoc($rs)){      
          $sc = new Stucps();
-         $sc->Id = $row['CoursePacketId'];
+		 $sc->Id = $row['CoursePacketId'];
          $sc->Name = $row['CoursePacketName'];
          $sc->Desc = $row['CoursePacketDesc'];
          $sc->AvailableTime = date("Y/m/d",strtotime($row['AvailableTimeEnd']));

@@ -261,6 +261,7 @@
       $str_query1 = $str_query1 . "AND OccurTime >= '$searchNewsfrom2' ";
    if ($searchNewsto2 != '')
       $str_query1 = $str_query1 . "AND OccurTime <= '$searchNewsto2' ";
+   $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    
@@ -320,7 +321,7 @@
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"OccurTime\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"NewsAction\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -359,7 +360,7 @@
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"OccurTime\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"NewsAction\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"

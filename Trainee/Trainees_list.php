@@ -24,8 +24,6 @@ function actionSearchTrainee(TrainingId, Status, UserId)
    str = "cmd=actionTrainees&TrainingId=" + TrainingId + "&Status=" + Status + "&UserId=" + UserId;
    url_str = "Trainee/Trainees_action.php?";
    
-   // alert(url_str + str);
-   // return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -69,8 +67,6 @@ function deleteSearchTrainee(TrainingId,UserId)
    str = "cmd=deleteTrainees&TrainingId=" + TrainingId + "&UserId=" + UserId;
    url_str = "Trainee/Trainees_delete.php?";
    
-   // alert(url_str + str);
-   // return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -187,7 +183,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchTrainees"><input name="searchTraineesButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchTrainees"><input name="searchTraineesButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>
@@ -210,9 +206,9 @@ function occurTimeDatePicker()
                   <col class="Status" />
                   <col class="TraineeDate" />
                   <col class="Date" />
-                  <col class="ExamineUser" />
+				  <col class="ExamineUser" />
                   <col class="Status" />
-                  <col class="TraineeStatus" />
+				  <col class="TraineeStatus" />
                </colgroup>
                <tr>
                   <th>编号</th>
@@ -222,9 +218,9 @@ function occurTimeDatePicker()
                   <th>学员编号</th>
                   <th>课程时间</th>
                   <th>报名时间</th>
-                  <th>审核人</th>
+				  <th>审核人</th>
                   <th>用戶报名状态</th>
-                  <th>动作</th>
+				  <th>动作</th>
                </tr>
                <tr>
                   <td colspan="10" class="empty">请输入上方查询条件，并点选[开始查询]</td>

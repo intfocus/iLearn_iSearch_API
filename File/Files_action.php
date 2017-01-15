@@ -102,9 +102,15 @@
       return;
    }
    if ($Status == 0)
+   {
       $FileStatus = 1;
+	  $ActionReturn = "文件上架";
+   }
    else if ($Status == 1)
+   {
       $FileStatus = 0;
+	  $ActionReturn = "文件下架";
+   }
    else
    {
       sleep(DELAY_SEC);
@@ -129,6 +135,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','文件管理','文件上下架',now(),'$ActionReturn','$FileId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

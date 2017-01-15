@@ -147,7 +147,7 @@
    
    $qts = array();
    
-   $str_qt = "select QuestionTemplateId, QuestionTemplateName from wutian.questiontemplate where Status = 1;";
+   $str_qt = "select QuestionTemplateId, QuestionTemplateName from questiontemplate where Status = 1;";
    if($rs = mysqli_query($link, $str_qt))
    {
       while ($row = mysqli_fetch_assoc($rs)) {
@@ -251,37 +251,30 @@
 <!DOCTYPE HTML>
 <html>
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
-      <meta http-equiv="Pragma" content="no-cache">
-      <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
-      <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
-      <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
-      <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
-      <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
-      <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-      <script type="text/javascript" src="../lib/jquery.min.js"></script>
-      <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-      <script type="text/javascript" src="../js/OSC_layout.js"></script>
-      <!-- for tree view -->
-      <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-      <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-      <link rel="stylesheet" type="text/css" href="../css/demo.css">
-      <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-      <!-- Bootstrap core CSS -->
-      <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/bootstrap-reset.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
+<link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
+<link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
+<link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
+<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
+<!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
 
-
-      <!-- Plugins css-->
-      <link rel="stylesheet" type="text/css" href="assets/jquery-multi-select/multi-select.css" />
-      <link rel="stylesheet" type="text/css" href="assets/select2/select2.css" />
-
-
-      <!-- Custom styles for this template -->
-      <link href="css/style.css" rel="stylesheet">
-      <link href="css/helper.css" rel="stylesheet">
-      <link href="css/style-responsive.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
       <!-- End of tree view -->
       <!--[if lt IE 10]>
       <script type="text/javascript" src="lib/PIE.js"></script>
@@ -317,6 +310,12 @@
             if (QuestionName.length == 0 && QuestionDesc.length == 0)
             {
                alert("问卷名称及问卷描述不可为空白");
+               return;
+            }
+			
+			if (QuestionTemplateId == "#")
+            {
+               alert("问卷模板不可为空白");
                return;
             }
             
@@ -401,101 +400,100 @@
       </Script>
       <!--Step15 新增修改页面    起始 -->
    </head>
-   <body Onload="loaded();">
-      <div id="header">
-         <form name=logoutform action=logout.php>
-         </form>
-         <span class="global">使用者 : <?php echo $login_name ?>
-            <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-         </span>
-         <span class="logo"></span>
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
       </div>
-      <div id="banner">
-         <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-         <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-      </div>
-      <div id="content">
-         <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-               <th>问卷名称：</th>
-               <td><Input type=text name="QuestionNameModify" size=50 value="<?php echo $QuestionName;?>"></td>
-            </tr>
-            <tr>
-               <th>问卷模板名称：</th>
-               <td>
-                  <section class="content">
-                     <div class="row">
-                        <div class="col-lg-6">
-                           <div class="panel-body" style="width: 550px;">
-                              <form action="#" class="form-horizontal">
-                                 <div class="form-group">
-                                    <div class="col-sm-9">
-                                       <select name="QuestionTemplateIdModify" class="select2" data-placeholder="Choose a Country...">
+    </div>
+<!--<div id="banner">
+   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
+   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
+</div>-->
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
+
+<div id="content">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">问卷名称：</label>
+		<div class="col-lg-7">
+			<Input type=text class=" form-control" name="QuestionNameModify" size=50 value="<?php echo $QuestionName;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">问卷模板：</label>
+		<div class="col-lg-7">
+           <select name="QuestionTemplateIdModify" class=" form-control" >
                                           <option value="#">&nbsp;</option>
                                        <?php
                                           foreach ($qts as $qt) {
                                        ?>
-                                          <option value="<?php echo $qt->QTId ?>"><?php echo $qt->QTName ?></option>
+                                          <option value="<?php echo $qt->QTId ?>" <?php echo $qt->QTId == $QuestionTemplateId ? 'selected':'' ?>><?php echo $qt->QTName ?></option>
                                        <?php
                                           }
                                        ?>
-                                       </select>
-                                    </div>
-                                 </div>
-                              </form>
-                           </div> <!-- panel-body -->
-                        </div> <!-- col -->
-                     </div> <!-- End row -->
-                     <!-- Page Content Ends -->
-                     <!-- ================== -->
-                  </section>
-               </td>
-            </tr>
-            <tr>
-               <th>问卷描述：</th>
-               <td><Textarea name="QuestionDescModify" rows=30 cols=100><?php echo $QuestionDesc;?></Textarea></td>
-            </tr> 
-            <tr>
-               <th>问卷开始时间 ：</th>
-               <td>
-                  <input id="from16" type="text" name="searchQuestionsfrom16" class="from" readonly="true" value="<?php echo $StartTime; ?>"/>
-               </td>
-            </tr>
-            <tr>
-               <th>问卷截止时间：</th>
-               <td>
-                  <input id="to16" type="text" class="to" name="searchQuestionsto16" readonly="true" value="<?php echo $EndTime; ?>"/>
-               </td>
-            </tr>
+           </select>
+                                    
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">问卷开始时间 ：</label>
+		<div class="col-lg-7">
+			<input id="from16" type="text" name="searchQuestionsfrom16" class=" form-control" readonly="true" value="<?php echo $StartTime; ?>"/>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">问卷截止时间：</label>
+		<div class="col-lg-7">
+			<input id="to16" type="text" class=" form-control" name="searchQuestionsto16" readonly="true" value="<?php echo $EndTime; ?>"/>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">问卷描述：</label>
+		<div class="col-lg-7">
+			<Textarea name="QuestionDescModify" class=" form-control" rows=30 cols=100><?php echo $QuestionDesc;?></Textarea>
+		</div>
+	</div>
             <?php
                if ($Status != 1)
                {
-            ?>       
-            <tr>
-               <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new modifyQuestionsContent"><input name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyQuestionsContent(<?php echo $QuestionId;?>)"></a>
-               </th>
-            </tr>      
+            ?>    
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2"></label>
+		<div class="col-lg-7">
+			<input name="modifyQuestionsButton" class="btn btn-success" type="button" value="保存" OnClick="modifyQuestionsContent(<?php echo $QuestionId;?>)">
+		</div>
+	</div>
             <?php
                }
             ?>   
-         </table>
+         </form>
       </div>
-      <!-- js placed at the end of the document so the pages load faster -->
-      <!-- <script src="js/jquery.js"></script> -->
-
-      <script src="assets/select2/select2.min.js" type="text/javascript"></script>
-
-
-      <script>
-          jQuery(document).ready(function() {
-             $(".select2").find("option[value='<?php echo $QuestionTemplateId ?>']").attr("selected",true);
-              // Select2
-              jQuery(".select2").select2({
-                  width: '100%'
-              });
-          });
-      </script>
+      </div>
+ 
    </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

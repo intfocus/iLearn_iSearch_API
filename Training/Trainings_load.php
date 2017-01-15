@@ -292,6 +292,7 @@
       $str_query1 = $str_query1 . "AND EndDate >= '$searchTrainingsfrom2' ";
    if ($searchTrainingsto2 != '')
       $str_query1 = $str_query1 . "AND EndDate <= '$searchTrainingsto2' ";
+   $str_query1 = $str_query1 . "ORDER BY EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    
@@ -356,12 +357,12 @@
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
-                                         . "<th>课程名称</th>"
+                                         . "<th>培训班名称</th>"
                                          . "<th>讲师名称</th>"
-                                         . "<th>课程负责人</th>"
-                                         . "<th>课程状态</th>"
-                                         . "<th>课程时间</th>"
-                                         . "<th>报名时间</th>"
+                                         . "<th>培训班负责人</th>"
+                                         . "<th>培训班状态</th>"
+										 . "<th>报名时间</th>"
+                                         . "<th>培训班时间</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
@@ -401,8 +402,8 @@
                                          . "<th>讲师名称</th>"
                                          . "<th>课程负责人</th>"
                                          . "<th>课程状态</th>"
+										 . "<th>报名时间</th>"
                                          . "<th>课程时间</th>"
-                                         . "<th>报名时间</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -416,8 +417,8 @@
                $Status = $row["Status"];
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
-               $TrainingDate = substr($row["TrainingBegin"],0,10) . "~" . substr($row["TrainingEnd"],0,10);
-               $EnrollDate = substr($row["StartDate"],0,10) . "~" . substr($row["EndDate"],0,10);
+               $TrainingDate = substr($row["TrainingBegin"],0,10) . "<br />~<br />" . substr($row["TrainingEnd"],0,10);
+               $EnrollDate = substr($row["StartDate"],0,10) . "<br />~<br />" . substr($row["EndDate"],0,10);
                $page_count_display = $page_count + 1;
                
                $return_string = $return_string 
@@ -427,8 +428,8 @@
                   . "<td><span class=\"SpeakerName fixWidth\">$SpeakerName</span></td>"
                   . "<td>" . get_employ_id_from_usernames($TrainingManager) . "</td>"
                   . "<td>$StatusStr</td>"
-                  . "<td>$TrainingDate</td>"
-                  . "<td>$EnrollDate</td>"
+                  . "<td><span class=\"TrainingDate fixWidth\">$TrainingDate</span></td>"
+                  . "<td><span class=\"EnrollDate fixWidth\">$EnrollDate</span></td>"
                   . "<td><A OnClick=\"actionSearchTrainings($TrainingId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchTrainings($TrainingId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchTrainings($TrainingId);\">删除</A><br/>"

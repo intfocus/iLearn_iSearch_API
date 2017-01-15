@@ -236,6 +236,7 @@ class OneLogin_Saml2_Utils
             return $url;
         }
 
+		echo "<div style=\"margin:0 auto;width:960px;\">正在加载中......</div>";
         header('Pragma: no-cache');
         header('Cache-Control: no-cache, must-revalidate');
         header('Location: ' . $url);

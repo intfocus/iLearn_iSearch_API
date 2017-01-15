@@ -226,9 +226,16 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -307,42 +314,69 @@ function modifyFunctionsContent(FunctionId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+<!--<div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+</div>-->
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
+
 <div id="content">
 
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>功能名称：</th>
-         <td><Input type=text name=FunctionNameModify size=50 value="<?php echo $FunctionName;?>"></td>
-      </tr>
-      <tr>
-         <th>功能类型：</th>
-         <td>
-            <select name="FunctionTypeModify">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">功能名称：</label>
+		<div class="col-lg-7">
+			<Input type=text class=" form-control" name=FunctionNameModify size=50 value="<?php echo $FunctionName;?>">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">功能类型：</label>
+		<div class="col-lg-7">
+			
+            <select name="FunctionTypeModify" class=" form-control" >
                <option value="1" <?php echo $FunctionType == 1?"Selected":""?>>产品</option>
                <option value="2" <?php echo $FunctionType == 2?"Selected":""?>>适应症</option>
                <option value="3" <?php echo $FunctionType == 3?"Selected":""?>>题库类别</option>
             </select>
-         </td>
-      </tr>    
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyFunctionsContent"><input name="modifyFunctionsButton" type="button" value="保存" OnClick="modifyFunctionsContent(<?php echo $FunctionId;?>)"></a>
-         </th>
-      </tr>
-   </table>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2"></label>
+		<div class="col-lg-7">
+			<input name="modifyFunctionsButton"  class="btn btn-success" type="button" value="保存" OnClick="modifyFunctionsContent(<?php echo $FunctionId;?>)">
+		</div>
+	</div>
+   </form>
+ </div>
 </div>
 </body>
 </html>

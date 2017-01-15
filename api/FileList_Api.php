@@ -89,9 +89,6 @@
       }
    }
    
-   // print_r(CategoryNameList(6));
-   // return;
-   
    $datafile = array();
    class Stucategory{
       public $Id;
@@ -117,7 +114,11 @@
 f.Status as FileStatus,f.EditTime as FileEditTime,f.CategoryId as CategoryId,f.ZipSize as ZipSize,c.CategoryName as CategoryName,c.DeptList as DeptList,c.PAList as PAList,c.Status as CategoryStatus,
 c.ProductList as ProductList 
 from files f left join categories c on f.CategoryId = c.CategoryId 
-where f.Status = 1 and c.DeptList like '%,$deptid,%';";
+where f.Status = 1";
+   if($deptid != 0)
+   {
+      $str_file = $str_file . " and c.DeptList like '%,$deptid,%'";
+   }
 
    if($rs = mysqli_query($link, $str_file)){
       $filecount = mysqli_num_rows($rs);
@@ -134,7 +135,7 @@ where f.Status = 1 and c.DeptList like '%,$deptid,%';";
          $sc->EditTime = date("Y/m/d H:i:s",strtotime($row['FileEditTime']));
          $sc->CategoryId = $row['CategoryId'];
          $sc->ZipSize = $row['ZipSize'];
-         $sc->CategoryName = CategoryNameList($row['CategoryId']);//$row['CategoryName'];
+         $sc->CategoryName = $row['CategoryName'];//CategoryNameList($row['CategoryId']);
          $sc->DeptList = $row['DeptList'];
          $sc->PAList = $row['PAList'];
          $sc->CategoryStatus = $row['CategoryStatus'];

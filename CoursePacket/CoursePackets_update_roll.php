@@ -204,6 +204,7 @@
       }
 
       $users_id = array();
+	  $usererror_id = array();
 
       // if Exxxx, xxxx is digit
       // else if it is composed by alpha & digit, it is employID, and get it user_id, and push it
@@ -219,8 +220,9 @@
                }
                else
                {
-                  echo "不存在工号 $id";
-                  return false;
+                  //echo "不存在工号 $id";
+                  //return false;
+				  array_push($usererror_id, "不存在工号 $id");
                }
             }
             else
@@ -239,8 +241,9 @@
                }
                else
                {
-                  echo "不存在使用者ID $id";
-                  return false;
+                  //echo "不存在使用者ID $id";
+                  //return false;
+				  array_push($usererror_id, "不存在工号 $id");
                }
             }
             else
@@ -255,6 +258,16 @@
             return false; 
          }
       }  
-      return $users_id;
+      //return $users_id;
+	  if(count($usererror_id)>0)
+	  {
+		 $usererror = implode("\r\n", $usererror_id);
+		 echo $usererror;
+		 return false;
+	  }
+	  else
+	  {
+         return $users_id;
+	  }
    }
 ?>

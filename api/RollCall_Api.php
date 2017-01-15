@@ -5,7 +5,7 @@
    $rollcall = json_decode($rollcallContent);
    //echo var_dump($user->username);
    $trainingId = $rollcall->TrainingId;
-   $userId = $rollcall->UserId;
+   $eId = $rollcall->UserId;
    $issueDate = $rollcall->IssueDate;
    $createdUser = $rollcall->CreatedUser;
    $status = $rollcall->Status;
@@ -61,6 +61,14 @@
       return;
    }
    
+   $userId=0;
+   $str_user = "select UserId from Users where EmployeeId = '$eId'";
+   if($rs = mysqli_query($link, $str_user)){
+      while($row = mysqli_fetch_assoc($rs)){
+		 $userId = $row['UserId'];
+	  }
+   }
+   
    $str_log = "Insert into RollCall (TrainingId, UserId, IssueDate, Status, Reason, CreatedUser, CheckInId)" 
                . " VALUES('$trainingId', $userId, '$issueDate', $status, '$reason', $createdUser, $checkinId)" ;
    // echo $str_log;
@@ -72,7 +80,7 @@
    }
    else
    {
-      echo -__LINE__ . $str_query1;
+      echo -__LINE__ . $str_log;
       return;
    }
 ?>

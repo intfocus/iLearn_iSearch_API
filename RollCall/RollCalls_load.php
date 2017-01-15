@@ -217,9 +217,13 @@
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
-   $str_query1 = "select ti.TrainingName as TrainingName, us.UserName as UserName, rc.IssueDate as IssueDate, rc.Status as Status, rc.Reason as Reason, u.UserName as CreatedUser, ti.ApproreLevel  
+   $str_query1 = "select ti.TrainingName as TrainingName, us.UserName as UserName, rc.IssueDate as IssueDate, rc.Status as Status, rc.Reason as Reason, u.UserName as CreatedUser, rc.UserId, c.CheckInName
+,case when locate('0',rc.Reason)>0 then '签到' else '未到' end as Statua
+,case when locate('1',rc.Reason)>0 then '迟到' else '' end as Statub 
+,case when locate('2',rc.Reason)>0 then '早退' else '' end as Statuc 
 from rollcall rc left join trainings ti on rc.TrainingId = ti.TrainingId 
-left join users us on rc.UserId = us.UserId left join wutian.users u on rc.CreatedUser = u.UserId where rc.status";
+left join users us on rc.UserId = us.UserId left join users u on rc.CreatedUser = u.UserId 
+left join checkins c on rc.TrainingId = c.TrainingId and rc.CheckInId = c.CheckInId where c.Status = 1 and rc.status";
 
    if ($statusCheckbox == 1)
    {
@@ -244,11 +248,12 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
       $str_query1 = $str_query1 . "AND rc.IssueDate >= '$searchRollCallsfrom12' ";
    if ($searchRollCallsto12 != '')
       $str_query1 = $str_query1 . "AND rc.IssueDate <= '$searchRollCallsto12' ";
+   $str_query1 = $str_query1 . "ORDER BY IssueDate DESC";
    
    //***Step16 页面搜索SQl语句 结束
    
-   // echo $str_query1;
-   // return;
+   //echo $str_query1;
+   //return;
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
@@ -297,24 +302,28 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
          $return_string = $return_string . "<table id=\"search_table\" class=\"report\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
+										 . "<col class=\"CheckInName\"/>"
                                          . "<col class=\"RollCallName\"/>"
                                          . "<col class=\"UserName\"/>"
                                          . "<col class=\"IssueDate\"/>"
-                                         . "<col class=\"Status\"/>"
+                                         . "<col class=\"Statua\"/>"
+										 . "<col class=\"Statub\"/>"
+										 . "<col class=\"Statuc\"/>"
                                          . "<col class=\"CreatedUser\"/>"
-                                         . "<col class=\"Reason\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
+										 . "<th>签到名称</th>"
                                          . "<th>课程名称</th>"
                                          . "<th>用户名称</th>"
                                          . "<th>点名时间</th>"
                                          . "<th>到场状态</th>"
+										 . "<th>是否迟到</th>"
+										 . "<th>是否早退</th>"
                                          . "<th>发起点名用户</th>"
-                                         . "<th>原因说明</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"7\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"9\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -336,58 +345,52 @@ left join users us on rc.UserId = us.UserId left join wutian.users u on rc.Creat
                                          . "<table id=\"search_table\" class=\"report\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
+										 . "<col class=\"CheckInName\"/>"
                                          . "<col class=\"RollCallName\"/>"
                                          . "<col class=\"UserName\"/>"
                                          . "<col class=\"IssueDate\"/>"
-                                         . "<col class=\"Status\"/>"
+                                         . "<col class=\"Statua\"/>"
+										 . "<col class=\"Statub\"/>"
+										 . "<col class=\"Statuc\"/>"
                                          . "<col class=\"CreatedUser\"/>"
-                                         . "<col class=\"Reason\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
+										 . "<th>签到名称</th>"
                                          . "<th>课程名称</th>"
                                          . "<th>用户名称</th>"
                                          . "<th>点名时间</th>"
                                          . "<th>到场状态</th>"
+										 . "<th>是否迟到</th>"
+										 . "<th>是否早退</th>"
                                          . "<th>发起点名用户</th>"
-                                         . "<th>原因说明</th>"
                                          . "</tr>";
             }
             if ($page_count < $page_size)
             {
                $row = mysqli_fetch_assoc($result);
+			   $CheckInName = $row["CheckInName"];
                $TrainingName = $row["TrainingName"];
                $UserName = $row["UserName"];
                $IssueDate = date("Y-m-d H:i:s", strtotime($row["IssueDate"]));
                $Status = $row["Status"];
-               $StatusStr = "";
-               switch ($Status) {
-                   case 0:
-                      $StatusStr = "未到";
-                      break;
-                   case 1:
-                      $StatusStr = "已到";
-                      break;
-                   case 2:
-                      $StatusStr = "取消";
-                      break;
-                   default:
-                       $StatusStr = "未到";
-                       break;
-               }
-               $Reason = $row["Reason"];
+			   $Statua = $row["Statua"];
+			   $Statub = $row["Statub"];
+			   $Statuc = $row["Statuc"];
                $CreatedUser = $row["CreatedUser"];
                $page_count_display = $page_count + 1;
                
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
+				  . "<td><span class=\"CheckInName fixWidth\">$CheckInName</span></td>"
                   . "<td><span class=\"RollCallName fixWidth\">$TrainingName</span></td>"
                   . "<td>$UserName</td>"
                   . "<td>$IssueDate</td>"
-                  . "<td>$StatusStr</td>"
+                  . "<td>$Statua</td>"
+				  . "<td>$Statub</td>"
+				  . "<td>$Statuc</td>"
                   . "<td>$CreatedUser</td>"
-                  . "<td><span class=\"RollCallReason fixWidth\">$Reason</span></td>"
                   . "</tr>";
 
                $i++;

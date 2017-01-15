@@ -225,6 +225,7 @@
    {
       $str_query1 = $str_query1 . "AND (F.CoursewareName like '%$searchCoursewaresNameDesc%' OR F.CoursewareDesc like '%$searchCoursewaresNameDesc%') ";
    }
+   $str_query1 = $str_query1 . "ORDER BY EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    

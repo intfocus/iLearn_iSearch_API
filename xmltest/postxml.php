@@ -1,7 +1,7 @@
 <?php
 //首先检测是否支持curl
 if (!extension_loaded("curl")) {
-   trigger_error("对不起，请开启curl功能模块！", E_USER_ERROR);
+	trigger_error("对不起，请开启curl功能模块！", E_USER_ERROR);
 }
 
 //构造xml
@@ -37,29 +37,48 @@ $jsonData = array(
 );
 
 $jsonData = array(
-   'UserId' => '4',
-   'TrainingId' => '1',
-   'CancelMsg' => 'abcd'
+   'UserId' => 'E00001',
+   'TrainingId' => '3',
+   'IssueDate' => '2015/08/23 14:33:43',
+   'Status' => '1',
+   'Reason' => '等快递快递收到伐',
+   'CreatedUser' => '1',
+   'CheckInId' => '1'
 );
-// $jsonData = array(
-   // 'UserId' => '1427',
-   // 'FunctionName' => 'LoginViewController.m, -[LoginViewController actionOutsideLoginSuccessfully], 275',
-   // 'ActionName' => 'U767bU5f55',
-   // 'ActionTime' => '2015-08-24 11:02:01',
-   // 'ActionReturn' => 'network: online',
-   // 'ActionObject' => 'U6210U529f/U5728U7ebf',
-   // 'AppName' => 'iSearch1');
+$jsonData = array(
+	'UserId' => 'UserId001logapi',
+	'FunctionName' => 'FunctionName002logapi',
+	'ActionName' => 'ActionName002logapi',
+	'ActionTime' => '2015-06-1 18:18:18',
+	'ActionReturn' => 'ActionReturn--092logapi',
+	'ActionObject' => 'ActionObject--003logapi',
+	'AppName' => 'iSearch');
+
+$jsonData = array(
+	'ActionName' => 'action log uuid',
+	'ActionObject' => '{ app: { name: iLearn version: 2.1.25, dbVersion:NotSet, machine: x86_64[Simulator], sdkName: iphonesimulator8.3, lang: en }, ios: { release: [14.5.0], sysname: [Darwin], nodename: [lijunjiedeMacBook-Air.local] } }',
+	'ActionReturn' => 'IGY32M7CEFBMREUK4PW7EWV2OA',
+	'ActionTime' => '2015-08-29 16:25:17',
+	'AppName' => 'iLearn',
+	'FunctionName' => '',
+	'UserId' => '1430'
+);
+
+$jsonData = array(
+   'UserId' => '1429',
+   'TrainingId' => '15'
+);
 
 $jsonDataEncoded = json_encode($jsonData);
-// echo $jsonDataEncoded;
-// return;
+//echo $jsonDataEncoded;
+//return;
 
 //初始一个curl会话
 $curl = curl_init();
 
 //设置url
 //curl_setopt($curl, CURLOPT_URL,"http://192.168.186.134/phptest/xmltest/dealxml.php");
-curl_setopt($curl, CURLOPT_URL,"http://192.168.186.134/phptest/api/TraineeCancel_Api.php");
+curl_setopt($curl, CURLOPT_URL,"http://127.0.0.1/uat/api/Trainee_Api.php");
 
 //设置发送方式：post
 curl_setopt($curl, CURLOPT_POST, true);

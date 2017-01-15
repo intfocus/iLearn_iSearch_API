@@ -1,4 +1,17 @@
 <?php
+   if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
+      if(isset($_GET["uid"])){
+         $uid = $_GET["uid"];
+      }
+      else {
+         echo json_encode(array("status"=>-2, "result"=>"问卷不存在！")); //-2没有传问卷用户ID
+         return; 
+      }
+   }
+   else{
+      echo json_encode(array("status"=>-1, "result"=>"问卷不存在！")); //-1没有传任何参数
+      return;
+   }
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -60,7 +73,7 @@
    }
    
    //----- query -----
-   $str_file = "select QuestionId, QuestionTemplateId, QuestionName, QuestionDesc, StartTime, EndTime, CreatedUser, Status from Question where Status = 1;";
+   $str_file = "select QuestionId, QuestionTemplateId, QuestionName, QuestionDesc, StartTime, EndTime, CreatedUser, Status from Question where Status = 1 and UserList like '%,$uid,%';";
 
    if($rs = mysqli_query($link, $str_file)){
       $questioncount = mysqli_num_rows($rs);
@@ -71,7 +84,7 @@
          $sq->Name = $row['QuestionName'];
          $sq->Desc = $row['QuestionDesc'];
          $sq->StartTime = date("Y/m/d H:i:s",strtotime($row['StartTime']));
-         $sq->EndTime = date("Y/m/d H:i:s",strtotime($row['EndTime']));
+         $sq->EndTime = date("Y/m/d H:i:s",strtotime($row['EndTime']) + "86399");
          $sq->CreatedUser = (int)$row['CreatedUser'];
          $sq->Status = (int)$row['Status'];
          array_push($dataQuestion,$sq);

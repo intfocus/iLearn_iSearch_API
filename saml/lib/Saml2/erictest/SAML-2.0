@@ -1,0 +1,49 @@
+OneLogin_Saml2_AuthnRequest Object ( 
+	[_settings:protected] => OneLogin_Saml2_Settings Object ( 
+		[_paths:OneLogin_Saml2_Settings:private] => Array ( 
+			[base] => D:\uat\saml/ 
+			[config] => D:\uat\saml/ 
+			[cert] => D:\uat\saml/certs/ 
+			[lib] => D:\uat\saml/lib/ 
+			[extlib] => D:\uat\saml/extlib/ ) 
+		[_strict:OneLogin_Saml2_Settings:private] => [_debug:OneLogin_Saml2_Settings:private] => [_sp:OneLogin_Saml2_Settings:private] => Array ( 
+			[entityId] => IntFocus_tsa-china 
+			[assertionConsumerService] => Array ( 
+				[url] => https://tsa-china.takeda.com.cn/uat/saml/sp/index.php?acs 
+				[binding] => urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST ) 
+			[singleLogoutService] => Array ( 
+				[url] => https://tsa-china.takeda.com.cn/uat/saml/sp/index.php?sls 
+				[binding] => urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect ) 
+			[NameIDFormat] => urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified 
+			[x509cert] => [privateKey] => ) 
+		[_idp:OneLogin_Saml2_Settings:private] => Array ( 
+			[entityId] => Takeda_Webssodev 
+			[singleSignOnService] => Array ( 
+				[url] => https://webssodev.secureaccess.takeda.com/idp/SSO.saml2?PartnerSpId=IntFocus_tsa-china ) 
+			[singleLogoutService] => Array ( 
+				[url] => https://webssodev.secureaccess.takeda.com/idp/SLO.saml2 ) 
+			[x509cert] => 
+				-----BEGIN CERTIFICATE----- 
+				MIICazCCAdSgAwIBAgIGAUemhEfOMA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYT 
+				AkNIMQ8wDQYDVQQHEwZadXJpY2gxLTArBgNVBAoTJFRha2VkYSBQaGFybWFjZXV0 
+				aWNhbHMgSW50ZXJuYXRpb25hbDEMMAoGA1UECxMDQ0NPMRwwGgYDVQQDDBNzaWdu 
+				YXR1cmVfd2Vic3NvZGV2MB4XDTE0MDgwNTE0MTMxMloXDTE3MDgwNDE0MTMxMlow 
+				eTELMAkGA1UEBhMCQ0gxDzANBgNVBAcTBlp1cmljaDEtMCsGA1UEChMkVGFrZWRh 
+				IFBoYXJtYWNldXRpY2FscyBJbnRlcm5hdGlvbmFsMQwwCgYDVQQLEwNDQ08xHDAa 
+				BgNVBAMME3NpZ25hdHVyZV93ZWJzc29kZXYwgZ8wDQYJKoZIhvcNAQEBBQADgY0A 
+				MIGJAoGBAJNBrA3GX/gDv6/YTOV1hN5zVGETzaAgXO8YJeCTAnQ+4bYdeFAjZNC6 
+				nvUILPChKGmlEZd88ZOzHSA3hpFD77QXGAAT9S06DVm4Oa664/JLjmmh7XQQXkep 
+				lla+4cDcBm+sPG9pZoEDeKwAHS7JKVGaX7uQRIONKSMf69Qp19g9AgMBAAEwDQYJ 
+				KoZIhvcNAQEFBQADgYEAU7mpmuaLZYQ8UWJ7ZtwX3QPGWHugjFO5Zc+XCZIDGA8V 
+				CE+iWj2wE9WfGs8c9EheZ5KFu3kStBb3xhZPqV3sXLsQGR/0lvte6fDZpc/pBOg7 
+				z0qWKF4TRH/pQHiuIitLaVPT2Xv7kkACHjvIl8OgsfALK40QH10oD1EOJbH3H3s= 
+				-----END CERTIFICATE----- 
+			[certFingerprint] => [certFingerprintAlgorithm] => sha1 ) 
+		[_security:OneLogin_Saml2_Settings:private] => Array ( 
+			[nameIdEncrypted] => [requestedAuthnContext] => 1 
+			[authnRequestsSigned] => [logoutRequestSigned] => [logoutResponseSigned] => [signMetadata] => [wantMessagesSigned] => [wantAssertionsSigned] => [wantAssertionsEncrypted] => [wantNameIdEncrypted] => [wantXMLValidation] => 1 ) 
+		[_contacts:OneLogin_Saml2_Settings:private] => Array ( ) 
+		[_organization:OneLogin_Saml2_Settings:private] => Array ( ) 
+		[_errors:OneLogin_Saml2_Settings:private] => Array ( ) ) 
+	[_authnRequest:OneLogin_Saml2_AuthnRequest:private] => IntFocus_tsa-china urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport 
+	[_id:OneLogin_Saml2_AuthnRequest:private] => ONELOGIN_9d6b86fbca004debd3bc215550252560994bc568 )

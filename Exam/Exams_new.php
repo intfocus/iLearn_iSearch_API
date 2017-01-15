@@ -328,9 +328,15 @@ function loaded() {
       {
 
          
-         $("#exam_ans_type").show();
+         //$("#exam_ans_type").show();
          //$("#exam_time_selections").show();
          $("#exam_location_selections").show();
+      }
+	  else if ($(this).val() == 2) 
+      {
+		 $("#exam_ans_type").hide();
+         //$("#exam_time_selections").hide();
+         $("#exam_location_selections").hide();
       }
    });
    
@@ -435,7 +441,7 @@ function loaded() {
             $(".tmp_data").remove();
          },
 
-         method: "GET",
+         type: "POST",
          url: "gen_problems.php",
          cache: false,
          data: {
@@ -879,7 +885,7 @@ function loaded() {
 
 .wizard > .content
 {
-   min-height: 1300px;
+   min-height: 1650px;
 	background: #fafafa;
 }
 </style>
@@ -950,7 +956,7 @@ function loaded() {
                             <div class="panel-body"> 
                                 <form id="basic-form" action="#">
                                     <div>
-                                        <h3>考试类别-至少选一项</h3>
+                                        <h3>手工选题</h3>
                                         <section>
 
                                  <div class="form-group"  style="height:420px;">
@@ -961,7 +967,7 @@ function loaded() {
                                             </div>
 
                                         </section>
-                                        <h3>题型选择</h3>
+                                        <h3>设定选题规则</h3>
                                         <section>
                                           <? include("Exam_problem_set.php")?>
                                         </section>
@@ -1022,6 +1028,7 @@ function loaded() {
 										
                                     </div>
                                     <div class="form-group">
+									       <label for="exam_type">考试类型</label>
 										   <select id="exam_type" class="form-control">
 											  <option selected value=0>模拟考试</option>
 											  <option value=1>正式考试</option>
@@ -1029,18 +1036,21 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group">
+									    <label for="exam_duration_time">考试长度</label>
 										<input type="text" id="exam_duration_time" type="text" class="from form-control" placeholder="考试长度 (分钟)">
                                     </div>
                                     <div class="form-group">
-                              <input type="text" id="exam_allow_time" type="text" class="from form-control" placeholder="考试次数">
+									   <label for="exam_allow_time">考试次数</label>
+									   <input type="text" id="exam_allow_time" type="text" class="from form-control" placeholder="考试次数">
                                     </div>
-                                    及格百分比
                                     <div class="form-group">
-                                       <select id="exam_qualify_percent" class="from form-control">
+									   <label for="exam_allow_time">及格百分比</label>
+                                       <select id="exam_qualify_percent" class="from form-control"></select>
                                     </div>
                                     <br>
                                     <div class="form-group">
-										<textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>
+									   <label for="exam_desc">考试描述</label>
+									   <textarea id="exam_desc" rows="4" class="form-control" placeholder="考试描述"></textarea>
                                     </div>
 									
 									<div class="form-group">   
@@ -1069,6 +1079,7 @@ function loaded() {
 										   </select>
                                     </div>
                                     <div class="form-group" id="exam_password_sections" style="display:none">
+									    <label for="exam_password">考卷密码</label>
 										<input type="text" id="exam_password" class="form-control" placeholder="考卷密码(4位数字)">
                                     </div>
 									
@@ -1081,29 +1092,32 @@ function loaded() {
                                     </form>
 									<form class="form-inline" role="form">
 										<div class="form-group">
-											<label class="sr-only" for="exam_begin_time">考试时间</label>
+											<label for="exam_begin_time">考试时间</label>
 											<input id="exam_begin_time" type="text" name="exam_from_date6" class="to form-control" readonly="true" placeholder="考试日期/小时/分钟">
 										</div>
 										  
-										<div class="form-group m-l-10">
+										<div class="form-group m-l-10" style="margin-top: 40px">
 										   <select id="exam_from_hour" class="form-control m-b-5" placeholder="小时"></select>
 										</div>
-										<div class="form-group m-l-10">
-										   <select id="exam_from_min" class="form-control m-b-5" style="margin-top: 10px" placeholder="分钟"></select>
+										<div class="form-group m-l-10" style="margin-top: 40px">
+										   <label class="sr-only" for="exam_from_min">小时</label>
+										   <select id="exam_from_min" class="form-control m-b-5" placeholder="分钟"></select>
 										</div>
                                     </form>
 									</div>
 									<div>
 									<form class="form-inline" role="form">
 										<div class="form-group">
-											<label class="sr-only" for="exam_end_time">结束时间</label>
+											<label for="exam_end_time">结束时间</label>
 											<input id="exam_end_time" type="text" name="exam_to_date6" class="to form-control" readonly="true" placeholder="结束日期/小时/分钟">
 										</div>
 										  
-										<div class="form-group m-l-10">
+										<div class="form-group m-l-10" style="margin-top: 40px">
+										   <label class="sr-only" for="exam_to_hour">小时</label>
 										   <select id="exam_to_hour" class="form-control m-b-5" placeholder="小时"></select>
 										</div>
-										<div class="form-group m-l-10">
+										<div class="form-group m-l-10" style="margin-top: 40px">
+										   <label class="sr-only" for="exam_to_min">分钟</label>
 										   <select id="exam_to_min" class="form-control m-b-5" placeholder="分钟"></select>
 										</div>
 									
@@ -1179,7 +1193,7 @@ function loaded() {
    
 
    <div>
-      欲选题数:<b id="num_selected_problems"></b>
+      预选题数:<b id="num_selected_problems"></b>
    </div>
    <div class="problem_info" style="display:none">
       <table class="table">
@@ -1212,7 +1226,7 @@ function loaded() {
         <!-- js placed at the end of the document so the pages load faster -->
         <script src="../newui/js/jquery.js"></script>
         <script src="../newui/js/bootstrap.min.js"></script>
-        <script src="../newui/js/pace.min.js"></script>
+        <!--<script src="../newui/js/pace.min.js"></script>-->
         <script src="../newui/js/wow.min.js"></script>
         <script src="../newui/js/jquery.nicescroll.js" type="text/javascript"></script>
 

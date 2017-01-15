@@ -210,35 +210,35 @@
       echo DB_ERROR;       
       return;
    }
-   
-   function CategoryNameList($CategoryId)
-   {
-      $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-      $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
-      if (!$strlink)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return;
-      }
-      if($rs = mysqli_query($strlink, $str_categorie)){
-         $row = mysqli_fetch_assoc($rs);
-         //return $row["CategoryName"];
-         if($row["ParentId"] == 1 || $CategoryId == 1){
-            mysqli_close($strlink);
-            return $row["CategoryName"];
-         }
-         else{
-            mysqli_close($strlink);
-            return CategoryNameList($row["ParentId"]) . "\\" . $row["CategoryName"];
-         }
-      }
-      else{
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return "";
-      }
-   }
+
+	function CategoryNameList($CategoryId)
+	{
+       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+       $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+       if (!$strlink)  //connect to server failure    
+       {
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return;
+       }
+       if($rs = mysqli_query($strlink, $str_categorie)){
+          $row = mysqli_fetch_assoc($rs);
+          //return $row["CategoryName"];
+          if($row["ParentId"] == 1 || $CategoryId == 1){
+             mysqli_close($strlink);
+             return $row["CategoryName"];
+          }
+          else{
+             mysqli_close($strlink);
+             return CategoryNameList($row["ParentId"]) . "\\<br />" . $row["CategoryName"];
+          }
+       }
+       else{
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return "";
+       }
+    }
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
@@ -269,7 +269,6 @@
       $str_query1 = $str_query1 . "AND EditTime >= '$searchCategoriesfrom1' ";
    if ($searchCategoriesto1 != '')
       $str_query1 = $str_query1 . "AND EditTime <= '$searchCategoriesto1' ";
-   
    $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
@@ -327,7 +326,6 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"CategoryAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -335,7 +333,6 @@
                                          . "<th>分类名称</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
-                                         . "<th>分类夹路径</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
@@ -364,7 +361,6 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"CategoryPath\"/>"
                                          . "<col class=\"CategoryAction\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
@@ -372,7 +368,6 @@
                                          . "<th>分类名称</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
-                                         . "<th>分类夹路径</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -381,12 +376,11 @@
             {
                $row = mysqli_fetch_assoc($result);
                $CategoryId = $row["CategoryId"];
-               $CategoryName = $row["CategoryName"];
+               $CategoryName = CategoryNameList($row["CategoryId"]);//$row["CategoryName"];
                $Status = $row["Status"];
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
                $EditTime = $row["EditTime"];
-               $CategoryPath = $row["CategoryPath"] . "/" . $CategoryName;
                $page_count_display = $page_count + 1;
                $return_string = $return_string 
                   . "<tr>"
@@ -394,11 +388,10 @@
                   . "<td><span class=\"CategoryName fixWidth\">$CategoryName</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$EditTime</td>"
-                  . "<td><span =\"CategoryPath fixWidth\">$CategoryPath</span></td>"
                   . "<td><A OnClick=\"actionSearchCategories($CategoryId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchCategories($CategoryId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchCategories($CategoryId);\">删除</A><br/>"
-                  . "<A OnClick=\"updateSearchCategorieDepts($CategoryId);\">分类权限</A></td>"
+				  . "<A OnClick=\"updateSearchCategorieDepts($CategoryId);\">分类权限</A></td>"
                   . "</tr>";
 
                $i++;

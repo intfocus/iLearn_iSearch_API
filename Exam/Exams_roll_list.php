@@ -120,7 +120,7 @@
       die("连接DB失败");
    }
    $examname = "";
-   $str_query = "select ExamName from uat.exams where ExamId = $exam_id";
+   $str_query = "select ExamName from exams where ExamId = $exam_id";
    if($result = mysqli_query($link, $str_query)){
       $row = mysqli_fetch_assoc($result);
       $examname = $row["ExamName"];
@@ -325,10 +325,17 @@ function modifyUsersContent(exam_id)
 
             <!-- Page Content Start -->
             <!-- ================== -->
-
+			<?php
+			   $row_number = 0;
+			   // read roll
+		       $str_query = "select * from examroll where ExamId=$exam_id AND Status=".ACTIVE;
+               if($result = mysqli_query($link, $str_query)){
+			      $row_number = mysqli_num_rows($result);
+			   }
+			?>
             <div class="wraper container-fluid">
-                <div class="page-title"> 
-                    <h3 class="title">批次上传考试用户(<?php echo $examname ?>)</h3> 
+                <div class="page-title">
+                    <h3 class="title">批次上传考试用户(<?php echo $examname ?>) 考试人数:<?php echo $row_number ?></h3> 
                 </div>
 
                 <!-- Basic Form Wizard -->
@@ -345,8 +352,9 @@ function modifyUsersContent(exam_id)
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100 placeholder="员工号 如 E99999"><?   
             // read roll
-         $str_query = "select * from examroll where ExamId=$exam_id AND Status=".ACTIVE;
-         if($result = mysqli_query($link, $str_query)){
+         //$str_query = "select * from examroll where ExamId=$exam_id AND Status=".ACTIVE;
+         //if($result = mysqli_query($link, $str_query)){
+		 if($row_number > 0){
             $row_number = mysqli_num_rows($result);
 
             for ($i=0; $i<$row_number; $i++)

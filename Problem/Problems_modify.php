@@ -242,11 +242,11 @@
       }
       
       // Category check
-      // if (!is_correct_prob_category_format($ProbCategory))
-      // {
-         // echo ERR_PROB_CATEGORY_FORMAT;
-         // return;
-      // }
+      //if (!is_correct_prob_category_format($ProbCategory))
+      //{
+      //   echo ERR_PROB_CATEGORY_FORMAT;
+      //   return;
+      //}
 
       // Level check
       if (!is_correct_prob_level_format($ProbLevel))
@@ -565,7 +565,7 @@ function modifyProbsContent(ProbId)
       <?php
          // Function Adaptation
          $func_type = FUNCTION_ADAPTATION;
-         $str_query = "Select * from functions where FunctionType=$func_type";
+         $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
          
          if($result = mysqli_query($link, $str_query))
          { 
@@ -595,7 +595,7 @@ function modifyProbsContent(ProbId)
  
          // Function Product
          $func_type = FUNCTION_PRODUCT;
-         $str_query = "Select * from functions where FunctionType=$func_type";
+         $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
          
          if($result = mysqli_query($link, $str_query))
          { 
@@ -625,7 +625,7 @@ function modifyProbsContent(ProbId)
  
          // Function Other
          $func_type = FUNCTION_OTHER;
-         $str_query = "Select * from functions where FunctionType=$func_type";
+         $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
          
          if($result = mysqli_query($link, $str_query))
          { 

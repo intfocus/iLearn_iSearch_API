@@ -136,7 +136,7 @@ function occurTimeDatePicker()
 <!--快速查詢 從這裡開始-->
    <div class="searchW">
    <!-- ***Step2 搜索框的设计 开始 -->
-      <form>
+      <!--<form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
                <th>部门名称/部门编号 ：</th>
@@ -159,7 +159,40 @@ function occurTimeDatePicker()
                </th>
             </tr>
          </table>
-      </form>
+      </form>-->
+		<form class="cmxform form-horizontal tasi-form searchField">
+			 <div class="form-group">
+				<label for="cname" class="control-label col-md-2">部门名称/部门编号:</label>
+				<div class="col-md-5">
+					<input class="form-control" id="searchDeptsNameCode" type="text" maxlength="50">
+				</div>
+				<label for="cname" class="control-label col-md-1">状态:</label>
+				<div class="col-md-2" style="padding-top:6px;">
+					<label class="cr-styled">
+						<input id="searchDeptsCheckBox1" type="checkbox" checked>
+						<i class="fa"></i> 
+						上架
+					</label>
+					<label class="cr-styled">
+						<input id="searchDeptsCheckBox2" type="checkbox" checked>
+						<i class="fa"></i> 
+						下架
+					</label>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label for="cemail" class="control-label col-md-2">最后修改时间：</label>
+				<div class="col-md-5">
+					<input id="from4" type="text" style="width:46%; display:inline-block" name="searchDeptsfrom1" class="from form-control" readonly="true"/> ~ <input id="to4" type="text" style="width:46%; display:inline-block" class="to form-control" name="searchDeptsto1" readonly="true"/>
+				</div>
+			</div>
+			  <div class="form-group">
+				<label class="control-label col-md-2">　</label>
+				<div class="col-md-5">
+					<a class="btn_submit_new searchDepts"><input class="btn btn-success" name="searchDeptsButton" type="button" value="开始查询"></a>
+				</div>
+			</div>
+		</form>
       <!-- ***Step2 搜索框的设计 结束 -->
    
       <!-- ***Step3 表格框架 开始 -->
@@ -175,7 +208,7 @@ function occurTimeDatePicker()
                   <col class="DeptCode" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="DeptAction" />
+                  <col class="action" />
                </colgroup>
                <tr>
                   <th>编号</th>

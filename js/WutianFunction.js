@@ -188,18 +188,21 @@ var data_7;
 //set checkbox color and call sessionTimeout()
 function loaded()
 {
-   for (i = 0; i < D_EXTREME_TYPE_NUM; i++)
-   {
-      str_checkboxid = "checkbox_" + i;
-      if (document.getElementById(str_checkboxid) != undefined)
-      {
-         if (g_defaultExtremeType[i] == 1)
-            document.getElementById(str_checkboxid).style.color = "red";
-         else
-            document.getElementById(str_checkboxid).style.color = "black";
-      }
-   }
-   var timeout = window.setInterval(sessionTimeout, D_TIMEOUT);
+   //for (i = 0; i < D_EXTREME_TYPE_NUM; i++)
+   //{
+   //   str_checkboxid = "checkbox_" + i;
+   //   if (document.getElementById(str_checkboxid) != undefined)
+   //   {
+   //      if (g_defaultExtremeType[i] == 1)
+   //         document.getElementById(str_checkboxid).style.color = "red";
+   //      else
+   //         document.getElementById(str_checkboxid).style.color = "black";
+   //   }
+   //}
+   //var timeout = window.setInterval(sessionTimeout, D_TIMEOUT);
+   document.getElementsByName("searchTraineesExamineButton")[0].click();
+   document.getElementsByName("searchTraineeCancelsButton")[0].click();
+   document.getElementsByName("searchTrainingLogsButton")[0].click();
 }
 
 //check session to keep alive
@@ -1351,8 +1354,8 @@ $(function()
       var searchTraineesto1 = document.getElementsByName("searchTraineesto1")[0].value;
       var searchTraineesfrom2 = document.getElementsByName("searchTraineesfrom2")[0].value;
       var searchTraineesto2 = document.getElementsByName("searchTraineesto2")[0].value;
-      var searchTraineesStatus = document.getElementById("searchTraineesStatus").value;
-      
+	  var searchTraineesStatus = document.getElementById("searchTraineesStatus").value;
+   
       var str;                            //送出資料字串  
       
       //ajax
@@ -1360,8 +1363,8 @@ $(function()
             + "searchTraineesto1=" + searchTraineesto1 + "&" + "searchTraineesfrom2=" + searchTraineesfrom2 + "&" + "searchTraineesto2=" + searchTraineesto2 + "&" + "searchTraineesStatus=" + searchTraineesStatus;
       url_str = "Trainee/Trainees_load.php?";
       
-      // alert(url_str+str);
-      // return;
+      //alert(url_str+str);
+	  //return;
       $('#loadingWrap').show();
       $.ajax
       ({
@@ -1399,14 +1402,14 @@ $(function()
    //***Step4 searchTraineeExamines begin
    $('.btn_submit_new.searchTraineeExamines').click(function()
    {
-      var searchTraineesNameSpeaker = document.getElementById("searchTraineesNameSpeaker").value;
+      var searchTraineeExaminesNameSpeaker = document.getElementById("searchTraineeExaminesNameSpeaker").value;
       var str;                            //送出資料字串  
       
       //ajax
-      str = "cmd=searchTraineeExamines" + "&" + "searchTraineesNameSpeaker=" + encodeURIComponent(searchTraineesNameSpeaker);
+      str = "cmd=searchTraineeExamines" + "&" + "searchTraineesNameSpeaker=" + encodeURIComponent(searchTraineeExaminesNameSpeaker);
       url_str = "TraineeExamine/TraineeExamines_load.php?";
       
-      // alert(url_str+str);
+      //alert(url_str+str);
       $('#loadingWrap').show();
       $.ajax
       ({
@@ -1429,13 +1432,13 @@ $(function()
                else  //failed
                {  
                   //echo "1.0";
-                  alert(MSG_SEARCH_ERROR);
+                  //alert(MSG_SEARCH_ERROR);
                }
             });
          },
          error: function(xhr)
          {
-            alert("ajax error: " + xhr.status + " " + xhr.statusText);
+            //alert("ajax error: " + xhr.status + " " + xhr.statusText);
          }
       });
    });
@@ -1484,7 +1487,7 @@ $(function()
          }
       });
    });
-   //***Step4 searchTraineeCancelExamines end
+   //***Step4 searchTraineeCancels end
    
    //***Step4 searchTrainingLogs begin
    $('.btn_submit_new.searchTrainingLogs').click(function()
@@ -1614,7 +1617,8 @@ $(function()
             + "searchRollCallsto12=" + searchRollCallsto12 + "&" + "statusCheckbox=" + statusCheckbox;
       url_str = "RollCall/RollCalls_load.php?";
       
-      // alert(str);
+      //alert(url_str + str);
+	  //return;
       $('#loadingWrap').show();
       $.ajax
       ({
@@ -2159,7 +2163,7 @@ $(function()
       for (i=0;i<len;i++) 
       {
          if (document.getElementsByName("userMgmt_type")[i].checked)
-            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";";
+            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";"
       }
 
       len = document.getElementsByName("userMgmt_targetCom").length;
@@ -2261,7 +2265,7 @@ $(function()
       for (i=0;i<len;i++) 
       {
          if (document.getElementsByName("userMgmt_type")[i].checked)
-            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";";
+            userMgmt_type = userMgmt_type + document.getElementsByName("userMgmt_type")[i].value + ";"
       }
 
       len = document.getElementsByName("userMgmt_targetCom").length;
@@ -2438,7 +2442,6 @@ $(function()
       var searchProduct = document.getElementById("searchProduct").value;
       var searchProblemsfrom18 = document.getElementsByName("searchProblemsfrom18")[0].value;
       var searchProblemsto18 = document.getElementsByName("searchProblemsto18")[0].value;
-   
       var statusCheckbox = 0;
       if (document.getElementById("searchProbsCheckBox1").checked == true)
       {
@@ -2448,7 +2451,6 @@ $(function()
       {
          statusCheckbox += 2; 
       }
-      
       var str;                            //送出内文字串  
       
       //ajax

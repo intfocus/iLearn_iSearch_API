@@ -128,7 +128,7 @@
          return;
       }
       $str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
-          . " VALUES($UserId,'报名撤销审核','撤销审核驳回',now(),$user_id,$TrainingId)";
+          . " VALUES($UserId,'撤销审核','撤销审核驳回',now(),$user_id,$TrainingId)";
       if(!mysqli_query($link, $str_traineelog))
       {
          echo -__LINE__ . $str_traineelog;

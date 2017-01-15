@@ -15,7 +15,7 @@
       echo json_encode(array("status"=>-1, "result"=>"分类夹下文件不存在！")); //-1没有传任何参数
       return;
    }
-   $file_name=$fileid . ".zip";
+   
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -52,6 +52,7 @@
    $str_update;
    $result;                 //query result
    $file_dir;
+   $file_type;
    
    //link    
    $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
@@ -63,14 +64,15 @@
    }
    
    $file_size;
-   $str_user = "select FilePath, ZipSize from files where FileId = " . $fileid;
+   $str_user = "select FilePath, ZipSize, FileType from files where FileId = " . $fileid;
    if($result = mysqli_query($link, $str_user)){
       $row_number = mysqli_num_rows($result);
       if ($row_number > 0)
       {
          $filerow = mysqli_fetch_assoc($result);
          $file_dir = $filerow["FilePath"] . "/";
-         $file_size = $filerow["ZipSize"];
+		 $file_size = $filerow["ZipSize"];
+		 $file_type = $filerow["FileType"];
       }
       else {
          if($link){
@@ -82,6 +84,14 @@
          return;
       }
    }
+   if($file_type == 3)
+   {
+	   $file_name=$fileid . ".zip";
+   }
+   else
+   {
+	   $file_name=$fileid . ".zip";
+   }
    mysqli_close($link);
    if   (!file_exists($file_dir.$file_name))   {   //检查文件是否存在 
      echo   "文件找不到"; 
@@ -89,19 +99,24 @@
    }
    else{
       // 输入文件标签
+	  
       Header("Content-type: application/octet-stream");
       Header("Accept-Ranges: bytes");
       Header("Accept-Length: " . $file_size);
       Header("Content-Disposition: attachment; filename=" . $file_name);
+	  
       // 输出文件内容
       //echo fread($file,filesize($file_dir . $file_name));
-      $filepath = $file_dir . $file_name;
-	   $file = fopen($filepath,"r"); // 打开文件
-	   while(1) {
-         $str = fread($file,1024);
-         echo $str;
-         if (strlen($str) < 1024)
-            break;
+	  $filepath = $file_dir . $file_name;
+	  $file = fopen($filepath,"r"); // 打开文件
+	  //while(!feof($file)) {
+      //   echo fgets($file, 1024);
+      //}
+	  while(1) {
+        $str = fread($file,1024);
+        echo $str;
+        if(strlen($str) < 1024)
+           break;
       }
       fclose($file);
       exit();

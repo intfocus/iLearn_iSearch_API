@@ -84,6 +84,35 @@
       return;
    }
    
+   function CategoryNameList($CategoryId)
+	{
+       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+       $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+       if (!$strlink)  //connect to server failure    
+       {
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return;
+       }
+       if($rs = mysqli_query($strlink, $str_categorie)){
+          $row = mysqli_fetch_assoc($rs);
+          //return $row["CategoryName"];
+          if($row["ParentId"] == 1 || $CategoryId == 1){
+             mysqli_close($strlink);
+             return $row["CategoryName"];
+          }
+          else{
+             mysqli_close($strlink);
+             return CategoryNameList($row["ParentId"]) . "\\<br />" . $row["CategoryName"];
+          }
+       }
+       else{
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return "";
+       }
+    }
+   
    //----- Check command -----
    function check_command($check_str)
    {
@@ -161,9 +190,9 @@
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
             $TitleStr = "文档修改 (只允许修改文档标题及文档说明)";
-            $CategoryParent = $row["CategoryPath"];
             if ($Status == 1)
                $TitleStr = "文档查看 (上架状态无法修改)";
+		    $FilePath = CategoryNameList($CategoryId);
          }
          else
          {
@@ -176,20 +205,19 @@
             $FileType = 1;
             $TitleStr = "文档新增";
             $Status = 0;
-            $CategoryParent = "";
+			$FilePath = "";
          }
       }
    }
    else if ($FileId == 0) // Insert
    {
-      $FileName = $_POST["FileName"];
-      $FileCode = $_POST["FileCode"];
-      $PAList = $_POST["PAList"] == "" ? "All":$_POST["PAList"];
-      $ProductList = $_POST["ProductList"] == ""?"All":$_POST["ProductList"];
-      $ParentId = $_POST["ParentId"];
-      $CategoryPath = $_POST["CategoryParent"];
-      $str_query1 = "Insert into Files (FileName,FileCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status,CategoryPath)" 
-                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1,$CategoryPath)" ;
+      $FileName = $_GET["FileName"];
+      $FileCode = $_GET["FileCode"];
+      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
+      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
+      $ParentId = $_GET["ParentId"];
+      $str_query1 = "Insert into Files (FileName,FileCode,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$FileName','$FileCode',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -203,8 +231,8 @@
    }
    else // Update
    {
-      $FileTitle = $_POST["FileTitle"];
-      $FileDesc = $_POST["FileDesc"];
+      $FileTitle = $_GET["FileTitle"];
+      $FileDesc = $_GET["FileDesc"];
       //TODO EditUser=UserId
       $str_query1 = "Update Files set FileTitle='$FileTitle', FileDesc='$FileDesc', EditUser=$user_id, EditTime=now() where FileId=$FileId";
       
@@ -236,9 +264,16 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -247,35 +282,6 @@
 <title>武田 - 文档页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
-$(function(){
-   $("#tt").tree({
-      onClick: function(node){
-         //alert(node.text);
-         var categoryparent = categoryPath(node);
-         document.getElementsByName("CategoryParent")[0].value = categoryparent;
-      }
-   });
-});
-function categoryPath(node){
-   var parent = node;
-   // alert(parent.text);
-   var tree = $('#tt');
-   var path = new Array();
-   do{
-      path.unshift(parent.text);
-      var parent = tree.tree('getParent', parent.target);
-   }while(parent);
-
-   var pathStr = '';
-   for(var i = 0; i < path.length; i++){
-      pathStr += path[i];
-      if(i < path.length -1){
-         pathStr += "/";
-      }
-   }
-
-   return pathStr;
-}
 function checkFileTypeModify() {
    FileName = document.getElementsByName("FilePathModify")[0].value;
    var pos1 = FileName.lastIndexOf('/');
@@ -322,17 +328,10 @@ function modifyFilesContent(FileId)
    FileDesc = document.getElementsByName("FileDescModify")[0].value.trim();
    CategoryId = getSelectedId();
    CategoryFilePath = getSelectedFilePath();
-   CategoryParent = document.getElementsByName("CategoryParent")[0].value;
    
    if (FileTitle.length == 0 || FileDesc.length == 0)
    {
       alert("文档标题及文档说明不可为空白");
-      return;
-   }
-   
-   if (FileTitle.length > 255 || FileDesc.length > 255)
-   {
-      alert("文档标题及文档说明长度过长！请缩短后重新保存。");
       return;
    }
    
@@ -364,20 +363,12 @@ function modifyFilesContent(FileId)
       {
          //alert(str);
       },
-      type: "POST",
+      type: "GET",
       url: url_str + str,
-      data:{
-         FileTitle:FileTitle, 
-         FileDesc:FileDesc,
-         CategoryId:CategoryId,
-         
-      },
       cache: false,
-      data: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
-         res=String(res);
          if (res.match(/^-/))  //failed
          {
             alert(MSG_OPEN_CONTENT_ERROR + res);
@@ -397,55 +388,88 @@ function modifyFilesContent(FileId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
+
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <form enctype="multipart/form-data" name=uploadFileForm action="../File/Files_upload.php" method="POST">
-         <Input type=hidden name="FileId" value="0">
-         <Input type=hidden name="cmd" value="uploadFile">
-         <Input type=hidden name="CategoryId" value="1">
-         <Input type=hidden name="CategoryFilePath" value="">
-         <input type="hidden" name="CategoryParent" value="" />
-<?php
+<form class="cmxform form-horizontal tasi-form searchField" enctype="multipart/form-data" name=uploadFileForm action="../File/Files_upload.php" method="POST">
+		<input type=hidden name="FileId" value="0">
+         <input type=hidden name="cmd" value="uploadFile">
+         <input type=hidden name="CategoryId" value="1">
+         <input type=hidden name="CategoryFilePath" value="">
+
+		 <?php
    if ($FileId > 0)
    {
-?>   
-      <tr>
-         <th>文档名称：</th>
-         <td><Input type=text size=50 readonly="true" value="<?php echo $FileName;?>">(共 <?php echo $PageNo; ?> 页)</td>
-      </tr>
+?>  
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">文档路径：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  readonly="true" value="<?php echo $FilePath;?>" type="text">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">文档名称：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  readonly="true" value="<?php echo $FileName;?>" type="text">
+		</div>
+		<div class="col-lg-1">(共 <?php echo $PageNo; ?> 页)</div>
+		<div class="col-lg-1"><a href="/uat/api/FileDown_api.php?fid=<?php echo $FileId; ?>">下载</a></div>
+	</div>
 <?php
    }
    else
    {
-      echo "<Input type=hidden name=FileName>";
+      echo "<input type=hidden name=FileName>";
    }
 ?>
-      <tr>
-         <th>文档标题：</th>
-         <td><Input type=text name=FileTitleModify size=50 value="<?php echo $FileTitle;?>"></td>
-      </tr>
-      <tr>
-         <th>文档说明：</th>
-         <td><Textarea name="FileDescModify" rows=30 cols=100><?php echo $FileDesc;?></Textarea></td>
-      </tr>   
-      <tr>
-         <th>选择分类：</th>
-         <td>
-            <div style="margin:20px 0;">
-               <a id=displayExpandToButton href="#" class="easyui-linkbutton" onclick="expandTo()">显示当前所属分类</a>
+
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">文档标题：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  name="FileTitleModify" size=50 value="<?php echo $FileTitle;?>" type="text">
+		</div>
+	</div>
+	
+	<div class="form-group ">
+		<label for="cemail" class="control-label col-lg-2">文档说明：</label>
+		<div class="col-lg-7">
+			<textarea style="height:250px;" class="form-control " name="FileDescModify"><?php echo $FileDesc;?></textarea>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">选择分类：</label>
+		<div class="col-lg-7">
+			<div style="display:none;">
+               <a id=displayExpandToDeptButton href="#" class="easyui-linkbutton" onclick="expandToDept()">显示当前所属分类</a>
             </div>
             <div class="easyui-panel" style="padding:5px">
                <ul id="tt" class="easyui-tree" data-options="url:'<?php echo $web_path;?>Category_tree_load.php',method:'get',animate:true"></ul>
@@ -461,7 +485,7 @@ function modifyFilesContent(FileId)
                   var node = $('#tt').tree('find',<?php echo $CategoryId; ?>);
                   $('#tt').tree('expandTo', node.target).tree('select', node.target);
                   $('#displayExpandToButton').hide();
-                  $('#tt').tree('collapseAll');
+				  $('#tt').tree('collapseAll');
                }
                function getSelected(){
                   var node = $('#tt').tree('getSelected');
@@ -490,28 +514,45 @@ function modifyFilesContent(FileId)
                   else
                      return 0;
                }
-            </script>         
-         </td>
-      </tr>
-      <tr>
-         <th>文档类型：</th>
-         <td>
-            <Input type=radio name=FileTypeModify value=1 <?php if ($FileType == 1) echo "checked";?>>ppt转pdf(横板)
-            <Input type=radio name=FileTypeModify value=2 <?php if ($FileType == 2) echo "checked";?>>pdf(直版)
-            <Input type=radio name=FileTypeModify value=3 <?php if ($FileType == 3) echo "checked";?>>视频
-            <Input type=radio name=FileTypeModify value=4 <?php if ($FileType == 4) echo "checked";?>>Zip
-         </td>
-      </tr>
+            </script>       
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2"> 文档类型：</label>
+		<div class="col-lg-7">
+			<label class="cr-styled">
+				<input value="1" <?php if ($FileType == 1) echo "checked";?> type="radio" name="FileTypeModify">
+				<i class="fa"></i> 
+				PDF			
+			</label>
+			<label class="cr-styled" style="display:none">
+				<input value="2" <?php if ($FileType == 2) echo "checked";?> type="radio" name="FileTypeModify">
+				<i class="fa"></i> 
+				pdf(直版)			
+			</label>
+			<label class="cr-styled">
+				<input value="3" <?php if ($FileType == 3) echo "checked";?> type="radio" name="FileTypeModify">
+				<i class="fa"></i> 
+				视频		
+			</label>
+			<label class="cr-styled">
+				<input value="4" <?php if ($FileType == 4) echo "checked";?> type="radio" name="FileTypeModify">
+				<i class="fa"></i> 
+				Zip		
+			</label>
+		</div>
+	</div>
 <?php
    if ($FileId == 0)
    {
 ?>
-      <tr>
-         <th>选取上传文档：</th>
-         <td>
-            <Input type=file accept="application/pdf,application/x-zip-compressed,audio/mp4,audio/mp3" size=50 name="FilePathModify" onchange="checkFileTypeModify();" />
-         </td>
-      </tr>
+      <div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">选取上传文档：</label>
+		<div class="col-lg-7">
+            <Input class="form-control "  type=file accept="application/pdf,application/x-zip-compressed,audio/mp4,audio/mp3" size=50 name="FilePathModify" onchange="checkFileTypeModify();" />
+         
+		</div>
+	</div>
 <?php
    }
 ?>      
@@ -519,18 +560,17 @@ function modifyFilesContent(FileId)
    if ($Status != 1)
    {
 ?>       
-      <tr>
-         <th colspan="2" class="submitBtns">
-            <a class="btn_submit_new modifyFilesContent">
-               <input name="modifyFilesButton" type="button" value="保存 <?php if ($FileId > 0) echo "(只允许修改文档标题及文档说明)"; ?>" OnClick="modifyFilesContent(<?php echo $FileId;?>)">
-            </a>
-         </th>
-      </tr>      
+     <div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">
+               <input class="btn btn-success" name="modifyFilesButton" type="button" value="保存 <?php if ($FileId > 0) echo "(只允许修改文档标题及文档说明)"; ?>" OnClick="modifyFilesContent(<?php echo $FileId;?>)">
+            
+		</div>
+	</div>    
 <?php
    }
 ?>
       </Form>
-   </table>
+   </div>
 </div>
 </body>
 </html>

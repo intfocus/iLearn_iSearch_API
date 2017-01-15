@@ -84,7 +84,10 @@ pre .string.value {
       line-height: 40px; }
     .example .brick.small {
       width: 540px;
-      height: 40px; }
+      height: 40px; text-align: center;
+    color: #fff;
+    line-height: 40px;
+    font-size: 16px;}
     .example .brick.large {
       width: 300px;
       height: 300px; }
@@ -130,3 +133,5 @@ pre .string.value {
       background: #95a5a6; }
     .example .brick:nth-child(20n + 20) {
       background: #7f8c8d; }
+
+#gridlyList .example .brick { background: #3498db; }

@@ -241,6 +241,7 @@
       $str_query1 = $str_query1 . "AND EditTime >= '$searchDeptsfrom1' ";
    if ($searchDeptsto1 != '')
       $str_query1 = $str_query1 . "AND EditTime <= '$searchDeptsto1' ";
+   $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
    
    //***Step16 页面搜索SQl语句 结束
    
@@ -298,7 +299,7 @@
                                          . "<col class=\"DeptCode\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"DeptAction\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -335,7 +336,7 @@
                                          . "<col class=\"DeptCode\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"DeptAction\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"

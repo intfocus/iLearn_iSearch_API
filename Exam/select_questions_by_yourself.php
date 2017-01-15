@@ -96,11 +96,11 @@
             <tr>
                <td>
                <select id="select_specific_problem_set">
-                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
+				  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -127,8 +127,9 @@
             <tr>
                <td>
                   <select id="is_obu_or_not">
+				     <option value=2 selected>不限</option>
                      <option value=1>是</option>
-                     <option value=0 selected>否</option>
+                     <option value=0>否</option>
                   </select>
                </td>
             </tr>
@@ -142,7 +143,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -172,7 +173,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -194,7 +195,7 @@
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchExamProbs"><input name="searchExamProbsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchExamProbs"><input name="searchExamProbsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
 

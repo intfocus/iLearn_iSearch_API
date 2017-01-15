@@ -65,7 +65,7 @@
       public $Id;
       public $Name;
       public $UserId;
-      public $UserName;
+	  public $UserName;
       public $EmployeeId;
       public $CreatedTime;
       public $Status;
@@ -83,7 +83,7 @@
          $sc->Id = $row['CheckInId'];
          $sc->Name = $row['CheckInName'];
          $sc->UserId = $row['CreatedUser'];
-         $sc->UserName = $row['UserName'];
+		 $sc->UserName = $row['UserName'];
          $sc->EmployeeId = $row['EmployeeId'];
          $sc->CreatedTime = date("Y/m/d H:i:s",strtotime($row['CreatedTime']));
          $sc->Status = $row['Status'];

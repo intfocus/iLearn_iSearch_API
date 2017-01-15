@@ -140,15 +140,14 @@
    $FileDescModify = $_POST["FileDescModify"];
    $FileTypeModify = $_POST["FileTypeModify"];
    $FileName = $_POST["FileName"];
-   $CategoryPath = $_POST["CategoryParent"];
    
    ///////////////////////////////////
    // 2. 取得 FileId
    //       先 insert 再取得 FileId
    ///////////////////////////////////
    $str_query1 = "Insert into Files (FileName, FileTitle, FileDesc, CategoryId, FilePath, SmallGifPath, PageNo, FileType, 
-      Status, CreatedUser, CreatedTime, EditUser, EditTime,CategoryPath) VALUES('$FileName','$FileTitleModify','$FileDescModify',$CategoryId,'$CategoryFilePath','',0,
-      $FileTypeModify,0,$user_id,now(),$user_id,now(),'$CategoryPath');";
+      Status, CreatedUser, CreatedTime, EditUser, EditTime) VALUES('$FileName','$FileTitleModify','$FileDescModify',$CategoryId,'$CategoryFilePath','',0,
+      $FileTypeModify,0,$user_id,now(),$user_id,now());";
    mysqli_query($link,$str_query1);
    //echo $str_query1;
    //return;
@@ -189,19 +188,21 @@
       $str_query3 = "update Files set ZipSize = $FileSize where FileId = $FileId";
       mysqli_query($link,$str_query3);
    }else{
-      $path_parts = pathinfo($FileName);
-      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId." .$path_parts['extension']))
+      if(!copy($_FILES["FilePathModify"]["tmp_name"],"$total_file_path/$FileId.mp4"))
       {
          sleep(DELAY_SEC);
          $resultStr = "文档上传失败 - " . -__LINE__;
          goto errexit;
       }
+	  $FileSize = filesize("$total_file_path/$FileId.mp4");
+      $str_query4 = "update Files set ZipSize = $FileSize where FileId = $FileId";
+      mysqli_query($link,$str_query4);
    }
    
    ///////////////////////////////////
    // 4. 写入 $pdf2image_temp
    //    写入 $pdf2image_bin, FileId, FilePath
-   if ($FileTypeModify == 1 || $FileTypeModify ==2 || $FileTypeModify ==3){
+   if ($FileTypeModify == 1 || $FileTypeModify == 2 || $FileTypeModify == 3){
       $fp = fopen($pdf2image_temp,"a+");
       if (!$fp)
       {
@@ -241,6 +242,15 @@ errexit:
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
@@ -255,25 +265,41 @@ function loaded() {
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+    </div>
+    <div class="navbar-collapse collapse" role="navigation">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown text-center">
+                	
+							   <form name="logoutform" action="logout.php">
+							   </form>
+			<a class="dropdown-toggle" href="#" aria-expanded="false">
+				<i class="fa fa-user"></i>
+				<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+			</a>
+			<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+				<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+			</ul>-->
+		</li>
+		</ul>
+    </div>
+  </div>
 </div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>上传结果</span><span class="bArrow"></span></span>
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active">上传结果</li>
+</ol>
+<div id="content">   
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">上传文档结果：</label>
+		<div class="col-lg-7"><?php echo $resultStr;?></div>
+	</div>
 </div>
-<div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>上传文档结果：</th>
-         <td><?php echo $resultStr;?></td>
-      </tr>
-   </table>
 </div>
 </body>
 </html>

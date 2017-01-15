@@ -249,7 +249,6 @@
    
    $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
    
-   
    //***Step16 页面搜索SQl语句 结束
    
    // echo $str_query1;
@@ -290,8 +289,7 @@
       }
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
-                       . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
-                       . "<span class=\"btn ExamsexpandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
+                       . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -388,13 +386,13 @@
                $return_string = $return_string
                   . "<tr>"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"ExamName fixWidth\">$ExamName</span></td>"
-                  . "<td><span class=\"ExamType fixWidth\">$ExamTypeStr</span></td>"
-                  . "<td><span class=\"ExamStatus fixWidth\">$StatusStr</span></td>"
-                   . "<td><span class=\"ExamStatus fixWidth\">$ExamPassword</span></td>"
-                  . "<td><span class=\"CreatedUser fixWidth\">$CreatedUserName</span></td>"
-                  . "<td><span class=\"CreatedTime fixWidth\">$CreatedTime</span></td>"
-                  . "<td><span class=\"ExamEnd fixWidth\">$ExamEndWithOnlyDate</span></td>"
+                  . "<td><span class=\"ExamName breakAll\">$ExamName</span></td>"
+                  . "<td><span class=\"ExamType breakAll\">$ExamTypeStr</span></td>"
+                  . "<td><span class=\"ExamStatus breakAll\">$StatusStr</span></td>"
+                   . "<td><span class=\"ExamStatus breakAll\">$ExamPassword</span></td>"
+                  . "<td><span class=\"CreatedUser breakAll\">$CreatedUserName</span></td>"
+                  . "<td><span class=\"CreatedTime breakAll\">$CreatedTime</span></td>"
+                  . "<td><span class=\"ExamEnd breakAll\">$ExamEndWithOnlyDate</span></td>"
                   . "<td><A OnClick=\"actionSearchExams($ExamId,$ExamStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchExams($ExamId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchExams($ExamId);\">删除</A><br/>"
@@ -422,8 +420,7 @@
 
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
-                        . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>&nbsp;"
-                        . "<span class=\"btn ExamsexpandSR\" OnClick=\"expandSearchExamsContentFunc();\">显示过长内容</span>"
+                        . "<span align=right class=\"btn\" OnClick=\"newSearchExamsContentFunc();\">新增考卷</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----

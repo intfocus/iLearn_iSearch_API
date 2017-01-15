@@ -146,7 +146,7 @@
       public $createdTime;
    }
    
-   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1";
+   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1 and Status = 1";
    if($rs = mysqli_query($link, $str_functionsyz)){
       while($row = mysqli_fetch_assoc($rs)){
          $syz = new StuFunction();
@@ -157,7 +157,7 @@
       }
    }
    
-   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2";
+   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2 and Status = 1";
    if($rs = mysqli_query($link, $str_functioncpmc)){
       while($row = mysqli_fetch_assoc($rs)){
          $cpmc = new StuFunction();
@@ -199,7 +199,7 @@
             $DeptId = 0;
             $DeptName = "";
             $DeptCode = "";
-            $ParentId = 1;
+            $ParentId = 227;
             $PAList = "";
             $ProductList = "";
             $TitleStr = "部门新增";
@@ -261,13 +261,20 @@
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -407,8 +414,31 @@ function modifyDeptsContent(DeptId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+<!--<div id="header">
    <form name=logoutform action=logout.php>
    </form>
    <span class="global">使用者 : <?php echo $login_name ?>
@@ -419,10 +449,125 @@ function modifyDeptsContent(DeptId)
 <div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+</div>-->
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
 <div id="content">
 
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">部门名称：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  name="DeptNameModify" size=50 value="<?php echo $DeptName;?>" type="text">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">部门编号：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  name="DeptCodeModify" size=50 value="<?php echo $DeptCode;?>" type="text">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">适应症：</label>
+		<div class="col-lg-7">
+		<?php
+		for($i=0; $i<count($datasyz); $i++)
+		{
+		   $syz = $datasyz[$i];
+		?>
+		
+			<label class="cr-styled">
+				<input  value="<?php echo $syz->functionId ?>" type="checkbox" name="palist">
+				<i class="fa"></i> 
+				<?php echo $syz->functionName ?>
+			</label>
+		<?php
+		}
+?>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">产品名称：</label>
+		<div class="col-lg-7">
+		<?php
+	for($i=0; $i<count($datacpmc); $i++)
+	{
+	   $cpmc = $datacpmc[$i];
+	?>
+			<label class="cr-styled">
+					<input  value="<?php echo $cpmc->functionId ?>" type="checkbox" name="productlist">
+					<i class="fa"></i> 
+					<?php echo $cpmc->functionName ?>
+				</label>
+	<?php
+	}
+	?>
+		</div>
+	</div>
+	<div class="form-group "> 
+		<label for="curl" class="control-label col-lg-2">上级部门：</label>
+		<div class="col-lg-7">
+			<div>
+               <a id="displayExpandToButton" href="#" class="easyui-linkbutton" onclick="expandTo()">显示当前所属部门</a>
+            </div>
+            <div class="easyui-panel" style="padding:5px">
+               <ul id="tt" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true"></ul>
+            </div>
+			<script type="text/javascript">
+               function collapseAll(){
+                  $('#tt').tree('collapseAll');
+               }
+               function expandAll(){
+                  $('#tt').tree('expandAll');
+               }
+               function expandTo(){
+                  var node = $('#tt').tree('find',<?php echo $ParentId; ?>);
+                  $('#tt').tree('expandTo', node.target).tree('select', node.target);
+                  $('#displayExpandToButton').hide();
+                  $('#tt').tree('collapseAll');
+               }
+               function getSelected(){
+                  var node = $('#tt').tree('getSelected');
+                  if (node){
+                     var s = node.text;
+                     if (node.attributes){
+                        s += ","+node.attributes.p1+","+node.attributes.p2;
+                     }
+                     //alert(s);
+                     return s;
+                  }
+               }
+               function getSelectedId(){
+                  var node = $('#tt').tree('getSelected');
+                  if (node){
+                     return node.id;
+                  }
+                  else
+                     return 0;
+               }
+            </script>   
+		</div>
+	</div>
+	<?php
+   if ($Status != 1)
+   {
+?>         
+	  <div class="form-group">
+		<label class="control-label col-lg-2">　</label>
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyDeptsButton" type="button" value="保存" OnClick="modifyDeptsContent(<?php echo $DeptId;?>)">
+		</div>
+	</div>
+<?php
+   }
+?>  
+	
+</form>
+
+   <!--<table class="searchField" border="0" cellspacing="0" cellpadding="0">
       <tr>
          <th>部门名称：</th>
          <td><Input type=text name=DeptNameModify size=50 value="<?php echo $DeptName;?>"></td>
@@ -515,7 +660,8 @@ for($i=0; $i<count($datacpmc); $i++)
 <?php
    }
 ?>   
-   </table>
+   </table>-->
+</div>
 </div>
 </body>
 </html>

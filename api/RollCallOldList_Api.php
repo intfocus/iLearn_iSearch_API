@@ -77,7 +77,7 @@
       public $Reason;
       public $CreatedUser;
       public $UserName;
-      public $EmployeeId;
+	  public $EmployeeId;
    }
    
    //----- query -----
@@ -97,7 +97,7 @@
          $src->CreatedUser = $row['CreatedUser'];
          $src->UserName = $row['UserName'];
          $src->Status = $row['Status'];
-         $src->EmployeeId = $row['EmployeeId'];
+		 $src->EmployeeId = $row['EmployeeId'];
          array_push($datarollcalls,$src);
       }
    }

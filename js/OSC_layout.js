@@ -52,6 +52,8 @@ $(function() {
 		}
 	});
 	var dates2 = $( "#from2, #to2" ).datepicker({
+		maxDate: new Date(),
+		defaultDate: "+1w",
 		changeMonth: true,
       changeYear: true,
 		numberOfMonths: 1,
@@ -143,7 +145,6 @@ $(function() {
 	});
 	
 	var dates0 = $( "#from0" ).datepicker({
-      minDate: new Date(),
       defaultDate: "+1w",
       changeMonth: true,
       changeYear: true,

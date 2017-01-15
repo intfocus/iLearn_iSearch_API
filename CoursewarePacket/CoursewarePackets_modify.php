@@ -167,7 +167,7 @@
       $i = 0;
       foreach ($coursewareLists as $cl) {
          $top = $i * 60;
-         $str_query1 = "select * from coursewares where CoursewareId=$cl";
+         $str_query1 = "select * from coursewares where Status=1 and CoursewareId=$cl";
          if($result = mysqli_query($link, $str_query1)){
             $row = mysqli_fetch_assoc($result);
             $return_string = $return_string . "<div class='brick small' name='" . $cl . "'  style='position: absolute; left: 0px; top: " . $top . "px;'>" . $row["CoursewareName"] . "<div class='delete'>&times;</div></div>";
@@ -191,7 +191,7 @@
    //***Step14 如果cmd为读取通过ID获取要修改内容信息，如果cmd不为读取并且ID为零为新增动作，如果不为读取和新增则为修改动作
    if ($cmd == "read") // Load
    {
-      $str_query1 = "Select * from ppts where PPTId=$PPTId";
+      $str_query1 = "Select * from ppts where Status = 1 and PPTId=$PPTId";
       if($result = mysqli_query($link, $str_query1))
       {
          $row_number = mysqli_num_rows($result);
@@ -305,29 +305,17 @@
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
       <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
-      <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-      <script type="text/javascript" src="../lib/jquery.min.js"></script>
-      <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-      <!-- for tree view -->
-      <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
-      <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
-      <link rel="stylesheet" type="text/css" href="../css/demo.css">
-      <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-      <link rel="shortcut icon" href="img/favicon_1.ico">
+      
       <!-- Bootstrap core CSS -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/bootstrap-reset.css" rel="stylesheet">
-      
       <!--Animation css-->
       <link href="css/animate.css" rel="stylesheet">
-      
       <!--Icon-fonts css-->
       <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
       <link href="assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
-      
       <!-- DataTables -->
       <link href="assets/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-      
+      <!--Form Wizard-->
       <!-- Custom styles for this template -->
       <link href="css/style.css" rel="stylesheet">
       <link href="css/helper.css" rel="stylesheet">
@@ -338,6 +326,19 @@
       <script src='js/jquery.gridly.js' type='text/javascript'></script>
       <script src='js/sample.js' type='text/javascript'></script>
       <script src='js/rainbow.js' type='text/javascript'></script>
+
+<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/demo.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<style>
+.searchField{width:960px;}
+</style>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
       <!-- End of tree view -->
       <!--[if lt IE 10]>
       <script type="text/javascript" src="lib/PIE.js"></script>
@@ -360,9 +361,8 @@
             }
             $("input[name='CoursewareNameModify']").val(cnm);
          });
-         function cnm()
+		 function cnm()
          {
-            //alert("OK");
             var num = $("div[class='brick small']").length;
             var cnm = "";
             for(var i = 0; i<num; i++)
@@ -376,7 +376,6 @@
                   }
                });
             }
-            //alert(cnm);
             $("input[name='CoursewareNameModify']").val(cnm);
          }
          function lockFunction(obj, n)
@@ -402,7 +401,7 @@
          //***Step12 修改页面点击保存按钮出发Ajax动作
          function modifyPPTsContent(PPTId)
          {
-            cnm();
+			cnm();
             PPTName = document.getElementsByName("PPTNameModify")[0].value.trim();
             PPTDesc = document.getElementsByName("PPTDescModify")[0].value.trim();
             CoursewareList = document.getElementsByName("CoursewareNameModify")[0].value.trim();
@@ -438,8 +437,6 @@
                dataType: 'json',
                success: function(res)
                {
-         	     alert(res);
-         	    
                   //alert("Data Saved: " + res);
                   res = String(res);
                   if (res.match(/^-\d+$/))  //failed
@@ -529,22 +526,54 @@
       </Script>
       <!--Step15 新增修改页面    起始 -->
    </head>
-   <body Onload="loaded();">
-      <div id="header">
-         <form name=logoutform action=logout.php>
-         </form>
-         <span class="global">使用者 : <?php echo $login_name ?>
-            <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-         </span>
-         <span class="logo"></span>
+   <body Onload="loaded();" style="padding-top:62px!important;background: rgb(255, 255, 255);">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+			</li>
+			</ul>
+        </div>
       </div>
-      <div id="banner">
-         <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-         <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-      </div>
+    </div>
+	<div class="container">
+	<ol class="breadcrumb">
+	  <li class="active">后台功能名称</li>
+	  <li class="active"><?php echo $TitleStr; ?></li>
+	</ol>
       <div id="content">
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-            <tr>
+			<tr>
+				<td colspan="2">
+					<form class="cmxform form-horizontal tasi-form searchField">
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课件包名称：</label>
+							<div class="col-lg-7">
+								<input class=" form-control" name="PPTNameModify" type="text" value="<?php echo $PPTName;?>">
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课件包备注：</label>
+							<div class="col-lg-7">
+								<textarea class=" form-control" style="height:150px;" name="PPTDescModify"><?php echo $PPTDesc;?></textarea>
+							</div>
+						</div>
+						<input type="hidden" name="CoursewareNameModify" value="<?php echo $CoursewareList;?>">
+					</form>
+				</td>
+			</tr>
+            <!--<tr>
                <th>课件包名称：</th>
                <td><Input type="text" name="PPTNameModify" size=50 value="<?php echo $PPTName;?>"></td>
             </tr>
@@ -555,20 +584,7 @@
       	  <tr>
                <th>课件名称：</th>
                <td><Input type=text name="CoursewareNameModify" size=50 value="<?php echo $CoursewareList;?>"></td>
-            </tr>
-      		<?php
-         
-      	if ($Status != 1)
-         {
-      ?>       
-            <tr>
-               <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new modifyPPTsContent"><input name="modifyPPTsButton" type="button" value="保存" OnClick="modifyPPTsContent(<?php echo $PPTId;?>)"></a>
-               </th>
-            </tr>      
-      <?php
-         }
-      ?>   
+            </tr>-->
          </table>
       </div>
       <!--Main Content Start -->
@@ -585,14 +601,14 @@
          <!-- ================== -->
          <div class="wraper container-fluid">
             <div class="page-title"> 
-               <h3 class="title">Datatable</h3> 
+               <h3 class="title">选择课件</h3> 
             </div>
             <div class="row">
                <div class="col-md-12">
                   <div class="panel panel-default">
                      <div class="panel-heading">
-                        <h3 class="panel-title">Datatable</h3>
-                        <a class='add button' href='#'>Add</a>
+                        <h3 class="panel-title"></h3>
+                        <a class="add button btn btn-success" href="#" style="padding:10px 0; width:100px;">Add</a>
                      </div>
                      <div class="panel-body">
                         <div class="row">
@@ -614,7 +630,7 @@
                                           echo DB_ERROR;       
                                           return;
                                        }  
-                                       $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares";
+                                       $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares where Status = 1";
                                        $result = mysqli_query($link, $str_query1);
                                        $rownum = mysqli_num_rows($result);
                                        while($row = mysqli_fetch_assoc($result))
@@ -638,17 +654,36 @@
                   </div>
                </div>
             </div> <!-- End Row -->
+			<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+			   <table style="width:100%; margin:20px 0;">
+					<tbody>
+						<tr>
+							<td colspan="3" align="right">
+									<?php
+					 
+					if ($Status != 1)
+					 {
+				  ?>    
+									<a class="btn_submit_new modifyPPTsContent"><input class="btn btn-success" name="modifyPPTsButton" type="button" value="保存" OnClick="modifyPPTsContent(<?php echo $PPTId;?>)"></a>
+			 <?php
+					 }
+				  ?>   
+							</td>
+						</tr>
+					 </tbody>
+				 </table>
+				 </div>
+				 </div>
          </div>
          <!-- Page Content Ends -->
          <!-- ================== -->
-         <!-- Footer Start -->
-         <footer class="footer">
-             2015 © Velonic.
-         </footer>
-         <!-- Footer Ends -->
       </section>
+	  </div>
+	  </div>
       <!-- Main Content Ends -->
       <!-- js placed at the end of the document so the pages load faster -->
+      <!--Form Wizard-->
       <script src="js/bootstrap.min.js"></script>
       <script src="js/pace.min.js"></script>
       <script src="js/wow.min.js"></script>

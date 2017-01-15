@@ -378,7 +378,7 @@
                   . "<A OnClick=\"modifySearchCoursePackets($CoursePacketId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchCoursePackets($CoursePacketId);\">删除</A><br/>"
                   . "<A OnClick=\"uploadUserCoursePackets($CoursePacketId);\">上传课程人员名单</A><br/>"
-                  . "<A OnClick=\"uploadDeptCoursePackets($CoursePacketId);\">上传课程部门名单</A></td>"
+                  . "<A OnClick=\"uploadDeptCoursePackets($CoursePacketId);\" style=\"display:none\">上传课程部门名单</A></td>"
                   . "</tr>";
 
                $i++;

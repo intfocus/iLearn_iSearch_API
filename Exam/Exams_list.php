@@ -184,7 +184,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchExams"><input name="searchExamsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchExams"><input name="searchExamsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>
@@ -196,7 +196,6 @@ function occurTimeDatePicker()
          <div id="searchExamsPages">
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
-               <span class="btn ExamsexpandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -226,7 +225,6 @@ function occurTimeDatePicker()
             </table>
             <div class="toolMenu">
                <span align=right class="btn" OnClick="newSearchExamsContentFunc();">新增考卷</span>
-               <span class="btn ExamsexpandSR" OnClick="expandSearchExamsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

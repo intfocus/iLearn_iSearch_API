@@ -161,9 +161,9 @@
             $TrainingManager = $row["TrainingManager"];
             $ApproreLevel = $row["ApproreLevel"]; 
             // $OccurTime = $row["OccurTime"] == null ? '' : date("Y/m/d",strtotime($row["OccurTime"]));
-            $TitleStr = "课程修改";
+            $TitleStr = "培训修改";
             if ($Status == 1)
-               $TitleStr = "课程查看 (上架状态无法修改)";
+               $TitleStr = "培训查看 (上架状态无法修改)";
          }
          else
          {
@@ -172,7 +172,7 @@
             $SpeakerName = "";
             $TrainingBegin = "";
             $TrainingEnd = "";
-            $TitleStr = "课程新增";
+            $TitleStr = "培训新增";
             $StartDate = "";
             $EndDate = "";
             $TrainingLocation = "";
@@ -271,15 +271,22 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
-<title>武田 - 课程页面</title>
+<title>武田 - 培训页面</title>
 <Script Language=JavaScript>
 function lockFunction(obj, n)
 {
@@ -295,7 +302,7 @@ function click_logout()  //log out
 function loaded()
 {
    var i = <?php echo $ApproreLevel?>;
-   i = i-1;
+   //i = i-1;
    document.getElementsByName("ApproreLevel")[0].options[i].selected = true;
 }
 
@@ -315,13 +322,13 @@ function modifyTrainingsContent(TrainingId)
 
    if (TrainingName.length == 0 || SpeakerName.length == 0)
    {
-      alert("课程名称及讲师名称不可为空白");
+      alert("培训名称及讲师名称不可为空白");
       return;
    }
    
    if (TrainingName.length > 100 || SpeakerName.length > 100 || TrainingLocation.length > 1000 || TrainingMemo.length > 1000 || TrainingManager.length > 255)
    {
-      alert("课程名称，讲师名称，报名地点， 课程备注及课程负责人长度过长！请缩短后重新保存。");
+      alert("培训名称，讲师名称，报名地点， 培训备注及培训负责人长度过长！请缩短后重新保存。");
       return;
    }
    
@@ -378,7 +385,7 @@ function modifyTrainingsContent(TrainingId)
       }
    }
    else{
-      alert("课程起始时间不可为空白");
+      alert("培训起始时间不可为空白");
       return;
    }
    
@@ -397,7 +404,7 @@ function modifyTrainingsContent(TrainingId)
       }
    }
    else{
-      alert("课程截至时间不可为空白");
+      alert("培训截至时间不可为空白");
       return;
    }
    
@@ -441,7 +448,7 @@ function modifyTrainingsContent(TrainingId)
          }
          else  //success
          {
-            alert("课程新增/修改成功，页面关闭后请自行刷新");
+            alert("培训新增/修改成功，页面关闭后请自行刷新");
             window.close();
          }
       },
@@ -454,84 +461,117 @@ function modifyTrainingsContent(TrainingId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+<!--<div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+</div>-->
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
+
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>课程名称</th>
-         <td><Input type="text" name="TrainingName" size="100" value="<?php echo $TrainingName;?>" /></td>
-      </tr>
-      <tr>
-         <th>讲师名称：</th>
-         <td><input type="text" name="SpeakerName" size="100" value="<?php echo $SpeakerName;?>" /></td>
-      </tr>
-      <tr>
-         <th>报名（起始/截止）时间：</th>
-         <td>
-            <input id="from8" type="text" name="TrainingBegin" class="from" readonly="true" value="<?php echo $TrainingBegin ?>" /> 
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">培训名称</label>
+		<div class="col-lg-7">
+			<Input type="text" class=" form-control" name="TrainingName" size="100" value="<?php echo $TrainingName;?>" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">讲师名称：</label>
+		<div class="col-lg-7">
+			<input type="text" class=" form-control" name="SpeakerName" size="100" value="<?php echo $SpeakerName;?>" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">报名（起始/截止）时间：</label>
+		<div class="col-lg-7">
+			
+            <input id="from8" type="text" name="TrainingBegin" class=" form-control" readonly="true" value="<?php echo $TrainingBegin ?>" /> 
             ~ 
-            <input id="to8" type="text" class="to" name="TrainingEnd" readonly="true" value="<?php echo $TrainingEnd ?>" />
-         </td>
-      </tr>
-      <tr>
-         <th>课程（起始/截至）时间：</th>
-         <td>
-            <input id="from9" type="text" name="StartDate" class="from" readonly="true" value="<?php echo $StartDate ?>" /> 
+            <input id="to8" type="text" class=" form-control" name="TrainingEnd" readonly="true" value="<?php echo $TrainingEnd ?>" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">培训（起始/截至）时间：</label>
+		<div class="col-lg-7">
+			
+            <input id="from9" type="text" name="StartDate" class=" form-control"  readonly="true" value="<?php echo $StartDate ?>" /> 
             ~ 
-            <input id="to9" type="text" class="to" name="EndDate" readonly="true" value="<?php echo $EndDate ?>" />
-         </td>
-      </tr>
-      <tr>
-         <th>报名地点：</th>
-         <td>
-            <input type="text" name="TrainingLocation" size="100" value="<?php echo $TrainingLocation ?>" />
-         </td>
-      </tr>
-      <tr>
-         <th>课程负责人：</th>
-         <td>
-            <input type="text" name="TrainingManager" size="100" value="<?php echo $TrainingManager ?>" />
-         </td>
-      </tr>
-      <tr>
-         <th>报名审批层级：</th>
-         <td>
-            <select name="ApproreLevel">
+            <input id="to9" type="text" class=" form-control"  name="EndDate" readonly="true" value="<?php echo $EndDate ?>" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">培训地点：</label>
+		<div class="col-lg-7">
+			<input type="text" class=" form-control" name="TrainingLocation" size="100" value="<?php echo $TrainingLocation ?>" />
+		</div>
+	</div>
+	<div class="form-group " style="display:none;">
+		<label for="cname" class="control-label col-lg-2">培训负责人：</label>
+		<div class="col-lg-7">
+			<input type="text" class=" form-control" name="TrainingManager" size="100" value="<?php echo $TrainingManager ?>" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">培训报名审批层级：</label>
+		<div class="col-lg-7">
+			<select name="ApproreLevel" class=" form-control" >
+			   <option value="0">0</option>
                <option value="1">1</option>
-               <option value="2">2</option>
-               <option value="3">3</option>               
+               <option value="2">2</option>             
             </select>
-         </td>
-      </tr>
-      <tr>
-         <th>课程备注：</th>
-         <td><Textarea name="TrainingMemo" rows="30" cols="100"><?php echo $TrainingMemo;?></textarea></td>
-      </tr>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">培训备注：</label>
+		<div class="col-lg-7">
+			<Textarea name="TrainingMemo" class=" form-control" rows="30" cols="100"><?php echo $TrainingMemo;?></textarea>
+		</div>
+	</div>
 <?php
    if ($Status != 1)
    {
 ?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_Training modifyTrainingsContent"><input name="modifyTrainingsButton" type="button" value="保存" OnClick="modifyTrainingsContent(<?php echo $TrainingId;?>)"></a>
-         </th>
-      </tr>      
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2"></label>
+		<div class="col-lg-7">
+           <input name="modifyTrainingsButton" class="btn btn-success" type="button" value="保存" OnClick="modifyTrainingsContent(<?php echo $TrainingId;?>)">
+         
+		</div>
+	</div>
 <?php
    }
 ?>   
-   </table>
+   </form>
+</div>
 </div>
 </body>
 </html>

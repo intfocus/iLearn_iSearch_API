@@ -11,14 +11,14 @@
          $filetype = $_GET["ftype"];
       }
       else {
-         echo json_encode(array("status"=>-2, "result"=>"文件不存在！")); //-2没有传文件属性
+         echo json_encode(array("status"=>-4, "result"=>"文件不存在！")); //-2没有传文件属性
          return; 
       }
-      if(isset($_GET["fe"])){
-         $fileExtension = $_GET["fe"];
+	  if(isset($_GET["uid"])){
+         $userid = $_GET["uid"];
       }
       else {
-         echo json_encode(array("status"=>-2, "result"=>"文件不存在！")); //-2没有传文件属性
+         echo json_encode(array("status"=>-3, "result"=>"文件不存在！")); //-2没有传文件ID
          return; 
       }
    }
@@ -26,7 +26,7 @@
       echo json_encode(array("status"=>-1, "result"=>"文件不存在！")); //-1没有传任何参数
       return;
    }
-   $file_name=$fileid . "." . $fileExtension;
+   $file_name=$fileid;
    define("FILE_NAME", "../DB.conf");
    define("DELAY_SEC", 3);
    define("FILE_ERROR", -2);
@@ -57,7 +57,7 @@
    //timezone
    date_default_timezone_set(TIME_ZONE);      
 
-   $filepath = FILE_PATH . "/uploads/" . $filetype . "/" . $file_name;
+   $filepath = FILE_PATH . "/uploads/" . $filetype . "/" . $userid . "/" . $file_name;
    if   (!file_exists($filepath))   {   //检查文件是否存在 
      echo   "文件找不到"; 
      exit;   

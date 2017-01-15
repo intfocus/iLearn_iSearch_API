@@ -1,4 +1,4 @@
-<?php
+﻿<?php
    require_once("Exams_utility.php");
    require_once("../Problem/Problems_utility.php");
  
@@ -207,7 +207,7 @@
       $Duration = $_GET["Duration"];
       $ExamBeginTime = $_GET["ExamBeginTime"];
       $ExamEndTime = $_GET["ExamEndTime"];
-      $ExamPassword = $_GET["ExamPassword"];
+	  $ExamPassword = $_GET["ExamPassword"];
 
       $from_datetime = timestamp_to_datetime($ExamBeginTime);
       $end_datetime = timestamp_to_datetime($ExamEndTime);
@@ -229,6 +229,7 @@
                       Duration=$Duration, ExamBegin='$from_datetime', ExamPassword = '$ExamPassword', 
                       ExamEnd='$end_datetime', EditUser=$user_id, EditTime=now() where ExamId=$ExamId
 EOD;
+
 
       if(mysqli_query($link, $str_query1))
       {
@@ -492,7 +493,7 @@ function modifyExamsContent(ExamId)
          "&ExamDesc=" + encodeURIComponent(ExamDesc) + "&Duration=" + encodeURIComponent(Duration) +         
          "&ExamBeginTime=" + encodeURIComponent(from_timestamp/1000) + "&ExamEndTime=" + encodeURIComponent(to_timestamp/1000);
    url_str = "Exams_modify.php?";
-   
+
    $.ajax
    ({
       beforeSend: function()
@@ -715,7 +716,7 @@ function modifyExamsContent(ExamId)
 ?>       
       <tr>
          <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyExamsContent"><input name="modifyExamsButton" type="button" value="保存" OnClick="modifyExamsContent(<?php echo $ExamId;?>)"></a>
+            <a class="btn_submit_new modifyExamsContent"><input name="modifyExamsButton" class="btn btn-success" type="button" value="保存" OnClick="modifyExamsContent(<?php echo $ExamId;?>)"></a>
          </th>
       </tr>      
 <?php

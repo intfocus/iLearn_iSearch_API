@@ -92,16 +92,16 @@
    $ExamDetail = new ExamDetail();
 
    $select_problems = array();
-   if (isset($_GET["select_problems"]))
+   if (isset($_POST["select_problems"]))
    {
-      $select_problems = $_GET["select_problems"];
+      $select_problems = $_POST["select_problems"];
       //print_r($select_problems);
    }
 
    $problem_sets = array();
-   if (isset($_GET["problem_sets"]))
+   if (isset($_POST["problem_sets"]))
    {
-      $problem_sets = $_GET["problem_sets"];
+      $problem_sets = $_POST["problem_sets"];
       //print_r($problem_sets);
    }
    else
@@ -175,10 +175,9 @@
    $SelectedSingleSelProbs = unqiue_problem($SelectedSingleSelProbs);
    $SelectedMultiSelProbs = unqiue_problem($SelectedMultiSelProbs);
 
-   //if (count($SelectedTrueFalseProbs) == 0 && count($SelectedSingleSelProbs) == 0 && count($SelectedMultiSelProbs) == 0)
    if (!(count($SelectedTrueFalseProbs) == 0 || count($SelectedSingleSelProbs) == 0 || count($SelectedMultiSelProbs) == 0))
    {
-      echo json_encode(array("code"=>ERR_NOT_ENOUGH_PROBLEM, "message"=>"问题数量不够2"));
+      echo json_encode(array("code"=>ERR_NOT_ENOUGH_PROBLEM, "message"=>"问题数量不够"));
       return;
    }
 
@@ -270,10 +269,14 @@
       {
          $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory like '%,$obu_id,%')";
       }
-      else
+      if ($is_obu_require == 0)
       {
          $str_query1 = "select * from problems where Status = 1 AND (ProblemCategory NOT like '%,$obu_id,%')";
-       }
+      }
+	  if ($is_obu_require == 2)
+      {
+         $str_query1 = "select * from problems where Status = 1";
+      }
 
       //----- query -----
       if (count($product_functions_id) == 0 && count($adapation_functions_id) == 0)
@@ -321,7 +324,6 @@
             }
          }
       }
-      echo $str_query1 . "<br />";
 
       //***Step16 页面搜索SQl语句 结束
       /////////////////////

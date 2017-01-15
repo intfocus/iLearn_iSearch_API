@@ -1,10 +1,8 @@
 <?php
-print_r($_GET["ftype"]);
-echo "<pre>";
-print_r($_POST);
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
+//print_r($_POST);
+//echo "<pre>";
+//print_r($_FILES);
+//echo "</pre>";
 // 
 // if(move_uploaded_file($_FILES['upimg']['tmp_name'],$_FILES['upimg']['name'])){
  // echo 'ok';
@@ -23,12 +21,18 @@ echo "</pre>";
    
    //define
    define("File_PATH", $file_path);
-   $savefile = File_PATH . "/uploads/" . $_GET["ftype"];
+   $savefile = File_PATH . "/uploads/" . $_POST["FileType"];
    if (!file_exists($savefile))
    {
       mkdir ($savefile);
       //echo '创建文件夹test成功';
-   } 
+   }
+   $savefile = $savefile . "/" . $_POST["UserId"];
+   if (!file_exists($savefile))
+   {
+      mkdir ($savefile);
+      //echo '创建文件夹test成功';
+   }
    // else 
    // {
       // echo '需创建的文件夹test已经存在';

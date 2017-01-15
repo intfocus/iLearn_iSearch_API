@@ -87,6 +87,35 @@
       return;
    }
    
+   function CategoryNameList($CategoryId)
+	{
+       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+       $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+       if (!$strlink)  //connect to server failure    
+       {
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return;
+       }
+       if($rs = mysqli_query($strlink, $str_categorie)){
+          $row = mysqli_fetch_assoc($rs);
+          //return $row["CategoryName"];
+          if($row["ParentId"] == 1 || $CategoryId == 1){
+             mysqli_close($strlink);
+             return $row["CategoryName"];
+          }
+          else{
+             mysqli_close($strlink);
+             return CategoryNameList($row["ParentId"]) . "\\" . $row["CategoryName"];
+          }
+       }
+       else{
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return "";
+       }
+    }
+   
    //----- Check command -----
    function check_command($check_str)
    {
@@ -148,7 +177,7 @@
       public $createdTime;
    }
    
-   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1";
+   $str_functionsyz="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=1 and Status = 1";
    if($rs = mysqli_query($link, $str_functionsyz)){
       while($row = mysqli_fetch_assoc($rs)){
          $syz = new StuFunction();
@@ -159,7 +188,7 @@
       }
    }
    
-   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2";
+   $str_functioncpmc="select FunctionId, FunctionName, CreatedTime from functions where FunctionType=2 and Status = 1";
    if($rs = mysqli_query($link, $str_functioncpmc)){
       while($row = mysqli_fetch_assoc($rs)){
          $cpmc = new StuFunction();
@@ -201,9 +230,9 @@
             $EditTime = $row["EditTime"];
             $CreatedTime = $row["CreatedTime"];
             $TitleStr = "分类修改";
-            $CategoryParent = $row["CategoryPath"];
             if ($Status == 1)
                $TitleStr = "分类查看 (上架状态无法修改)";
+		    $CategoryPath = CategoryNameList($row["CategoryId"]);
          }
          else
          {
@@ -215,20 +244,19 @@
             $ProductList = "";
             $TitleStr = "分类新增";
             $Status = 0;
-            $CategoryParent = "";
+			$CategoryPath = "";
          }
       }
    }
    else if ($CategoryId == 0) // Insert
    {
-      $CategoryName = $_POST["CategoryName"];
-      $FilePath = $_POST["FilePath"];
-      $PAList = $_POST["PAList"] == "" ? "All":$_POST["PAList"];
-      $ProductList = $_POST["ProductList"] == ""?"All":$_POST["ProductList"];
-      $ParentId = $_POST["ParentId"];
-      $CategoryPath = $_POST["CategoryParent"];
-      $str_query1 = "Insert into Categories (CategoryName,FilePath,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status,CategoryPath)" 
-                  . " VALUES('$CategoryName','$FilePath',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1,$CategoryPath)" ;
+      $CategoryName = $_GET["CategoryName"];
+      $FilePath = $_GET["FilePath"];
+      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
+      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
+      $ParentId = $_GET["ParentId"];
+      $str_query1 = "Insert into Categories (CategoryName,FilePath,ParentId,PAList,ProductList,CreatedUser,CreatedTime,EditUser,EditTime,Status)" 
+                  . " VALUES('$CategoryName','$FilePath',$ParentId,'$PAList','$ProductList',$user_id,now(),$user_id,now(),1)" ;
       if(mysqli_query($link, $str_query1))
       {
 		 $str_id = (string)mysqli_insert_id($link);
@@ -246,15 +274,13 @@
    }
    else // Update
    {
-      $CategoryName = $_POST["CategoryName"];
-      $FilePath = $_POST["FilePath"] . "/" . $CategoryId;
-      $ParentId = $_POST["ParentId"];
-      $PAList = $_POST["PAList"] == "" ? "All":$_GET["PAList"];
-      $ProductList = $_POST["ProductList"] == ""?"All":$_GET["ProductList"];
-      $CategoryPath = $_POST["CategoryParent"];
+      $CategoryName = $_GET["CategoryName"];
+      $FilePath = $_GET["FilePath"] . "/" . $CategoryId;
+      $ParentId = $_GET["ParentId"];
+      $PAList = $_GET["PAList"] == "" ? "All":$_GET["PAList"];
+      $ProductList = $_GET["ProductList"] == ""?"All":$_GET["ProductList"];
       //TODO EditUser=UserId
-      $str_query1 = "Update Categories set CategoryName='$CategoryName', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, ";
-      $str_query1 = $str_query1 . "EditTime=now(), CategoryPath='$CategoryPath' where CategoryId=$CategoryId";
+      $str_query1 = "Update Categories set CategoryName='$CategoryName', ParentId=$ParentId, FilePath='$FilePath', PAList='$PAList', ProductList='$ProductList', EditUser=$user_id, EditTime=now() where CategoryId=$CategoryId";
       if(mysqli_query($link, $str_query1))
       {
          echo "0";
@@ -283,9 +309,16 @@
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -295,35 +328,6 @@
 <!-- BEG_ORISBOT_NOINDEX -->
 <!-- Billy 2012/2/3 -->
 <Script Language=JavaScript>
-$(function(){
-   $("#tt").tree({
-      onClick: function(node){
-         //alert(node.text);
-         var categoryparent = categoryPath(node);
-         document.getElementsByName("CategoryParent")[0].value = categoryparent;
-      }
-   });
-});
-function categoryPath(node){
-   var parent = node;
-   // alert(parent.text);
-   var tree = $('#tt');
-   var path = new Array();
-   do{
-      path.unshift(parent.text);
-      var parent = tree.tree('getParent', parent.target);
-   }while(parent);
-
-   var pathStr = '';
-   for(var i = 0; i < path.length; i++){
-      pathStr += path[i];
-      if(i < path.length -1){
-         pathStr += "/";
-      }
-   }
-
-   return pathStr;
-}
 function lockFunction(obj, n)
 {
    if (g_defaultExtremeType[n] == 1)
@@ -385,7 +389,6 @@ function loaded()
       }
    }
    window.setTimeout("expandTo()",2000);
-   // window.setTimeout("expandToDept()", 2000);
 }
 //***Step23 PAList and ProductList begin
 function PAListStr(){
@@ -423,7 +426,6 @@ function modifyCategoriesContent(CategoryId)
    CategoryName = document.getElementsByName("CategoryNameModify")[0].value.trim();
    ParentId = getSelectedId();
    FilePath = getSelectedFilePath();
-   CategoryParent = document.getElementsByName("CategoryParent")[0].value;
    //alert(DeptList);
    
    if (CategoryName.length == 0)
@@ -432,16 +434,9 @@ function modifyCategoriesContent(CategoryId)
       return;
    }
    
-   if (CategoryName.length > 100)
-   {
-      alert("分类名称长度过长！请缩短后重新保存。");
-      return;
-   }
-   
-   // str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
-         // "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
-         // "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath);
-   str = "cmd=write&CategoryId=" + CategoryId;
+   str = "cmd=write&CategoryId=" + CategoryId + "&CategoryName=" + encodeURIComponent(CategoryName) + 
+         "&ProductList=" + encodeURIComponent(ProductList) + "&PAList=" + encodeURIComponent(PAList) + 
+         "&ParentId=" + ParentId + "&FilePath=" + encodeURIComponent(FilePath);
    url_str = "../Category/Categories_modify.php?";
 
    //alert(url_str + str);
@@ -452,22 +447,12 @@ function modifyCategoriesContent(CategoryId)
       {
          //alert(str);
       },
-      type: "POST",
+      type: "GET",
       url: url_str + str,
-      data:{
-         CategoryName:CategoryName,
-         ProductList:ProductList,
-         PAList:PAList,
-         ParentId:ParentId,
-         FilePath:FilePath,
-         CategoryParent:CategoryParent,
-      },
       cache: false,
-      dataType: 'json',
       success: function(res)
       {
          //alert("Data Saved: " + res);
-         res = String(res);
          if (res.match(/^-\d+$/))  //failed
          {
             alert(MSG_OPEN_CONTENT_ERROR);
@@ -487,58 +472,106 @@ function modifyCategoriesContent(CategoryId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <input type="hidden" name="CategoryParent" value="<?php echo $CategoryParent;?>" />
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uatui/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+<!--<div id="banner">
    <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
    <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-</div>
+</div>-->
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
+
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>分类名称：</th>
-         <td><Input type=text name=CategoryNameModify size=50 value="<?php echo $CategoryName;?>"></td>
-      </tr>
-      <tr>
-         <th>适应症：</th>
-         <td>
+
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
 <?php
-for($i=0; $i<count($datasyz); $i++)
-{
-   $syz = $datasyz[$i];
+	if($CategoryId !== 0)
+	{
 ?>
-           <input type="checkbox" value="<?php echo $syz->functionId ?>" name="palist"/><?php echo $syz->functionName ?>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">分类路径：</label>
+		<div class="col-lg-7">
+			<input class=" form-control" readonly="true" name="CategoryNameModify" size=50 value="<?php echo $CategoryPath;?>" type="text">
+		</div>
+	</div>
 <?php
-}
+	}
 ?>
-         </td>
-      </tr>
-      <tr>
-         <th>产品名称：</th>
-         <td>
-<?php
-for($i=0; $i<count($datacpmc); $i++)
-{
-   $cpmc = $datacpmc[$i];
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">分类名称：</label>
+		<div class="col-lg-7">
+			<input class=" form-control"  name="CategoryNameModify" size=50 value="<?php echo $CategoryName;?>" type="text">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">适应症：</label>
+		<div class="col-lg-7">
+
+		<?php
+		for($i=0; $i<count($datasyz); $i++)
+		{
+		   $syz = $datasyz[$i];
+		?>
+			<label class="cr-styled">
+				<input  value="<?php echo $syz->functionId ?>" type="checkbox"  name="palist">
+				<i class="fa"></i> 
+				<?php echo $syz->functionName ?>
+			</label>
+		<?php
+		}
 ?>
-           <input type="checkbox" value="<?php echo $cpmc->functionId ?>" name="productlist"/><?php echo $cpmc->functionName ?>
-<?php
-}
-?>
-         </td>
-      </tr>
-      <tr>
-         <th>选择分类：</th>
-         <td>
-            <div style="margin:20px 0;">
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">产品名称：</label>
+		<div class="col-lg-7">
+		<?php
+	for($i=0; $i<count($datacpmc); $i++)
+	{
+	   $cpmc = $datacpmc[$i];
+	?>
+			<label class="cr-styled">
+					<input  value="<?php echo $cpmc->functionId ?>" type="checkbox"  name="productlist">
+					<i class="fa"></i> 
+					<?php echo $cpmc->functionName ?>
+				</label>
+	<?php
+	}
+	?>
+		</div>
+	</div>
+	
+	
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-2">选择分类：</label>
+		<div class="col-lg-7">
+            <div>
                <a id=displayExpandToButton href="#" class="easyui-linkbutton" onclick="expandTo()">显示当前所属分类</a>
             </div>
             <div class="easyui-panel" style="padding:5px">
@@ -555,7 +588,7 @@ for($i=0; $i<count($datacpmc); $i++)
                   var node = $('#tt').tree('find',<?php echo $ParentId; ?>);
                   $('#tt').tree('expandTo', node.target).tree('select', node.target);
                   $('#displayExpandToButton').hide();
-                  $('#tt').tree('collapseAll');
+				  $('#tt').tree('collapseAll');
                }
                function getSelected(){
                   var node = $('#tt').tree('getSelected');
@@ -598,22 +631,24 @@ for($i=0; $i<count($datacpmc); $i++)
                   else
                      return 0;
                }
-            </script>         
-         </td>
-      </tr>
+            </script>        
+		</div>
+	</div>
 <?php
    if ($Status != 1)
    {
 ?>       
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyCategoriesContent"><input name="modifyCategoriesButton" type="button" value="保存" OnClick="modifyCategoriesContent(<?php echo $CategoryId;?>)"></a>
-         </th>
-      </tr>      
+	  <div class="form-group">
+		<label class="control-label col-lg-2">　</label>
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyCategoriesButton" type="button" value="保存" OnClick="modifyCategoriesContent(<?php echo $CategoryId;?>)">
+		</div>
+	</div>
 <?php
    }
 ?>   
-   </table>
+  
+</div>
 </div>
 </body>
 </html>

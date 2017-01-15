@@ -91,7 +91,6 @@
          $this->selections = array_slice($problem_details, 8);
       }
       
-      
       function _parse_level($level_name)
       {
          if (strlen($level_name) == 0)
@@ -103,7 +102,7 @@
             return get_level_id($level_name);
          }
       }
-      
+	  
       /*
       function _parse_level($level_id)
       {
@@ -117,7 +116,7 @@
             return $level_id;
          }
       }
-      */
+	  */
       
       function _parse_product($input)
       {
@@ -376,7 +375,7 @@
       }
       else if ($prob_type == MULTI_CHOICE_PROB)
       {
-         if (strlen($prob_answer) < 1 || is_answer_has_empty_selection($prob_answer, $selections))
+         if (strlen($prob_answer) <= 1 || is_answer_has_empty_selection($prob_answer, $selections))
          {
             return false;
          }

@@ -40,15 +40,10 @@ class OneLogin_Saml2_AuthnRequest
         $idpData = $this->_settings->getIdPData();
         $security = $this->_settings->getSecurityData();
 
-        $id = OneLogin_Saml2_Utils::generateUniqueID();
+		$id = OneLogin_Saml2_Utils::generateUniqueID();
         $issueInstant = OneLogin_Saml2_Utils::parseTime2SAML(time());
         
         $nameIDPolicyFormat = $spData['NameIDFormat'];
-		echo "1@@@@@@@@@@@@<br /> nameIDPolicyFormat: ";
-		print_r($nameIDPolicyFormat);
-		echo "<br /> OneLogin_Saml2_Constants::NAMEID_ENCRYPTED: ";
-		print_r(OneLogin_Saml2_Constants::NAMEID_ENCRYPTED);
-		echo "2@@@@@@@@@@@@<br />";
 		//$nameIDPolicyFormat = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified";
         if (isset($security['wantNameIdEncrypted']) && $security['wantNameIdEncrypted']) {
             $nameIDPolicyFormat = OneLogin_Saml2_Constants::NAMEID_ENCRYPTED;
@@ -91,7 +86,7 @@ ISPASSIVE;
             if ($security['requestedAuthnContext'] === true) {
                 $requestedAuthnStr = <<<REQUESTEDAUTHN
     <samlp:RequestedAuthnContext Comparison="exact">
-        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
     </samlp:RequestedAuthnContext>
 REQUESTEDAUTHN;
             } else {

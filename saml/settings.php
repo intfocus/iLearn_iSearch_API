@@ -28,7 +28,7 @@ $settings = array (
         // returned to the requester, in this case our SP.
         'singleLogoutService' => array (
             // URL Location where the <Response> from the IdP will be returned
-            'url' => 'https://tsa-china.takeda.com.cn/uat/saml/sp/slo.php',
+            'url' => 'https://tsa-china.takeda.com.cn/uat/saml/sp/slo.php'
             // SAML protocol binding to be used when returning the <Response>
             // message.  Onelogin Toolkit supports for this endpoint the
             // HTTP-Redirect binding only
@@ -42,7 +42,7 @@ $settings = array (
         // Usually x509cert and privateKey of the SP are provided by files placed at
         // the certs folder. But we can also provide them with the following parameters
         'x509cert' => '',
-        'privateKey' => '',
+        'privateKey' > '',
     ),
 
     // Identity Provider Data that we want connect with our SP

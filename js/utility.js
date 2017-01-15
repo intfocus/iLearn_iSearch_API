@@ -20,15 +20,15 @@ function output_category_str_from_func_array(func_array)
    {
       if (i == func_array.length - 1)
       {
-         output_str = output_str + func_array[i];
+         output_str = output_str + func_array[i]
       }
       else
       {
-         output_str = output_str + func_array[i] + ",,";
+         output_str = output_str + func_array[i] + ",,"
       }
    }
 
-   output_str = output_str + ",";
+   output_str = output_str + ","
    
    return output_str;
 }

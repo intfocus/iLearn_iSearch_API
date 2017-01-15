@@ -139,14 +139,6 @@
    $str_query2 = "update trainees set Status = $approreLevel, ExamineUser = '$str_user' where  TrainingId = $TrainingId and UserId = $UserId";
 
    if(mysqli_query($link, $str_query2)){
-      $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject)" 
-               . " VALUES('$UserId','报名审核','审核同意',now(),'$user_id','$TrainingId')";
-      if(!mysqli_query($link, $str_log))
-      {
-         echo -__LINE__ . $str_log;
-         mysqli_close($link);
-         return;
-      }
       echo "0";
       mysqli_close($link);
       return;

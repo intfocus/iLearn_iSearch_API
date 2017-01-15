@@ -2,14 +2,14 @@
 //***Step5 expand search Result table
 function expandSearchTrainingsContentFunc()
 {
-   if ($('span.TrainingName, span.Speaker, span.TrainingManager').hasClass('fixWidth'))
+   if ($('span.TrainingName, span.Speaker, span.TrainingManager, span.TrainingDate, span.EnrollDate').hasClass('fixWidth'))
    {
-      $('span.TrainingName, span.Speaker, span.TrainingManager').removeClass('fixWidth');
+      $('span.TrainingName, span.Speaker, span.TrainingManager, span.TrainingDate, span.EnrollDate').removeClass('fixWidth');
       $('.TrainingsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.TrainingName, span.Speaker, span.TrainingManager').addClass('fixWidth');
+      $('span.TrainingName, span.Speaker, span.TrainingManager, span.TrainingDate, span.EnrollDate').addClass('fixWidth');
       $('.TrainingsexpandSR').text('显示过长内容');
    }
 }
@@ -170,7 +170,7 @@ function occurTimeDatePicker()
       <form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
-               <th>课程名称/讲师名称搜索 ：</th>
+               <th>培训班名称/讲师名称搜索 ：</th>
                <td><input id="searchTrainingsNameSpeaker" type="text" maxlength="50"></td>
                <th>状态 ：</th>
                <td colspan="3">
@@ -185,14 +185,14 @@ function occurTimeDatePicker()
                </td>
             </tr>
             <tr>
-               <th>课程截止时间 ：</th>
+               <th>培训班截止时间 ：</th>
                <td colspan="3">
                   <input id="from9" type="text" name="searchTrainingsfrom2" class="from" readonly="true"/> ~ <input id="to9" type="text" class="to" name="searchTrainingsto2" readonly="true"/>
                </td>
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchTrainings"><input name="searchTrainingsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchTrainings"><input name="searchTrainingsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>
@@ -220,12 +220,12 @@ function occurTimeDatePicker()
                </colgroup>
                <tr>
                   <th>编号</th>
-                  <th>课程名称</th>
+                  <th>培训班名称</th>
                   <th>讲师名称</th>
-                  <th>课程负责人</th>
-                  <th>课程状态</th>
-                  <th>课程时间</th>
-                  <th>报名时间</th>
+                  <th>培训班负责人</th>
+                  <th>培训班状态</th>
+				  <th>报名时间</th>
+                  <th>培训班时间</th>
                   <th>动作</th>
                </tr>
                <tr>

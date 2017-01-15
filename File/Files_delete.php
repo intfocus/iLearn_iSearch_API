@@ -113,6 +113,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','文件管理','文件删除',now(),'文件删除','$FileId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

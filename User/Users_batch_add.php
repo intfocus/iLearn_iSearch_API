@@ -98,24 +98,6 @@
       return $check_str;
    }
    
-   function detp_id($deptname)
-   {
-      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-      $str_deptId = "select DeptId from depts where deptname = '$deptname'";
-      if($result = mysqli_query($link, $str_deptId))
-      {
-         $row_number = mysqli_num_rows($result);
-         if($row_number==1)
-         {
-            $row = mysqli_fetch_assoc($result); 
-            return $row["DeptId"];
-         }
-         else {
-             return 0;
-         }
-      }
-   }
-   
    function check_email($check_str)
    {
       $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
@@ -156,7 +138,7 @@
    else if ($cmd == "write") // Batch Insert
    {
       $newUsersBatchInput = $_POST["newUsersBatchInput"];
-      // $DeptId = $_POST["DeptId"];
+      $DeptId = $_POST["DeptId"];
       // 1. 按照 \n 切开
       $tmp = explode("\n", $newUsersBatchInput);
       $tmp_count = count($tmp);
@@ -165,7 +147,7 @@
       for ($i=0;$i<$tmp_count;$i++)
       {
          $ret = explode(',',$tmp[$i]);
-         if (count($ret) != 6 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0 || strlen($ret[3])==0 || strlen($ret[4])==0 || strlen($ret[5])==0)
+         if (count($ret) != 4 || strlen($ret[0])==0 || strlen($ret[1])==0 || strlen($ret[2])==0 || strlen($ret[3])==0)
          {
             echo "-- 第" . ($i+1) . "笔数据格式错误 -- " . $tmp[$i];
             return;
@@ -187,10 +169,8 @@
          $UserName = $result[$i][1];
          $UserEmail = $result[$i][2];
          $UserWId = $result[$i][3];
-         $UserDeptId = detp_id($result[$i][4]);
-         $UserCheckInTime = date("Y/m/d",strtotime($result[$i][5]));
-         $sql_str = "Insert into Users (UserName,Email,EmployeeId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,UserWId,DeptId,CheckInTime)" .
-            " VALUES('$UserName','$UserEmail','$EmployeeId',1,0,1,$user_id,now(),$user_id,now(),'$UserWId',$UserDeptId,'$UserCheckInTime');";
+         $sql_str = "Insert into Users (UserName,Email,EmployeeId,DeptId,Status,CanApprove,JobGrade,CreatedUser,CreatedTime,EditUser,EditTime,UserWId)" .
+            " VALUES('$UserName','$UserEmail','$EmployeeId',$DeptId,1,0,1,$user_id,now(),$user_id,now(),'$UserWId');";
          if (!mysqli_query($link, $sql_str))
          {
             mysqli_rollback($link);
@@ -199,7 +179,7 @@
                mysqli_close($link);
                $link = 0;
             }
-            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail,$UserWId,$UserDeptId";
+            $ErrMsg = "第" . ($i+1) . "笔数据新增失败 -- $EmployeeId,$UserName,$UserEmail,$UserWId";
             echo "-- " . $ErrMsg;
             return;
          }
@@ -232,13 +212,20 @@
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -260,13 +247,14 @@ function click_logout()  //log out
 
 function loaded()
 {
-   //window.setTimeout("expandTo()",2000);
+   window.setTimeout("expandTo()",2000);
 }
 //***Step12 修改页面点击保存按钮出发Ajax动作
 function modifyUsersContent()
 {
+   alert("OK");
    newUsersBatchInput = document.getElementsByName("newUsersBatchInput")[0].value.trim();
-   //DeptId = getSelectedId();
+   DeptId = getSelectedId();
    
    //str = "cmd=write&newUsersBatchInput=" + encodeURIComponent(newUsersBatchInput) + "&DeptId=" + DeptId;
    url_str = "../User/Users_batch_add.php?cmd=write";
@@ -281,9 +269,11 @@ function modifyUsersContent()
       type: "POST",
       url: url_str,
       data:{
-         newUsersBatchInput:newUsersBatchInput
+         newUsersBatchInput:newUsersBatchInput,
+         DeptId:DeptId,
       },
       cache: false,
+      dataType: 'json',
       success: function(res)
       {
          res = String(res);
@@ -307,36 +297,79 @@ function modifyUsersContent()
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
-</div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>批次上传用户</span><span class="bArrow"></span></span>
-</div>
+<body Onload="loaded();" style="padding-top: 62px !important; background: rgb(255, 255, 255);">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active">批次上传用户</li>
+</ol>
 <div id="content">
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email,WId,部门,入职日期)</th>
-      </tr>
-      <tr>
-         <td><Textarea name=newUsersBatchInput rows=30 cols=100>
-工号1,姓名1,Email1,WId,部门,入职日期（yyyy-mm-dd）
-工号2,姓名2,Email2,WId,部门,入职日期（yyyy-mm-dd）
-         </Textarea></td>        
-      </tr>    
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyUsersContent"><input name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent();"></a>
-         </th>
-      </tr>        
-   </table>
+	<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-10" style="text-align:left; margin-bottom:5px;">批次上传内容：(一行一笔数据，数据格式为 工号,姓名,Email)：</label>
+		<div class="col-lg-7">
+			<textarea style="height:250px;" class="form-control " id="ccomment" name="newUsersBatchInput">工号1,姓名1,Email1
+工号2,姓名2,Email2</textarea>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-lg-10" style="text-align:left; margin-bottom:5px;">选择部门：</label>
+		<div class="col-lg-7">
+
+	<div class="easyui-panel" style="padding:5px">
+		<ul id="tt" class="easyui-tree" data-options="url:'<?php echo $web_path ?>Dept_tree_load.php',method:'get',animate:true"></ul>
+	</div>
+	<script type="text/javascript">
+      function expandTo(){
+		 var node = $('#tt').tree('find',1);
+		 $('#tt').tree('expandTo', node.target).tree('select', node.target);
+         $('#displayExpandToButton').hide();
+		 $('#tt').tree('collapseAll');
+	  }
+      function getSelectedId(){
+			var node = $('#tt').tree('getSelected');
+			if (node){
+            return node.id;
+			}
+         else
+            return 0;
+		}
+	</script>         
+ 
+
+		</div>
+	</div>
+	  <div class="form-group">
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyUsersButton" type="button" value="保存" OnClick="modifyUsersContent()">
+		</div>
+	</div>
+</form>
+
+</div>
 </div>
 </body>
 </html>

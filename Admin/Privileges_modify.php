@@ -182,7 +182,7 @@
             $CreatedTime = $row["CreatedTime"];
             $TitleStr = "用户权限修改";
             if ($Status == 1)
-               $TitleStr = "用户权限查看 (上架状态无法修改)";
+               $TitleStr = "用户权限修改";
          }
          else
          {
@@ -220,9 +220,9 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
@@ -231,34 +231,26 @@
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
 <link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
 <!-- for tree view -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
 
-
-        <!-- Bootstrap core CSS -->
-        <link href="../newui/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../newui/css/bootstrap-reset.css" rel="stylesheet">
-
-        <!--Animation css-->
-        <link href="../newui/css/animate.css" rel="stylesheet">
-
-        <!--Icon-fonts css-->
-        <link href="../newui/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        <link href="../newui/assets/ionicon/css/ionicons.min.css" rel="stylesheet" />
-
-        <!--Morris Chart CSS -->
-        <link rel="stylesheet" href="../newui/assets/morris/morris.css">
-
-        <!-- sweet alerts -->
-        <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="../newui/css/style.css" rel="stylesheet">
-        <link href="../newui/css/helper.css" rel="stylesheet">
-        <link href="../newui/css/style-responsive.css" rel="stylesheet" />
 <title>武田 - 用户页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
@@ -339,148 +331,100 @@ function modifyPrivilegesContent(UserId)
 </Script>
 <!--Step15 新增修改页面    起始 -->
 </head>
-<body Onload="loaded();">
 
-        <!--Main Content Start -->
-        <div class="" id="content">
-            
-            <!-- Header -->
-            <header class="top-head container-fluid">
-                <button type="button" class="navbar-toggle pull-left">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                
-                
-                <!-- Left navbar -->
-                <nav class=" navbar-default hidden-xs" role="navigation">
-                    <ul class="nav navbar-nav">
+<body Onload="loaded();" style="padding-top:62px!important; background:#fff;">
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uatui/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+				<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+					<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+				</ul>-->
+			</li>
+			</ul>
+        </div>
+      </div>
+    </div>
 
-                        <li><a href="#"><?php echo date('Y-m-d',time()); ?></a></li>
-                    </ul>
-                </nav>
-                
-                <!-- Right navbar -->
-                <ul class="list-inline navbar-right top-menu top-right-menu">  
-
-                    <!-- user login dropdown start-->
-                    <li class="dropdown text-center">
-              	
-						   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
-						   <form name=logoutform action=logout.php>
-						   </form>
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <i class="fa fa-user"></i>
-                            <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
-                            <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
-                        </ul>
-                    </li>
-                    <!-- user login dropdown end -->       
-                </ul>
-                <!-- End right navbar -->
-
-            </header>
-            <!-- Header Ends -->
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active"><?php echo $TitleStr; ?></li>
+</ol>
 
 
-            <!-- Page Content Start -->
-            <!-- ================== -->
+<div id="content">
+<form class="cmxform form-horizontal tasi-form searchField" id="commentForm" method="get" action="#" novalidate="novalidate">
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">用户名称：</label>
+		<div class="col-lg-7">
+			<Input type=text readonly="true" class=" form-control" name=UserNameModify size=50 value="<?php echo $UserName;?>">
+        </div>
+    </div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">工号：</label>
+		<div class="col-lg-7">
+			<Input type=text readonly="true" class=" form-control" name=EmployeeId size=50 value="<?php echo $EmployeeId;?>">
+        </div>
+    </div>
 
-            <div class="wraper container-fluid">
-                <div class="page-title"> 
-                    <h3 class="title"><?php echo $TitleStr; ?></h3> 
-                </div>
-
-                <!-- Basic Form Wizard -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body"> 
-
-   <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-         <th>用户名称：</th>
-         <td><Input type=text readonly="true" name=UserNameModify size=50 value="<?php echo $UserName;?>"></td>
-      </tr>
-      <tr>
-         <th>工号：</th>
-         <td><Input type=text readonly="true" name=EmployeeId size=50 value="<?php echo $EmployeeId;?>"></td>
-      </tr>
-      <tr>
-         <th>用户邮箱：</th>
-         <td><Input type=text readonly="true" name=UserEmailModify size=50 value="<?php echo $UserEmail;?>"></td>
-      </tr>
-      <tr>
-         <th>后台功能列表：</th>
-         <td>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">用户邮箱：</label>
+		<div class="col-lg-7">
+			<Input type=text readonly="true" class=" form-control" name=UserEmailModify size=50 value="<?php echo $UserEmail;?>">
+        </div>
+    </div>
+	<div class="form-group ">
+		<label for="cname" class="control-label col-lg-2">后台功能列表：</label>
+		<div class="col-lg-7">
+			
 
       <!-- 显示所有的 function_name with functionId 以及目前这个 user 有哪些权限 开始-->
-      <table>
-         <tr>
 <?php      
-      $str_query1 = "Select * from functions where FunctionType=0 order by Rank" ;
-      $i = 1;
+      $str_query1 = "Select * from functions where FunctionType=0" ;
       if ($result = mysqli_query($link, $str_query1))
       {
          while ($row = mysqli_fetch_assoc($result))
          {
             $func_name = $row["FunctionName"];
             $func_id = $row["FunctionId"];
-            echo "<td><Input type=checkbox name='privilegesList' value='$func_id'>$func_name </td>";
-            if($i == 8)
-            {
-               echo "</tr><tr>";
-               $i = 1;
-            }
-            else 
-            {
-                $i = $i + 1;
-            }
+			
+			?>
+			<label class="cr-styled">
+            <?php echo "<Input type=checkbox name='privilegesList' value='$func_id'> "; ?>
+			<i class="fa"></i> 
+		      <?php echo $func_name ?>
+			</label>
+		<?php
          }
       }
 ?>
-         </tr>
-      </table>
+
+
       <!-- 显示所有的 function_name with functionId 以及目前这个 user 有哪些权限 结束-->
-         </td>
-      </tr>
-      <tr>
-         <th colspan="4" class="submitBtns">
-            <a class="btn_submit_new modifyPrivilegesContent"><input name="modifyPrivilegesButton" type="button" value="保存" OnClick="modifyPrivilegesContent(<?php echo $UserId;?>)"></a>
-         </th>
-      </tr>      
-
-   </table>
-
-							</div>  <!-- End panel-body -->
-                        </div> <!-- End panel -->
-                    </div> <!-- end col -->
-                </div> <!-- End row -->
-
-				
-            </div>
-            <!-- Page Content Ends -->
-            <!-- ================== -->
-
-            <!-- Footer Start -->
-            <footer class="footer">
-                2015 © Takeda.
-            </footer>
-            <!-- Footer Ends -->
-
-
-
+         
         </div>
-        <!-- Main Content Ends -->
-
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../lib/jquery.min.js"></script>
-<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../js/OSC_layout.js"></script>
+    </div>
+	<div class="form-group">
+		<label class="control-label col-lg-2">　</label>
+		<div class="col-lg-7">
+		<input class="btn btn-success" name="modifyPrivilegesButton" type="button" value="保存" OnClick="modifyPrivilegesContent(<?php echo $UserId;?>)">
+		</div>
+	</div>
+  </form>
+</div>
+</div>
 </body>
 </html>
 <!--Step15 新增修改页面    结束 -->

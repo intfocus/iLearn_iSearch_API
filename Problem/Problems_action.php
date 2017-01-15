@@ -15,6 +15,23 @@
       return;
    }
    
+   session_start();
+   if ($_SESSION["GUID"] == "" || $_SESSION["username"] == "")
+   {
+      session_write_close();
+      sleep(DELAY_SEC);
+      //header("Location:". $web_path . "main.php?cmd=err");
+      $return_string = "<div id=\"sResultTitle\" class=\"sResultTitle\">Session 已经过期，请重新登录！</div>";
+      echo $return_string;
+      exit();
+   }
+   $user_id = $_SESSION["GUID"];
+   $login_name = $_SESSION["username"];
+   // $login_name = "Phantom";
+   // $user_id = 1;
+   $current_func_name = "iSearch";
+   session_write_close();
+   
    header('Content-Type:text/html;charset=utf-8');
    
    //define
@@ -85,9 +102,15 @@
       return;
    }
    if ($Status == 0)
+   {
       $ProbStatus = 1;
+	  $ActionReturn = "题目上架";
+   }
    else if ($Status == 1)
+   {
       $ProbStatus = 0;
+	  $ActionReturn = "题目下架";
+   }
    else
    {
       sleep(DELAY_SEC);
@@ -112,6 +135,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','题目管理','题目上下架',now(),'$ActionReturn','$ProbId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

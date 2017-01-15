@@ -263,8 +263,8 @@
  
    //***Step16 页面搜索SQl语句 结束
    
-   // echo $str_query1;
-   // return;
+   //echo $str_query1;
+   //return;
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
@@ -356,7 +356,7 @@
                                          . "<col class=\"ProbType\"/>"
                                          . "<col class=\"ProbDesc\"/>"
                                          . "<col class=\"ProbCategory\"/>"
-                                         . "<col class=\"CreatedTime\"/>"
+										 . "<col class=\"CreatedTime\"/>"
                                          . "<col class=\"ProbStatus\"/>"
                                          . "<col class=\"ProbAction\"/>"
                                          . "</colgroup>"
@@ -365,7 +365,7 @@
                                          . "<th>类型</th>"
                                          . "<th>描述</th>"
                                          . "<th>分类</th>"
-                                         . "<th>创建时间</th>"
+										 . "<th>创建时间</th>"
                                          . "<th>状态</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
@@ -393,7 +393,7 @@
                   . "<td><span class=\"ProbType fixWidth\">$ProbTypeStr</span></td>"
                   . "<td><span class=\"ProbDesc fixWidth\">$ProbDesc</span></td>"
                   . "<td><span class=\"ProbCategory fixWidth\">$funcs_name_str</span></td>"
-                  . "<td><span class=\"ProbCategory fixWidth\">$CreatedTime</span></td>"
+				  . "<td><span class=\"ProbCategory fixWidth\">$CreatedTime</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td><A OnClick=\"actionSearchProbs($ProbId,$ProbStatus);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchProbs($ProbId);\">修改</A><br/>"

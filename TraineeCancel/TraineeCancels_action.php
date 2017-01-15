@@ -181,7 +181,7 @@
             return;
          }
          $str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
-               . " VALUES($UserId,'报名撤销审核','撤销审核同意',now(),$user_id,$TrainingId)";
+               . " VALUES($UserId,'撤销审核','撤销审核同意',now(),$user_id,$TrainingId)";
          if(!mysqli_query($link, $str_traineelog))
          {
             echo -__LINE__ . $str_traineelog;
@@ -217,7 +217,7 @@
                   while($row = mysqli_fetch_assoc($uids))
                   {
                      $ExamineUser = $ExamineUser . "," . $row["UserId"] . ",";
-   			      array_push($emaillist, $row["Email"]);
+					 array_push($emaillist, $row["Email"]);
                   }
    			}
    			else
@@ -230,6 +230,10 @@
             echo json_encode(array("status"=> 0, "count"=>0, "result"=>"报名失败！")); 
             return;
          }
+		 if($approreLevel == $newStatus)
+		 {
+			$ExamineUser = ",$user_id,";
+		 }
          $str_query4 = "update traineecancels set Status = $newStatus, ExamineUser = '$ExamineUser' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
 
          if(mysqli_query($link, $str_query4)){
@@ -242,25 +246,25 @@
                return;
             }
             $str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
-                  . " VALUES($UserId,'报名撤销审核','撤销审核同意',now(),$user_id,$TrainingId)";
+                  . " VALUES($UserId,'撤销审核','撤销审核同意',now(),$user_id,$TrainingId)";
             if(!mysqli_query($link, $str_traineelog))
             {
                echo -__LINE__ . $str_traineelog;
                mysqli_close($link);
                return;
             }
-            echo "0";
-            mysqli_close($link);
+			//return;
+			$emaillist = array_unique($emaillist);
    			if($approreLevel > $newStatus)
    			{
    			   $emailsmtp = new EmailSmtp();
                foreach ($emaillist as $el) {
                   //$emailsmtp->eSmtp($el,$UserName,$TrainingName);
       			   $soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
-      			   $result2 = $soap->TsaSendCancelEmail(array(  
-      		    'email'=>$el,  
-      		    'username'=>$UserName,
-      		    'trainingname'=>$TrainingName
+      			   $result2 = $soap->TsaSendCancelEmail(array(
+				      'email'=>$el,  
+      		          'username'=>$UserName,
+      		          'trainingname'=>$TrainingName
       			   ));  
                }
    			   if(count($emaillist) == 0)
@@ -274,16 +278,29 @@
    			      ));
    			   }
                return;
+			}
+			else
+			{
+				$strc_query1 = "Update trainees set Status=-1 where TrainingId=$TrainingId and UserId=$UserId";
+				if(!mysqli_query($link, $strc_query1))
+			    {
+                   echo -__LINE__ . $strc_query1;
+                   mysqli_close($link);
+                   return;
+                }
+			}
+			echo "0";
+            mysqli_close($link);
+			return;
+         }
+         else
+         {
+		    if($link){
+               mysqli_close($link);
             }
-            else
-            {
-               if($link){
-                  mysqli_close($link);
-               }
-               sleep(DELAY_SEC);
-               echo -__LINE__;
-               return;
-            }
+            sleep(DELAY_SEC);
+            echo -__LINE__;
+            return;
          }
       }
    }

@@ -157,6 +157,7 @@
    {
       $str_query1 = $str_query1 . " AND (QuestionTemplateName like '%$searchQTsDescName%' OR QuestionTemplateDesc like '%$searchQTsDescName%') ";
    }
+   $str_query1 = $str_query1 . " ORDER BY EditTime DESC";
  
    //***Step16 页面搜索SQl语句 结束
    
@@ -196,7 +197,7 @@
       }
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
-                       . "<span align=right class=\"btn\" OnClick=\"newSearchQTsContentFunc();\">上传题库</span>&nbsp;"
+                       . "<span align=right class=\"btn\" OnClick=\"newSearchQTsContentFunc();\">上传问卷模板</span>&nbsp;"
                        . "<span class=\"btn QTsexpandSR\" OnClick=\"expandSearchQTsContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
@@ -300,7 +301,7 @@
 
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
-                        . "<span align=right class=\"btn\" OnClick=\"newSearchQTsContentFunc();\">上传题库</span>&nbsp;"
+                        . "<span align=right class=\"btn\" OnClick=\"newSearchQTsContentFunc();\">上传问卷模板</span>&nbsp;"
                         . "<span class=\"btn QTsexpandSR\" OnClick=\"expandSearchQTsContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       

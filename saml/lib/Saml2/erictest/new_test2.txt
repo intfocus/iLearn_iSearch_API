@@ -1,0 +1,15 @@
+<samlp:authnrequest id="ONELOGIN_d5c2f2f141a0ab6727599bf2ead954045c329d29" 
+					assertionconsumerserviceurl="https://tsa-china.takeda.com.cn/uat/saml/sp2/index.php?acs" 
+					protocolbinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" 
+					destination="https://webssodev.secureaccess.takeda.com/idp/SSO.saml2?PartnerSpId=IntFocus_tsa-china" 
+					issueinstant="2015-06-25T05:25:14Z" 
+					version="2.0" 
+					xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+					xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+	<saml:issuer>IntFocus_tsa-china</saml:issuer>
+	<samlp:nameidpolicy allowcreate="true" format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">
+		<samlp:requestedauthncontext comparison="exact">
+			<saml:authncontextclassref>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:authncontextclassref>
+		</samlp:requestedauthncontext>
+	</samlp:nameidpolicy>
+</samlp:authnrequest>

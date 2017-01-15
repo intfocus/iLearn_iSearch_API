@@ -187,9 +187,40 @@
       echo SYMBOL_ERROR;
       return;
    }
+   
+   function get_employ_id_from_usernames($userids)
+   {
+      if(strlen($userids)>0){
+         $userids = substr($userids,1);
+         $userids = substr($userids,0,-1);
+         $userids = str_replace(",,",",",$userids);
+      }
+      $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+      if (!$link)  //connect to server failure    
+      {
+         sleep(DELAY_SEC);
+         echo DB_ERROR;
+         die("连接DB失败");
+      }
+      
+      $strusernames = "";
+      $str_query = "select * from users where UserId in ($userids)";
+      if($result = mysqli_query($link, $str_query)){
+         while($row = mysqli_fetch_assoc($result)){
+            $strusernames = $strusernames . $row["UserName"] . "<br />";
+         }
+         return $strusernames;
+      }
+      else
+      {
+         //echo DB_ERROR;
+         //die("操作资料库失败");
+         echo "";
+      }
+   }
 
    //link    
-   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);    
+   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);   
    if (!$link)  //connect to server failure    
    {
       sleep(DELAY_SEC);
@@ -199,10 +230,13 @@
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始
-   $str_query1 = "select tl.LogId, tl.UserId, us.UserName, tl.FunctionName, tl.ActionName, tl.ActionTime, tl.TUserId, tl.TrainingId, ts.TrainingName, ts.SpeakerName, ts.ApproreLevel, tc.CancelMsg, us.EmployeeId 
+   $str_query1 = "select tl.LogId, tl.UserId, us.UserName, tis.TrainingMemo, tl.FunctionName, right(tl.ActionName,2) as ActionName, tl.ActionTime, tl.TUserId, tl.TrainingId, ts.TrainingName, ts.SpeakerName, 
+ts.ApproreLevel, tc.CancelMsg, us.EmployeeId, tis.ApproreLevel, tes.Status as teStatus, tc.Status as tcStatus, tes.ExamineUser as teUser, tc.ExamineUser as tcUser
 from traineelogs as tl left join trainings as ts on tl.TrainingId = ts.TrainingId 
 left join users as us on tl.UserId = us.UserId 
-left join traineecancels as tc on tl.UserId = tc.UserId and tl.TrainingId = tc.TrainingId
+left join traineecancels as tc on tl.UserId = tc.UserId and tl.TrainingId = tc.TrainingId 
+left join trainings as tis on tl.TrainingId = tis.TrainingId 
+left join trainees as tes on tl.TrainingId = tes.TrainingId and tl.UserId = tes.UserId 
 where tl.TUserId = $user_id";
    
    //TODO: trim space
@@ -213,11 +247,12 @@ where tl.TUserId = $user_id";
       OR us.UserName like '%$searchTrainingLogsNameSpeaker%' 
       OR us.EmployeeId like '%$searchTrainingLogsNameSpeaker%') ";
    }
+   $str_query1 = $str_query1 . " order by tl.ActionTime desc";
    
    //***Step16 页面搜索SQl语句 结束
    
-   // echo $str_query1;
-   // return;
+   //echo $str_query1;
+   //return;
    /////////////////////
    // prepare the SQL command and query DB
    /////////////////////
@@ -254,6 +289,7 @@ where tl.TUserId = $user_id";
       }
       //***Step7 function name ==> expandSearchTraineesContentFunc
       $return_string = $return_string . "</span>"
+                       . "<span class=\"btn TrainingLogsexpandSR\" OnClick=\"expandSearchTrainingLogsContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -266,25 +302,29 @@ where tl.TUserId = $user_id";
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
                                          . "<col class=\"TraineeName\" />"
+                                         . "<col class=\"TrainingMemo\" />"
                                          . "<col class=\"SpeakerName\" />"
                                          . "<col class=\"UserName\" />"
-                                         . "<col class=\"EmployeeId\" />"
                                          . "<col class=\"ActionName\" />"
-                                         . "<col class=\"ActionDate\" />"
+										 . "<col class=\"strteStatus\" />"
                                          . "<col class=\"CancelMsg\" />"
+										 . "<col class=\"struser\" />"
+                                         . "<col class=\"ActionDate\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
                                          . "<th>课程名称</th>"
-                                         . "<th>讲师名称</th>"
-                                         . "<th>学员名称</th>"
-                                         . "<th>学员编号</th>"
-                                         . "<th>动作名称</th>"
+                                         . "<th>课程简介</th>"
+                                         . "<th>讲师</th>"
+                                         . "<th>学员姓名</th>"
+                                         . "<th>操作</th>"
+										 . "<th>审核状态</th>"
+                                         . "<th>撤销原因</th>"
+										 . "<th>审核人</th>"
                                          . "<th>操作时间</th>"
-                                         . "<th>撤销说明</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"10\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -307,22 +347,26 @@ where tl.TUserId = $user_id";
                                          . "<colgroup>"
                                          . "<col class=\"num\"/>"
                                          . "<col class=\"TraineeName\" />"
+                                         . "<col class=\"TrainingMemo\" />"
                                          . "<col class=\"SpeakerName\" />"
                                          . "<col class=\"UserName\" />"
-                                         . "<col class=\"EmployeeId\" />"
                                          . "<col class=\"ActionName\" />"
-                                         . "<col class=\"ActionDate\" />"
+										 . "<col class=\"strteStatus\" />"
                                          . "<col class=\"CancelMsg\" />"
+										 . "<col class=\"struser\" />"
+                                         . "<col class=\"ActionDate\" />"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
                                          . "<th>课程名称</th>"
-                                         . "<th>讲师名称</th>"
-                                         . "<th>学员名称</th>"
-                                         . "<th>学员编号</th>"
-                                         . "<th>动作名称</th>"
+                                         . "<th>课程简介</th>"
+                                         . "<th>讲师</th>"
+                                         . "<th>学员姓名</th>"
+                                         . "<th>操作</th>"
+										 . "<th>审核状态</th>"
+                                         . "<th>撤销原因</th>"
+										 . "<th>审核人</th>"
                                          . "<th>操作时间</th>"
-                                         . "<th>撤销说明</th>"
                                          . "</tr>";
             }
             if ($page_count < $page_size)
@@ -330,6 +374,7 @@ where tl.TUserId = $user_id";
                $row = mysqli_fetch_assoc($result);
                $TrainingId = $row["TrainingId"];
                $TrainingName = $row["TrainingName"];
+               $TrainingMemo = $row["TrainingMemo"];
                $SpeakerName = $row["SpeakerName"];
                $UserName = $row["UserName"];
                $UserId = $row["UserId"];
@@ -338,17 +383,72 @@ where tl.TUserId = $user_id";
                $ActionTime = date("Y-m-d H:i:s", strtotime($row["ActionTime"]));
                $CancelMsg = $row["CancelMsg"];
                $page_count_display = $page_count + 1;
+			   $ApproreLevel = $row["ApproreLevel"];
+			   $teStatus = $row["teStatus"];
+			   $tcStatus = $row["tcStatus"];
+			   $FunctionName = $row["FunctionName"];
+			   $strteStatus = "";
+			   $strtcStatus = "";
+			   $teUser = $row["teUser"];
+			   $tcUser = $row["tcUser"];
+			   if($teStatus < 0)
+			   {
+				   $strteStatus = "驳回";
+			   }
+			   else
+			   {
+			      if($teStatus == $ApproreLevel)
+			      {
+				      $strteStatus = "通过";
+			      }
+				  else
+				  {
+				      $strteStatus = "审核中";
+			      }
+			   }
+			   
+			   $struser = "";
+			   if($tcStatus < 0)
+			   {
+				   $strtcStatus = "驳回";
+			   }
+			   else
+			   {
+			      if($tcStatus == $ApproreLevel)
+			      {
+				      $strtcStatus = "通过";
+			      }
+				  else
+				  {
+				      $strtcStatus = "审核中";
+			      }
+			   }
+			   
+			   $strStatus = "";
+			   if($FunctionName == "撤销审核")
+			   {
+			      $strStatus = $strtcStatus;
+				  $struser = get_employ_id_from_usernames($tcUser);
+			   }
+			   
+			   if($FunctionName == "报名审核")
+			   {
+			      $strStatus = $strteStatus;
+				  $struser = get_employ_id_from_usernames($teUser);
+			   }
                
                $return_string = $return_string 
-                  . "<tr>"
+                  . "<tr class=\"$TrainingId\">"
                   . "<td>$page_count_display</td>"
-                  . "<td><span class=\"TraineeName breakAll\">$TrainingName</span></td>"
+                  . "<td><span class=\"TraineeName fixWidth\">$TrainingName</span></td>"
+                  . "<td><span class=\"TrainingMemo fixWidth\">$TrainingMemo</span></td>"
                   . "<td><span class=\"SpeakerName breakAll\">$SpeakerName</span></td>"
                   . "<td><span class=\"UserName breakAll\">$UserName</span></td>"
-                  . "<td><span class=\"EmployeeId breakAll\">$EmployeeId</span></td>"
-                  . "<td><span class=\"RegisterDate breakAll\">$ActionName</span></td>"
+                  . "<td><span class=\"RegisterDate breakAll\">$FunctionName</span></td>"
+				  . "<td><span class=\"teStatus breakAll\">$ActionName</span></td>"
+                  . "<td><span class=\"CancelMsg fixWidth\">$CancelMsg</span></td>"
+				  . "<td><span class=\"teStatus breakAll\">$struser</span></td>"
                   . "<td><span class=\"RegisterDate breakAll\">$ActionTime</span></td>"
-                  . "<td><span class=\"CancelMsg breakAll\">$CancelMsg</span></td>"
                   . "</tr>";
 
                $i++;
@@ -386,6 +486,7 @@ where tl.TUserId = $user_id";
          }
       }
       $return_string = $return_string . "</span>"
+                       . "<span class=\"btn TrainingLogsexpandSR\" OnClick=\"expandSearchTrainingLogsContentFunc();\">显示过长内容</span>"
                                       . "</div>";
       echo $return_string;
       mysqli_free_result($result);

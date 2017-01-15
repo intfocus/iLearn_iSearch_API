@@ -291,6 +291,7 @@ class OneLogin_Saml2_Auth
         $authnRequest = new OneLogin_Saml2_AuthnRequest($this->_settings, $forceAuthn, $isPassive);
 
         $samlRequest = $authnRequest->getRequest();
+
         $parameters['SAMLRequest'] = $samlRequest;
 
         if (!empty($returnTo)) {
@@ -300,6 +301,7 @@ class OneLogin_Saml2_Auth
         }
 
         $security = $this->_settings->getSecurityData();
+		
         if (isset($security['authnRequestsSigned']) && $security['authnRequestsSigned']) {
             $signature = $this->buildRequestSignature($samlRequest, $parameters['RelayState']);
             $parameters['SigAlg'] = XMLSecurityKey::RSA_SHA1;
@@ -333,6 +335,8 @@ class OneLogin_Saml2_Auth
         }
 
         $logoutRequest = new OneLogin_Saml2_LogoutRequest($this->_settings, null, $nameId, $sessionIndex);
+		print_r($logoutRequest);
+		return;
 
         $samlRequest = $logoutRequest->getRequest();
 

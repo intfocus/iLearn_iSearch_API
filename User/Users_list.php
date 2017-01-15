@@ -224,11 +224,11 @@ function delUsersBatch()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchUsers"><input name="searchUsersButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchUsers"><input name="searchUsersButton" class="btn btn-success" type="button" value="开始查询"></a>
                   <a class="btn_submit_new newUsersBatch">
-                     <input name="newUsersBatchButton" type="button" value="批次新增" OnClick="newUsersBatch();"></a>
+                     <input name="newUsersBatchButton" type="button" class="btn btn-primary" value="批次新增" OnClick="newUsersBatch();"></a>
                   <a class="btn_submit_new delUsersBatch">
-                     <input name="delUsersBatchButton" type="button" value="批次离职" OnClick="delUsersBatch();"></a>
+                     <input name="delUsersBatchButton" type="button" class="btn btn-danger" value="批次离职" OnClick="delUsersBatch();"></a>
                </th>
             </tr>
          </table>

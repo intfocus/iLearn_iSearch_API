@@ -17,23 +17,20 @@
    }
    define("URL_PREFIX", $webui_link);
    session_start();
-   // if (!session_is_registered("GUID"))
-   // {
-      // session_register("GUID");
-   // }
-
-   //////////////////////
-   // Set session=empty, redirect to main.php
-   //////////////////////
    $_SESSION["GUID"] = "";
-   $cmd="";
+   $_SESSION["loginName"] = ""; //#001 Add
+   $_SESSION["username"] = "";
+   $_SESSION["login_name"] = "";
+   $cmd = "";
    session_write_close();
+   //header("Location: https://tsa-china.takeda.com.cn");
+   //return;
    if(is_array($_GET)&&count($_GET)>0){   //判断是否有Get参数
       if(isset($_GET["cmd"])){
          $cmd = $_GET["cmd"];
          /* 20120522 Billy begin */
-         if (strcmp($cmd , "err") != 0)
-            $cmd = "";
+         //if (strcmp($cmd , "err") != 0)
+         //   $cmd = "";
          /* 20120522 Billy end */
       }
    }
@@ -59,8 +56,14 @@
          window.onload = function()  //print flash
          {
             var cmd = "<?php echo $cmd ?>";
-            if (cmd == "err")
+            if (cmd == "err") {
                document.getElementById("msg").style.display = "block";
+			}
+			else if(cmd == "account_not_exist") {
+               var msg = document.getElementById("msg");
+			   msg.style.display = "block";
+			   msg.innerHTML = "帐号不存在或已下架";
+			}
          };
       </script>
 	  
@@ -102,12 +105,12 @@
 
 				<form name=myForm method=POST  class="form-horizontal m-t-40" action=login.php>
                                             
-                    <div class="form-group ">
+                    <div class="form-group "  style="display:none;">
                         <div class="col-xs-12">
                             <input class="form-control" type="text" name=login_name placeholder="用户帐号">
                         </div>
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group "  style="display:none;">
                         
                         <div class="col-xs-12">
                             <input class="form-control" type="password" name=password placeholder="密码">
@@ -117,18 +120,19 @@
                     <div class="form-group ">
                         <div class="col-xs-12">
 						
-								<div id="msg" class="msg" style="display:none;">错误 -- 输入账号或密码错误，请重新输入</div>    
+								<div id="msg" class="msg" style="display:none;">错误 -- 请重新登录</div>    
                         </div>
                     </div>
                     
                     <div class="form-group text-right">
                         <div class="col-xs-12">
-                                <input type="submit" class="btn btn-purple w-md" value="登陆">    
+                               <!-- <input type="submit" class="btn btn-purple w-md" value="登录">    -->
+                                <a href="https://tsa-china.takeda.com.cn/uat/saml/spapp/index.php?sso" class="btn btn-purple w-md" >  重新登录 </a>
                         </div>
                     </div>
                     <div class="form-group m-t-30"
                         <div class="text-right">
-                            <a href="#">服务电话：400 400 400</a>
+                            <a href="#">服务电话：400 882 2731</a>
                         </div>
                     </div>
                 </form>

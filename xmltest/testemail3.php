@@ -1,8 +1,8 @@
 <?php
-$soap = new SoapClient("http://localhost/TsaSendMail/EmailWebService.asmx?wsdl");  
+$soap = new SoapClient("http://localhost/TsaSendEmail/EmailWebService.asmx?wsdl");
 $result2 = $soap->TsaSendEmail(array(  
-    'email'=>'yy_lfy@163.com',  
-    'username'=>'yy_lfy',
+    'email'=>'eric_yue@intfocus.com,albert_li@intfocus.com',  
+    'username'=>'eric_yue',
     'trainingname'=>'abcd'
 ));  
 print_r($result2->TsaSendEmailResult);  

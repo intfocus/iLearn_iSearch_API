@@ -21,7 +21,7 @@ function actionSearchCoursePackets(CoursePacketId, Status)
    str = "cmd=actionCoursePackets" + "&CoursePacketId=" + CoursePacketId + "&Status=" + Status;
    url_str = "CoursePacket/CoursePackets_action.php?";
    
-   alert(url_str + str);
+   //alert(url_str + str);
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -186,7 +186,7 @@ function occurTimeDatePicker()
 
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchCoursePackets"><input name="searchCoursePacketsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchCoursePackets"><input class="btn btn-success" name="searchCoursePacketsButton" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>

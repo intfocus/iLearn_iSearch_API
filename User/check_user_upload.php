@@ -180,7 +180,7 @@ function read_excel_and_insert_into_database($target_file,$userid)
       if (!is_valid_syntax_import_file($tmp))
       {
          $file_status->status = ERR_FILE_LOAD;
-         array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>0, "message"=>MSG_ERR_FILE_CONTENT_SYNTAX));
+         array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>0, "UserName"=>"", "EmployeeId"=>"", "message"=>MSG_ERR_FILE_CONTENT_SYNTAX));
          return $file_status->status;
       }
       
@@ -202,33 +202,33 @@ function read_excel_and_insert_into_database($target_file,$userid)
          if (!is_correct_user_eid_format($cur_user->EmployeeId))
          {
             $file_status->status = ERR_FILE_LOAD;
-            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_USER_EID_FORMAT));
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "UserName"=>$cur_user->UserName, "EmployeeId"=>$cur_user->EmployeeId, "message"=>MSG_ERR_USER_EID_FORMAT));
          }
          
          
          if (!is_correct_user_name_format($cur_user->UserName))
          {
             $file_status->status = ERR_FILE_LOAD;
-            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_USER_NAME_FORMAT));
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "UserName"=>$cur_user->UserName, "EmployeeId"=>$cur_user->EmployeeId, "message"=>MSG_ERR_USER_NAME_FORMAT));
          }
          
          if (!is_correct_user_email_format($cur_user->Email))
          {
             $file_status->status = ERR_FILE_LOAD;
-            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_USER_EMAIL_FORMAT));
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "UserName"=>$cur_user->UserName, "EmployeeId"=>$cur_user->EmployeeId, "message"=>MSG_ERR_USER_EMAIL_FORMAT));
          }
          
          if (!is_correct_user_dept_format($cur_user->DeptCode))
          {
             $file_status->status = ERR_FILE_LOAD;
-            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=>MSG_ERR_USER_DEPT_FORMAT));
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "UserName"=>$cur_user->UserName, "EmployeeId"=>$cur_user->EmployeeId, "message"=>MSG_ERR_USER_DEPT_FORMAT));
          }
          
          $detp_id = get_dept_id_from_database($cur_user->DeptCode);
          if ($detp_id == ERR_USER_DEPT_NOT_EXIST) 
          {
             $file_status->status = ERR_FILE_LOAD;
-            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "message"=> "$product_name 不存在"));
+            array_push($file_status->errors, array("sheet"=>$cur_sheet, "lines"=>$row, "UserName"=>$cur_user->UserName, "EmployeeId"=>$cur_user->EmployeeId, "message"=> "$product_name 不存在"));
          }
          else 
          {
@@ -435,6 +435,7 @@ EOD;
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+<link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
 <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
 <link rel="stylesheet" type="text/css" href="../css/OSC_layout.css">
@@ -448,6 +449,15 @@ EOD;
 <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
 <link rel="stylesheet" type="text/css" href="../css/demo.css">
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+<link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="../css/css/style.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <!-- End of tree view -->
 <!--[if lt IE 10]>
@@ -463,17 +473,35 @@ function loaded() {
 <!--Step15 新增修改页面    起始 -->
 </head>
 <body Onload="loaded();">
-<div id="header">
-   <form name=logoutform action=logout.php>
-   </form>
-   <span class="global">使用者 : <?php echo $login_name ?>
-      <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-   </span>
-   <span class="logo"></span>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+    </div>
+    <div class="navbar-collapse collapse" role="navigation">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown text-center">
+                	
+							   <form name="logoutform" action="logout.php">
+							   </form>
+			<a class="dropdown-toggle" href="#" aria-expanded="false">
+				<i class="fa fa-user"></i>
+				<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+			</a>
+			<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+				<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+			</ul>-->
+		</li>
+		</ul>
+    </div>
+  </div>
 </div>
-<div id="banner">
-   <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-   <span class="bLink company"><span>上传名单</span><span class="bArrow"></span></span>
+
+<div class="container">
+<ol class="breadcrumb">
+  <li class="active">后台功能名称</li>
+  <li class="active">上传名单</li>
+</ol>
 </div>
 <div id="content">
 <?
@@ -497,7 +525,7 @@ function loaded() {
          <th style="width:5%">页签</th><th style="width:5%">行</th><th>员工姓名</th><th>员工号</th><th>错误</th>
       <? foreach ($file_status->errors as $error)
             {?>
-               <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["message"];?></td></tr>
+               <tr><td><?echo $error["sheet"];?></td><td><?echo $error["lines"];?></td><td><?echo $error["UserName"];?></td><td><?echo $error["EmployeeId"]; ?></td><td><?echo $error["message"];?></td></tr>
          <? }?>
       </table>
    </div>

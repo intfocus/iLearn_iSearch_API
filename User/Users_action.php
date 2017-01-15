@@ -101,9 +101,15 @@
       return;
    }
    if ($Status == 0)
+   {
       $UserStatus = 1;
+	  $ActionReturn = "人员上架";
+   }
    else if ($Status == 1)
+   {
       $UserStatus = 0;
+	  $ActionReturn = "人员下架";
+   }
    else
    {
       sleep(DELAY_SEC);
@@ -128,6 +134,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','人员管理','人员上下架',now(),'$ActionReturn','$UserId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

@@ -136,11 +136,20 @@
 
       <!-- sweet alerts -->
       <link href="../newui/assets/sweet-alert/sweet-alert.min.css" rel="stylesheet">
+	  
 
       <!-- Custom styles for this template -->
       <link href="../newui/css/style.css" rel="stylesheet">
       <link href="../newui/css/helper.css" rel="stylesheet">
       <link href="../newui/css/style-responsive.css" rel="stylesheet" />
+	  <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+	  <link href="../css/datepicker.css" media="all" rel="stylesheet" type="text/css" />
+	  <link href="../css/timepicker.css" media="all" rel="stylesheet" type="text/css" />
+	  <link href="../js/date-timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+	  <link rel="stylesheet" type="text/css" href="../css/css/style.css">
+	  
+	  <!--<script type="text/javascript" src="../js/bootstrap.min.js"></script>-->
+	  <!--<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>-->
 		
       <title>武田 - 名单上传</title>
       <!-- BEG_ORISBOT_NOINDEX -->
@@ -155,43 +164,35 @@
       <!--Main Content Start -->
       <div class="" id="content">
          <!-- Header -->
-         <header class="top-head container-fluid">
-            <button type="button" class="navbar-toggle pull-left">
-               <span class="sr-only">Toggle navigation</span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-            </button>
-            <!-- Left navbar -->
-            <nav class=" navbar-default hidden-xs" role="navigation">
-               <ul class="nav navbar-nav">
-                   <li><a href="#"><?php echo date('Y-m-d', time()); ?></a></li>
-               </ul>
-            </nav>
-            <!-- Right navbar -->
-            <ul class="list-inline navbar-right top-menu top-right-menu">  
-               <!-- user login dropdown start-->
-               <li class="dropdown text-center">
-      			   <input type="hidden" id="userid" value="<?php echo $user_id ?>" />
-      			   <form name=logoutform action=logout.php></form>
-                  <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                      <i class="fa fa-user"></i>
-                      <span class="username"><?php echo $login_name ?> </span> <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none; display:none;">
-                      <li><a href="javascript:void(0)" OnClick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
-                  </ul>
-               </li>
-               <!-- user login dropdown end -->       
-            </ul>
-            <!-- End right navbar -->
-         </header>
+         <div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+				<a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+				</div>
+				<div class="navbar-collapse collapse" role="navigation">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown text-center">
+								
+										<form name="logoutform" action="logout.php">
+										</form>
+						<a class="dropdown-toggle" href="#" aria-expanded="false">
+							<i class="fa fa-user"></i>
+							<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+						</a>
+						<!--<ul class="dropdown-menu extended pro-menu fadeInUp animated" tabindex="5003" style="overflow: hidden; outline: none;">
+							<li><a href="javascript:void(0)" onclick="click_logout();"><i class="fa fa-sign-out"></i> 退出</a></li>
+						</ul>-->
+					</li>
+					</ul>
+				</div>
+			</div>
+		 </div>
          <!-- Header Ends -->
          <!-- Page Content Start -->
          <!-- ================== -->
    
          <div class="wraper container-fluid">
-            <div class="page-title"> 
+            <div class="page-title" style="margin-top: 50px;"> 
                 <h3 class="title">上传名单</h3> 
             </div>
       
@@ -210,7 +211,7 @@
                               </tr>
                               <tr>
                                  <th colspan="2" class="submitBtns">
-                                       <input type="submit" value="上传文档" name="submit"  class="btn btn-purple">
+                                       <input type="submit" value="上传文档" name="submit"  class="btn btn-purple">&nbsp;&nbsp;<a href="http://tsa-china.takeda.com.cn/uat/public/User.xlsx" value="名单模板下载">名单模板下载</a>
                                  </th>
                               </tr>      
                            </Form>
@@ -230,7 +231,7 @@
       </div>
       <!-- Main Content Ends -->
 
-      <script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+      <!--<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>-->
       <script type="text/javascript" src="../lib/jquery.min.js"></script>
       <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
       <script type="text/javascript" src="../js/OSC_layout.js"></script>

@@ -21,8 +21,8 @@ function actionSearchCoursewares(CoursewareId, Status)
    str = "cmd=actionCoursewares" + "&CoursewareId=" + CoursewareId + "&Status=" + Status;
    url_str = "Courseware/Coursewares_action.php?";
    
-   alert(str);
-   return;
+   //alert(str);
+   //return;
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -166,7 +166,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchCoursewares"><input name="searchCoursewaresButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchCoursewares"><input name="searchCoursewaresButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>

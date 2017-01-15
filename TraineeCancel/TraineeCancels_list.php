@@ -2,14 +2,14 @@
 //***Step5 expand search Result table
 function expandSearchTraineeCancelsContentFunc()
 {
-   if ($('span.TraineeCancelName, span.SpeakerCancelName').hasClass('fixWidth'))
+   if ($('span.TraineeName, span.SpeakerName, span.TrainingMemo, span.CancelMsg').hasClass('fixWidth'))
    {
-      $('span.TraineeCancelName, span.SpeakerCancelName').removeClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TrainingMemo, span.CancelMsg').removeClass('fixWidth');
       $('.TraineeCancelsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.TraineeCancelName, span.SpeakerCancelName').addClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TrainingMemo, span.CancelMsg').addClass('fixWidth');
       $('.TraineeCancelsexpandSR').text('显示过长内容');
    }
 }
@@ -23,9 +23,7 @@ function actionSearchTraineeCancels(TrainingId, Status, UserId)
    //ajax
    str = "cmd=actionTraineeCancels&TrainingId=" + TrainingId + "&Status=" + Status + "&UserId=" + UserId;
    url_str = "TraineeCancel/TraineeCancels_action.php?";
-   
-   alert(url_str + str);
-   return;
+
    //$('#loadingWrap').show();
    $.ajax
    ({
@@ -174,12 +172,14 @@ function occurTimeDatePicker()
       <div id="sResultW" class="reportW" style="display:block;">
          <div id="searchTraineeCancelsPages">
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
-            <div class="toolMenu">
+            <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTraineeCancelsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
                   <col class="num" />
                   <col class="TraineeName" />
+                  <col class="TrainingMemo" />
                   <col class="Speaker" />
                   <col class="UserName" />
                   <col class="EmployeeId" />
@@ -190,18 +190,20 @@ function occurTimeDatePicker()
                <tr>
                   <th>编号</th>
                   <th>课程名称</th>
-                  <th>讲师名称</th>
-                  <th>学员名称</th>
+                  <th>课程简介</th>
+                  <th>讲师</th>
+                  <th>学员姓名</th>
                   <th>学员编号</th>
                   <th>报名时间</th>
-                  <th>撤销说明</th>
-                  <th>动作</th>
+                  <th>撤销原因</th>
+                  <th>操作</th>
                </tr>
                <tr>
-                  <td colspan="8" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="9" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
-            <div class="toolMenu">
+            <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTraineeCancelsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

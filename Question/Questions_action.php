@@ -102,9 +102,15 @@
       return;
    }
    if ($Status == 0)
+   {
       $QuestionStatus = 1;
+	  $ActionReturn = "问卷上架";
+   }
    else if ($Status == 1)
+   {
       $QuestionStatus = 0;
+	  $ActionReturn = "问卷下架";
+   }
    else
    {
       sleep(DELAY_SEC);
@@ -129,6 +135,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','问卷管理','问卷上下架',now(),'$ActionReturn','$QuestionId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

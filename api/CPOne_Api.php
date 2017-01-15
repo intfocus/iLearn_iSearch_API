@@ -278,35 +278,35 @@
 		 $sc->AvailableTimeEnd = date("Y/m/d",strtotime($row['AvailableTimeEnd']));
 		 if(strlen($row['CoursewarePacketList']) > 0)
 		 {
-			$sc->CoursewarePacketList = $row['CoursewarePacketList']== null?array():CPList($row['CoursewarePacketList']);
+			$sc->CoursewarePacketList = $row['CoursewarePacketList']== null?[]:CPList($row['CoursewarePacketList']);
 		 }
 		 else
 		 {
-			 $sc->CoursewarePacketList = array();
+			 $sc->CoursewarePacketList = [];
 		 }
 		 if(strlen($row['CoursewareList']) > 0)
 		 {
-			$sc->CoursewareList = $row['CoursewareList'] == null?array():CList($row['CoursewareList']);
+			$sc->CoursewareList = $row['CoursewareList'] == null?[]:CList($row['CoursewareList']);
 		 }
 		 else
 		 {
-			$sc->CoursewareList = array();
+			$sc->CoursewareList = [];
 		 }
 		 if(strlen($row['QuestionnaireList']) > 0)
 		 {
-			$sc->QuestionnaireList = $row['QuestionnaireList'] == null?array():QList($row['QuestionnaireList']);
+			$sc->QuestionnaireList = $row['QuestionnaireList'] == null?[]:QList($row['QuestionnaireList']);
 		 }
 		 else
 		 {
-			$sc->QuestionnaireList = array();
+			$sc->QuestionnaireList = [];
 		 }
 		 if(strlen($row['ExamList']) > 0)
 		 {
-			$sc->ExamList = $row['ExamList'] == null?array():EList($row['ExamList']);
+			$sc->ExamList = $row['ExamList'] == null? []:EList($row['ExamList']);
 		 }
 		 else
 		 {
-			$sc->ExamList = array();
+			$sc->ExamList = [];
 		 }
          $sc->Status = $row['Status'];
          $sc->EditTime = $row['EditTime'];

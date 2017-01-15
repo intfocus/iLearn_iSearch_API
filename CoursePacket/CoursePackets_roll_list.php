@@ -186,7 +186,7 @@
         <link href="../newui/css/helper.css" rel="stylesheet">
         <link href="../newui/css/style-responsive.css" rel="stylesheet" />
 		
-<title>武田 - 上传考试用户页面</title>
+<title>武田 - 上传课程包用户页面</title>
 <!-- BEG_ORISBOT_NOINDEX -->
 <Script Language=JavaScript>
 function lockFunction(obj, n)
@@ -247,10 +247,10 @@ function modifyUsersContent(coursepacket_id)
                "users_id[]": users_id,
             },
       cache: false,
-      dataType: 'json',
+      //dataType: 'json',
       success: function(res)
       {
-         res = String(res);
+         //res = String(res);
          if (res.match(/^-\d+$/))
          {
             alert("新增 / 删除课程包用户名单失败");
@@ -343,7 +343,7 @@ function modifyUsersContent(coursepacket_id)
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100 placeholder="员工号 如 E99999"><?   
             // read roll
-         $str_query = "select * from CoursePacket where CoursePacketId=$coursepacket_id AND Status=".ACTIVE;
+         $str_query = "select * from CoursePacket where CoursePacketId=$coursepacket_id AND Status >= 0";
          if($result = mysqli_query($link, $str_query)){
             $row_number = mysqli_num_rows($result);
             $row = mysqli_fetch_assoc($result);

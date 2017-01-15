@@ -1,15 +1,15 @@
 <script type="text/javascript">
 function expandSearchFilesContentFunc()
 {
-   if ($('span.FileName, span.FileDesc').hasClass('fixWidth'))
+   if ($('span.FileName, span.FileDesc, span.CategoryName').hasClass('fixWidth'))
    {
-      $('span.FileName, span.FileDesc').removeClass('fixWidth');
-      $('.FilesexpandSR').text('隐藏过长内容');
+      $('span.FileName, span.FileDesc, span.CategoryName').removeClass('fixWidth');
+      $('.NewsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.FileName, span.FileDesc').addClass('fixWidth');
-      $('.FilesexpandSR').text('显示过长内容');
+      $('span.FileName, span.FileDesc, span.CategoryName').addClass('fixWidth');
+      $('.NewsexpandSR').text('显示过长内容');
    }
 }
 //***Step9 列表中的动作上架/下架Ajax呼叫
@@ -150,7 +150,7 @@ function occurTimeDatePicker()
 <!--快速查詢 從這裡開始-->
    <div class="searchW">
    <!-- ***Step2 搜索框的设计 开始 -->
-      <form>
+      <!--<form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
                <th>文档标题/文档说明/分类名称 ：</th>
@@ -173,7 +173,41 @@ function occurTimeDatePicker()
                </th>
             </tr>
          </table>
-      </form>
+      </form>-->
+
+	  <form class="cmxform form-horizontal tasi-form searchField">
+			 <div class="form-group">
+				<label for="cname" class="control-label col-md-2">文档标题/文档说明/分类名称:</label>
+				<div class="col-md-5">
+					<input class="form-control" id="searchFilesNameCode" type="text" maxlength="50">
+				</div>
+				<label for="cname" class="control-label col-md-1">状态:</label>
+				<div class="col-md-2" style="padding-top:6px;">
+					<label class="cr-styled">
+						<input id="searchFilesCheckBox1" type="checkbox" checked>
+						<i class="fa"></i> 
+						上架
+					</label>
+					<label class="cr-styled">
+						<input id="searchFilesCheckBox2" type="checkbox" checked>
+						<i class="fa"></i> 
+						下架
+					</label>
+				</div>
+			</div>
+			<div class="form-group ">
+				<label for="cemail" class="control-label col-md-2">最后修改时间：</label>
+				<div class="col-md-5">
+					<input id="from6" type="text" style="width:46%; display:inline-block" name="searchFilesfrom1" class="from form-control" readonly="true"/> ~ <input id="to6" type="text" style="width:46%; display:inline-block" class="to form-control" name="searchFilesto1" readonly="true"/>
+				</div>
+			</div>
+			  <div class="form-group">
+				<label class="control-label col-md-2">　</label>
+				<div class="col-md-5">
+					<a class="btn_submit_new searchFiles"><input class="btn btn-success" name="searchFilesButton" type="button" value="开始查询"></a>
+				</div>
+			</div>
+		</form>
       <!-- ***Step2 搜索框的设计 结束 -->
    
       <!-- ***Step3 表格框架 开始 -->
@@ -191,8 +225,8 @@ function occurTimeDatePicker()
                   <col class="CategoryName" />
                   <col class="Status" />
                   <col class="EditTime" />
-                  <col class="CategoryPath" />
-                  <col class="FileAction" />
+				  <col class="ZipSize"/>
+                  <col class="action" />
                </colgroup>
                <tr>
                   <th>编号</th>
@@ -201,7 +235,7 @@ function occurTimeDatePicker()
                   <th>所属分类</th>
                   <th>状态</th>
                   <th>最后修改时间</th>
-                  <th>文件所属分类</th>
+				  <th>文件大小</th>
                   <th>动作</th>
                </tr>
                <tr>

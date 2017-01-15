@@ -73,10 +73,11 @@
       public $EditTime;
       public $CategoryId;
       public $ZipSize;
+	  public $CategoryName;
    }
    
    //----- query -----
-   $str_file = "select FileId,FileName,FileTitle,FileDesc,FilePath,PageNo,FileType,Status,EditTime,CategoryId,ZipSize from files where CategoryId = $categoryid and Status = 1;";
+   $str_file = "select F.FileId as FileId,F.FileName as FileName,F.FileTitle as FileTitle,F.FileDesc as FileDesc,F.FilePath as FilePath,F.PageNo as PageNo,F.FileType as FileType,F.Status as Status,F.EditTime as EditTime,F.CategoryId as CategoryId,F.ZipSize as ZipSize, C.CategoryName as CategoryName from files F left join categories C on F.CategoryId = C.CategoryId where F.CategoryId = $categoryid and F.Status = 1;";
    
    if($rs = mysqli_query($link, $str_file)){
       $filecount = mysqli_num_rows($rs);
@@ -93,6 +94,7 @@
          $sc->EditTime = date("Y/m/d H:i:s",strtotime($row['EditTime']));
          $sc->CategoryId = $row['CategoryId'];
          $sc->ZipSize = $row['ZipSize'];
+		 $sc->CategoryName = $row['CategoryName'];
          array_push($datafile,$sc);
       }
       // mysqli_close($link);

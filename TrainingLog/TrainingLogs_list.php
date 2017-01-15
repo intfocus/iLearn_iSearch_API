@@ -2,14 +2,14 @@
 //***Step5 expand search Result table
 function expandSearchTrainingLogsContentFunc()
 {
-   if ($('span.TrainingLogName, span.SpeakerLogName').hasClass('fixWidth'))
+   if ($('span.TrainingMemo, span.CancelMsg, span.TraineeName').hasClass('fixWidth'))
    {
-      $('span.TrainingLogName, span.SpeakerLogName').removeClass('fixWidth');
+      $('span.TrainingMemo, span.CancelMsg, span.TraineeName').removeClass('fixWidth');
       $('.TrainingLogsexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.TrainingLogName, span.SpeakerLogName').addClass('fixWidth');
+      $('span.TrainingMemo, span.CancelMsg, span.TraineeName').addClass('fixWidth');
       $('.TrainingLogsexpandSR').text('显示过长内容');
    }
 }
@@ -64,34 +64,40 @@ function clickSearchTrainingLogsPage(obj, n)  //搜尋換頁
       <div id="sResultW" class="reportW" style="display:block;">
          <div id="searchTrainingLogsPages">
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
-            <div class="toolMenu">
+            <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTrainingLogsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
                   <col class="num" />
                   <col class="TraineeName" />
+                  <col class="TrainingMemo" />
                   <col class="Speaker" />
                   <col class="UserName" />
-                  <col class="EmployeeId" />
                   <col class="ActionName" />
-                  <col class="ActionDate" />
+				  <col class="strteStatus" />
                   <col class="CancelMsg" />
+				  <col class="struser" />
+                  <col class="ActionDate" />
                </colgroup>
                <tr>
                   <th>编号</th>
                   <th>课程名称</th>
-                  <th>讲师名称</th>
-                  <th>学员名称</th>
-                  <th>学员编号</th>
-                  <th>动作名称</th>
+                  <th>课程简介</th>
+                  <th>讲师</th>
+                  <th>学员姓名</th>
+                  <th>操作</th>
+				  <th>审核状态</th>
+                  <th>撤销原因</th>
+				  <th>审核人</th>
                   <th>操作时间</th>
-                  <th>撤销说明</th>
                </tr>
                <tr>
-                  <td colspan="8" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="10" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
-            <div class="toolMenu">
+            <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTrainingLogsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

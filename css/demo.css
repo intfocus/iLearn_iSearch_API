@@ -19,3 +19,11 @@ h2 {
 .demo-tip{
 	display:none;
 }
+.navbar-inverse{  background-color: #1a2942;border-color: #1a2942;}
+.navbar-inverse .navbar-brand,.navbar-inverse .navbar-nav>li>a{color:#b4b6bd;}
+.navbar-inverse .navbar-brand:hover,.navbar-inverse .navbar-nav>li>a:hover{color:#fff;}
+.breadcrumb a{font-size:14px;}
+.btn-success{background:#3bc0c3; border-color:#3bc0c3;}
+.btn-success:hover{background:#3bc0c3; border-color:#3bc0c3;}
+.ui-datepicker .ui-widget-header{background:#95bcfc;}
+.ui-datepicker td span:hover, .ui-datepicker td a:hover{background:#b9d2fc;}

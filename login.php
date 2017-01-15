@@ -39,6 +39,7 @@
    define("SYMBOL_ERROR_GUID", -4);
    define("SYMBOL_ERROR_HOSTNAME", -5);
    
+   
    //////////////////////
    // Input validation
    //////////////////////
@@ -57,59 +58,16 @@
       return $check_str;
    }
 
-   if(($login_name = check($_POST["login_name"])) == SYMBOL_ERROR)
-   {
-     sleep(DELAY_SEC);
-     header("Location:main.php?cmd=err");
-     exit();
-   }
-   $password = $_POST["password"];
+   session_start();
+   $login_name = $_SESSION["login_name"];
+   //if(($login_name = check($_SESSION["login_name"])) == SYMBOL_ERROR)
+   //{
+   //  sleep(DELAY_SEC);
+   //  header("Location:main.php?cmd=err");
+   //  exit();
+   //}
+   $password = "";//$_POST["password"];
    $username = $login_name;
-   //SSO 
-   //$password = '2Federate';
-
-   //$url = "https://login.salesforce.com/services/Soap/u/24.0";
-   // $url = "https://webssodev.secureaccess.takeda.com/idp/attrsvc.ssaml2";
-//    
-   // $body = "
-      // <samlp:AuthnRequest xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
-                          // ID='s248735275d5542177e9a4fd021410177660b9c8be'
-                          // Version='2.0'
-                          // IssueInstant='2015-05-26T08:36:03Z'
-                          // Destination='https://websso.secureaccess.takeda.com/idp/SSO.saml2'
-                          // ForceAuthn='false'
-                          // IsPassive='false'
-                          // ProtocolBinding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
-                          // AssertionConsumerServiceURL='http://tsa-china.takeda.com.cn'
-                          // >
-          // <saml:Issuer xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>IntFocus_tsa-china</saml:Issuer>
-          // <samlp:NameIDPolicy xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
-                              // Format='urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'
-                              // AllowCreate='true'
-                              // />
-          // <samlp:RequestedAuthnContext xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'
-                                       // Comparison='minimum'
-                                       // >
-              // <saml:AuthnContextClassRef xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
-          // </samlp:RequestedAuthnContext>
-      // </samlp:AuthnRequest>";
-      // // $body = "
-      // // <sfdc:login xmlns:sfdc='urn:partner.soap.sforce.com'>
-         // // <sfdc:username>$username</sfdc:username>
-         // // <sfdc:password>$password</sfdc:password>
-      // // </sfdc:login>";
-    // $result = HTTP::doSoap($url, '', $body, NULL, NULL, 'http://schemas.xmlsoap.org/soap/envelope/', 'text/xml');
-    // print_r($result);
-    // return;
-   //$loginType = $_POST["loginType"]; //直接猜測 system admin or user, 不再用 loginType
-   /* 
-   if(($password = check($_POST["password"])) == SYMBOL_ERROR)
-   {
-     sleep(DELAY_SEC);
-     header("Location:main.php?cmd=err");
-     exit();
-   }
-   */
    /////////////////////////////
    //Dylan 20120307
    //encrypt password by md5
@@ -142,8 +100,8 @@
    
    $login_name = mysqli_real_escape_string($link, $login_name);   #002
    
-   $str_query1 = "select UserId, status, UserName from users where EmployeeId = '$login_name' and status=1";
-
+   $str_query1 = "select UserId, status, UserName, EmployeeId from users where UserWId = '$login_name' and status=1";
+   
    if($result = mysqli_query($link, $str_query1))
    {   //query success
       $row = mysqli_fetch_assoc($result);
@@ -154,13 +112,15 @@
          $uid = $row["UserId"];
          $status = $row["status"];
          $username = $row["UserName"];
+		 $employeeId = $row["EmployeeId"];
          $loginType = 2;
          $timestr = date('Y/m/d H:i:s', time());
-         $str_query2 = "Update Users set LastModifyTime='$timestr' where EmployeeId='$login_name';";
-         mysqli_query($link, $str_query2); // no check, 失敗就算了, 只是修改 userLogin 裡面的 last_modify_time
-         session_start();
+		 echo "1--- " . $uid . "<br />";
+		 echo "1--- " . $employeeId . "<br />";
+		 echo "1--- " . $username . "<br />";
+		 
          $_SESSION["GUID"] = $uid;
-         $_SESSION["loginName"] = $login_name; //#001 Add
+         $_SESSION["loginName"] = $employeeId; //#001 Add
          $_SESSION["username"] = $username;
          session_write_close(); 
          header("Location:index.php");
@@ -173,6 +133,8 @@
             mysqli_close($link);
             $link = 0;   
          }
+      header("Location:main.php?cmd=account_not_exist");
+      exit();
       }
    }
    else

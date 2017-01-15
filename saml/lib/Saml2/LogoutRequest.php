@@ -103,6 +103,8 @@ LOGOUTREQUEST;
             $this->id = self::getID($logoutRequest);
         }
         $this->_logoutRequest = $logoutRequest;
+		echo $logoutRequest;
+		return;
     }
 
 

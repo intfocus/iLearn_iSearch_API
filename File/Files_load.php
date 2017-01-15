@@ -211,41 +211,40 @@
       echo DB_ERROR;       
       return;
    }
-   
    function CategoryNameList($CategoryId)
-   {
-      $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
-      $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
-      if (!$strlink)  //connect to server failure    
-      {
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return;
-      }
-      if($rs = mysqli_query($strlink, $str_categorie)){
-         $row = mysqli_fetch_assoc($rs);
-         //return $row["CategoryName"];
-         if($row["ParentId"] == 1 || $CategoryId == 1){
-            mysqli_close($strlink);
-            return $row["CategoryName"];
-         }
-         else{
-            mysqli_close($strlink);
-            return CategoryNameList($row["ParentId"]) . "\\" . $row["CategoryName"];
-         }
-      }
-      else{
-         sleep(DELAY_SEC);
-         echo DB_ERROR;       
-         return "";
-      }
-   }
+	{
+       $strlink = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB);
+       $str_categorie = "select CategoryName, ParentId from categories where CategoryId=$CategoryId";
+       if (!$strlink)  //connect to server failure    
+       {
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return;
+       }
+       if($rs = mysqli_query($strlink, $str_categorie)){
+          $row = mysqli_fetch_assoc($rs);
+          //return $row["CategoryName"];
+          if($row["ParentId"] == 1 || $CategoryId == 1){
+             mysqli_close($strlink);
+             return $row["CategoryName"];
+          }
+          else{
+             mysqli_close($strlink);
+             return CategoryNameList($row["ParentId"]) . "\\<br />" . $row["CategoryName"];
+          }
+       }
+       else{
+          sleep(DELAY_SEC);
+          echo DB_ERROR;       
+          return "";
+       }
+    }
    
    //----- query -----
    //***Step16 页面搜索SQl语句 起始               
    $str_query1 = "
-      select F.FileId as FileId, F.FileTitle as FileTitle, F.FileDesc as FileDesc, C.CategoryId as CategoryId, 
-             C.CategoryName as CategoryName, F.Status as Status, F.EditTime as EditTime, F.CategoryPath as CategoryPath
+      select F.FileId as FileId, F.FileTitle as FileTitle, F.FileDesc as FileDesc, C.CategoryId as CategoryId,
+             C.CategoryName as CategoryName, F.Status as Status, F.EditTime as EditTime, F.ZipSize as ZipSize
       from Files F, Categories C where C.CategoryId=F.CategoryId AND F.status";
 
    if ($statusCheckbox == 1)
@@ -314,7 +313,7 @@
       //***Step7 function name ==> expandSearchNewsContentFunc
       $return_string = $return_string . "</span>"
                        . "<span align=right class=\"btn\" OnClick=\"newSearchFilesContentFunc();\">新增</span>&nbsp;"
-                       . "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
+					   . "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
                        . "</div>";                   
       
       //----- Print Search Tables -----
@@ -331,8 +330,8 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"CategoryPath\"/>"
-                                         . "<col class=\"FileAction\"/>"
+										 . "<col class=\"ZipSize\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -341,11 +340,11 @@
                                          . "<th>所属分类</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
-                                         . "<th>文件所属分类</th>"
+										 . "<th>文件大小</th>"
                                          . "<th>动作</th>"
                                          . "</tr>"
                                          . "<tr>"
-                                         . "<td colspan=\"8\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
+                                         . "<td colspan=\"7\" class=\"empty\">请输入上方查询条件，并点选\"开始查询\"</td>"
                                          . "</tr>"
                                          . "</table>";
       }
@@ -372,8 +371,8 @@
                                          . "<col class=\"CategoryName\"/>"
                                          . "<col class=\"Status\"/>"
                                          . "<col class=\"EditTime\"/>"
-                                         . "<col class=\"CategoryPath\"/>"
-                                         . "<col class=\"FileAction\"/>"
+										 . "<col class=\"ZipSize\"/>"
+                                         . "<col class=\"action\"/>"
                                          . "</colgroup>"
                                          . "<tr>"
                                          . "<th>编号</th>"
@@ -382,7 +381,7 @@
                                          . "<th>所属分类</th>"
                                          . "<th>状态</th>"
                                          . "<th>最后修改时间</th>"
-                                         . "<th>文件所属分类</th>"
+										 . "<th>文件大小</th>"
                                          . "<th>动作</th>"
                                          . "</tr>";
             }
@@ -398,17 +397,17 @@
                $StatusStr = $row["Status"] == 0 ? "下架" : "上架";
                $StatusAction = $row["Status"] == 1 ? "下架" : "上架";
                $EditTime = $row["EditTime"];
+			   $ZipSize = $row["ZipSize"];
                $page_count_display = $page_count + 1;
-               $CategoryPath = $row["CategoryPath"];
                $return_string = $return_string 
                   . "<tr>"
                   . "<td>$page_count_display</td>"
                   . "<td><span class=\"FileName fixWidth\">$FileTitle</span></td>"
                   . "<td><span class=\"FileDesc fixWidth\">$FileDesc</span></td>"
-                  . "<td>$CategoryName</td>"
+                  . "<td><span class=\"CategoryName fixWidth\">$CategoryName</span></td>"
                   . "<td>$StatusStr</td>"
                   . "<td>$EditTime</td>"
-                  . "<td>$CategoryPath</td>"
+				  . "<td>$ZipSize</td>"
                   . "<td><A OnClick=\"actionSearchFiles($FileId,$Status);\">$StatusAction</A><br/>"
                   . "<A OnClick=\"modifySearchFiles($FileId);\">修改</A><br/>"
                   . "<A OnClick=\"deleteSearchFiles($FileId);\">删除</A></td>"
@@ -436,7 +435,7 @@
 
       $return_string = $return_string . "<div class=\"toolMenu\">"
                         . "<span align=right class=\"btn\" OnClick=\"newSearchFilesContentFunc();\">新增</span>&nbsp;"
-                        . "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
+						. "<span class=\"btn FilesexpandSR\" OnClick=\"expandSearchFilesContentFunc();\">显示过长内容</span>"
                         . "<span class=\"paging\">";
       
       //----- Print Search Pages -----

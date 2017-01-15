@@ -157,7 +157,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchFunctions"><input name="searchFunctionsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchFunctions"><input name="searchFunctionsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>

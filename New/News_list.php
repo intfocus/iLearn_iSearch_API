@@ -152,7 +152,47 @@ function occurTimeDatePicker()
 <!--快速查詢 從這裡開始-->
    <div class="searchW">
    <!-- ***Step2 搜索框的设计 开始 -->
-      <form>
+   <form class="cmxform form-horizontal tasi-form searchField">
+	 <div class="form-group">
+		<label for="cname" class="control-label col-md-2">标题/信息搜索:</label>
+		<div class="col-md-5">
+			<input class="form-control" id="searchNewsTitleMsg" type="text" maxlength="50">
+		</div>
+		<label for="cname" class="control-label col-md-1">状态:</label>
+		<div class="col-md-2" style="padding-top:6px;">
+			<label class="cr-styled">
+				<input id="searchNewsCheckBox1" type="checkbox" checked>
+				<i class="fa"></i> 
+				上架
+			</label>
+			<label class="cr-styled">
+				<input id="searchNewsCheckBox2" type="checkbox" checked>
+				<i class="fa"></i> 
+				下架
+			</label>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="cemail" class="control-label col-md-2">最后修改时间：</label>
+		<div class="col-md-5">
+			<input id="from1" type="text" style="width:46%; display:inline-block" name="searchNewsfrom1" class="from form-control" readonly="true"/> ~ <input id="to1" type="text" style="width:46%; display:inline-block" class="to form-control" name="searchNewsto1" readonly="true"/>
+		</div>
+	</div>
+	<div class="form-group ">
+		<label for="curl" class="control-label col-md-2">发生时间：</label>
+		<div class="col-md-5">
+			<input id="from2" type="text" style="width:46%; display:inline-block" name="searchNewsfrom2" class="from form-control" readonly="true"/> ~ <input id="to2" type="text" class="to form-control" style="width:46%; display:inline-block" name="searchNewsto2" readonly="true"/>
+		</div>
+	</div>
+	  <div class="form-group">
+		<label class="control-label col-md-2">　</label>
+		<div class="col-md-5">
+			<a class="btn_submit_new searchNews"><input class="btn btn-success" name="searchNewsButton" type="button" value="开始查询"></a>
+		</div>
+	</div>
+	
+</form>
+      <!--<form>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
             <tr>
                <th>标题/信息搜索 ：</th>
@@ -181,16 +221,16 @@ function occurTimeDatePicker()
                </th>
             </tr>
          </table>
-      </form>
+      </form>-->
       <!-- ***Step2 搜索框的设计 结束 -->
    
       <!-- ***Step3 表格框架 开始 -->
       <div id="sResultW" class="reportW" style="display:block;">
          <div id="searchNewsPages">
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
-            <div class="toolMenu">
-               <span align=right class="btn" OnClick="newSearchNewsContentFunc();">新增</span>
-               <span class="btn NewsexpandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
+            <div class="toolMenu2">
+               <span align=right class="btn btn-primary btn-rounded m-b-5" OnClick="newSearchNewsContentFunc();">新增</span>
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
@@ -200,7 +240,7 @@ function occurTimeDatePicker()
                   <col class="Status" />
                   <col class="OccurTime" />
                   <col class="EditTime" />
-                  <col class="NewsAction" />
+                  <col class="action" />
                </colgroup>
                <tr>
                   <th>编号</th>
@@ -215,9 +255,9 @@ function occurTimeDatePicker()
                   <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
-            <div class="toolMenu">
-               <span align=right class="btn" OnClick="newSearchNewsContentFunc();">新增</span>
-               <span class="btn NewsexpandSR" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
+            <div class="toolMenu2" style="padding:5px 0 0;">
+               <span align=right class="btn btn-primary btn-rounded m-b-5" OnClick="newSearchNewsContentFunc();">新增</span>
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchNewsContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

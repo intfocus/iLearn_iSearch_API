@@ -99,7 +99,7 @@
       {
          return MSG_OFFICIAL_EXAM;
       }
-      else if ($type == EXERCISE_EXAM)
+	  else if ($type == EXERCISE_EXAM)
       {
          return MSG_EXERCISE_EXAM;
       }

@@ -45,7 +45,7 @@
          { 
             $header .= "Cc: ".$cc."\r\n"; 
          } 
-         $header .= "From: $from<".$from.">\r\n"; 
+         $header .= "From: TSA<".$from.">\r\n"; 
          $header .= "Subject: =?UTF-8?B?".base64_encode($subject)."?=\r\n"; 
          $header .= $additional_headers; 
          $header .= "Date: ".date("r")."\r\n"; 

@@ -391,7 +391,7 @@ body, html {
 	padding:5px 0;
 }
 #enterpiceReport .mainContent .toolMenu span.btn {
-	display:inline-block;
+	/*display:inline-block;
 	position:relative;
 	line-height:26px;
 	padding:0 15px;
@@ -410,17 +410,40 @@ body, html {
 	background: -ms-linear-gradient(#F0F0F0, #CCC);
 	background: -o-linear-gradient(#F0F0F0, #CCC);
 	background: linear-gradient(#F0F0F0, #CCC);
-	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#F0F0F0', EndColorStr='#CCCCCC', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#F0F0F0', EndColorStr='#CCCCCC', GradientType=0);*/
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  background-color: #3bc0c3;
+  border: 1px solid #3bc0c3;
+    border-radius: 2em;
+	margin-bottom: 5px;
+	color:#fff;
 }
 #enterpiceReport .mainContent .toolMenu span.btn:hover {
-	background: #F0F0F0;
+	/*background: #F0F0F0;
 	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#F0F0F0), to(#aaa));
 	background: -webkit-linear-gradient(#F0F0F0, #aaa);
 	background: -moz-linear-gradient(#F0F0F0, #aaa);
 	background: -ms-linear-gradient(#F0F0F0, #aaa);
 	background: -o-linear-gradient(#F0F0F0, #aaa);
 	background: linear-gradient(#F0F0F0, #aaa);
-	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#F0F0F0', EndColorStr='#aaaaaa', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#F0F0F0', EndColorStr='#aaaaaa', GradientType=0);*/
+	opacity: 0.8;
 }
 #enterpiceReport .mainContent .toolMenu span.new {
 	color:#fff;
@@ -861,13 +884,13 @@ body, html {
 	color:#666;
 }
 #enterpiceReport .mainContent .report a {
-	color:#4ca222;
+	color:#3bc0c3;
 	font-weight:bold;
 	cursor:pointer;
 	text-decoration:underline;
 }
 #enterpiceReport .mainContent .report a:hover {
-	color:#A0B234;
+	color:#44dcdf;
 }
 #enterpiceReport .mainContent .report a.del {
 	font-weight:normal;
@@ -1042,7 +1065,7 @@ span.fixWidth {
 	text-align:left;
 }
 a.btn_submit_new {
-	height:29px;
+	/*height:29px;
 	display:block;
 	border:1px solid;
 	border-color:#ccc #999 #999 #ccc;
@@ -1050,10 +1073,10 @@ a.btn_submit_new {
 	background:#eee;
 	display:inline-block;
 	padding:0;
-	margin:0;
+	margin:0;*/
 }
 a.btn_submit_new input {
-	background:url(../images/submit_new.gif) repeat-x;
+	/*background:url(../images/submit_new.gif) repeat-x;
 	height:29px;
 	cursor:pointer;
 	color:black;
@@ -1064,10 +1087,10 @@ a.btn_submit_new input {
 	vertical-align:top;
 	border:0;
 	width:auto;
-	overflow:visible;
+	overflow:visible;*/
 }
 a.btn_submit_new:hover input {
-	background-position:58px;
+	/*background-position:58px;*/
 }
 
 
@@ -1127,7 +1150,7 @@ a.btn_submit_new:hover input {
 }
 
 #loadingContent {
-   position:absolute;
+   position:fixed;
    top:50%;
    width:100%;
    text-align:center;
@@ -1172,7 +1195,7 @@ a.btn_submit_new:hover input {
 	padding:15px;
 }
 .searchField {
-	width:960px;
+	/*width:960px;*/
 }
 .searchField td{
 	padding:5px 10px;
@@ -1194,7 +1217,7 @@ a.btn_submit_new:hover input {
 }
 #enterpiceReport .mainContent #sResultW #sResultTitle {
 	padding:10px 0;
-	color:#3B991A;
+	color:#3bc0c3;
 	font-weight:bold;
 }
 #enterpiceReport .mainContent #sResultW.reportW {
@@ -1541,3 +1564,6 @@ html[xmlns] .clearfix {
    word-wrap: break-word; /* Internet Explorer 5.5+, 6, 7, 8 compability-mode */
    -ms-word-break: break-all; /* Internet Explorer 8 */
 }
+
+.ui-datepicker .ui-widget-header{background:#95bcfc;}
+.ui-datepicker td span:hover, .ui-datepicker td a:hover{background:#b9d2fc;}

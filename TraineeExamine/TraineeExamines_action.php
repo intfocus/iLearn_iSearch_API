@@ -162,10 +162,11 @@
    }
    
    $TrainingName = "";
-   $str_trainings = "select TrainingName from trainings where TrainingId=$TrainingId";
+   $str_trainings = "select TrainingName, ApproreLevel from trainings where TrainingId=$TrainingId";
    if($rs = mysqli_query($link, $str_trainings)){
 	  $row = mysqli_fetch_assoc($rs);
       $TrainingName = $row["TrainingName"];
+	  $ApproreLevel = $row["ApproreLevel"];
    }
    
    if($parentId == 0)
@@ -177,6 +178,14 @@
          if(!mysqli_query($link, $str_log))
          {
             echo -__LINE__ . $str_log;
+            mysqli_close($link);
+            return;
+         }
+		 $str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
+            . " VALUES($UserId,'报名审核','审核同意',now(),$user_id,$TrainingId)";
+         if(!mysqli_query($link, $str_traineelog))
+         {
+			echo -__LINE__ . $str_traineelog;
             mysqli_close($link);
             return;
          }
@@ -222,6 +231,10 @@
             echo json_encode(array("status"=> 0, "count"=>0, "result"=>"报名失败！")); 
             return;
          }
+		 if($approreLevel == $newStatus)
+		 {
+			$ExamineUser = ",$user_id,";
+		 }
          $str_query4 = "update trainees set Status = $newStatus, ExamineUser = '$ExamineUser' where  TrainingId = $TrainingId and UserId = $UserId and Status = $Status";
 
          if(mysqli_query($link, $str_query4)){
@@ -233,8 +246,17 @@
                mysqli_close($link);
                return;
             }
+			$str_traineelog = "Insert into traineelogs (UserId,FunctionName,ActionName,ActionTime,TUserId,TrainingId)" 
+				. " VALUES($UserId,'报名审核','审核同意',now(),$user_id,$TrainingId)";
+			if(!mysqli_query($link, $str_traineelog))
+			{
+				echo -__LINE__ . $str_traineelog;
+				mysqli_close($link);
+				return;
+			}
             echo "0";
             mysqli_close($link);
+			$emaillist = array_unique($emaillist);
 			if($approreLevel > $newStatus)
 			{
 			   $emailsmtp = new EmailSmtp();
@@ -258,7 +280,7 @@
 			      ));
 			   }
 			}
-            return;
+               return;
          }
          else
          {

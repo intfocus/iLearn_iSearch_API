@@ -1,6 +1,5 @@
 <?php 
    require_once("Problems_utility.php");
-   
 ?>
 <script type="text/javascript">
 //***Step9 列表中的动作上架/下架Ajax呼叫
@@ -183,7 +182,7 @@ function occurTimeDatePicker()
                   <label><input id="searchProbsCheckBox2" type="checkbox" checked> 下架</label>
                </td>
             </tr>
-            <tr>
+			<tr>
                <th>产品：</th>
                <td>
                   <select id="searchProduct" style="width: 200px;">
@@ -240,7 +239,7 @@ function occurTimeDatePicker()
             </tr>
             <tr>
                <th colspan="4" class="submitBtns">
-                  <a class="btn_submit_new searchProbs"><input name="searchProbsButton" type="button" value="开始查询"></a>
+                  <a class="btn_submit_new searchProbs"><input name="searchProbsButton" class="btn btn-success" type="button" value="开始查询"></a>
                </th>
             </tr>
          </table>

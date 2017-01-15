@@ -19,18 +19,17 @@
 
 $ch = curl_init();
 $post_data = array(
-'filename' => 'qie.jpg',
-'fileType' => 'images',
-'file' => curl_file_create('d:/phptest/index3.html')
+'UserId' => '111',
+'FileType' => 'sql',
+'file' => curl_file_create('d:/uat.sql')
 );
 curl_setopt($ch, CURLOPT_HEADER, false);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-curl_setopt($ch, CURLOPT_URL, 'http://192.168.186.134/phptest/api/FileUpload_Api.php?ftype=images');
+curl_setopt($ch, CURLOPT_URL, 'http://127.0.0.1/uat/api/FileUpload_Api.php');
 $info = curl_exec($ch);
 curl_close($ch);
 print_r($info);
-sleep(30)
-unlink($filename)
-?>
+
+?> 

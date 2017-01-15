@@ -219,7 +219,7 @@
    }
    
    
-   $str_exams = "select ExamId, ExamName from exams where ExamType=2";
+   $str_exams = "select ExamId, ExamName from exams where Status = 1 and ExamType=2";
    if($result = mysqli_query($link, $str_exams))
    {
       $row_number = mysqli_num_rows($result);
@@ -355,6 +355,10 @@
       <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
       <meta http-equiv="Pragma" content="no-cache">
       <meta http-equiv="Expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+
+	
+
+
       <link type="image/x-icon" href="../images/wutian.ico" rel="shortcut icon">
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssreset-min.css">
       <link rel="stylesheet" type="text/css" href="../lib/yui-cssfonts-min.css">
@@ -362,7 +366,6 @@
       
       <!-- Bootstrap core CSS -->
       <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/bootstrap-reset.css" rel="stylesheet">
       <!--Animation css-->
       <link href="css/animate.css" rel="stylesheet">
       <!--Icon-fonts css-->
@@ -385,13 +388,23 @@
       <script src='js/jquery.gridly.js' type='text/javascript'></script>
       <script src='js/sample.js' type='text/javascript'></script>
       <script src='js/rainbow.js' type='text/javascript'></script>
+
+<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/OSC_layout.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/demo.css">
+
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
+<link type="text/css" href="../lib/jQueryDatePicker/jquery-ui.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
       <!-- End of tree view -->
       <!--[if lt IE 10]>
       <script type="text/javascript" src="lib/PIE.js"></script>
       <![endif]-->
       <title>武田 - 课程包页面</title>
       <Script Language=JavaScript>
-         function cnm()
+	    function cnm()
          {
             var num = $("div[class='brick small']").length;
             var cnm = "";
@@ -408,6 +421,12 @@
             }
             $("input[name='CoursewareListModify']").val(cnm);
          }
+		$(function(){
+			$(".datepicker").on("focus",function(){
+				$(".datepicker-orient-bottom").css({bottom:($(window).height()-$(this).offset().top)+"px",top:"auto"});
+				$(".datepicker-orient-top").css({top:($(this).offset().top+$(this).height())+"px",bottom:"auto"});
+			});
+		});
          function lockFunction(obj, n)
          {
             if (g_defaultExtremeType[n] == 1)
@@ -438,7 +457,7 @@
          //***Step12 修改页面点击保存按钮出发Ajax动作
          function modifyCoursePacketsContent(CoursePacketId)
          {
-            cnm();
+			cnm();
             CoursePacketName = document.getElementsByName("CoursePacketNameModify")[0].value.trim();
             CoursePacketDesc = document.getElementsByName("CoursePacketDescModify")[0].value.trim();
             AvailableTimeBegin = document.getElementsByName("AvailableTimeBegin")[0].value.trim();
@@ -535,20 +554,36 @@
       </Script>
       <!--Step15 新增修改页面    起始 -->
    </head>
-   <body Onload="loaded();">
+   <style>
+   body{font-size:14px;}
+   </style>
+   <body Onload="loaded();" style="padding-top:62px!important;background: rgb(255, 255, 255);">
       <!--Main Content Start -->
-      <div id="header">
-         <form name=logoutform action=logout.php>
-         </form>
-         <span class="global">使用者 : <?php echo $login_name ?>
-            <font class="logout" OnClick="click_logout();">登出</font>&nbsp;
-         </span>
-         <span class="logo"></span>
+	  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-sm" href="/uat/index.php" onclick="_hmt.push(['_trackEvent', 'navbar', 'click', 'navbar-首页'])">武田学习与工作辅助平台</a>
+        </div>
+        <div class="navbar-collapse collapse" role="navigation">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown text-center">
+                    	
+								   <form name="logoutform" action="logout.php">
+								   </form>
+				<a class="dropdown-toggle" href="#" aria-expanded="false">
+					<i class="fa fa-user"></i>
+					<span class="username">使用者 : <?php echo $login_name ?> </span> <!--<span class="caret"></span>-->
+				</a>
+			</li>
+			</ul>
+        </div>
       </div>
-      <div id="banner">
-         <span class="bLink first"><span>后台功能名称</span><span class="bArrow"></span></span>
-         <span class="bLink company"><span><?php echo $TitleStr; ?></span><span class="bArrow"></span></span>
-      </div>
+    </div>
+	<div class="container">
+	<ol class="breadcrumb">
+	  <li class="active">后台功能名称</li>
+	  <li class="active"><?php echo $TitleStr; ?></li>
+	</ol>
       <!-- Page Content Start -->
       <!-- ================== -->
       <div id="content">
@@ -556,9 +591,117 @@
          <input type="hidden" id="eListModify" name="eListModify" value="<?php echo $ExamList; ?>" />
          <input type="hidden" id="qListModify" name="qListModify" value="<?php echo $QuestionnaireList; ?>" />
          <INPUT type="hidden" name="CoursewareListModify" value="<?php echo $CoursewareList;?>">
-         <h3>课程包、练习考卷、问卷管理</h3>
+         <h3 class="page-header">课程包、练习考卷、问卷管理</h3>
          <table class="searchField" border="0" cellspacing="0" cellpadding="0">
-            <tr>
+			<tr>
+				<td colspan="2">
+					<form class="cmxform form-horizontal tasi-form searchField">
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课程包名称 *</label>
+							<div class="col-lg-7">
+								<input class=" form-control" name="CoursePacketNameModify" type="text" value="<?php echo $CoursePacketName; ?>">
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课程包说明 *</label>
+							<div class="col-lg-7">
+								<input class=" form-control" name="CoursePacketDescModify" type="text" value="<?php echo $CoursePacketDesc; ?>">
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课程包有效起始时间 *</label>
+							<div class="col-lg-7">
+								<input type="text" class="datepicker form-control" placeholder="yyyy/mm/dd" id="datepicker1" name="AvailableTimeBegin" value="<?php echo $AvailableTimeBegin; ?>">
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课程包有效截止时间 *</label>
+							<div class="col-lg-7">
+								<input type="text" class="datepicker form-control" placeholder="yyyy/mm/dd" id="datepicker2" name="AvailableTimeEnd" value="<?php echo $AvailableTimeEnd; ?>">
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">课件包</label>
+							<div class="col-lg-7">
+								<select id="cpList" class="select1" multiple data-placeholder="选择课件包..." style="width: 100px;">
+									 <option value="#">&nbsp;</option>
+									 <?php
+									   foreach ($dataPPTs as $ppt) {
+										  $pptidtmp = "," . $ppt->PPTId . ",";
+										  $tmp = strpos($CoursewarePacketList, $pptidtmp);
+										  if($tmp !== false)
+										  {
+									 ?>
+									 <option value="<?php echo $ppt->PPTId; ?>" selected="selected"><?php echo $ppt->PPTName; ?></option>
+									 <?php
+										  }
+										  else 
+										  {
+									 ?>
+									 <option value="<?php echo $ppt->PPTId; ?>"><?php echo $ppt->PPTName; ?></option>
+									 <?php
+										  }
+									   }
+									 ?>
+								  </select>
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">练习考试</label>
+							<div class="col-lg-7">
+								<select id="eList" class="select2" multiple data-placeholder="选择练习考..." style="width: 100px;">
+								 <option value="#">&nbsp;</option>
+								 <?php
+								   foreach ($dataExam as $exam) {
+									  $examidtmp = "," . $exam->ExamId . ",";
+									  $tmp = strpos($ExamList, $examidtmp);
+									  if($tmp !== false)
+									  {
+								 ?>
+								 <option value="<?php echo $exam->ExamId; ?>" selected="selected"><?php echo $exam->ExamName; ?></option>
+								 <?php
+									  }
+									  else 
+									  {
+								 ?>
+								 <option value="<?php echo $exam->ExamId; ?>"><?php echo $exam->ExamName; ?></option>
+								 <?php
+									  }
+								   }
+								 ?>
+							  </select>
+							</div>
+						</div>
+						<div class="form-group ">
+							<label for="cname" class="control-label col-lg-2">问卷管理</label>
+							<div class="col-lg-7">
+								<select id="qList" class="select2" multiple data-placeholder="选择问卷..." style="width: 100px;">
+								 <option value="#">&nbsp;</option>
+								 <?php
+								   foreach ($dataQuestion as $question) {
+									  $questionidtmp = "," . $question->QuestionId . ",";
+									  $tmp = strpos($QuestionnaireList, $questionidtmp);
+									  if($tmp !== false)
+									  {
+								 ?>
+								 <option value="<?php echo $question->QuestionId; ?>" selected="selected"><?php echo $question->QuestionName; ?></option>
+								 <?php
+									  }
+									  else 
+									  {
+								 ?>
+								 <option value="<?php echo $question->QuestionId; ?>"><?php echo $question->QuestionName; ?></option>
+								 <?php
+									  }
+								   }
+								 ?>
+							  </select>
+							</div>
+						</div>
+					</form>
+				</td>
+			</tr>
+            <!--<tr>
                <th><label  style="width: 100px;">课程包名称 *</label></th>
                <td><input style="width: 200px;" name="CoursePacketNameModify" type="text" value="<?php echo $CoursePacketName; ?>"></td>
             </tr>
@@ -663,10 +806,10 @@
                      ?>
                   </select>
                </td>
-            </tr>
+            </tr>-->
             <tr>
                <td colspan="3" style="width: 100%">
-                  <div class="form-group clearfix">
+                  <div id="gridlyList" class="form-group clearfix">
                      <section class='example'>
                         <div class='gridly'></div>
                         <p class='actions'>
@@ -677,16 +820,16 @@
                   <section class="content">
                      <!-- Page Content Start -->
                      <!-- ================== -->
-                     <div class="wraper container-fluid">
+                     <div class="wraper">
                         <div class="page-title"> 
-                           <h3 class="title">Datatable</h3> 
+                           <h3 class="title">选择课件</h3> 
                         </div>
                         <div class="row">
-                           <div class="col-md-12">
+                           <div class="col-md-12" style="padding:0;">
                               <div class="panel panel-default">
                                  <div class="panel-heading">
-                                    <h3 class="panel-title">Datatable</h3>
-                                    <a class='add button' href='#'>Add</a>
+                                    <h3 class="panel-title"></h3>
+                                    <a class='add button btn btn-success' href='#' style="padding:10px 0; width:100px;">Add</a>
                                  </div>
                                  <div class="panel-body">
                                     <div class="row">
@@ -708,7 +851,7 @@
                                                       echo DB_ERROR;       
                                                       return;
                                                    }  
-                                                   $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares";
+                                                   $str_query1 = "SELECT CoursewareId,CoursewareName,CoursewareDesc,PAList,ProductList FROM coursewares where Status = 1";
                                                    $result = mysqli_query($link, $str_query1);
                                                    $rownum = mysqli_num_rows($result);
                                                    while($row = mysqli_fetch_assoc($result))
@@ -739,18 +882,21 @@
                </td>
             </tr>
             <tr>
-               <td colspan="3"><label style="width: 100px;">(*) Mandatory</label></td>
+               <td colspan="3" align="right"><label style="width: 150px;">(*) Mandatory</label></td>
             </tr>
+<?php
+   if ($Status != 1)
+   {
+?> 
             <tr>
-               <td><a class="btn_submit_new modifyQuestionsContent"><input name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyCoursePacketsContent(<?php echo $CoursePacketId;?>)"></a></td>
+               <td colspan="3" align="right"><a class="modifyQuestionsContent"><input class="btn btn-success" name="modifyQuestionsButton" type="button" value="保存" OnClick="modifyCoursePacketsContent(<?php echo $CoursePacketId;?>)"></a></td>
             </tr>
+<?php
+   }
+?>
          </table>
       </div>
-      <!-- Footer Start -->
-      <footer class="footer">
-         2015 © Velonic.
-      </footer>
-      <!-- Footer Ends -->
+	  </div>
       <!-- Main Content Ends -->
       <!-- js placed at the end of the document so the pages load faster -->
       <script type="text/javascript" src="assets/jquery-multi-select/jquery.multi-select.js"></script>

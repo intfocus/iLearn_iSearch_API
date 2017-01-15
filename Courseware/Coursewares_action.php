@@ -102,9 +102,15 @@
       return;
    }
    if ($Status == 0)
+   {
       $Coursewarestatus = 1;
+	  $ActionReturn = "课件上架";
+   }
    else if ($Status == 1)
+   {
       $Coursewarestatus = 0;
+	  $ActionReturn = "课件下架";
+   }
    else
    {
       sleep(DELAY_SEC);
@@ -129,6 +135,14 @@
    // prepare the SQL command and query DB
    /////////////////////
    if(mysqli_query($link, $str_query1)){
+	  $str_log = "Insert into log (UserId,FunctionName,ActionName,ActionTime,ActionReturn,ActionObject,AppName)" 
+         . " VALUES('$user_id','课件管理','课件上下架',now(),'$ActionReturn','$CoursewareId','pc')";
+      if(!mysqli_query($link, $str_log))
+      {
+         echo -__LINE__ . $str_log;
+         mysqli_close($link);
+         return;
+      }
       echo "0";
       mysqli_close($link);
       return;

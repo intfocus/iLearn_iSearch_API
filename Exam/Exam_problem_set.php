@@ -100,11 +100,11 @@
             <tr>
                <td>
                <select class="ps_required_function">
-                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
+			      <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -131,8 +131,9 @@
             <tr>
                <td>
                   <select class="ps_is_obu_require">
+				     <option value=2 selected>不限</option>
                      <option value=1>是</option>
-                     <option value=0 selected>否</option>
+                     <option value=0>否</option>
                   </select>
                </td>
             </tr>          
@@ -145,7 +146,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -175,7 +176,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -250,11 +251,11 @@
             <tr>
                <td>
                <select class="ps_required_function">
-                  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
+				  <label class='cr-styled'><option value="0"><i class='fa'></i>全部</label>
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -281,8 +282,9 @@
             <tr>
                <td>
                   <select class="ps_is_obu_require">
+				     <option value=2 selected>不限</option>
                      <option value=1>是</option>
-                     <option value=0 selected>否</option>
+                     <option value=0>否</option>
                   </select>
                </td>
             </tr> 
@@ -296,7 +298,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -326,7 +328,7 @@
                               <?
             // Function Other
             
-            $str_query = "Select * from functions where FunctionType=$func_type";
+            $str_query = "Select * from functions where Status = 1 and FunctionType=$func_type";
             if($result = mysqli_query($link, $str_query))
             {
                $row_number = mysqli_num_rows($result);
@@ -394,21 +396,20 @@
 
 
                                       <div class="col-md-12" id="problem_set_btn_0">
-                                          <a class="btn_submit_new problem_set_btn"><input class="problem_set_btn1" name="problem_set_button" data-problem_set="0" type="button" value="题目规则1"></a>
+                                          <a class="btn_submit_new problem_set_btn"><input class="problem_set_btn1 btn btn-default" name="problem_set_button" data-problem_set="0" type="button" value="题目规则1"></a>
+                                      </div>
+									  
+                                      <div class="col-md-12" id="problem_set_btn_template"  style="display: none;" style="margin-top: 20px;">
+                                          <a class="btn_submit_new problem_set_btn"><input class="btn btn-default" name="problem_set_button" type="button"></a>
                                       </div>
 
-
-                                     <div class="col-md-12" id="problem_set_btn_template"  style="display: none;">
-                                          <a class="btn_submit_new problem_set_btn"><input name="problem_set_button" type="button"></a>
-                                       </div>
-                                       
-                                       <div class="col-md-12">
-                                        <a><input id="delete_cur_problem" data-problem_set="" type="button" value="删除此规则"></a>
+                                      <div class="col-md-12" style="margin-top: 20px;">
+                                        <a><input id="delete_cur_problem" class="btn btn-danger" data-problem_set="" type="button" value="删除此规则"></a>
                                       </div>
-
-                                     <div class="col-md-5">
-                                          <a class="btn_submit_new next_problem_set"><input name="next_problem_set" type="button" value="新增产生题目规则"></a>
-                                       </div>
+									  <br/>
+                                      <div class="col-md-5" style="margin-top: 20px;">
+                                         <a class="btn_submit_new next_problem_set"><input name="next_problem_set" class="btn btn-purple" type="button" value="新增产生题目规则"></a>
+                                      </div>
 
     </body>
 </html>

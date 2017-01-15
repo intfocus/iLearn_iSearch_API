@@ -1,15 +1,16 @@
 <script type="text/javascript">
+
 //***Step5 expand search Result table
 function expandSearchTraineeExaminesContentFunc()
 {
-   if ($('span.TraineeName, span.SpeakerName').hasClass('fixWidth'))
+   if ($('span.TraineeName, span.SpeakerName, span.TrainingMemo').hasClass('fixWidth'))
    {
-      $('span.TraineeName, span.SpeakerName').removeClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TrainingMemo').removeClass('fixWidth');
       $('.TraineesexpandSR').text('隐藏过长内容');
    }
    else
    {
-      $('span.TraineeName, span.SpeakerName').addClass('fixWidth');
+      $('span.TraineeName, span.SpeakerName, span.TrainingMemo').addClass('fixWidth');
       $('.TraineesexpandSR').text('显示过长内容');
    }
 }
@@ -148,7 +149,7 @@ function occurTimeDatePicker()
 </script>
 
 <!--新增修改所跳出的 block 开始-->
-<div id="searchTraineesContent" class="blockUI" style="display:none;">
+<div id="searchTraineesContent" class="blockUI" style="display:none;" Onload="loaded();">
 </div>
 <!--新增修改所跳出的 block 结束--> 
 
@@ -174,12 +175,14 @@ function occurTimeDatePicker()
       <div id="sResultW" class="reportW" style="display:block;">
          <div id="searchTraineeExaminesPages">
             <!-- <div id="sResultTitle" class="sResultTitle">查詢結果 : 共有 <span>256</span> 筆檔案符合查詢條件</div> -->
-            <div class="toolMenu">
+            <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTraineeExaminesContentFunc();">显示过长内容</span>
             </div>
             <table class="report" border="0" cellspacing="0" cellpadding="0">
                <colgroup>
                   <col class="num" />
                   <col class="TraineeName" />
+                  <col class="TrainingMemo" />
                   <col class="Speaker" />
                   <col class="UserName" />
                   <col class="EmployeeId" />
@@ -189,17 +192,19 @@ function occurTimeDatePicker()
                <tr>
                   <th>编号</th>
                   <th>课程名称</th>
-                  <th>讲师名称</th>
-                  <th>学员名称</th>
+                  <th>课程简介</th>
+                  <th>讲师</th>
+                  <th>学员姓名</th>
                   <th>学员编号</th>
                   <th>报名时间</th>
-                  <th>动作</th>
+                  <th>操作</th>
                </tr>
                <tr>
-                  <td colspan="7" class="empty">请输入上方查询条件，并点选[开始查询]</td>
+                  <td colspan="8" class="empty">请输入上方查询条件，并点选[开始查询]</td>
                </tr>
             </table>
-            <div class="toolMenu">
+              <div class="toolMenu2">
+               <span class="btn btn-primary btn-rounded m-b-5" OnClick="expandSearchTraineeExaminesContentFunc();">显示过长内容</span>
             </div>
          </div>
       </div>

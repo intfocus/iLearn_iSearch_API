@@ -158,7 +158,7 @@
    if ($exam_location == ONSITE_TEST)
    {
       //$exam_password = get_random_password();
-      $exam_password = $_POST["exam_pwd"];
+	  $exam_password = $_POST["exam_pwd"];
    }
 
    $exam_status = EXAM_INACTIVE;

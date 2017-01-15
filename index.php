@@ -94,10 +94,10 @@
          $sf->codepath = $row["codepath"];
          if ($first_func_name == "")
             $first_func_name = $func_name;
-         array_push($func_array,$sf);
+         Array_Push($func_array,$sf);
       }
    }
-   
+   //eric-edit -end
    $str_query2 = "Select FunctionId, FunctionName, FunctionType 
       from Functions
       where FunctionType <> 0 and Status = 1";
@@ -118,25 +118,8 @@
          array_push($funPPA_array,$sppa);
       }
    }
-   
-   class StuExams{
-      public $ExamId;
-      public $ExamName;
-   }
-   $dataexams = array();
-   $str_exams = "select ExamId,ExamName from exams";
-   if($result = mysqli_query($link, $str_exams)){
-      while($row = mysqli_fetch_assoc($result)){      
-         $se = new StuExams();
-         $se->ExamId = $row["ExamId"];
-         $se->ExamName = $row['ExamName'];
-         array_push($dataexams,$se);
-      }
-   }
-   //print_r($dataexams);
-   //eric-edit -end
    $canApprove = 0;
-   $str_users = "select CanApprove from wutian.users where UserId=$user_id";
+   $str_users = "select CanApprove from users where UserId=$user_id";
    if($result = mysqli_query($link, $str_users)){
       while($row = mysqli_fetch_assoc($result)){
          $canApprove = $row["CanApprove"];
@@ -162,6 +145,7 @@
 <!--[if lt IE 10]>
 <script type="text/javascript" src="lib/PIE.js"></script>
 <![endif]-->
+          
         <!-- Bootstrap core CSS -->
         <link href="newui/css/bootstrap.min.css" rel="stylesheet">
         <link href="newui/css/bootstrap-reset.css" rel="stylesheet">
@@ -210,7 +194,7 @@ function click_logout()  //log out
 
 function loaded()
 {
-	
+	document.getElementsByName("searchTraineesExamineButton")[0].click();
 }
 
 </Script>
@@ -223,7 +207,7 @@ function loaded()
 </head>
 
 
-<body Onload="">
+<body Onload="loaded();">
 <div id="loadingWrap" class="nodlgclose loading" style="display:none;">
    <div id="loadingContent">
       <span id="loadingContentInner">
@@ -248,8 +232,11 @@ function loaded()
       
             <!-- Navbar Start -->
             <nav class="navigation">
-                <ul class="list-unstyled mainTabW">                	
-<?php
+                <ul class="list-unstyled mainTabW">
+                	
+                	
+                	
+                	<?php
    for($i=0; $i<count($func_array); $i++){
       $func = $func_array[$i];
       if($i == 0){
@@ -260,15 +247,21 @@ function loaded()
       }
       
    }
-?>     
+?>
 <?php
    if($canApprove==1)
    {
-      echo "<li><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>报名审批</span></a></li>";
-      echo "<li><a href='javascript:void(0)'><span class='tabIcon examinecancel'></span><span class='nav-label'>报名撤销审批</span></a></li>";
+	  $funcnum = count($func_array);
+	  $active = "";
+	  if($funcnum == 0)
+		  $active = "active";
+      echo "<li class='" . $active . "'><a href='javascript:void(0)'><span class='tabIcon examine'></span><span class='nav-label'>报名审批</span></a></li>";
+	  echo "<li><a href='javascript:void(0)'><span class='tabIcon examinecancel'></span><span class='nav-label'>报名撤销审批</span></a></li>";
       echo "<li><a href='javascript:void(0)'><span class='tabIcon examinelog'></span><span class='nav-label'>审批查询</span></a></li>";
    }
-?>
+?> 
+
+
                 </ul>
             </nav>
         </aside>
@@ -343,21 +336,37 @@ function loaded()
       }
    }
 ?>
-<?php
+
+<?php 
    if($canApprove==1)
    {
-      echo "<div class='container2 searchNewsC' style='display:none;'>";
-         include("TraineeExamine/TraineeExamines_list.php");
-      echo "</div>";
-      echo "<div class='container2 searchNewsC' style='display:none;'>";
-         include("TraineeCancel/TraineeCancels_list.php");
-      echo "</div>";
-      echo "<div class='container2 searchNewsC' style='display:none;'>";
-         include("TrainingLog/TrainingLogs_list.php");
-      echo "</div>";
+	  $funcnum = count($func_array);
+	  if($funcnum == 0)
+	  {
+	     echo "<div class='container2 searchNewsC' style='display:block;'>";
+            include("TraineeExamine/TraineeExamines_list.php");
+		 echo "</div>";
+		 echo "<div class='container2 searchNewsC' style='display:none;'>";
+			include("TraineeCancel/TraineeCancels_list.php");
+		 echo "</div>";
+	     echo "<div class='container2 searchNewsC' style='display:none;'>";
+			include("TrainingLog/TrainingLogs_list.php");
+		 echo "</div>";
+	  }
+	  else
+	  {
+         echo "<div class='container2 searchNewsC' style='display:none;'>";
+            include("TraineeExamine/TraineeExamines_list.php");
+         echo "</div>";
+		 echo "<div class='container2 searchNewsC' style='display:none;'>";
+			include("TraineeCancel/TraineeCancels_list.php");
+         echo "</div>";
+         echo "<div class='container2 searchNewsC' style='display:none;'>";
+			include("TrainingLog/TrainingLogs_list.php");
+         echo "</div>";
+	  }
    }
 ?> 
-  
    </div>
    
    
@@ -383,7 +392,7 @@ function loaded()
         <script src="newui/js/jquery.js"></script>
         <script src="newui/js/bootstrap.min.js"></script>
         <script src="newui/js/modernizr.min.js"></script>
-        <script src="newui/js/pace.min.js"></script>
+        <!--<script src="newui/js/pace.min.js"></script>-->
         <script src="newui/js/wow.min.js"></script>
         <script src="newui/js/jquery.scrollTo.min.js"></script>
         <script src="newui/js/jquery.nicescroll.js" type="text/javascript"></script>

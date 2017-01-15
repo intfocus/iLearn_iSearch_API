@@ -110,14 +110,20 @@
       public $Manager;
       public $Status;
       public $ApproreLevel;
+	  public $TraineesStatus;
+	  public $CancelStatus;
    }
    
    //----- query -----
    $str_training = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
-      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel from trainings ti 
+      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel,te.Status as TraineesStatus, tc.Status as CancelStatus from trainings ti 
+	  left join trainees te on ti.TrainingId = te.TrainingId and (te.UserId = $userid  or te.UserId is null)
+	  left join traineecancels tc on ti.TrainingId = tc.TrainingId and (tc.UserId = $userid or tc.UserId is null)
       where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.TrainingBegin),now()) >= 0 
-      and TIMESTAMPDIFF(DAY,date(ti.TrainingEnd),now()) <= 0
+      and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 
       and ti.UserList like '%,$userid,%' order by ti.TrainingId";
+	  //echo $str_training;
+	  //return;
 
    if($rs = mysqli_query($link, $str_training)){
       $trainingcount = mysqli_num_rows($rs);
@@ -126,15 +132,17 @@
          $sn->Id = $row['TrainingId'];
          $sn->Name = $row['TrainingName'];
          $sn->SpeakerName = $row['SpeakerName'];
-         $sn->Begin = date("Y/m/d",strtotime($row['TrainingBegin']));
-         $sn->End = date("Y/m/d",strtotime($row['TrainingEnd']));
-         $sn->StartDate = date("Y/m/d",strtotime($row['StartDate']));
-         $sn->EndDate = date("Y/m/d",strtotime($row['EndDate']));
+         $sn->Begin = date("Y/m/d",strtotime($row['StartDate']));
+         $sn->End = date("Y/m/d",strtotime($row['EndDate']));
+         $sn->StartDate = date("Y/m/d",strtotime($row['TrainingBegin']));
+         $sn->EndDate = date("Y/m/d",strtotime($row['TrainingEnd']));
          $sn->Location = $row['TrainingLocation'];
          $sn->Memo = $row['TrainingMemo'];
          $sn->Manager = get_employ_id_from_usernames($row['TrainingManager']);
          $sn->ApproreLevel = $row['ApproreLevel'];
          $sn->Status = $row['Status'];
+		 $sn->TraineesStatus = $row['TraineesStatus'];
+		 $sn->CancelStatus = $row['CancelStatus'];
          array_push($dataTrainings,$sn);
       }
    }
@@ -149,27 +157,32 @@
    }
    
    $str_tmanager = "select ti.TrainingId,ti.TrainingName,ti.SpeakerName,ti.TrainingBegin,ti.TrainingEnd,ti.StartDate,ti.EndDate,
-      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel from trainings ti 
-      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.StartDate),now()) >= 0 
+      ti.TrainingLocation,ti.TrainingMemo,ti.TrainingManager,ti.Status,ti.ApproreLevel,te.Status as TraineesStatus, tc.Status as CancelStatus from trainings ti 
+	  left join trainees te on ti.TrainingId = te.TrainingId and (te.UserId = $userid or te.UserId is null) 
+	  left join traineecancels tc on ti.TrainingId = tc.TrainingId and (tc.UserId = $userid or tc.UserId is null)
+      where ti.status = 1 and TIMESTAMPDIFF(DAY,date(ti.TrainingBegin),now()) >= 0 
       and TIMESTAMPDIFF(DAY,date(ti.EndDate),now()) <= 0 
       and ti.TrainingManager like '%,$userid,%' order by ti.TrainingId";
 
    if($rs = mysqli_query($link, $str_tmanager)){
       $tmanagercount = mysqli_num_rows($rs);
+	  $trainingcount = $trainingcount + $tmanagercount;
       while($row = mysqli_fetch_assoc($rs)){      
          $sm = new StuTrainings();
          $sm->Id = $row['TrainingId'];
          $sm->Name = $row['TrainingName'];
          $sm->SpeakerName = $row['SpeakerName'];
-         $sm->Begin = date("Y/m/d",strtotime($row['TrainingBegin']));
-         $sm->End = date("Y/m/d",strtotime($row['TrainingEnd']));
-         $sm->StartDate = date("Y/m/d",strtotime($row['StartDate']));
-         $sm->EndDate = date("Y/m/d",strtotime($row['EndDate']));
+         $sm->Begin = date("Y/m/d",strtotime($row['StartDate']));
+         $sm->End = date("Y/m/d",strtotime($row['EndDate']));
+         $sm->StartDate = date("Y/m/d",strtotime($row['TrainingBegin']));
+         $sm->EndDate = date("Y/m/d",strtotime($row['TrainingEnd']));
          $sm->Location = $row['TrainingLocation'];
          $sm->Memo = $row['TrainingMemo'];
          $sm->Manager = get_employ_id_from_usernames($row['TrainingManager']);
          $sm->ApproreLevel = $row['ApproreLevel'];
          $sm->Status = $row['Status'];
+		 $sm->TraineesStatus = $row['TraineesStatus'];
+		 $sm->CancelStatus = $row['CancelStatus'];
          array_push($dataTManagers,$sm);
       }
    }

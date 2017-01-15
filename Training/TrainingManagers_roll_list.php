@@ -112,6 +112,25 @@
       return;
    }
    
+   $link = @mysqli_connect(DB_HOST, ADMIN_ACCOUNT, ADMIN_PASSWORD, CONNECT_DB); 
+   if (!$link)  //connect to server failure    
+   {
+      sleep(DELAY_SEC);
+      echo DB_ERROR;
+      die("连接DB失败");
+   }
+   $trainingname = "";
+   $str_query = "select TrainingName from trainings where TrainingId = $training_id";
+   if($result = mysqli_query($link, $str_query)){
+      $row = mysqli_fetch_assoc($result);
+      $trainingname = $row["TrainingName"];
+   }
+   else
+   {
+      echo DB_ERROR;
+      die("操作资料库失败");
+   }
+   
    $userarray = array();
    
    function get_employ_id_from_user_id($userids)
@@ -247,7 +266,6 @@ function modifyUsersContent(training_id)
                "users_id[]": users_id,
             },
       cache: false,
-      dataType: 'json',
       success: function(res)
       {
          res = String(res);
@@ -326,7 +344,7 @@ function modifyUsersContent(training_id)
 
             <div class="wraper container-fluid">
                 <div class="page-title"> 
-                    <h3 class="title">批次上传课程负责人员名单</h3> 
+                    <h3 class="title">批次上传课程负责人员名单(<?php echo $trainingname;?>)</h3> 
                 </div>
 
                 <!-- Basic Form Wizard -->
@@ -343,7 +361,7 @@ function modifyUsersContent(training_id)
       <tr>
          <td><Textarea name=newUsersBatchInput rows=30 cols=100 placeholder="员工号 如 E99999"><?   
             // read roll
-         $str_query = "select * from Trainings where TrainingId=$training_id AND Status=".ACTIVE;
+         $str_query = "select * from Trainings where TrainingId=$training_id";
          if($result = mysqli_query($link, $str_query)){
             $row_number = mysqli_num_rows($result);
             $row = mysqli_fetch_assoc($result);
@@ -381,8 +399,8 @@ function modifyUsersContent(training_id)
         </div>
         <!-- Main Content Ends -->
 
-<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../lib/jquery.min.js"></script>
+<script type="text/javascript" src="../lib/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../js/OSC_layout.js"></script>
 <script type="text/javascript" src="../js/utility.js"></script>

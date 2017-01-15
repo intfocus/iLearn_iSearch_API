@@ -8,8 +8,8 @@
       //alert("---1---");
       //alert(this.document.body.scrollHeight); //弹出当前页面的高度  
       //alert(this.document.body.scrollWidth);
-      var frame = document.getElementById('report_list');
-      frame.setAttribute('height', this.document.body.scrollHeight);
+      //var frame = document.getElementById('report_list');
+      //frame.setAttribute('height', this.document.body.scrollHeight);
       // var frame = document.getElementById('report_list');
       // var win = frame.contentWindow;
       // var doc = win.document;
@@ -22,39 +22,51 @@
       var index = myselect.selectedIndex;//获取下拉框中
       //alert(index);
       var srcvalue = myselect.options[index].value;//获取下拉框中的value
-      srcvalue = "http://baidu.com?l=" + srcvalue; 
-      alert(srcvalue);
+	  srcvalue = "http://tsa-china.takeda.com.cn/ibi_apps/WFServlet?IBIAPP_app=ireport&IBIF_ex=" + srcvalue; 
+      //alert(srcvalue);
+      //alert(srcvalue);
       if(srcvalue != "")
       {
-         var frame = document.getElementById('report_list');
-         frame.setAttribute('src', srcvalue);
+         //var frame = document.getElementById('report_list');
+         //frame.setAttribute('src', srcvalue);
+		 window.open(srcvalue,'_blank');
       }
    }
 </script>
 
-<!--新增修改所跳出的 block 开始-->
-<div id="searchUsersContent" class="blockUI" style="display:none;">
-</div>
-<!--新增修改所跳出的 block 结束--> 
-
-<!--快速查詢 從這裡開始-->
-   <div class="searchW">
-      <select id="srcpaht" onchange="change();">
-<?php 
-   echo print_r($dataexams);
-   for($de=0; $de<count($dataexams); $de++){
-      $dei = $dataexams[$de]->ExamId;
-      $den = $dataexams[$de]->ExamName;
-?>
-         <option value="<?php echo $dei ?>"><?php echo $den ?></option>
-<?php
-   }
-?>
+            <div class="searchW">
+                <div class="row">
+   <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="srcpaht" class="col-sm-2 control-label">选择报表</label>
+		<div class="col-sm-4">
+      <select id="srcpaht" class="form-control" onchange="change()">
+         <option value="m000">选择报表</option>
+         <option value="m005_01">员工信息查询</option>
+         <option value="m001_01">考试分数查询</option>
+         <option value="m002_01">考卷明细</option>
+         <option value="m004_01">考题正确率</option>
+         <option value="m006_01">问卷结果查询</option>
+         <option value="m003_01">使用日志查询</option>
+         <option value="m101_01">iSEARCH用户日志</option>
+         <option value="m201_01">iSEARCH文件日志</option>
+         <option value="m202_01">iSEARCH推广文件按月统计</option>
+         <option value="m203_01">iSEARCH月明细By小时导出</option>
+         <option value="m007_01">iLearn学习进度查询</option>
+         <option value="m008_01">培训班信息查询</option>
       </select>
-   <!-- ***Step2 搜索框的设计 开始 -->
-      <form>
-         <iframe id="report_list" src="" width="100%" height="100%" frameborder="0"  onLoad="iFrameHeight()"></iframe>
-      </form>
-      <!-- ***Step2 搜索框的设计 结束 -->
-   </div>
-<!-- ***Step3 表格框架 结束 -->
+	  </div> 
+      </div>
+
+   </form>
+   
+	  </div>
+    </div>
+    <!-- ***Step2 搜索框的设计 开始 -->
+    <div id="sResultW" class="reportW">
+
+    </div>
+	<!-- ***Step2 搜索框的设计 结束 -->
+	  
+   
+   <!-- ***Step3 表格框架 结束 -->
